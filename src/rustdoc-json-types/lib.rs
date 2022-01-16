@@ -272,7 +272,7 @@ pub struct Enum {
 #[serde(tag = "variant_kind", content = "variant_inner")]
 pub enum Variant {
     Plain,
-    Tuple(Vec<Type>),
+    Tuple(Vec<Id>),
     Struct(Vec<Id>),
 }
 
