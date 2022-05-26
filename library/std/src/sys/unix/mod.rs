@@ -54,15 +54,6 @@ pub unsafe fn init(argc: isize, argv: *const *const u8) {
     // resources opened later, we reopen standards streams when they are closed.
     sanitize_standard_fds();
 
-    // By default, some platforms will send a *signal* when an EPIPE error
-    // would otherwise be delivered. This runtime doesn't install a SIGPIPE
-    // handler, causing it to kill the program, which isn't exactly what we
-    // want!
-    //
-    // Hence, we set SIGPIPE to ignore when the program starts up in order
-    // to prevent this problem.
-    reset_sigpipe();
-
     stack_overflow::init();
     args::init(argc, argv);
 
@@ -115,11 +106,6 @@ pub unsafe fn init(argc: isize, argv: *const *const u8) {
                 }
             }
         }
-    }
-
-    unsafe fn reset_sigpipe() {
-        #[cfg(not(any(target_os = "emscripten", target_os = "fuchsia")))]
-        rtassert!(signal(libc::SIGPIPE, libc::SIG_IGN) != libc::SIG_ERR);
     }
 }
 
