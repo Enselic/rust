@@ -138,8 +138,8 @@ fn lang_start_internal(
 #[lang = "start"]
 fn lang_start<T: crate::process::Termination + 'static>(
     main: fn() -> T,
-    argc: isize,
     argv: *const *const u8,
+    argc: isize,
 ) -> isize {
     let Ok(v) = lang_start_internal(
         &move || crate::sys_common::backtrace::__rust_begin_short_backtrace(main).report().to_i32(),

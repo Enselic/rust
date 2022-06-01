@@ -451,12 +451,12 @@ pub fn maybe_create_entry_wrapper<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>>(
                 .unwrap()
                 .unwrap(),
             );
-            let start_ty = cx.type_func(&[cx.val_ty(rust_main), isize_ty, i8pp_ty], isize_ty);
-            (start_fn, start_ty, vec![rust_main, arg_argc, arg_argv])
+            let start_ty = cx.type_func(&[cx.val_ty(rust_main), i8pp_ty, isize_ty], isize_ty);
+            (start_fn, start_ty, vec![rust_main, arg_argv, arg_argc])
         } else {
             debug!("using user-defined start fn");
-            let start_ty = cx.type_func(&[isize_ty, i8pp_ty], isize_ty);
-            (rust_main, start_ty, vec![arg_argc, arg_argv])
+            let start_ty = cx.type_func(&[i8pp_ty, isize_ty], isize_ty);
+            (rust_main, start_ty, vec![arg_argv, arg_argc])
         };
 
         let result = bx.call(start_ty, start_fn, &args, None);
