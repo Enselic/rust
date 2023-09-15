@@ -1,4 +1,4 @@
-#![allow(large_assignments)]
+//#![allow(large_assignments)]
 
 use core::borrow::Borrow;
 use core::iter::*;

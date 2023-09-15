@@ -1,4 +1,4 @@
-#![allow(large_assignments)]
+//#![allow(large_assignments)]
 
 use core::iter::Iterator;
 use std::{
