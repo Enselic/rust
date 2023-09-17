@@ -1,24 +1,6 @@
 use rand::RngCore;
 use test::{black_box, Bencher};
 
-macro_rules! bench_in_place {
-    ($($fname:ident, $type:ty, $count:expr, $init:expr);*) => {
-        $(
-            #[bench]
-            fn $fname(b: &mut Bencher) {
-                b.iter(|| {
-                    let src: Vec<$type> = black_box(vec![$init; $count]);
-                    src.into_iter()
-                        .enumerate()
-                        .map(|(idx, e)| idx as $type ^ e)
-                        .collect::<Vec<$type>>()
-                });
-            }
-        )+
-    };
-}
-
-
 #[bench]
 fn bench_in_place_recycle(b: &mut Bencher) {
     let mut data = vec![0; 1000];
