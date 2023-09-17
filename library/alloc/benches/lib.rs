@@ -8,18 +8,18 @@
 #![feature(strict_provenance)]
 #![feature(test)]
 #![deny(fuzzy_provenance_casts)]
-#![allow(large_assignments)]
+//#![allow(large_assignments)]
 
 extern crate test;
 
-mod binary_heap;
-mod btree;
-mod linked_list;
-mod slice;
-mod str;
-mod string;
+//mod binary_heap;
+//mod btree;
+//mod linked_list;
+//mod slice;
+//mod str;
+//mod string;
 mod vec;
-mod vec_deque;
+//mod vec_deque;
 
 /// Returns a `rand::Rng` seeded with a consistent seed.
 ///
