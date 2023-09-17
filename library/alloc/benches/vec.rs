@@ -18,26 +18,6 @@ macro_rules! bench_in_place {
     };
 }
 
-bench_in_place![
-    bench_in_place_xxu8_0010_i0,   u8,   10, 0;
-    bench_in_place_xxu8_0100_i0,   u8,  100, 0;
-    bench_in_place_xxu8_1000_i0,   u8, 1000, 0;
-    bench_in_place_xxu8_0010_i1,   u8,   10, 1;
-    bench_in_place_xxu8_0100_i1,   u8,  100, 1;
-    bench_in_place_xxu8_1000_i1,   u8, 1000, 1;
-    bench_in_place_xu32_0010_i0,  u32,   10, 0;
-    bench_in_place_xu32_0100_i0,  u32,  100, 0;
-    bench_in_place_xu32_1000_i0,  u32, 1000, 0;
-    bench_in_place_xu32_0010_i1,  u32,   10, 1;
-    bench_in_place_xu32_0100_i1,  u32,  100, 1;
-    bench_in_place_xu32_1000_i1,  u32, 1000, 1;
-    bench_in_place_u128_0010_i0, u128,   10, 0;
-    bench_in_place_u128_0100_i0, u128,  100, 0;
-    bench_in_place_u128_1000_i0, u128, 1000, 0;
-    bench_in_place_u128_0010_i1, u128,   10, 1;
-    bench_in_place_u128_0100_i1, u128,  100, 1;
-    bench_in_place_u128_1000_i1, u128, 1000, 1
-];
 
 #[bench]
 fn bench_in_place_recycle(b: &mut Bencher) {
