@@ -1,5 +1,6 @@
-// aux-build:change_box.rs
+// --------aux-build:change_box.rs
 // build-pass
+// compile-flags: -Zinline-mir
 
 #![feature(large_assignments)]
 #![feature(test)]
