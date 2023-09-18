@@ -2,9 +2,11 @@
 // build-pass
 
 #![feature(large_assignments)]
+#![feature(test)]
 #![move_size_limit = "1000"]
 
 extern crate change_box;
+extern crate test;
 
 fn main() {
     let cell = std::cell::UnsafeCell::new([0; 9999]);
@@ -16,6 +18,5 @@ fn main() {
 const LEN: usize = 16384;
 
 fn bench_chain_collect() {
-    let _data = change_box::black_box([0; LEN]);
-    //b.iter(|| data.iter().cloned().chain([1]).collect::<Vec<_>>());
+    let _ = test::black_box([0; LEN]);
 }
