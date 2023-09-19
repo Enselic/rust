@@ -13,4 +13,3 @@ fn actual_bench_chain_collect(b: &mut Bencher) {
 fn bench_chain_collect(_b: &mut Bencher) {
     let _data = black_box([0u8; 9999]);
 }
-
