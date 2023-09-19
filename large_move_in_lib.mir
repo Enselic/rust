@@ -1,0 +1,30 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+fn main() -> () {
+    let mut _0: ();
+    let mut _1: [u8; 9999];
+    let mut _2: [u8; 9999];
+    scope 1 {
+    }
+    scope 2 (inlined std::hint::black_box::<[u8; 9999]>) {
+        debug dummy => _2;
+    }
+
+    bb0: {
+        _2 = [const 0_u8; 9999];
+        _1 = std::intrinsics::black_box::<[u8; 9999]>(move _2) -> [return: bb1, unwind unreachable];
+    }
+
+    bb1: {
+        return;
+    }
+}
+
+main::{constant#0}: usize = {
+    let mut _0: usize;
+
+    bb0: {
+        _0 = const 9999_usize;
+        return;
+    }
+}
