@@ -610,10 +610,10 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         )
     }
 
-    fn check_move_size(&mut self, operand: &mir::Operand<'tcx>, location: Location) {
+    fn move_too_large(&mut self, operand: &mir::Operand<'tcx>) -> bool {
         let limit = self.tcx.move_size_limit().0;
-        if limit > 0 && !self.skip_move_size_check {
-            return;
+        if limit > 0 {
+            return false;
         }
         let limit = Size::from_bytes(limit);
         let ty = operand.ty(self.body, self.tcx);
@@ -795,14 +795,19 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
             mir::TerminatorKind::Call { ref func, ref args, .. } => {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
-                self.skip_move_size_check = visit_fn_use(
+                let skip_move_size_check = visit_fn_use(
                     self.tcx,
                     callee_ty,
                     true,
                     source,
                     &mut self.output,
                     &self.skip_move_check_fns,
-                )
+                );
+                if !skip_move_size_check {
+                    for arg in args {
+                        self.check_move_size(arg, location);
+                    }
+                }
             }
             mir::TerminatorKind::Drop { ref place, .. } => {
                 let ty = place.ty(self.body, self.tcx).ty;
@@ -853,7 +858,6 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
         }
 
         self.super_terminator(terminator, location);
-        self.skip_move_size_check = false;
     }
 
     fn visit_operand(&mut self, operand: &mir::Operand<'tcx>, location: Location) {
@@ -889,9 +893,8 @@ fn visit_fn_use<'tcx>(
     output: &mut MonoItems<'tcx>,
     skip_move_check_fns: &[DefId],
 ) -> bool {
-    let mut skip_move_size_check = false;
     if let ty::FnDef(def_id, args) = *ty.kind() {
-        skip_move_size_check = skip_move_check_fns.contains(&def_id);
+        skip_move_check_fns.contains(&def_id);
         let instance = if is_direct_call {
             ty::Instance::expect_resolve(tcx, ty::ParamEnv::reveal_all(), def_id, args)
         } else {
@@ -902,7 +905,6 @@ fn visit_fn_use<'tcx>(
         };
         visit_instance_use(tcx, instance, is_direct_call, source, output);
     }
-    skip_move_size_check
 }
 
 fn visit_instance_use<'tcx>(
