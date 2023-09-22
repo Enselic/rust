@@ -593,9 +593,6 @@ struct MirUsedCollector<'a, 'tcx> {
     instance: Instance<'tcx>,
     /// Spans for move size lints already emitted. Helps avoid duplicate lints.
     move_size_spans: Vec<Span>,
-    /// If true, we should temporarily skip move size checks, because we are
-    /// processing an operand to a `skip_move_check_fns` function call.
-    skip_move_size_check: bool,
     /// Set of functions for which it is OK to move large data into.
     skip_move_check_fns: Vec<DefId>,
 }
@@ -626,6 +623,22 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             return;
         }
         debug!(?layout);
+
+//         let block = &self.body[location.block];
+//         let stmts = &block.statements;
+//         let idx = location.statement_index;
+//         let (source_info, span) = if idx < stmts.len() {
+//             let source_info = &stmts[idx].source_info;
+//             (source_info, source_info.span)
+//         } else {
+//             assert_eq!(idx, stmts.len());
+//             let terminator = &block.terminator();
+//             match terminator.kind {
+//                 mir::TerminatorKind::Call { func, .. } => (source_info, source_info.span),
+//                 _ => (terminator.source_info, terminator.source_info.span),
+//             }
+//         }
+
         let source_info = self.body.source_info(location);
         debug!(?source_info);
         for span in &self.move_size_spans {
@@ -779,7 +792,7 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
         };
 
         match terminator.kind {
-            mir::TerminatorKind::Call { ref func, .. } => {
+            mir::TerminatorKind::Call { ref func, ref args, .. } => {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
                 self.skip_move_size_check = visit_fn_use(
@@ -1433,7 +1446,6 @@ fn collect_used_items<'tcx>(
         output,
         instance,
         move_size_spans: vec![],
-        skip_move_size_check: false,
         skip_move_check_fns,
     }
     .visit_body(&body);
