@@ -677,7 +677,6 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
 
         debug!("cp 135 {:#?}", foo);
 
-
         if let Some(hir::Node::Expr(expr)) = foo {
             if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) =
                 expr.kind
