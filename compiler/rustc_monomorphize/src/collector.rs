@@ -615,8 +615,14 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
     ) -> Option<Size> {
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
-        let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return None };
-        if limit.value_within_limit(Size::from_bytes(layout.size).bytes_usize()) {  None } else { Some(layout.size)}
+        let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else {
+            return None;
+        };
+        if limit.value_within_limit(Size::from_bytes(layout.size).bytes_usize()) {
+            None
+        } else {
+            Some(layout.size)
+        }
     }
 
     fn check_move_into_fn(
@@ -671,7 +677,8 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             {
                 assert_eq!(hir_args.len(), mir_args.len());
                 for (idx, callee_arg) in mir_args.iter().enumerate() {
-                    if let Some(too_large_size) = self.operand_size_if_too_large(limit, callee_arg) {
+                    if let Some(too_large_size) = self.operand_size_if_too_large(limit, callee_arg)
+                    {
                         self.maybe_lint_large_assignment(
                             limit,
                             too_large_size,
