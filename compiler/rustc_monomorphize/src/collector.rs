@@ -629,13 +629,19 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         location: Location,
     ) {
         let limit = self.tcx.move_size_limit();
+        debug!("{}", limit.0);
         if limit.0 == 0 {
             return;
         }
+        debug!("cp 1");
 
         let ty::FnDef(def_id, _) = *callee_ty.kind() else { return };
 
+        debug!("cp 12");
+
         let Some(local_def_id) = def_id.as_local() else { return };
+
+        debug!("cp 13");
 
         /// Allow large moves into container types that themselves are cheap to move
         static SKIP_MOVE_CHECK_FNS: std::sync::OnceLock<Vec<DefId>> = std::sync::OnceLock::new();
@@ -667,12 +673,19 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             return;
         }
 
-        if let Some(hir::Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
+        let foo = tcx.hir().find_by_def_id(local_def_id);
+
+        debug!("cp 135 {:#?}", foo);
+
+
+        if let Some(hir::Node::Expr(expr)) = foo {
             if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) =
                 expr.kind
             {
+                debug!("cp 1351");
                 assert_eq!(hir_args.len(), mir_args.len());
                 for (idx, callee_arg) in mir_args.iter().enumerate() {
+                    debug!(?callee_arg);
                     if let Some(too_large_size) = self.operand_size_if_too_large(limit, callee_arg)
                     {
                         self.maybe_lint_large_assignment(
