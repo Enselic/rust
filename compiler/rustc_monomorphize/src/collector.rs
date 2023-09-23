@@ -610,17 +610,17 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
 
     fn operand_size_if_too_large(
         &mut self,
-        limit: usize,
+        size_limit: Size,
         operand: &mir::Operand<'tcx>,
     ) -> Option<Size> {
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
-        let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return };
-        let limit = Size::from_bytes(limit);
-        if layout.size > limit { Some(layout.size) } else { None }
+        let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return None };
+        if layout.size > size_limit { Some(layout.size) } else { None }
     }
 
     fn check_move_into_fn(
+        &mut self,
         tcx: TyCtxt<'tcx>,
         callee_ty: Ty<'tcx>,
         callee_args: &[mir::Operand<'tcx>],
@@ -836,7 +836,7 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
             mir::TerminatorKind::Call { ref func, args: ref callee_args, .. } => {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
-                check_move_into_fn(tcx, callee_ty, callee_args, location);
+                self.check_move_into_fn(tcx, callee_ty, callee_args, location);
                 visit_fn_use(self.tcx, callee_ty, true, source, &mut self.output);
             }
             mir::TerminatorKind::Drop { ref place, .. } => {
@@ -888,11 +888,6 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
         }
 
         self.super_terminator(terminator, location);
-    }
-
-    fn visit_operand(&mut self, operand: &mir::Operand<'tcx>, location: Location) {
-        self.super_operand(operand, location);
-        self.check_move_size(operand, location);
     }
 
     fn visit_local(
