@@ -610,24 +610,24 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
 
     fn operand_size_if_too_large(
         &mut self,
-        size_limit: Size,
+        limit: Limit,
         operand: &mir::Operand<'tcx>,
     ) -> Option<Size> {
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
         let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return None };
-        if layout.size > size_limit { Some(layout.size) } else { None }
+        if limit.value_within_limit(Size::from_bytes(layout.size).bytes_usize()) {  None } else { Some(layout.size)}
     }
 
     fn check_move_into_fn(
         &mut self,
         tcx: TyCtxt<'tcx>,
         callee_ty: Ty<'tcx>,
-        callee_args: &[mir::Operand<'tcx>],
+        mir_args: &[mir::Operand<'tcx>],
         location: Location,
     ) {
-        let limit = self.tcx.move_size_limit().0;
-        if limit == 0 {
+        let limit = self.tcx.move_size_limit();
+        if limit.0 == 0 {
             return;
         }
 
@@ -669,9 +669,9 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) =
                 expr.kind
             {
-                assert_eq!(args.len(), callee_args.len());
-                for (idx, callee_arg) in callee_args.iter().enumerate() {
-                    if let Some(too_large_size) = self.operand_size_if_too_large(arg) {
+                assert_eq!(hir_args.len(), mir_args.len());
+                for (idx, callee_arg) in mir_args.iter().enumerate() {
+                    if let Some(too_large_size) = self.operand_size_if_too_large(limit, callee_arg) {
                         self.maybe_lint_large_assignment(
                             limit,
                             too_large_size,
