@@ -608,16 +608,16 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         )
     }
 
-    fn operand_size_if_too_large(&mut self, limit: usize, operand: &mir::Operand<'tcx>) -> Option<Size> {
+    fn operand_size_if_too_large(
+        &mut self,
+        limit: usize,
+        operand: &mir::Operand<'tcx>,
+    ) -> Option<Size> {
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
         let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return };
         let limit = Size::from_bytes(limit);
-        if layout.size > limit {
-            Some(layout.size)
-        } else {
-            None
-        }
+        if layout.size > limit { Some(layout.size) } else { None }
     }
 
     fn check_move_into_fn(
@@ -637,45 +637,60 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
 
         /// Allow large moves into container types that themselves are cheap to move
         static SKIP_MOVE_CHECK_FNS: OnceCell<Vec<DefId>> = OnceCell::new();
-        if SKIP_MOVE_CHECK_FNS.get_or_init(|| {
-            let mut skip_move_check_fns = vec![];
-            add_assoc_fn(
-                tcx,
-                tcx.lang_items().owned_box(),
-                Ident::from_str("new"),
-                &mut skip_move_check_fns,
-            );
-            add_assoc_fn(
-                tcx,
-                tcx.get_diagnostic_item(sym::Arc),
-                Ident::from_str("new"),
-                &mut skip_move_check_fns,
-            );
-            add_assoc_fn(
-                tcx,
-                tcx.get_diagnostic_item(sym::Rc),
-                Ident::from_str("new"),
-                &mut skip_move_check_fns,
-            );
-            skip_move_check_fns
-        }).contains(&def_id) {
+        if SKIP_MOVE_CHECK_FNS
+            .get_or_init(|| {
+                let mut skip_move_check_fns = vec![];
+                add_assoc_fn(
+                    tcx,
+                    tcx.lang_items().owned_box(),
+                    Ident::from_str("new"),
+                    &mut skip_move_check_fns,
+                );
+                add_assoc_fn(
+                    tcx,
+                    tcx.get_diagnostic_item(sym::Arc),
+                    Ident::from_str("new"),
+                    &mut skip_move_check_fns,
+                );
+                add_assoc_fn(
+                    tcx,
+                    tcx.get_diagnostic_item(sym::Rc),
+                    Ident::from_str("new"),
+                    &mut skip_move_check_fns,
+                );
+                skip_move_check_fns
+            })
+            .contains(&def_id)
+        {
             return;
         }
 
         if let Some(Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
-            if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) = expr.kind
+            if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) =
+                expr.kind
             {
                 assert_eq!(args.len(), callee_args.len());
                 for (idx, callee_arg) in callee_args.iter().enumerate() {
-                    if let Some(too_large_size) = self.operand_size_if_too_large(arg) { 
-                        self.maybe_lint_large_assignment(limit, too_large_size, location, hir_args[idx].span);
+                    if let Some(too_large_size) = self.operand_size_if_too_large(arg) {
+                        self.maybe_lint_large_assignment(
+                            limit,
+                            too_large_size,
+                            location,
+                            hir_args[idx].span,
+                        );
                     };
                 }
             }
         }
     }
 
-    fn maybe_lint_large_assignment(&mut self, limit: usize, too_large_size: Size, location: Location, span: Span) {
+    fn maybe_lint_large_assignment(
+        &mut self,
+        limit: usize,
+        too_large_size: Size,
+        location: Location,
+        span: Span,
+    ) {
         let source_info = self.body.source_info(location);
         debug!(?source_info);
         for reported_span in &self.move_size_spans {
@@ -697,11 +712,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             LARGE_ASSIGNMENTS,
             lint_root,
             span,
-            LargeAssignmentsLint {
-                span,
-                size: too_large_size,
-                limit,
-            },
+            LargeAssignmentsLint { span, size: too_large_size, limit },
         );
         self.move_size_spans.push(span);
     }
@@ -750,13 +761,7 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
             ) => {
                 let fn_ty = operand.ty(self.body, self.tcx);
                 let fn_ty = self.monomorphize(fn_ty);
-                visit_fn_use(
-                    self.tcx,
-                    fn_ty,
-                    false,
-                    span,
-                    &mut self.output,
-                );
+                visit_fn_use(self.tcx, fn_ty, false, span, &mut self.output);
             }
             mir::Rvalue::Cast(
                 mir::CastKind::PointerCoercion(PointerCoercion::ClosureFnPointer(_)),
@@ -832,13 +837,7 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
                 check_move_into_fn(tcx, callee_ty, callee_args, location);
-                visit_fn_use(
-                    self.tcx,
-                    callee_ty,
-                    true,
-                    source,
-                    &mut self.output,
-                );
+                visit_fn_use(self.tcx, callee_ty, true, source, &mut self.output);
             }
             mir::TerminatorKind::Drop { ref place, .. } => {
                 let ty = place.ty(self.body, self.tcx).ty;
@@ -927,7 +926,12 @@ fn visit_fn_use<'tcx>(
         let instance = if is_direct_call {
             ty::Instance::expect_resolve(tcx, ty::ParamEnv::reveal_all(), def_id, args_ref)
         } else {
-            match ty::Instance::resolve_for_fn_ptr(tcx, ty::ParamEnv::reveal_all(), def_id, args_ref) {
+            match ty::Instance::resolve_for_fn_ptr(
+                tcx,
+                ty::ParamEnv::reveal_all(),
+                def_id,
+                args_ref,
+            ) {
                 Some(instance) => instance,
                 _ => bug!("failed to resolve instance for {ty}"),
             }
@@ -1449,14 +1453,8 @@ fn collect_used_items<'tcx>(
 ) {
     let body = tcx.instance_mir(instance.def);
 
-    MirUsedCollector {
-        tcx,
-        body: &body,
-        output,
-        instance,
-        move_size_spans: vec![],
-    }
-    .visit_body(&body);
+    MirUsedCollector { tcx, body: &body, output, instance, move_size_spans: vec![] }
+        .visit_body(&body);
 }
 
 #[instrument(skip(tcx, output), level = "debug")]
