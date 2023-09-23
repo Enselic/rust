@@ -624,14 +624,17 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         tcx: TyCtxt<'tcx>,
         callee_ty: Ty<'tcx>,
         callee_args: &[mir::Operand<'tcx>],
+        location: Location,
     ) {
         let limit = self.tcx.move_size_limit().0;
         if limit == 0 {
             return;
         }
-    
+
         let ty::FnDef(def_id, _) = *ty.kind() else { return };
-    
+
+        let Some(local_def_id) = def_id.as_local() else { return };
+
         /// Allow large moves into container types that themselves are cheap to move
         static SKIP_MOVE_CHECK_FNS: OnceCell<Vec<DefId>> = OnceCell::new();
         if SKIP_MOVE_CHECK_FNS.get_or_init(|| {
@@ -659,22 +662,22 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             return;
         }
 
-
-        let Some(local_def_id) = def_id.as_local() else { return };
-
         if let Some(Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
             if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) = expr.kind
             {
                 assert_eq!(args.len(), callee_args.len());
                 for (idx, callee_arg) in callee_args.iter().enumerate() {
-                    let Some(too_large_size) = self.operand_size_if_too_large(arg) else { continue };
+                    if let Some(too_large_size) = self.operand_size_if_too_large(arg) { 
+                        self.maybe_lint_large_assignment(limit, too_large_size, location, hir_args[idx].span);
+                    };
                 }
             }
         }
     }
 
-    fn maybe_lint_large_assignment(&mut self, source_info: &SourceInfo, span: &Span) {
-        debug!(?source_info, ?span);
+    fn maybe_lint_large_assignment(&mut self, limit: usize, too_large_size: Size, location: Location, span: Span) {
+        let source_info = self.body.source_info(location);
+        debug!(?source_info);
         for reported_span in &self.move_size_spans {
             if reported_span.overlaps(span) {
                 return;
@@ -695,9 +698,9 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             lint_root,
             span,
             LargeAssignmentsLint {
-                span: span,
-                size: layout.size.bytes(),
-                limit: limit.bytes(),
+                span,
+                size: too_large_size,
+                limit,
             },
         );
         self.move_size_spans.push(span);
@@ -828,7 +831,7 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
             mir::TerminatorKind::Call { ref func, args: ref callee_args, .. } => {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
-                check_move_into_fn(tcx, callee_ty, callee_args);
+                check_move_into_fn(tcx, callee_ty, callee_args, location);
                 visit_fn_use(
                     self.tcx,
                     callee_ty,
@@ -916,7 +919,6 @@ fn visit_drop_use<'tcx>(
 fn visit_fn_use<'tcx>(
     tcx: TyCtxt<'tcx>,
     ty: Ty<'tcx>,
-    args: &[mir::Operand<'tcx>],
     is_direct_call: bool,
     source: Span,
     output: &mut MonoItems<'tcx>,
