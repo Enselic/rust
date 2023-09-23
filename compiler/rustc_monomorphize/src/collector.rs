@@ -610,39 +610,26 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         )
     }
 
-    fn move_too_large(&mut self, operand: &mir::Operand<'tcx>) -> bool {
+    fn move_too_large(&mut self, operand: &mir::Operand<'tcx>) -> Option<TyAndLayout<'tcx>> {
         let limit = self.tcx.move_size_limit().0;
-        if limit > 0 {
+        if limit == 0 {
             return false;
         }
         let limit = Size::from_bytes(limit);
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
         let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else { return };
-        if layout.size <= limit {
-            return;
+        if layout.size > limit {
+            Some(layout)
+        } else {
+            None
         }
-        debug!(?layout);
+    }
 
-//         let block = &self.body[location.block];
-//         let stmts = &block.statements;
-//         let idx = location.statement_index;
-//         let (source_info, span) = if idx < stmts.len() {
-//             let source_info = &stmts[idx].source_info;
-//             (source_info, source_info.span)
-//         } else {
-//             assert_eq!(idx, stmts.len());
-//             let terminator = &block.terminator();
-//             match terminator.kind {
-//                 mir::TerminatorKind::Call { func, .. } => (source_info, source_info.span),
-//                 _ => (terminator.source_info, terminator.source_info.span),
-//             }
-//         }
-
-        let source_info = self.body.source_info(location);
-        debug!(?source_info);
-        for span in &self.move_size_spans {
-            if span.overlaps(source_info.span) {
+    fn maybe_lint_large_assignment(&mut self, source_info: &SourceInfo, span: &Span) {
+        debug!(?source_info, ?span);
+        for reported_span in &self.move_size_spans {
+            if reported_span.overlaps(span) {
                 return;
             }
         }
@@ -659,14 +646,14 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         self.tcx.emit_spanned_lint(
             LARGE_ASSIGNMENTS,
             lint_root,
-            source_info.span,
+            span,
             LargeAssignmentsLint {
-                span: source_info.span,
+                span: span,
                 size: layout.size.bytes(),
                 limit: limit.bytes(),
             },
         );
-        self.move_size_spans.push(source_info.span);
+        self.move_size_spans.push(span);
     }
 }
 
@@ -795,19 +782,15 @@ impl<'a, 'tcx> MirVisitor<'tcx> for MirUsedCollector<'a, 'tcx> {
             mir::TerminatorKind::Call { ref func, ref args, .. } => {
                 let callee_ty = func.ty(self.body, tcx);
                 let callee_ty = self.monomorphize(callee_ty);
-                let skip_move_size_check = visit_fn_use(
+                visit_fn_use(
                     self.tcx,
                     callee_ty,
+                    args,
                     true,
                     source,
                     &mut self.output,
                     &self.skip_move_check_fns,
                 );
-                if !skip_move_size_check {
-                    for arg in args {
-                        self.check_move_size(arg, location);
-                    }
-                }
             }
             mir::TerminatorKind::Drop { ref place, .. } => {
                 let ty = place.ty(self.body, self.tcx).ty;
@@ -885,20 +868,65 @@ fn visit_drop_use<'tcx>(
     visit_instance_use(tcx, instance, is_direct_call, source, output);
 }
 
+fn check_move_into_fn(
+    tcx: TyCtxt<'tcx>,
+    fn_def_id: DefId,
+    fn_args: &[mir::Operand<'tcx>],
+    skip_move_check_fns: &[DefId],
+) {
+    let limit = self.tcx.move_size_limit().0;
+    if limit == 0 {
+        return;
+    }
+
+    if skip_move_check_fns.contains(&def_id) {
+        return;
+    }
+
+    let Some(layout) = self.move_too_large(arg) else { return };
+
+    let Some(local_def_id) = def_id.as_local() else { return };
+
+
+    
+              if let Some(Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
+                if let hir::ExprKind::Call(_, args)
+                | hir::ExprKind::MethodCall(_, _, args)
+                 = expr.kind
+                {
+                    if Some(*span) != err.span.primary_span() {
+                        err.span_label(*span, "required by a bound introduced by this call");
+                    }
+                }
+    
+                match  {
+                    Some(hir::Expr::Item(item)) => {
+                        let span = item.span;
+                        let source_info = SourceInfo {
+                            span,
+                            scope: region::Scope::CallSite(hir::ItemLocalId::from_u32(idx as u32)),
+                }
+                self.maybe_lint_large_assignment(source_info, &layout.span);
+            }
+        }
+    }
+
+}
+
 fn visit_fn_use<'tcx>(
     tcx: TyCtxt<'tcx>,
     ty: Ty<'tcx>,
+    args: &[mir::Operand<'tcx>],
     is_direct_call: bool,
     source: Span,
     output: &mut MonoItems<'tcx>,
     skip_move_check_fns: &[DefId],
 ) -> bool {
-    if let ty::FnDef(def_id, args) = *ty.kind() {
-        skip_move_check_fns.contains(&def_id);
+    if let ty::FnDef(def_id, args_ref) = *ty.kind() {
         let instance = if is_direct_call {
-            ty::Instance::expect_resolve(tcx, ty::ParamEnv::reveal_all(), def_id, args)
+            ty::Instance::expect_resolve(tcx, ty::ParamEnv::reveal_all(), def_id, args_ref)
         } else {
-            match ty::Instance::resolve_for_fn_ptr(tcx, ty::ParamEnv::reveal_all(), def_id, args) {
+            match ty::Instance::resolve_for_fn_ptr(tcx, ty::ParamEnv::reveal_all(), def_id, args_ref) {
                 Some(instance) => instance,
                 _ => bug!("failed to resolve instance for {ty}"),
             }
