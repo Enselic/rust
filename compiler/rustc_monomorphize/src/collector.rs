@@ -618,11 +618,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else {
             return None;
         };
-        if limit.value_within_limit(Size::from_bytes(layout.size).bytes_usize()) {
-            None
-        } else {
-            Some(layout.size)
-        }
+        if layout.size.bytes_usize() > limit.0 { Some(layout.size) } else { None }
     }
 
     fn check_move_into_fn(
@@ -637,12 +633,12 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             return;
         }
 
-        let ty::FnDef(def_id, _) = *ty.kind() else { return };
+        let ty::FnDef(def_id, _) = *callee_ty.kind() else { return };
 
         let Some(local_def_id) = def_id.as_local() else { return };
 
         /// Allow large moves into container types that themselves are cheap to move
-        static SKIP_MOVE_CHECK_FNS: OnceCell<Vec<DefId>> = OnceCell::new();
+        static SKIP_MOVE_CHECK_FNS: std::sync::OnceLock<Vec<DefId>> = std::sync::OnceLock::new();
         if SKIP_MOVE_CHECK_FNS
             .get_or_init(|| {
                 let mut skip_move_check_fns = vec![];
@@ -671,7 +667,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             return;
         }
 
-        if let Some(Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
+        if let Some(hir::Node::Expr(expr)) = tcx.hir().find_by_def_id(local_def_id) {
             if let hir::ExprKind::Call(_, hir_args) | hir::ExprKind::MethodCall(_, _, hir_args, _) =
                 expr.kind
             {
@@ -680,7 +676,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
                     if let Some(too_large_size) = self.operand_size_if_too_large(limit, callee_arg)
                     {
                         self.maybe_lint_large_assignment(
-                            limit,
+                            limit.0,
                             too_large_size,
                             location,
                             hir_args[idx].span,
@@ -719,7 +715,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
             LARGE_ASSIGNMENTS,
             lint_root,
             span,
-            LargeAssignmentsLint { span, size: too_large_size, limit },
+            LargeAssignmentsLint { span, size: too_large_size.bytes(), limit: limit as u64 },
         );
         self.move_size_spans.push(span);
     }
@@ -923,7 +919,7 @@ fn visit_fn_use<'tcx>(
     is_direct_call: bool,
     source: Span,
     output: &mut MonoItems<'tcx>,
-) -> bool {
+) {
     if let ty::FnDef(def_id, args_ref) = *ty.kind() {
         let instance = if is_direct_call {
             ty::Instance::expect_resolve(tcx, ty::ParamEnv::reveal_all(), def_id, args_ref)
