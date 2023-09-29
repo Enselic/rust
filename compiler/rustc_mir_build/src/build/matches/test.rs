@@ -263,7 +263,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                             unwind: UnwindAction::Continue,
                             call_source: CallSource::Misc,
                             fn_span: source_info.span,
-                            arg_spans: vec![],
+                            arg_spans: vec![DUMMY_SP],
                         }
                     );
                     self.non_scalar_compare(eq_block, make_target_blocks, source_info, value, ref_str, ref_str_ty);
@@ -500,7 +500,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                 unwind: UnwindAction::Continue,
                 call_source: CallSource::MatchCmp,
                 fn_span: source_info.span,
-                arg_spans: vec![],
+                arg_spans: vec![DUMMY_SP, DUMMY_SP],
             },
         );
         self.diverge_from(block);

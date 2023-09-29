@@ -9,7 +9,7 @@ use rustc_target::abi::{FieldIdx, VariantIdx, FIRST_VARIANT};
 
 use rustc_index::{Idx, IndexVec};
 
-use rustc_span::Span;
+use rustc_span::{Span, DUMMY_SP};
 use rustc_target::spec::abi::Abi;
 
 use std::fmt;
@@ -529,7 +529,7 @@ impl<'tcx> CloneShimBuilder<'tcx> {
                 unwind: UnwindAction::Cleanup(cleanup),
                 call_source: CallSource::Normal,
                 fn_span: self.span,
-                arg_spans: vec![],
+                arg_spans: vec![DUMMY_SP],
             },
             false,
         );
@@ -824,7 +824,7 @@ fn build_call_shim<'tcx>(
             },
             call_source: CallSource::Misc,
             fn_span: span,
-            arg_spans: vec![],
+            arg_spans: args.map(|_| DUMMY_SP),
         },
         false,
     );

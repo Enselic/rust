@@ -17,7 +17,7 @@ use rustc_middle::thir::*;
 use rustc_middle::ty::cast::{mir_cast_kind, CastTy};
 use rustc_middle::ty::layout::IntegerExt;
 use rustc_middle::ty::{self, Ty, UpvarArgs};
-use rustc_span::Span;
+use rustc_span::{Span, DUMMY_SP};
 
 impl<'a, 'tcx> Builder<'a, 'tcx> {
     /// Returns an rvalue suitable for use until the end of the current
@@ -175,7 +175,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                         unwind: UnwindAction::Continue,
                         call_source: CallSource::Misc,
                         fn_span: expr_span,
-                        arg_spans: vec![],
+                        arg_spans: vec![DUMMY_SP, DUMMY_SP],
                     },
                 );
                 this.diverge_from(block);

@@ -7,6 +7,7 @@ use rustc_middle::traits::Reveal;
 use rustc_middle::ty::util::IntTypeExt;
 use rustc_middle::ty::GenericArgsRef;
 use rustc_middle::ty::{self, Ty, TyCtxt};
+use rustc_span::DUMMY_SP;
 use rustc_target::abi::{FieldIdx, VariantIdx, FIRST_VARIANT};
 use std::{fmt, iter};
 
@@ -662,7 +663,7 @@ where
                     unwind: unwind.into_action(),
                     call_source: CallSource::Misc,
                     fn_span: self.source_info.span,
-                    arg_spans: vec![],
+                    arg_spans: vec![DUMMY_SP],
                 },
                 source_info: self.source_info,
             }),

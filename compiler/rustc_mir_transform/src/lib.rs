@@ -156,6 +156,7 @@ fn remap_mir_for_const_eval_select<'tcx>(
                 target,
                 unwind,
                 fn_span,
+                arg_spans,
                 ..
             } if let ty::FnDef(def_id, _) = *const_.ty().kind()
                 && tcx.item_name(def_id) == sym::const_eval_select
@@ -191,7 +192,7 @@ fn remap_mir_for_const_eval_select<'tcx>(
                     };
                     method(place)
                 }).collect();
-                terminator.kind = TerminatorKind::Call { func, args: arguments, destination, target, unwind, call_source: CallSource::Misc, fn_span,                 arg_spans: vec![]                };
+                terminator.kind = TerminatorKind::Call { func, args: arguments, destination, target, unwind, call_source: CallSource::Misc, fn_span, arg_spans };
             }
             _ => {}
         }
