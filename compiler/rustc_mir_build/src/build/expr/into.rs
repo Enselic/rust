@@ -9,6 +9,7 @@ use rustc_hir as hir;
 use rustc_middle::mir::*;
 use rustc_middle::thir::*;
 use rustc_middle::ty::CanonicalUserTypeAnnotation;
+use rustc_span::DUMMY_SP;
 use std::iter;
 
 impl<'a, 'tcx> Builder<'a, 'tcx> {
@@ -246,6 +247,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     .copied()
                     .map(|arg| unpack!(block = this.as_local_call_operand(block, &this.thir[arg])))
                     .collect();
+                let arg_spans = args.iter().map(|_| DUMMY_SP).collect();
 
                 let success = this.cfg.start_new_block();
 
@@ -259,7 +261,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     TerminatorKind::Call {
                         func: fun,
                         args,
-                        arg_spans: args.iter().map(|_| DUMMY_SP),
+                        arg_spans,
                         unwind: UnwindAction::Continue,
                         destination,
                         // The presence or absence of a return edge affects control-flow sensitive

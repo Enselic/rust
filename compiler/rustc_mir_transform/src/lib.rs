@@ -152,7 +152,7 @@ fn remap_mir_for_const_eval_select<'tcx>(
             TerminatorKind::Call {
                 func: Operand::Constant(box ConstOperand { ref const_, .. }),
                 ref mut args,
-                arg_spans,
+                ref mut arg_spans,
                 destination,
                 target,
                 unwind,
@@ -192,7 +192,7 @@ fn remap_mir_for_const_eval_select<'tcx>(
                     };
                     method(place)
                 }).collect();
-                terminator.kind = TerminatorKind::Call { func, args: arguments, destination, target, unwind, call_source: CallSource::Misc, fn_span, arg_spans };
+                terminator.kind = TerminatorKind::Call { func, args: arguments, arg_spans: std::mem::take(arg_spans), destination, target, unwind, call_source: CallSource::Misc, fn_span };
             }
             _ => {}
         }

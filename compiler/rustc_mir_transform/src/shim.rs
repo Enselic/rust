@@ -809,13 +809,14 @@ fn build_call_shim<'tcx>(
     };
 
     // BB #0
+    let arg_spans = args.iter().map(|_| DUMMY_SP).collect();
     block(
         &mut blocks,
         statements,
         TerminatorKind::Call {
             func: callee,
             args,
-            arg_spans: args.map(|_| DUMMY_SP),
+            arg_spans,
             destination: Place::return_place(),
             target: Some(BasicBlock::new(1)),
             unwind: if let Some(Adjustment::RefMut) = rcvr_adjustment {

@@ -19,7 +19,7 @@ use rustc_middle::ty::GenericArg;
 use rustc_middle::ty::{self, adjustment::PointerCoercion, Ty, TyCtxt};
 use rustc_span::def_id::DefId;
 use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use rustc_span::{Span, DUMMY_SP};
 use rustc_target::abi::VariantIdx;
 
 use std::cmp::Ordering;

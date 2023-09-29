@@ -121,10 +121,11 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                     .iter()
                     .map(|arg| self.parse_operand(*arg))
                     .collect::<PResult<Vec<_>>>()?;
+                let arg_spans = args.iter().map(|_| DUMMY_SP).collect();
                 Ok(TerminatorKind::Call {
                     func: fun,
                     args,
-                    arg_spans: args.iter().map(DUMMY_SP),
+                    arg_spans,
                     destination,
                     target: Some(target),
                     unwind: UnwindAction::Continue,
