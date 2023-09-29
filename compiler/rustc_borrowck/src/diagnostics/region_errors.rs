@@ -1018,7 +1018,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
         let expr = &map.body(body_id).value.peel_blocks();
         let mut closure_span = None::<rustc_span::Span>;
         match expr.kind {
-            hir::ExprKind::MethodCall(.., args, _) => {
+            hir::ExprKind::MethodCall(.., args, _, _) => {
                 for arg in args {
                     if let hir::ExprKind::Closure(hir::Closure {
                         capture_clause: hir::CaptureBy::Ref,

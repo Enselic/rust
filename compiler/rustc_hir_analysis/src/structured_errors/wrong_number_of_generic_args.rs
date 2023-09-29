@@ -798,7 +798,7 @@ impl<'a, 'tcx> WrongNumberOfGenericArgs<'a, 'tcx> {
         num_trait_generics_except_self: usize,
     ) {
         let sm = self.tcx.sess.source_map();
-        let hir::ExprKind::MethodCall(_, rcvr, args, _) = expr.kind else {
+        let hir::ExprKind::MethodCall(_, rcvr, args, _, _) = expr.kind else {
             return;
         };
         if num_assoc_fn_excess_args != num_trait_generics_except_self {

@@ -1688,7 +1688,7 @@ pub struct ConstBlock {
 }
 
 /// An expression.
-#[derive(Debug, Clone, Copy, HashStable_Generic)]
+#[derive(Debug, Clone, HashStable_Generic)]
 pub struct Expr<'hir> {
     pub hir_id: HirId,
     pub kind: ExprKind<'hir>,
@@ -1934,7 +1934,7 @@ pub fn is_range_literal(expr: &Expr<'_>) -> bool {
     }
 }
 
-#[derive(Debug, Clone, Copy, HashStable_Generic)]
+#[derive(Debug, Clone, HashStable_Generic)]
 pub enum ExprKind<'hir> {
     /// Allow anonymous constants from an inline `const` block
     ConstBlock(ConstBlock),
@@ -1963,7 +1963,7 @@ pub enum ExprKind<'hir> {
     /// the `hir_id` of the `MethodCall` node itself.
     ///
     /// [`type_dependent_def_id`]: ../../rustc_middle/ty/struct.TypeckResults.html#method.type_dependent_def_id
-    MethodCall(&'hir PathSegment<'hir>, &'hir Expr<'hir>, &'hir [Expr<'hir>], Span),
+    MethodCall(&'hir PathSegment<'hir>, &'hir Expr<'hir>, &'hir [Expr<'hir>], Span, Vec<Span>),
     /// A tuple (e.g., `(a, b, c, d)`).
     Tup(&'hir [Expr<'hir>]),
     /// A binary operation (e.g., `a + b`, `a * b`).
@@ -4082,8 +4082,8 @@ mod size_asserts {
     // tidy-alphabetical-start
     static_assert_size!(Block<'_>, 48);
     static_assert_size!(Body<'_>, 32);
-    static_assert_size!(Expr<'_>, 64);
-    static_assert_size!(ExprKind<'_>, 48);
+    static_assert_size!(Expr<'_>, 88);
+    static_assert_size!(ExprKind<'_>, 72);
     static_assert_size!(FnDecl<'_>, 40);
     static_assert_size!(ForeignItem<'_>, 72);
     static_assert_size!(ForeignItemKind<'_>, 40);

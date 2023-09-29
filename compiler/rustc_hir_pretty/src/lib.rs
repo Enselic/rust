@@ -1384,7 +1384,7 @@ impl<'a> State<'a> {
             hir::ExprKind::Call(func, args) => {
                 self.print_expr_call(func, args);
             }
-            hir::ExprKind::MethodCall(segment, receiver, args, _) => {
+            hir::ExprKind::MethodCall(segment, receiver, args, _, _) => {
                 self.print_expr_method_call(segment, receiver, args);
             }
             hir::ExprKind::Binary(op, lhs, rhs) => {

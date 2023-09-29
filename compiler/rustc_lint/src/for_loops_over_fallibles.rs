@@ -103,7 +103,7 @@ fn extract_iterator_next_call<'tcx>(
     expr: &Expr<'tcx>,
 ) -> Option<&'tcx Expr<'tcx>> {
     // This won't work for `Iterator::next(iter)`, is this an issue?
-    if let hir::ExprKind::MethodCall(_, recv, _, _) = expr.kind
+    if let hir::ExprKind::MethodCall(_, recv, _, _, _) = expr.kind
     && cx.typeck_results().type_dependent_def_id(expr.hir_id) == cx.tcx.lang_items().next_fn()
     {
         Some(recv)
