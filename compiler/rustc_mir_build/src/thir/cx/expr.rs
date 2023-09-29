@@ -279,6 +279,7 @@ impl<'tcx> Cx<'tcx> {
                     ty: expr.ty,
                     fun: self.thir.exprs.push(expr),
                     args,
+                    arg_spans: args.iter().map(|a| a.span).collect(),
                     from_hir_call: true,
                     fn_span,
                 }

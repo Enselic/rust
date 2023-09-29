@@ -50,7 +50,7 @@ pub fn walk_expr<'a, 'tcx: 'a, V: Visitor<'a, 'tcx>>(visitor: &mut V, expr: &Exp
                 visitor.visit_expr(&visitor.thir()[else_expr]);
             }
         }
-        Call { fun, ref args, ty: _, from_hir_call: _, fn_span: _ } => {
+        Call { fun, ref args, arg_spans: _, ty: _, from_hir_call: _, fn_span: _ } => {
             visitor.visit_expr(&visitor.thir()[fun]);
             for &arg in &**args {
                 visitor.visit_expr(&visitor.thir()[arg]);

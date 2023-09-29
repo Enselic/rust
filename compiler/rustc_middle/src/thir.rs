@@ -282,6 +282,9 @@ pub enum ExprKind<'tcx> {
         ty: Ty<'tcx>,
         /// The function itself.
         fun: ExprId,
+        /// The spans of the args
+        /// (e.g. `a` and `b` in `x.foo(a, b)`).
+        arg_spans: Vec<Span>,
         /// The arguments passed to the function.
         ///
         /// Note: in some cases (like calling a closure), the function call `f(...args)` gets
@@ -941,8 +944,8 @@ mod size_asserts {
     use super::*;
     // tidy-alphabetical-start
     static_assert_size!(Block, 56);
-    static_assert_size!(Expr<'_>, 64);
-    static_assert_size!(ExprKind<'_>, 40);
+    static_assert_size!(Expr<'_>, 88);
+    static_assert_size!(ExprKind<'_>, 64);
     static_assert_size!(Pat<'_>, 64);
     static_assert_size!(PatKind<'_>, 48);
     static_assert_size!(Stmt<'_>, 56);
