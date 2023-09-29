@@ -153,7 +153,14 @@ impl<'tcx> Cx<'tcx> {
                 let arg_spans = Box::new([expr.span]);
                 let args = Box::new([self.thir.exprs.push(expr)]);
 
-                self.overloaded_place(hir_expr, adjustment.target, Some(call), args, arg_spans, deref.span)
+                self.overloaded_place(
+                    hir_expr,
+                    adjustment.target,
+                    Some(call),
+                    args,
+                    arg_spans,
+                    deref.span,
+                )
             }
             Adjust::Borrow(AutoBorrow::Ref(_, m)) => ExprKind::Borrow {
                 borrow_kind: m.to_borrow_kind(),
@@ -1047,7 +1054,14 @@ impl<'tcx> Cx<'tcx> {
             temp_lifetime,
             ty: ref_ty,
             span,
-            kind: ExprKind::Call { ty: fun_ty, fun, args, arg_spans, from_hir_call: false, fn_span: span },
+            kind: ExprKind::Call {
+                ty: fun_ty,
+                fun,
+                args,
+                arg_spans,
+                from_hir_call: false,
+                fn_span: span,
+            },
         });
 
         // construct and return a deref wrapper `*foo()`
