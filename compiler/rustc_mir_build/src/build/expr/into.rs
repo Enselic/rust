@@ -9,7 +9,6 @@ use rustc_hir as hir;
 use rustc_middle::mir::*;
 use rustc_middle::thir::*;
 use rustc_middle::ty::CanonicalUserTypeAnnotation;
-use rustc_span::DUMMY_SP;
 use std::iter;
 
 impl<'a, 'tcx> Builder<'a, 'tcx> {

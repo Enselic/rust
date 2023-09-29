@@ -993,6 +993,7 @@ impl<'tcx> Cx<'tcx> {
         &mut self,
         expr: &'tcx hir::Expr<'tcx>,
         args: Box<[ExprId]>,
+        arg_spans: Vec<Span>,
     ) -> ExprKind<'tcx> {
         let fun = self.method_callee(expr, expr.span, None);
         let fun = self.thir.exprs.push(fun);
