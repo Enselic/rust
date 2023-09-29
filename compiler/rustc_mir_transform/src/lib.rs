@@ -152,11 +152,11 @@ fn remap_mir_for_const_eval_select<'tcx>(
             TerminatorKind::Call {
                 func: Operand::Constant(box ConstOperand { ref const_, .. }),
                 ref mut args,
+                arg_spans,
                 destination,
                 target,
                 unwind,
                 fn_span,
-                arg_spans,
                 ..
             } if let ty::FnDef(def_id, _) = *const_.ty().kind()
                 && tcx.item_name(def_id) == sym::const_eval_select

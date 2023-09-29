@@ -707,12 +707,12 @@ impl<'cx, 'tcx, R> rustc_mir_dataflow::ResultsVisitor<'cx, 'tcx, R> for MirBorro
             TerminatorKind::Call {
                 func,
                 args,
+                arg_spans: _,
                 destination,
                 target: _,
                 unwind: _,
                 call_source: _,
                 fn_span: _,
-                arg_spans: _,
             } => {
                 self.consume_operand(loc, (func, span), flow_state);
                 for arg in args {

@@ -31,12 +31,12 @@ impl<'tcx> Visitor<'tcx> for FunctionItemRefChecker<'_, 'tcx> {
         if let TerminatorKind::Call {
             func,
             args,
+            arg_spans: _,
             destination: _,
             target: _,
             unwind: _,
             call_source: _,
             fn_span: _,
-            arg_spans: _,
         } = &terminator.kind
         {
             let source_info = *self.body.source_info(location);

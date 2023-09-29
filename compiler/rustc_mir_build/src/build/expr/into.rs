@@ -259,6 +259,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     TerminatorKind::Call {
                         func: fun,
                         args,
+                        arg_spans: args.iter().map(|_| DUMMY_SP),
                         unwind: UnwindAction::Continue,
                         destination,
                         // The presence or absence of a return edge affects control-flow sensitive
@@ -275,7 +276,6 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                             CallSource::OverloadedOperator
                         },
                         fn_span,
-                        arg_spans: vec![],
                     },
                 );
                 this.diverge_from(block);

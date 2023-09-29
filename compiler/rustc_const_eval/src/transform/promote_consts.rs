@@ -800,9 +800,9 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
                 TerminatorKind::Call {
                     mut func,
                     mut args,
+                    arg_spans,
                     call_source: desugar,
                     fn_span,
-                    arg_spans,
                     ..
                 } => {
                     self.visit_operand(&mut func, loc);
@@ -817,12 +817,12 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
                         kind: TerminatorKind::Call {
                             func,
                             args,
+                            arg_spans,
                             unwind: UnwindAction::Continue,
                             destination: Place::from(new_temp),
                             target: Some(new_target),
                             call_source: desugar,
                             fn_span,
-                            arg_spans,
                         },
                         source_info: SourceInfo::outermost(terminator.source_info.span),
                         ..terminator

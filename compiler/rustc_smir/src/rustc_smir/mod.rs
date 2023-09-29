@@ -832,12 +832,12 @@ impl<'tcx> Stable<'tcx> for mir::Terminator<'tcx> {
             Call {
                 func,
                 args,
+                arg_spans: _,
                 destination,
                 target,
                 unwind,
                 call_source: _,
                 fn_span: _,
-                arg_spans: _,
             } => Terminator::Call {
                 func: func.stable(tables),
                 args: args.iter().map(|arg| arg.stable(tables)).collect(),

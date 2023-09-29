@@ -524,12 +524,12 @@ impl<'tcx> CloneShimBuilder<'tcx> {
             TerminatorKind::Call {
                 func,
                 args: vec![Operand::Move(ref_loc)],
+                arg_spans: vec![DUMMY_SP],
                 destination: dest,
                 target: Some(next),
                 unwind: UnwindAction::Cleanup(cleanup),
                 call_source: CallSource::Normal,
                 fn_span: self.span,
-                arg_spans: vec![DUMMY_SP],
             },
             false,
         );
@@ -815,6 +815,7 @@ fn build_call_shim<'tcx>(
         TerminatorKind::Call {
             func: callee,
             args,
+            arg_spans: args.map(|_| DUMMY_SP),
             destination: Place::return_place(),
             target: Some(BasicBlock::new(1)),
             unwind: if let Some(Adjustment::RefMut) = rcvr_adjustment {
@@ -824,7 +825,6 @@ fn build_call_shim<'tcx>(
             },
             call_source: CallSource::Misc,
             fn_span: span,
-            arg_spans: args.map(|_| DUMMY_SP),
         },
         false,
     );

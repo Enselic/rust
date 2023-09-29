@@ -471,12 +471,12 @@ impl<'b, 'a, 'tcx> Gatherer<'b, 'a, 'tcx> {
             TerminatorKind::Call {
                 ref func,
                 ref args,
+                arg_spans: _,
                 destination,
                 target,
                 unwind: _,
                 call_source: _,
                 fn_span: _,
-                arg_spans: _,
             } => {
                 self.gather_operand(func);
                 for arg in args {

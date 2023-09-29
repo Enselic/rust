@@ -170,12 +170,12 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     TerminatorKind::Call {
                         func: exchange_malloc,
                         args: vec![Operand::Move(size), Operand::Move(align)],
+                        arg_spans: vec![DUMMY_SP, DUMMY_SP],
                         destination: storage,
                         target: Some(success),
                         unwind: UnwindAction::Continue,
                         call_source: CallSource::Misc,
                         fn_span: expr_span,
-                        arg_spans: vec![DUMMY_SP, DUMMY_SP],
                     },
                 );
                 this.diverge_from(block);

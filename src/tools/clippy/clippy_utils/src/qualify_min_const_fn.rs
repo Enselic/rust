@@ -310,12 +310,12 @@ fn check_terminator<'tcx>(
         TerminatorKind::Call {
             func,
             args,
+            arg_spans: _,
             call_source: _,
             destination: _,
             target: _,
             unwind: _,
             fn_span: _,
-            arg_spans: _,
         } => {
             let fn_ty = func.ty(body, tcx);
             if let ty::FnDef(fn_def_id, _) = *fn_ty.kind() {

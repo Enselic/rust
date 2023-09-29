@@ -1661,12 +1661,12 @@ impl<'tcx> Visitor<'tcx> for EnsureGeneratorFieldAssignmentsNeverAlias<'_> {
             TerminatorKind::Call {
                 func,
                 args,
+                arg_spans: _,
                 destination,
                 target: Some(_),
                 unwind: _,
                 call_source: _,
                 fn_span: _,
-                arg_spans: _,
             } => {
                 self.check_assigned_place(*destination, |this| {
                     this.visit_operand(func, location);

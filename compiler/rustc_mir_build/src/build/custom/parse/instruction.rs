@@ -2,7 +2,7 @@ use rustc_middle::mir::interpret::Scalar;
 use rustc_middle::mir::tcx::PlaceTy;
 use rustc_middle::ty::cast::mir_cast_kind;
 use rustc_middle::{mir::*, thir::*, ty};
-use rustc_span::Span;
+use rustc_span::{Span, DUMMY_SP};
 use rustc_target::abi::{FieldIdx, VariantIdx};
 
 use crate::build::custom::ParseError;
@@ -124,6 +124,7 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                 Ok(TerminatorKind::Call {
                     func: fun,
                     args,
+                    arg_spans: args.iter().map(DUMMY_SP),
                     destination,
                     target: Some(target),
                     unwind: UnwindAction::Continue,
@@ -131,7 +132,6 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                         CallSource::OverloadedOperator
                     },
                     fn_span: *fn_span,
-                    arg_spans: vec![],
                 })
             },
         )
