@@ -42,6 +42,7 @@ fn mock_body<'tcx>() -> mir::Body<'tcx> {
             unwind: mir::UnwindAction::Continue,
             call_source: mir::CallSource::Misc,
             fn_span: DUMMY_SP,
+            arg_spans: vec![],
         },
     );
     block(3, mir::TerminatorKind::Return);
@@ -56,6 +57,7 @@ fn mock_body<'tcx>() -> mir::Body<'tcx> {
             unwind: mir::UnwindAction::Continue,
             call_source: mir::CallSource::Misc,
             fn_span: DUMMY_SP,
+            arg_spans: vec![],
         },
     );
 

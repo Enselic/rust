@@ -275,6 +275,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                             CallSource::OverloadedOperator
                         },
                         fn_span,
+                        arg_spans: vec![],
                     },
                 );
                 this.diverge_from(block);

@@ -682,6 +682,9 @@ pub enum TerminatorKind<'tcx> {
         /// This `Span` is the span of the function, without the dot and receiver
         /// e.g. `foo(a, b)` in `x.foo(a, b)`
         fn_span: Span,
+        /// The spans of the args
+        /// (e.g. `a` and `b` in `x.foo(a, b)`).
+        arg_spans: Vec<Span>,
     },
 
     /// Evaluates the operand, which must have type `bool`. If it is not equal to `expected`,

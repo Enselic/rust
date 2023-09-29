@@ -439,6 +439,7 @@ fn codegen_fn_body(fx: &mut FunctionCx<'_, '_, '_>, start_block: Block) {
                 destination,
                 target,
                 fn_span,
+                arg_spans: _,
                 unwind: _,
                 call_source: _,
             } => {

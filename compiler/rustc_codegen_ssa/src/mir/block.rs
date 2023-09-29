@@ -1257,6 +1257,7 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
                 unwind,
                 call_source: _,
                 fn_span,
+                arg_spans: _,
             } => self.codegen_call_terminator(
                 helper,
                 bx,

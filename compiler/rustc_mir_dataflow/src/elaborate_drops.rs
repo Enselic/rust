@@ -662,6 +662,7 @@ where
                     unwind: unwind.into_action(),
                     call_source: CallSource::Misc,
                     fn_span: self.source_info.span,
+                    arg_spans: vec![],
                 },
                 source_info: self.source_info,
             }),

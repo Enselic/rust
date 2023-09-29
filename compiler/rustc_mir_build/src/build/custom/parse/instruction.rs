@@ -131,6 +131,7 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                         CallSource::OverloadedOperator
                     },
                     fn_span: *fn_span,
+                    arg_spans: vec![],
                 })
             },
         )

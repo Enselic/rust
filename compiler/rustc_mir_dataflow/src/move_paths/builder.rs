@@ -476,6 +476,7 @@ impl<'b, 'a, 'tcx> Gatherer<'b, 'a, 'tcx> {
                 unwind: _,
                 call_source: _,
                 fn_span: _,
+                arg_spans: _,
             } => {
                 self.gather_operand(func);
                 for arg in args {

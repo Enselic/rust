@@ -120,6 +120,7 @@ impl<'mir, 'tcx: 'mir, M: Machine<'mir, 'tcx>> InterpCx<'mir, 'tcx, M> {
                 unwind,
                 call_source: _,
                 fn_span: _,
+                arg_spans: _,
             } => {
                 let old_stack = self.frame_idx();
                 let old_loc = self.frame().loc;

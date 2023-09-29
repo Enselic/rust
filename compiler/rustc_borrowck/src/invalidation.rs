@@ -130,6 +130,7 @@ impl<'cx, 'tcx> Visitor<'tcx> for InvalidationGenerator<'cx, 'tcx> {
                 unwind: _,
                 call_source: _,
                 fn_span: _,
+                arg_spans: _,
             } => {
                 self.consume_operand(location, func);
                 for arg in args {
