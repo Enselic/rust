@@ -435,9 +435,9 @@ fn expr_simple_identity_map<'a, 'hir>(
     expr: &'_ Expr<'hir>,
 ) -> Option<FxHashMap<Symbol, &'a Pat<'hir>>> {
     let peeled = peel_blocks(expr);
-    let (sub_pats, paths) = match (local_pat.kind, peeled.kind) {
+    let (sub_pats, paths) = match (&local_pat.kind, &peeled.kind) {
         (PatKind::Tuple(pats, _), ExprKind::Tup(exprs)) | (PatKind::Slice(pats, ..), ExprKind::Array(exprs)) => {
-            (pats, exprs)
+            (*pats, *exprs)
         },
         (_, ExprKind::Path(_)) => (slice::from_ref(local_pat), slice::from_ref(peeled)),
         _ => return None,
