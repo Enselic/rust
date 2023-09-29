@@ -105,7 +105,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
                     let receiver = self.lower_expr(receiver);
                     let args =
                         self.arena.alloc_from_iter(args.iter().map(|x| self.lower_expr_mut(x)));
-                    hir::ExprKind::MethodCall(hir_seg, receiver, args, self.lower_span(*span), args.iter().map(|a|a.span).collect())
+                    hir::ExprKind::MethodCall(hir_seg, receiver, args, self.lower_span(*span))
                 }
                 ExprKind::Binary(binop, lhs, rhs) => {
                     let binop = self.lower_binop(*binop);

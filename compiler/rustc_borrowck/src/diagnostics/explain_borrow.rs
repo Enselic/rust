@@ -78,7 +78,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     while let hir::ExprKind::AddrOf(_, _, inner)
                         | hir::ExprKind::Unary(hir::UnOp::Deref, inner)
                         | hir::ExprKind::Field(inner, _)
-                        | hir::ExprKind::MethodCall(_, inner, _, _, _)
+                        | hir::ExprKind::MethodCall(_, inner, _, _)
                         | hir::ExprKind::Index(inner, _, _) = &expr.kind
                     {
                         expr = inner;

@@ -1225,7 +1225,7 @@ impl<'a, 'tcx> Visitor<'tcx> for FindInferSourceVisitor<'a, 'tcx> {
             })
             .any(|generics| generics.has_impl_trait())
         };
-        if let ExprKind::MethodCall(path, receiver, method_args, span, _) = expr.kind
+        if let ExprKind::MethodCall(path, receiver, method_args, span) = expr.kind
             && let Some(args) = self.node_args_opt(expr.hir_id)
             && args.iter().any(|arg| self.generic_arg_contains_target(arg))
             && let Some(def_id) = self.typeck_results.type_dependent_def_id(expr.hir_id)

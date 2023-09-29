@@ -396,7 +396,7 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
                 let hir_id = hir.parent_id(expr.hir_id);
                 if let Some(parent) = hir.find(hir_id) {
                     let (def_id, args, offset) = if let hir::Node::Expr(parent_expr) = parent
-                        && let hir::ExprKind::MethodCall(_, _, args, _, _) = parent_expr.kind
+                        && let hir::ExprKind::MethodCall(_, _, args, _) = parent_expr.kind
                         && let Some(def_id) = typeck.type_dependent_def_id(parent_expr.hir_id)
                     {
                         (def_id.as_local(), args, 1)

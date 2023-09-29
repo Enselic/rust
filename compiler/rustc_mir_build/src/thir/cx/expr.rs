@@ -271,21 +271,26 @@ impl<'tcx> Cx<'tcx> {
                 // Rewrite a.b(c) into UFCS form like Trait::b(a, c)
                 let expr = self.method_callee(expr, segment.ident.span, None);
                 info!("Using method span: {:?}", expr.span);
+                let mut arg_spans = vec![];
                 let args = std::iter::once(receiver)
                     .chain(args.iter())
-                    .map(|expr| self.mirror_expr(expr))
+                    .map(|expr| {
+                        arg_spans.push(expr.span);
+                        self.mirror_expr(expr)
+                    })
                     .collect();
                 ExprKind::Call {
                     ty: expr.ty,
                     fun: self.thir.exprs.push(expr),
                     args,
-                    arg_spans: args.iter().map(|a| a.span).collect(),
+                    arg_spans,
                     from_hir_call: true,
                     fn_span,
                 }
             }
 
             hir::ExprKind::Call(ref fun, ref args) => {
+                let arg_spans = args.iter().map(|a| a.span).collect();
                 if self.typeck_results().is_method_call(expr) {
                     // The callee is something implementing Fn, FnMut, or FnOnce.
                     // Find the actual method implementation being called and
@@ -309,6 +314,7 @@ impl<'tcx> Cx<'tcx> {
                         ty: method.ty,
                         fun: self.thir.exprs.push(method),
                         args: Box::new([self.mirror_expr(fun), tupled_args]),
+                        arg_spans,
                         from_hir_call: true,
                         fn_span: expr.span,
                     }
@@ -403,6 +409,7 @@ impl<'tcx> Cx<'tcx> {
                             ty: self.typeck_results().node_type(fun.hir_id),
                             fun: self.mirror_expr(fun),
                             args: self.mirror_exprs(args),
+                            arg_spans,
                             from_hir_call: true,
                             fn_span: expr.span,
                         }

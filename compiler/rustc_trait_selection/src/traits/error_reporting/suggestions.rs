@@ -3611,7 +3611,7 @@ impl<'tcx> TypeErrCtxtExt<'tcx> for TypeErrCtxt<'_, 'tcx> {
         let mut prev_ty = self.resolve_vars_if_possible(
             typeck_results.expr_ty_adjusted_opt(expr).unwrap_or(Ty::new_misc_error(tcx)),
         );
-        while let hir::ExprKind::MethodCall(_path_segment, rcvr_expr, _args, span, _arg_spans) = &expr.kind {
+        while let hir::ExprKind::MethodCall(_path_segment, rcvr_expr, _args, span) = &expr.kind {
             // Point at every method call in the chain with the resulting type.
             // vec![1, 2, 3].iter().map(mapper).sum<i32>()
             //               ^^^^^^ ^^^^^^^^^^^

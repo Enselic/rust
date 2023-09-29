@@ -613,7 +613,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
                             Applicability::MachineApplicable,
                         );
                         self.suggested = true;
-                    } else if let hir::ExprKind::MethodCall(_path, receiver, _, sp, _) = expr.kind
+                    } else if let hir::ExprKind::MethodCall(_path, receiver, _, sp) = expr.kind
                         && let hir::ExprKind::Index(val, index, _) = receiver.kind
                         && expr.span == self.assign_span
                     {
@@ -885,7 +885,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
             v.visit_block(block);
             if let Some(expr) = v.expr && let Call(_, [expr]) = expr.kind {
                 match expr.kind {
-                    MethodCall(path_segment, _, _, span, _) => {
+                    MethodCall(path_segment, _, _, span) => {
                         // We have `for _ in iter.read_only_iter()`, try to
                         // suggest `for _ in iter.mutable_iter()` instead.
                         let opt_suggestions = self
@@ -1035,7 +1035,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
             && let ExprKind::Closure(closure) = kind && closure.movability == None
             && let Some(Node::Expr(expr)) = hir.find_parent(*hir_id) {
                 let mut cur_expr = expr;
-                while let ExprKind::MethodCall(path_segment, recv, _, _, _) = cur_expr.kind {
+                while let ExprKind::MethodCall(path_segment, recv, _, _) = cur_expr.kind {
                     if path_segment.ident.name == sym::iter {
                         // check `_ty` has `iter_mut` method
                         let res = self
