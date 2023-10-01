@@ -239,7 +239,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     None
                 })
             }
-            ExprKind::Call { ty: _, fun, ref args, from_hir_call, fn_span } => {
+            ExprKind::Call { ty: _, fun, ref args, ref arg_spans, from_hir_call, fn_span } => {
                 let fun = unpack!(block = this.as_local_operand(block, &this.thir[fun]));
                 let args: Vec<_> = args
                     .into_iter()
@@ -259,6 +259,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     TerminatorKind::Call {
                         func: fun,
                         args,
+                        arg_spans: arg_spans.clone().into_vec(),
                         unwind: UnwindAction::Continue,
                         destination,
                         // The presence or absence of a return edge affects control-flow sensitive

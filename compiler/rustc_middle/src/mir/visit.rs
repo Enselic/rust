@@ -516,11 +516,12 @@ macro_rules! make_mir_visitor {
                     TerminatorKind::Call {
                         func,
                         args,
+                        arg_spans: _,
                         destination,
                         target: _,
                         unwind: _,
                         call_source: _,
-                        fn_span: _
+                        fn_span: _,
                     } => {
                         self.visit_operand(func, location);
                         for arg in args {

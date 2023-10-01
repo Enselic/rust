@@ -1252,6 +1252,7 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
             mir::TerminatorKind::Call {
                 ref func,
                 ref args,
+                arg_spans: _,
                 destination,
                 target,
                 unwind,

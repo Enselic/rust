@@ -798,7 +798,12 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
 
             match terminator.kind {
                 TerminatorKind::Call {
-                    mut func, mut args, call_source: desugar, fn_span, ..
+                    mut func,
+                    mut args,
+                    arg_spans,
+                    call_source: desugar,
+                    fn_span,
+                    ..
                 } => {
                     self.visit_operand(&mut func, loc);
                     for arg in &mut args {
@@ -812,6 +817,7 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
                         kind: TerminatorKind::Call {
                             func,
                             args,
+                            arg_spans,
                             unwind: UnwindAction::Continue,
                             destination: Place::from(new_temp),
                             target: Some(new_target),
