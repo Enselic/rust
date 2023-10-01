@@ -115,6 +115,7 @@ impl<'mir, 'tcx: 'mir, M: Machine<'mir, 'tcx>> InterpCx<'mir, 'tcx, M> {
             Call {
                 ref func,
                 ref args,
+                arg_spans: _,
                 destination,
                 target,
                 unwind,

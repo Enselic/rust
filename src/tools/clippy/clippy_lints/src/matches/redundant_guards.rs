@@ -88,7 +88,7 @@ pub(super) fn check<'tcx>(cx: &LateContext<'tcx>, arms: &'tcx [Arm<'tcx>]) {
                 .or_else(|| get_pat_binding(cx, pat, outer_arm).map(|binding| (binding, local)))
             && expr_can_be_pat(cx, pat)
         {
-            let pat_span = match (pat.kind, binding.byref_ident) {
+            let pat_span = match (&pat.kind, &binding.byref_ident) {
                 (ExprKind::AddrOf(BorrowKind::Ref, _, expr), Some(_)) => expr.span,
                 (ExprKind::AddrOf(..), None) | (_, Some(_)) => continue,
                 _ => pat.span,

@@ -287,6 +287,9 @@ pub enum ExprKind<'tcx> {
         /// Note: in some cases (like calling a closure), the function call `f(...args)` gets
         /// rewritten as a call to a function trait method (e.g. `FnOnce::call_once(f, (...args))`).
         args: Box<[ExprId]>,
+        /// The spans of the args
+        /// (e.g. `a` and `b` in `x.foo(a, b)`).
+        arg_spans: Box<[Span]>,
         /// Whether this is from an overloaded operator rather than a
         /// function call from HIR. `true` for overloaded function call.
         from_hir_call: bool,
@@ -941,8 +944,8 @@ mod size_asserts {
     use super::*;
     // tidy-alphabetical-start
     static_assert_size!(Block, 56);
-    static_assert_size!(Expr<'_>, 64);
-    static_assert_size!(ExprKind<'_>, 40);
+    static_assert_size!(Expr<'_>, 80);
+    static_assert_size!(ExprKind<'_>, 56);
     static_assert_size!(Pat<'_>, 64);
     static_assert_size!(PatKind<'_>, 48);
     static_assert_size!(Stmt<'_>, 56);

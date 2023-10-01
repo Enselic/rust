@@ -1688,7 +1688,7 @@ pub struct ConstBlock {
 }
 
 /// An expression.
-#[derive(Debug, Clone, Copy, HashStable_Generic)]
+#[derive(Debug, Clone, HashStable_Generic)]
 pub struct Expr<'hir> {
     pub hir_id: HirId,
     pub kind: ExprKind<'hir>,
@@ -1934,7 +1934,7 @@ pub fn is_range_literal(expr: &Expr<'_>) -> bool {
     }
 }
 
-#[derive(Debug, Clone, Copy, HashStable_Generic)]
+#[derive(Debug, Clone, HashStable_Generic)]
 pub enum ExprKind<'hir> {
     /// Allow anonymous constants from an inline `const` block
     ConstBlock(ConstBlock),

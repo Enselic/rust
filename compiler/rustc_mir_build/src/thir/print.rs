@@ -233,7 +233,7 @@ impl<'a, 'tcx> ThirPrinter<'a, 'tcx> {
 
                 print_indented!(self, "}", depth_lvl);
             }
-            Call { fun, args, ty, from_hir_call, fn_span } => {
+            Call { fun, args, arg_spans, ty, from_hir_call, fn_span } => {
                 print_indented!(self, "Call {", depth_lvl);
                 print_indented!(self, format!("ty: {:?}", ty), depth_lvl + 1);
                 print_indented!(self, format!("from_hir_call: {}", from_hir_call), depth_lvl + 1);
@@ -249,6 +249,16 @@ impl<'a, 'tcx> ThirPrinter<'a, 'tcx> {
                     print_indented!(self, "]", depth_lvl + 1);
                 } else {
                     print_indented!(self, "args: []", depth_lvl + 1);
+                }
+
+                if arg_spans.len() > 0 {
+                    print_indented!(self, "arg_spans: [", depth_lvl + 1);
+                    for arg_span in arg_spans.iter() {
+                        print_indented!(self, format!("{:?}", arg_span), depth_lvl + 2);
+                    }
+                    print_indented!(self, "]", depth_lvl + 1);
+                } else {
+                    print_indented!(self, "arg_spans: []", depth_lvl + 1);
                 }
 
                 print_indented!(self, "}", depth_lvl);

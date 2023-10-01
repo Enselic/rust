@@ -9,7 +9,7 @@ use rustc_target::abi::{FieldIdx, VariantIdx, FIRST_VARIANT};
 
 use rustc_index::{Idx, IndexVec};
 
-use rustc_span::Span;
+use rustc_span::{Span, DUMMY_SP};
 use rustc_target::spec::abi::Abi;
 
 use std::fmt;
@@ -524,6 +524,7 @@ impl<'tcx> CloneShimBuilder<'tcx> {
             TerminatorKind::Call {
                 func,
                 args: vec![Operand::Move(ref_loc)],
+                arg_spans: vec![DUMMY_SP],
                 destination: dest,
                 target: Some(next),
                 unwind: UnwindAction::Cleanup(cleanup),
@@ -808,12 +809,14 @@ fn build_call_shim<'tcx>(
     };
 
     // BB #0
+    let arg_spans = args.iter().map(|_| DUMMY_SP).collect();
     block(
         &mut blocks,
         statements,
         TerminatorKind::Call {
             func: callee,
             args,
+            arg_spans,
             destination: Place::return_place(),
             target: Some(BasicBlock::new(1)),
             unwind: if let Some(Adjustment::RefMut) = rcvr_adjustment {

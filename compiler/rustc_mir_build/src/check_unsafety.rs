@@ -346,7 +346,7 @@ impl<'a, 'tcx> Visitor<'a, 'tcx> for UnsafetyVisitor<'a, 'tcx> {
                 self.hir_context = prev_id;
                 return; // don't visit the whole expression
             }
-            ExprKind::Call { fun, ty: _, args: _, from_hir_call: _, fn_span: _ } => {
+            ExprKind::Call { fun, ty: _, args: _, arg_spans: _, from_hir_call: _, fn_span: _ } => {
                 if self.thir[fun].ty.fn_sig(self.tcx).unsafety() == hir::Unsafety::Unsafe {
                     let func_id = if let ty::FnDef(func_id, _) = self.thir[fun].ty.kind() {
                         Some(*func_id)
