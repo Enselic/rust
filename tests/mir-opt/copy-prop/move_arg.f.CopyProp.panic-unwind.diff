@@ -21,8 +21,8 @@
 -         _4 = _1;
 -         StorageLive(_5);
 -         _5 = _2;
--         _3 = g::<T>(move _4, move _5) -> [return: bb1, unwind continue];
-+         _3 = g::<T>(_1, _1) -> [return: bb1, unwind continue];
+-         _3 = g::<T>(Spanned { node: move _4, span: $DIR/move_arg.rs:8:7: 8:8 (#0) }, Spanned { node: move _5, span: $DIR/move_arg.rs:8:10: 8:11 (#0) }) -> [return: bb1, unwind continue];
++         _3 = g::<T>(Spanned { node: _1, span: $DIR/move_arg.rs:8:7: 8:8 (#0) }, Spanned { node: _1, span: $DIR/move_arg.rs:8:10: 8:11 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

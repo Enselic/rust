@@ -26,7 +26,7 @@
   
       bb1: {
           StorageLive(_6);
-          _6 = begin_panic::<&str>(const "explicit panic") -> unwind continue;
+          _6 = begin_panic::<&str>(Spanned { node: const "explicit panic", span: $SRC_DIR/std/src/panic.rs:LL:COL (#7) }) -> unwind continue;
       }
   
       bb2: {

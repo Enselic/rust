@@ -32,8 +32,8 @@
           StorageLive(_5);
 -         StorageLive(_6);
 -         _6 = _4;
--         _5 = opaque::<*mut u8>(move _6) -> [return: bb1, unwind continue];
-+         _5 = opaque::<*mut u8>(_2) -> [return: bb1, unwind continue];
+-         _5 = opaque::<*mut u8>(Spanned { node: move _6, span: $DIR/reborrow.rs:31:12: 31:13 (#0) }) -> [return: bb1, unwind continue];
++         _5 = opaque::<*mut u8>(Spanned { node: _2, span: $DIR/reborrow.rs:31:12: 31:13 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

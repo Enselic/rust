@@ -81,7 +81,7 @@ fn int_range(_1: usize, _2: usize) -> () {
         StorageDead(_6);
         _12 = (_4.0: usize);
         StorageLive(_13);
-        _13 = <usize as Step>::forward_unchecked(_12, const 1_usize) -> [return: bb4, unwind continue];
+        _13 = <usize as Step>::forward_unchecked(Spanned { node: _12, span: $SRC_DIR/core/src/iter/range.rs:732:59: 732:62 (#0) }, Spanned { node: const 1_usize, span: $SRC_DIR/core/src/iter/range.rs:LL:COL (#0) }) -> [return: bb4, unwind continue];
     }
 
     bb4: {
@@ -106,7 +106,7 @@ fn int_range(_1: usize, _2: usize) -> () {
 
     bb7: {
         _15 = ((_11 as Some).0: usize);
-        _16 = opaque::<usize>(move _15) -> [return: bb8, unwind continue];
+        _16 = opaque::<usize>(Spanned { node: move _15, span: $DIR/loops.rs:8:16: 8:17 (#0) }) -> [return: bb8, unwind continue];
     }
 
     bb8: {

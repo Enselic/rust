@@ -25,7 +25,7 @@
           StorageLive(_2);
           StorageLive(_3);
           _3 = &_1;
-          _2 = opaque::<&impl Sized>(move _3) -> [return: bb1, unwind: bb10];
+          _2 = opaque::<&impl Sized>(Spanned { node: move _3, span: $DIR/gvn.rs:186:12: 186:14 (#0) }) -> [return: bb1, unwind: bb10];
       }
   
       bb1: {
@@ -34,7 +34,7 @@
           StorageLive(_4);
           StorageLive(_5);
           _5 = &_1;
-          _4 = opaque::<&impl Sized>(move _5) -> [return: bb2, unwind: bb10];
+          _4 = opaque::<&impl Sized>(Spanned { node: move _5, span: $DIR/gvn.rs:187:12: 187:14 (#0) }) -> [return: bb2, unwind: bb10];
       }
   
       bb2: {
@@ -43,7 +43,7 @@
           StorageLive(_6);
           StorageLive(_7);
           _7 = &mut _1;
-          _6 = opaque::<&mut impl Sized>(move _7) -> [return: bb3, unwind: bb10];
+          _6 = opaque::<&mut impl Sized>(Spanned { node: move _7, span: $DIR/gvn.rs:188:12: 188:18 (#0) }) -> [return: bb3, unwind: bb10];
       }
   
       bb3: {
@@ -52,7 +52,7 @@
           StorageLive(_8);
           StorageLive(_9);
           _9 = &mut _1;
-          _8 = opaque::<&mut impl Sized>(move _9) -> [return: bb4, unwind: bb10];
+          _8 = opaque::<&mut impl Sized>(Spanned { node: move _9, span: $DIR/gvn.rs:189:12: 189:18 (#0) }) -> [return: bb4, unwind: bb10];
       }
   
       bb4: {
@@ -61,7 +61,7 @@
           StorageLive(_10);
           StorageLive(_11);
           _11 = &raw const _1;
-          _10 = opaque::<*const impl Sized>(move _11) -> [return: bb5, unwind: bb10];
+          _10 = opaque::<*const impl Sized>(Spanned { node: move _11, span: $DIR/gvn.rs:190:12: 190:24 (#0) }) -> [return: bb5, unwind: bb10];
       }
   
       bb5: {
@@ -70,7 +70,7 @@
           StorageLive(_12);
           StorageLive(_13);
           _13 = &raw const _1;
-          _12 = opaque::<*const impl Sized>(move _13) -> [return: bb6, unwind: bb10];
+          _12 = opaque::<*const impl Sized>(Spanned { node: move _13, span: $DIR/gvn.rs:191:12: 191:24 (#0) }) -> [return: bb6, unwind: bb10];
       }
   
       bb6: {
@@ -79,7 +79,7 @@
           StorageLive(_14);
           StorageLive(_15);
           _15 = &raw mut _1;
-          _14 = opaque::<*mut impl Sized>(move _15) -> [return: bb7, unwind: bb10];
+          _14 = opaque::<*mut impl Sized>(Spanned { node: move _15, span: $DIR/gvn.rs:192:12: 192:22 (#0) }) -> [return: bb7, unwind: bb10];
       }
   
       bb7: {
@@ -88,7 +88,7 @@
           StorageLive(_16);
           StorageLive(_17);
           _17 = &raw mut _1;
-          _16 = opaque::<*mut impl Sized>(move _17) -> [return: bb8, unwind: bb10];
+          _16 = opaque::<*mut impl Sized>(Spanned { node: move _17, span: $DIR/gvn.rs:193:12: 193:22 (#0) }) -> [return: bb8, unwind: bb10];
       }
   
       bb8: {

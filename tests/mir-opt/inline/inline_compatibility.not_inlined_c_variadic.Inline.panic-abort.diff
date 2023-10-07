@@ -10,7 +10,7 @@
   
       bb0: {
           StorageLive(_1);
-          _1 = sum(const 4_u32, const 4_u32, const 30_u32, const 200_u32, const 1000_u32) -> [return: bb1, unwind unreachable];
+          _1 = sum(Spanned { node: const 4_u32, span: $DIR/inline_compatibility.rs:43:17: 43:21 (#0) }, Spanned { node: const 4_u32, span: $DIR/inline_compatibility.rs:43:23: 43:27 (#0) }, Spanned { node: const 30_u32, span: $DIR/inline_compatibility.rs:43:29: 43:34 (#0) }, Spanned { node: const 200_u32, span: $DIR/inline_compatibility.rs:43:36: 43:42 (#0) }, Spanned { node: const 1000_u32, span: $DIR/inline_compatibility.rs:43:44: 43:51 (#0) }) -> [return: bb1, unwind unreachable];
       }
   
       bb1: {

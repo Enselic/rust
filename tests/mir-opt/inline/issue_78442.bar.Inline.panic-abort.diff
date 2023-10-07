@@ -20,7 +20,7 @@
           _3 = &_4;
           StorageLive(_5);
           _5 = ();
-          _2 = <fn() {foo} as Fn<()>>::call(move _3, move _5) -> [return: bb2, unwind unreachable];
+          _2 = <fn() {foo} as Fn<()>>::call(Spanned { node: move _3, span: $DIR/issue_78442.rs:11:5: 11:15 (#0) }, Spanned { node: move _5, span: $DIR/issue_78442.rs:11:5: 11:17 (#0) }) -> [return: bb2, unwind unreachable];
       }
   
       bb2: {

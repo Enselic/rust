@@ -24,7 +24,7 @@ fn foo(_1: Box<[T]>) -> T {
 
     bb1: {
         _3 = &(*_1)[_4];
-        _2 = <T as Clone>::clone(move _3) -> [return: bb2, unwind: bb5];
+        _2 = <T as Clone>::clone(Spanned { node: move _3, span: $DIR/issue_91633.rs:28:14: 28:19 (#0) }) -> [return: bb2, unwind: bb5];
     }
 
     bb2: {

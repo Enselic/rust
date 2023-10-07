@@ -31,7 +31,7 @@ fn test() -> Option<Box<u32>> {
         StorageLive(_1);
         _2 = SizeOf(u32);
         _3 = AlignOf(u32);
-        _4 = alloc::alloc::exchange_malloc(move _2, move _3) -> [return: bb1, unwind continue];
+        _4 = alloc::alloc::exchange_malloc(Spanned { node: move _2, span: no-location (#0) }, Spanned { node: move _3, span: no-location (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {
@@ -40,7 +40,7 @@ fn test() -> Option<Box<u32>> {
         StorageLive(_6);
         StorageLive(_7);
         _7 = Option::<u32>::None;
-        _6 = <Option<u32> as Try>::branch(move _7) -> [return: bb2, unwind: bb12];
+        _6 = <Option<u32> as Try>::branch(Spanned { node: move _7, span: $DIR/issue_62289.rs:11:18: 11:22 (#0) }) -> [return: bb2, unwind: bb12];
     }
 
     bb2: {
@@ -67,7 +67,7 @@ fn test() -> Option<Box<u32>> {
         _9 = ((_6 as Break).0: std::option::Option<std::convert::Infallible>);
         StorageLive(_11);
         _11 = _9;
-        _0 = <Option<Box<u32>> as FromResidual<Option<Infallible>>>::from_residual(move _11) -> [return: bb6, unwind: bb12];
+        _0 = <Option<Box<u32>> as FromResidual<Option<Infallible>>>::from_residual(Spanned { node: move _11, span: $DIR/issue_62289.rs:11:22: 11:23 (#5) }) -> [return: bb6, unwind: bb12];
     }
 
     bb6: {

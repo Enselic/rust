@@ -19,7 +19,7 @@ fn vec_move(_1: Vec<impl Sized>) -> () {
 
     bb0: {
         StorageLive(_2);
-        _2 = <Vec<impl Sized> as IntoIterator>::into_iter(move _1) -> [return: bb1, unwind continue];
+        _2 = <Vec<impl Sized> as IntoIterator>::into_iter(Spanned { node: move _1, span: $DIR/loops.rs:25:14: 25:15 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {
@@ -32,7 +32,7 @@ fn vec_move(_1: Vec<impl Sized>) -> () {
         StorageLive(_5);
         StorageLive(_4);
         _4 = &mut _3;
-        _5 = <std::vec::IntoIter<impl Sized> as Iterator>::next(move _4) -> [return: bb3, unwind: bb9];
+        _5 = <std::vec::IntoIter<impl Sized> as Iterator>::next(Spanned { node: move _4, span: $DIR/loops.rs:25:14: 25:15 (#14) }) -> [return: bb3, unwind: bb9];
     }
 
     bb3: {
@@ -54,7 +54,7 @@ fn vec_move(_1: Vec<impl Sized>) -> () {
 
     bb6: {
         _7 = move ((_5 as Some).0: impl Sized);
-        _8 = opaque::<impl Sized>(move _7) -> [return: bb7, unwind: bb9];
+        _8 = opaque::<impl Sized>(Spanned { node: move _7, span: $DIR/loops.rs:26:16: 26:17 (#0) }) -> [return: bb7, unwind: bb9];
     }
 
     bb7: {

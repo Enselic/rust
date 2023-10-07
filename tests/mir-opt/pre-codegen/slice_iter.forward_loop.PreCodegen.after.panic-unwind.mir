@@ -142,7 +142,7 @@ fn forward_loop(_1: &[T], _2: impl Fn(&T)) -> () {
         StorageLive(_16);
         StorageLive(_15);
         _15 = &mut _14;
-        _16 = <std::slice::Iter<'_, T> as Iterator>::next(move _15) -> [return: bb5, unwind: bb11];
+        _16 = <std::slice::Iter<'_, T> as Iterator>::next(Spanned { node: move _15, span: $DIR/slice_iter.rs:29:14: 29:26 (#5) }) -> [return: bb5, unwind: bb11];
     }
 
     bb5: {
@@ -167,7 +167,7 @@ fn forward_loop(_1: &[T], _2: impl Fn(&T)) -> () {
         _19 = &_2;
         StorageLive(_20);
         _20 = (_18,);
-        _21 = <impl Fn(&T) as Fn<(&T,)>>::call(move _19, move _20) -> [return: bb9, unwind: bb11];
+        _21 = <impl Fn(&T) as Fn<(&T,)>>::call(Spanned { node: move _19, span: $DIR/slice_iter.rs:30:9: 30:10 (#0) }, Spanned { node: move _20, span: $DIR/slice_iter.rs:30:9: 30:13 (#0) }) -> [return: bb9, unwind: bb11];
     }
 
     bb9: {

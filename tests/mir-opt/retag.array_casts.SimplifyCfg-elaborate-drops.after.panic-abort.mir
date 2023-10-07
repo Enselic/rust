@@ -75,7 +75,7 @@ fn array_casts() -> () {
         StorageLive(_6);
         StorageLive(_7);
         _7 = _2;
-        _6 = ptr::mut_ptr::<impl *mut usize>::add(move _7, const 1_usize) -> [return: bb1, unwind unreachable];
+        _6 = ptr::mut_ptr::<impl *mut usize>::add(Spanned { node: move _7, span: $DIR/retag.rs:61:15: 61:16 (#0) }, Spanned { node: const 1_usize, span: $DIR/retag.rs:61:21: 61:22 (#0) }) -> [return: bb1, unwind unreachable];
     }
 
     bb1: {
@@ -101,7 +101,7 @@ fn array_casts() -> () {
         StorageLive(_16);
         StorageLive(_17);
         _17 = _9;
-        _16 = ptr::const_ptr::<impl *const usize>::add(move _17, const 1_usize) -> [return: bb2, unwind unreachable];
+        _16 = ptr::const_ptr::<impl *const usize>::add(Spanned { node: move _17, span: $DIR/retag.rs:65:26: 65:27 (#0) }, Spanned { node: const 1_usize, span: $DIR/retag.rs:65:32: 65:33 (#0) }) -> [return: bb2, unwind unreachable];
     }
 
     bb2: {
@@ -169,6 +169,6 @@ fn array_casts() -> () {
         StorageLive(_33);
         _33 = Option::<Arguments<'_>>::None;
         Retag(_33);
-        _27 = core::panicking::assert_failed::<usize, usize>(move _28, move _29, move _31, move _33) -> unwind unreachable;
+        _27 = core::panicking::assert_failed::<usize, usize>(Spanned { node: move _28, span: $SRC_DIR/core/src/macros/mod.rs:45:54: 45:58 (#4) }, Spanned { node: move _29, span: $SRC_DIR/core/src/macros/mod.rs:45:60: 45:70 (#4) }, Spanned { node: move _31, span: $SRC_DIR/core/src/macros/mod.rs:45:72: 45:83 (#4) }, Spanned { node: move _33, span: $SRC_DIR/core/src/macros/mod.rs:LL:COL (#4) }) -> unwind unreachable;
     }
 }

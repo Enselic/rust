@@ -14,12 +14,12 @@ fn main() -> () {
         StorageLive(_4);
         _4 = const "";
         _3 = &(*_4);
-        _2 = <str as ToString>::to_string(move _3) -> [return: bb1, unwind continue];
+        _2 = <str as ToString>::to_string(Spanned { node: move _3, span: $DIR/no_spurious_drop_after_call.rs:9:20: 9:22 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {
         StorageDead(_3);
-        _1 = std::mem::drop::<String>(move _2) -> [return: bb2, unwind: bb3];
+        _1 = std::mem::drop::<String>(Spanned { node: move _2, span: $DIR/no_spurious_drop_after_call.rs:9:20: 9:34 (#0) }) -> [return: bb2, unwind: bb3];
     }
 
     bb2: {

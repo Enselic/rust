@@ -26,7 +26,7 @@ fn num_to_digit(_1: char) -> u32 {
     bb0: {
         StorageLive(_3);
         StorageLive(_2);
-        _2 = char::methods::<impl char>::to_digit(_1, const 8_u32) -> [return: bb1, unwind continue];
+        _2 = char::methods::<impl char>::to_digit(Spanned { node: _1, span: $SRC_DIR/core/src/char/methods.rs:329:9: 329:13 (#0) }, Spanned { node: const 8_u32, span: $SRC_DIR/core/src/char/methods.rs:LL:COL (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {
@@ -41,7 +41,7 @@ fn num_to_digit(_1: char) -> u32 {
     bb2: {
         StorageDead(_4);
         StorageLive(_5);
-        _5 = char::methods::<impl char>::to_digit(move _1, const 8_u32) -> [return: bb3, unwind continue];
+        _5 = char::methods::<impl char>::to_digit(Spanned { node: move _1, span: $DIR/issue_59352.rs:15:26: 15:29 (#0) }, Spanned { node: const 8_u32, span: $DIR/issue_59352.rs:15:39: 15:40 (#0) }) -> [return: bb3, unwind continue];
     }
 
     bb3: {
@@ -51,7 +51,7 @@ fn num_to_digit(_1: char) -> u32 {
     }
 
     bb4: {
-        _7 = core::panicking::panic(const "called `Option::unwrap()` on a `None` value") -> unwind continue;
+        _7 = core::panicking::panic(Spanned { node: const "called `Option::unwrap()` on a `None` value", span: $SRC_DIR/core/src/option.rs:LL:COL (#0) }) -> unwind continue;
     }
 
     bb5: {

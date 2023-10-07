@@ -68,7 +68,7 @@ fn main() -> () {
         StorageLive(_7);
         _7 = &mut _1;
         _6 = &mut (*_7);
-        _3 = Test::foo(move _4, move _6) -> [return: bb1, unwind unreachable];
+        _3 = Test::foo(Spanned { node: move _4, span: $DIR/retag.rs:33:17: 33:24 (#0) }, Spanned { node: move _6, span: $DIR/retag.rs:33:29: 33:35 (#0) }) -> [return: bb1, unwind unreachable];
     }
 
     bb1: {
@@ -114,7 +114,7 @@ fn main() -> () {
         StorageLive(_18);
         _18 = &_1;
         _17 = &(*_18);
-        _15 = move _16(move _17) -> [return: bb3, unwind unreachable];
+        _15 = move _16(Spanned { node: move _17, span: $DIR/retag.rs:45:16: 45:18 (#0) }) -> [return: bb3, unwind unreachable];
     }
 
     bb3: {
@@ -133,7 +133,7 @@ fn main() -> () {
         Retag(_28);
         _23 = &(*_28);
         _22 = &(*_23);
-        _19 = Test::foo_shr(move _20, move _22) -> [return: bb4, unwind unreachable];
+        _19 = Test::foo_shr(Spanned { node: move _20, span: $DIR/retag.rs:48:5: 48:12 (#0) }, Spanned { node: move _22, span: $DIR/retag.rs:48:21: 48:23 (#0) }) -> [return: bb4, unwind unreachable];
     }
 
     bb4: {

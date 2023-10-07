@@ -30,7 +30,7 @@
           _4 = _1;
           StorageLive(_5);
           _5 = _2;
--         _3 = add_with_overflow::<i32>(move _4, move _5) -> [return: bb1, unwind unreachable];
+-         _3 = add_with_overflow::<i32>(Spanned { node: move _4, span: $DIR/lower_intrinsics.rs:123:50: 123:51 (#0) }, Spanned { node: move _5, span: $DIR/lower_intrinsics.rs:123:53: 123:54 (#0) }) -> [return: bb1, unwind unreachable];
 +         _3 = CheckedAdd(move _4, move _5);
 +         goto -> bb1;
       }
@@ -43,7 +43,7 @@
           _7 = _1;
           StorageLive(_8);
           _8 = _2;
--         _6 = sub_with_overflow::<i32>(move _7, move _8) -> [return: bb2, unwind unreachable];
+-         _6 = sub_with_overflow::<i32>(Spanned { node: move _7, span: $DIR/lower_intrinsics.rs:124:50: 124:51 (#0) }, Spanned { node: move _8, span: $DIR/lower_intrinsics.rs:124:53: 124:54 (#0) }) -> [return: bb2, unwind unreachable];
 +         _6 = CheckedSub(move _7, move _8);
 +         goto -> bb2;
       }
@@ -56,7 +56,7 @@
           _10 = _1;
           StorageLive(_11);
           _11 = _2;
--         _9 = mul_with_overflow::<i32>(move _10, move _11) -> [return: bb3, unwind unreachable];
+-         _9 = mul_with_overflow::<i32>(Spanned { node: move _10, span: $DIR/lower_intrinsics.rs:125:50: 125:51 (#0) }, Spanned { node: move _11, span: $DIR/lower_intrinsics.rs:125:53: 125:54 (#0) }) -> [return: bb3, unwind unreachable];
 +         _9 = CheckedMul(move _10, move _11);
 +         goto -> bb3;
       }

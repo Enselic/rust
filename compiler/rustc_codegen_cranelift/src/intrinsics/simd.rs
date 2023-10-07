@@ -22,7 +22,7 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
     fx: &mut FunctionCx<'_, '_, 'tcx>,
     intrinsic: Symbol,
     generic_args: GenericArgsRef<'tcx>,
-    args: &[mir::Operand<'tcx>],
+    args: &[Spanned<mir::Operand<'tcx>>],
     ret: CPlace<'tcx>,
     target: BasicBlock,
     span: Span,
@@ -122,8 +122,8 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
             let [x, y] = args else {
                 bug!("wrong number of args for intrinsic {intrinsic}");
             };
-            let x = codegen_operand(fx, x);
-            let y = codegen_operand(fx, y);
+            let x = codegen_operand(fx, &x.node);
+            let y = codegen_operand(fx, &y.node);
 
             if !x.layout().ty.is_simd() {
                 report_simd_type_validation_error(fx, intrinsic, span, x.layout().ty);
@@ -173,8 +173,8 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
                     bug!("wrong number of args for intrinsic {intrinsic}");
                 }
             };
-            let x = codegen_operand(fx, x);
-            let y = codegen_operand(fx, y);
+            let x = codegen_operand(fx, &x.node);
+            let y = codegen_operand(fx, &y.node);
 
             if !x.layout().ty.is_simd() {
                 report_simd_type_validation_error(fx, intrinsic, span, x.layout().ty);
@@ -183,7 +183,7 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
 
             // Make sure this is actually an array, since typeck only checks the length-suffixed
             // version of this intrinsic.
-            let idx_ty = fx.monomorphize(idx.ty(fx.mir, fx.tcx));
+            let idx_ty = fx.monomorphize(idx.node.ty(fx.mir, fx.tcx));
             let n: u16 = match idx_ty.kind() {
                 ty::Array(ty, len) if matches!(ty.kind(), ty::Uint(ty::UintTy::U32)) => len
                     .try_eval_target_usize(fx.tcx, ty::ParamEnv::reveal_all())
@@ -216,7 +216,7 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
 
             let indexes = {
                 use rustc_middle::mir::interpret::*;
-                let idx_const = match idx {
+                let idx_const = match &idx.node {
                     Operand::Constant(const_) => crate::constant::eval_mir_constant(fx, const_).0,
                     Operand::Copy(_) | Operand::Move(_) => unreachable!("{idx:?}"),
                 };
@@ -270,12 +270,12 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
                     bug!("wrong number of args for intrinsic {intrinsic}");
                 }
             };
-            let base = codegen_operand(fx, base);
-            let val = codegen_operand(fx, val);
+            let base = codegen_operand(fx, &base.node);
+            let val = codegen_operand(fx, &val.node);
 
             // FIXME validate
             let idx_const = if let Some(idx_const) =
-                crate::constant::mir_operand_get_const_val(fx, idx)
+                crate::constant::mir_operand_get_const_val(fx, &idx.node)
             {
                 idx_const
             } else {
@@ -305,7 +305,7 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
                     bug!("wrong number of args for intrinsic {intrinsic}");
                 }
             };
-            let v = codegen_operand(fx, v);
+            let v = codegen_operand(fx, &v.node);
 
             if !v.layout().ty.is_simd() {
                 report_simd_type_validation_error(fx, intrinsic, span, v.layout().ty);
@@ -313,7 +313,7 @@ pub(super) fn codegen_simd_intrinsic_call<'tcx>(
             }
 
             let idx_const = if let Some(idx_const) =
-                crate::constant::mir_operand_get_const_val(fx, idx)
+                crate::constant::mir_operand_get_const_val(fx, &idx.node)
             {
                 idx_const
             } else {

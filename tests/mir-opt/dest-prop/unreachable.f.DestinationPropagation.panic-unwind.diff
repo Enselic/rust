@@ -34,7 +34,7 @@
 -         _5 = _1;
 -         StorageLive(_6);
 -         _6 = _2;
--         _4 = g::<T>(move _5, move _6) -> [return: bb2, unwind continue];
+-         _4 = g::<T>(Spanned { node: move _5, span: $DIR/unreachable.rs:12:11: 12:12 (#0) }, Spanned { node: move _6, span: $DIR/unreachable.rs:12:14: 12:15 (#0) }) -> [return: bb2, unwind continue];
 -     }
 - 
 -     bb2: {
@@ -53,9 +53,9 @@
 +         nop;
           StorageLive(_9);
 -         _9 = _2;
--         _7 = g::<T>(move _8, move _9) -> [return: bb4, unwind continue];
+-         _7 = g::<T>(Spanned { node: move _8, span: $DIR/unreachable.rs:14:11: 14:12 (#0) }, Spanned { node: move _9, span: $DIR/unreachable.rs:14:14: 14:15 (#0) }) -> [return: bb4, unwind continue];
 +         _9 = _1;
-+         _7 = g::<T>(move _1, move _9) -> [return: bb2, unwind continue];
++         _7 = g::<T>(Spanned { node: move _1, span: $DIR/unreachable.rs:14:11: 14:12 (#0) }, Spanned { node: move _9, span: $DIR/unreachable.rs:14:14: 14:15 (#0) }) -> [return: bb2, unwind continue];
       }
   
 -     bb4: {

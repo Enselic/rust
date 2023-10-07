@@ -19,7 +19,7 @@ fn main() -> () {
         StorageLive(_1);
         _2 = SizeOf(S);
         _3 = AlignOf(S);
-        _4 = alloc::alloc::exchange_malloc(move _2, move _3) -> [return: bb1, unwind: bb9];
+        _4 = alloc::alloc::exchange_malloc(Spanned { node: move _2, span: no-location (#0) }, Spanned { node: move _3, span: no-location (#0) }) -> [return: bb1, unwind: bb9];
     }
 
     bb1: {
@@ -38,7 +38,7 @@ fn main() -> () {
         StorageLive(_6);
         StorageLive(_7);
         _7 = move _1;
-        _6 = std::mem::drop::<Box<S>>(move _7) -> [return: bb4, unwind: bb6];
+        _6 = std::mem::drop::<Box<S>>(Spanned { node: move _7, span: $DIR/box_expr.rs:9:10: 9:11 (#0) }) -> [return: bb4, unwind: bb6];
     }
 
     bb4: {

@@ -11,7 +11,7 @@
           StorageLive(_2);
           StorageLive(_3);
           _3 = _1;
-          _2 = dummy(move _3) -> [return: bb1, unwind continue];
+          _2 = dummy(Spanned { node: move _3, span: $DIR/copy_propagation_arg.rs:12:15: 12:16 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

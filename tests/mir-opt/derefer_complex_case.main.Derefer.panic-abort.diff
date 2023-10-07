@@ -30,7 +30,7 @@
           StorageLive(_2);
           _14 = const _;
           _2 = &(*_14);
-          _1 = <&[i32; 2] as IntoIterator>::into_iter(move _2) -> [return: bb1, unwind: bb8];
+          _1 = <&[i32; 2] as IntoIterator>::into_iter(Spanned { node: move _2, span: $DIR/derefer_complex_case.rs:6:17: 6:26 (#0) }) -> [return: bb1, unwind: bb8];
       }
   
       bb1: {
@@ -47,7 +47,7 @@
           StorageLive(_9);
           _9 = &mut _4;
           _8 = &mut (*_9);
-          _7 = <std::slice::Iter<'_, i32> as Iterator>::next(move _8) -> [return: bb3, unwind: bb8];
+          _7 = <std::slice::Iter<'_, i32> as Iterator>::next(Spanned { node: move _8, span: $DIR/derefer_complex_case.rs:6:17: 6:26 (#5) }) -> [return: bb3, unwind: bb8];
       }
   
       bb3: {
@@ -63,7 +63,7 @@
 +         _12 = (*_15);
           StorageLive(_13);
           _13 = _12;
-          _6 = std::mem::drop::<i32>(move _13) -> [return: bb7, unwind: bb8];
+          _6 = std::mem::drop::<i32>(Spanned { node: move _13, span: $DIR/derefer_complex_case.rs:6:34: 6:37 (#0) }) -> [return: bb7, unwind: bb8];
       }
   
       bb5: {

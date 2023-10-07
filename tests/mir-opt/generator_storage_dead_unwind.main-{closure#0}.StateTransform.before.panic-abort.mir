@@ -36,7 +36,7 @@ yields ()
         StorageLive(_7);
         StorageLive(_8);
         _8 = move _3;
-        _7 = take::<Foo>(move _8) -> [return: bb2, unwind unreachable];
+        _7 = take::<Foo>(Spanned { node: move _8, span: $DIR/generator_storage_dead_unwind.rs:26:14: 26:15 (#0) }) -> [return: bb2, unwind unreachable];
     }
 
     bb2: {
@@ -45,7 +45,7 @@ yields ()
         StorageLive(_9);
         StorageLive(_10);
         _10 = move _4;
-        _9 = take::<Bar>(move _10) -> [return: bb3, unwind unreachable];
+        _9 = take::<Bar>(Spanned { node: move _10, span: $DIR/generator_storage_dead_unwind.rs:27:14: 27:15 (#0) }) -> [return: bb3, unwind unreachable];
     }
 
     bb3: {

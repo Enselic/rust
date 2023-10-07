@@ -15,7 +15,7 @@ fn test2(_1: &dyn X) -> bool {
         _3 = &(*_1);
         _2 = move _3 as &dyn X (PointerCoercion(Unsize));
         StorageDead(_3);
-        _0 = <dyn X as X>::y(move _2) -> [return: bb1, unwind continue];
+        _0 = <dyn X as X>::y(Spanned { node: move _2, span: $DIR/inline_trait_method_2.rs:11:5: 11:6 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {

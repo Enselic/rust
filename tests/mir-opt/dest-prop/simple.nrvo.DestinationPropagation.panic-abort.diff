@@ -25,8 +25,8 @@
           StorageLive(_6);
           _6 = &mut _2;
           _5 = &mut (*_6);
--         _3 = move _4(move _5) -> [return: bb1, unwind unreachable];
-+         _3 = move _1(move _5) -> [return: bb1, unwind unreachable];
+-         _3 = move _4(Spanned { node: move _5, span: $DIR/simple.rs:7:10: 7:18 (#0) }) -> [return: bb1, unwind unreachable];
++         _3 = move _1(Spanned { node: move _5, span: $DIR/simple.rs:7:10: 7:18 (#0) }) -> [return: bb1, unwind unreachable];
       }
   
       bb1: {

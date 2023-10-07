@@ -15,7 +15,7 @@
       }
   
       bb1: {
-          _2 = begin_panic::<&str>(const "explicit panic") -> unwind continue;
+          _2 = begin_panic::<&str>(Spanned { node: const "explicit panic", span: $SRC_DIR/std/src/panic.rs:LL:COL (#7) }) -> unwind continue;
       }
   
       bb2: {

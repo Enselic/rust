@@ -139,17 +139,17 @@
 +         StorageDead(_14);
 +         StorageLive(_9);
 +         _13 = const _;
-+         _9 = std::alloc::Global::alloc_impl(move _13, _8, const false) -> [return: bb5, unwind unreachable];
++         _9 = std::alloc::Global::alloc_impl(Spanned { node: move _13, span: $SRC_DIR/alloc/src/alloc.rs:241:9: 241:13 (#0) }, Spanned { node: _8, span: $SRC_DIR/alloc/src/alloc.rs:241:25: 241:31 (#0) }, Spanned { node: const false, span: $SRC_DIR/alloc/src/alloc.rs:LL:COL (#0) }) -> [return: bb5, unwind unreachable];
       }
   
       bb1: {
--         _1 = Box::<Vec<u32>>::new(move _2) -> [return: bb2, unwind unreachable];
+-         _1 = Box::<Vec<u32>>::new(Spanned { node: move _2, span: $DIR/inline_into_box_place.rs:8:38: 8:48 (#0) }) -> [return: bb2, unwind unreachable];
 +         StorageDead(_1);
 +         return;
       }
   
       bb2: {
-+         _12 = handle_alloc_error(move _8) -> unwind unreachable;
++         _12 = handle_alloc_error(Spanned { node: move _8, span: $SRC_DIR/alloc/src/alloc.rs:LL:COL (#0) }) -> unwind unreachable;
 +     }
 + 
 +     bb3: {

@@ -22,11 +22,11 @@ fn foo(_1: Option<String>) -> i32 {
 
     bb1: {
         _4 = &((_1 as Some).0: std::string::String);
-        _5 = <String as Deref>::deref(move _4) -> [return: bb2, unwind unreachable];
+        _5 = <String as Deref>::deref(Spanned { node: move _4, span: no-location (#0) }) -> [return: bb2, unwind unreachable];
     }
 
     bb2: {
-        _6 = <str as PartialEq>::eq(_5, const "a") -> [return: bb3, unwind unreachable];
+        _6 = <str as PartialEq>::eq(Spanned { node: _5, span: no-location (#0) }, Spanned { node: const "a", span: no-location (#0) }) -> [return: bb3, unwind unreachable];
     }
 
     bb3: {

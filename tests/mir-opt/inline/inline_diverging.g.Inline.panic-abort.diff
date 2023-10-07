@@ -36,7 +36,7 @@
           StorageLive(_6);
 -         _6 = panic() -> unwind unreachable;
 +         StorageLive(_7);
-+         _7 = begin_panic::<&str>(const "explicit panic") -> unwind unreachable;
++         _7 = begin_panic::<&str>(Spanned { node: const "explicit panic", span: $SRC_DIR/std/src/panic.rs:LL:COL (#7) }) -> unwind unreachable;
       }
   }
   

@@ -8,7 +8,7 @@ fn outer(_1: u8) -> u8 {
     bb0: {
         StorageLive(_2);                 // scope 0 at $DIR/spans.rs:10:11: 10:13
         _2 = &_1;                        // scope 0 at $DIR/spans.rs:10:11: 10:13
-        _0 = inner(move _2) -> [return: bb1, unwind continue]; // scope 0 at $DIR/spans.rs:10:5: 10:14
+        _0 = inner(Spanned { node: move _2, span: $DIR/spans.rs:10:11: 10:13 (#0) }) -> [return: bb1, unwind continue]; // scope 0 at $DIR/spans.rs:10:5: 10:14
                                          // mir::ConstOperand
                                          // + span: $DIR/spans.rs:10:5: 10:10
                                          // + const_: Const { ty: for<'a> fn(&'a u8) -> u8 {inner}, val: Value(inner) }

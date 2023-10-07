@@ -11,8 +11,8 @@
   
       bb0: {
 -         StorageLive(_1);
--         _1 = dummy(const 5_u8) -> [return: bb1, unwind continue];
-+         _0 = dummy(const 5_u8) -> [return: bb1, unwind continue];
+-         _1 = dummy(Spanned { node: const 5_u8, span: $DIR/calls.rs:15:19: 15:20 (#0) }) -> [return: bb1, unwind continue];
++         _0 = dummy(Spanned { node: const 5_u8, span: $DIR/calls.rs:15:19: 15:20 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

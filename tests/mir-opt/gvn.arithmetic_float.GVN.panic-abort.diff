@@ -42,7 +42,7 @@
 -         _3 = Add(move _4, const 0f64);
 -         StorageDead(_4);
 +         _3 = Add(_1, const 0f64);
-          _2 = opaque::<f64>(move _3) -> [return: bb1, unwind unreachable];
+          _2 = opaque::<f64>(Spanned { node: move _3, span: $DIR/gvn.rs:121:12: 121:18 (#0) }) -> [return: bb1, unwind unreachable];
       }
   
       bb1: {
@@ -55,7 +55,7 @@
 -         _6 = Sub(move _7, const 0f64);
 -         StorageDead(_7);
 +         _6 = Sub(_1, const 0f64);
-          _5 = opaque::<f64>(move _6) -> [return: bb2, unwind unreachable];
+          _5 = opaque::<f64>(Spanned { node: move _6, span: $DIR/gvn.rs:122:12: 122:18 (#0) }) -> [return: bb2, unwind unreachable];
       }
   
       bb2: {
@@ -68,7 +68,7 @@
 -         _9 = Mul(move _10, const 0f64);
 -         StorageDead(_10);
 +         _9 = Mul(_1, const 0f64);
-          _8 = opaque::<f64>(move _9) -> [return: bb3, unwind unreachable];
+          _8 = opaque::<f64>(Spanned { node: move _9, span: $DIR/gvn.rs:123:12: 123:18 (#0) }) -> [return: bb3, unwind unreachable];
       }
   
       bb3: {
@@ -81,7 +81,7 @@
 -         _12 = Div(move _13, const 0f64);
 -         StorageDead(_13);
 +         _12 = Div(_1, const 0f64);
-          _11 = opaque::<f64>(move _12) -> [return: bb4, unwind unreachable];
+          _11 = opaque::<f64>(Spanned { node: move _12, span: $DIR/gvn.rs:124:12: 124:18 (#0) }) -> [return: bb4, unwind unreachable];
       }
   
       bb4: {
@@ -94,7 +94,7 @@
 -         _15 = Div(const 0f64, move _16);
 -         StorageDead(_16);
 +         _15 = Div(const 0f64, _1);
-          _14 = opaque::<f64>(move _15) -> [return: bb5, unwind unreachable];
+          _14 = opaque::<f64>(Spanned { node: move _15, span: $DIR/gvn.rs:125:12: 125:18 (#0) }) -> [return: bb5, unwind unreachable];
       }
   
       bb5: {
@@ -107,7 +107,7 @@
 -         _18 = Rem(move _19, const 0f64);
 -         StorageDead(_19);
 +         _18 = Rem(_1, const 0f64);
-          _17 = opaque::<f64>(move _18) -> [return: bb6, unwind unreachable];
+          _17 = opaque::<f64>(Spanned { node: move _18, span: $DIR/gvn.rs:126:12: 126:18 (#0) }) -> [return: bb6, unwind unreachable];
       }
   
       bb6: {
@@ -120,7 +120,7 @@
 -         _21 = Rem(const 0f64, move _22);
 -         StorageDead(_22);
 +         _21 = Rem(const 0f64, _1);
-          _20 = opaque::<f64>(move _21) -> [return: bb7, unwind unreachable];
+          _20 = opaque::<f64>(Spanned { node: move _21, span: $DIR/gvn.rs:127:12: 127:18 (#0) }) -> [return: bb7, unwind unreachable];
       }
   
       bb7: {
@@ -136,7 +136,7 @@
 -         StorageDead(_26);
 -         StorageDead(_25);
 +         _24 = Eq(_1, _1);
-          _23 = opaque::<bool>(move _24) -> [return: bb8, unwind unreachable];
+          _23 = opaque::<bool>(Spanned { node: move _24, span: $DIR/gvn.rs:129:12: 129:18 (#0) }) -> [return: bb8, unwind unreachable];
       }
   
       bb8: {
@@ -152,7 +152,7 @@
 -         StorageDead(_30);
 -         StorageDead(_29);
 +         _28 = Ne(_1, _1);
-          _27 = opaque::<bool>(move _28) -> [return: bb9, unwind unreachable];
+          _27 = opaque::<bool>(Spanned { node: move _28, span: $DIR/gvn.rs:130:12: 130:18 (#0) }) -> [return: bb9, unwind unreachable];
       }
   
       bb9: {

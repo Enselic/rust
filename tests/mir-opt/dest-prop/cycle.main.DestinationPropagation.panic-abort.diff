@@ -51,7 +51,7 @@
 -         _6 = _1;
 +         nop;
 +         nop;
-          _5 = std::mem::drop::<i32>(move _6) -> [return: bb2, unwind unreachable];
+          _5 = std::mem::drop::<i32>(Spanned { node: move _6, span: $DIR/cycle.rs:15:10: 15:11 (#0) }) -> [return: bb2, unwind unreachable];
       }
   
       bb2: {

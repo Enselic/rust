@@ -56,7 +56,7 @@ fn main() -> () {
         StorageLive(_5);
         StorageLive(_6);
         _6 = &_2;
-        _5 = std::mem::drop::<&i32>(move _6) -> [return: bb9, unwind: bb11];
+        _5 = std::mem::drop::<&i32>(Spanned { node: move _6, span: $DIR/issue_49232.rs:13:14: 13:21 (#0) }) -> [return: bb9, unwind: bb11];
     }
 
     bb9: {

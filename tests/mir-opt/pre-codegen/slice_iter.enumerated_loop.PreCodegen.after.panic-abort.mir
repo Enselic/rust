@@ -154,7 +154,7 @@ fn enumerated_loop(_1: &[T], _2: impl Fn(usize, &T)) -> () {
         StorageLive(_17);
         StorageLive(_16);
         _16 = &mut _15;
-        _17 = <Enumerate<std::slice::Iter<'_, T>> as Iterator>::next(move _16) -> [return: bb5, unwind unreachable];
+        _17 = <Enumerate<std::slice::Iter<'_, T>> as Iterator>::next(Spanned { node: move _16, span: $DIR/slice_iter.rs:43:19: 43:43 (#11) }) -> [return: bb5, unwind unreachable];
     }
 
     bb5: {
@@ -180,7 +180,7 @@ fn enumerated_loop(_1: &[T], _2: impl Fn(usize, &T)) -> () {
         _21 = &_2;
         StorageLive(_22);
         _22 = (_19, _20);
-        _23 = <impl Fn(usize, &T) as Fn<(usize, &T)>>::call(move _21, move _22) -> [return: bb9, unwind unreachable];
+        _23 = <impl Fn(usize, &T) as Fn<(usize, &T)>>::call(Spanned { node: move _21, span: $DIR/slice_iter.rs:44:9: 44:10 (#0) }, Spanned { node: move _22, span: $DIR/slice_iter.rs:44:9: 44:16 (#0) }) -> [return: bb9, unwind unreachable];
     }
 
     bb9: {

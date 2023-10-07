@@ -54,7 +54,7 @@
           _4 = _1;
           StorageLive(_5);
           _5 = _2;
--         _3 = unchecked_add::<i32>(move _4, move _5) -> [return: bb1, unwind unreachable];
+-         _3 = unchecked_add::<i32>(Spanned { node: move _4, span: $DIR/lower_intrinsics.rs:16:46: 16:47 (#0) }, Spanned { node: move _5, span: $DIR/lower_intrinsics.rs:16:49: 16:50 (#0) }) -> [return: bb1, unwind unreachable];
 +         _3 = AddUnchecked(move _4, move _5);
 +         goto -> bb1;
       }
@@ -67,7 +67,7 @@
           _7 = _1;
           StorageLive(_8);
           _8 = _2;
--         _6 = unchecked_sub::<i32>(move _7, move _8) -> [return: bb2, unwind unreachable];
+-         _6 = unchecked_sub::<i32>(Spanned { node: move _7, span: $DIR/lower_intrinsics.rs:17:46: 17:47 (#0) }, Spanned { node: move _8, span: $DIR/lower_intrinsics.rs:17:49: 17:50 (#0) }) -> [return: bb2, unwind unreachable];
 +         _6 = SubUnchecked(move _7, move _8);
 +         goto -> bb2;
       }
@@ -80,7 +80,7 @@
           _10 = _1;
           StorageLive(_11);
           _11 = _2;
--         _9 = unchecked_mul::<i32>(move _10, move _11) -> [return: bb3, unwind unreachable];
+-         _9 = unchecked_mul::<i32>(Spanned { node: move _10, span: $DIR/lower_intrinsics.rs:18:46: 18:47 (#0) }, Spanned { node: move _11, span: $DIR/lower_intrinsics.rs:18:49: 18:50 (#0) }) -> [return: bb3, unwind unreachable];
 +         _9 = MulUnchecked(move _10, move _11);
 +         goto -> bb3;
       }
@@ -93,7 +93,7 @@
           _13 = _1;
           StorageLive(_14);
           _14 = _2;
--         _12 = unchecked_div::<i32>(move _13, move _14) -> [return: bb4, unwind unreachable];
+-         _12 = unchecked_div::<i32>(Spanned { node: move _13, span: $DIR/lower_intrinsics.rs:19:46: 19:47 (#0) }, Spanned { node: move _14, span: $DIR/lower_intrinsics.rs:19:49: 19:50 (#0) }) -> [return: bb4, unwind unreachable];
 +         _12 = Div(move _13, move _14);
 +         goto -> bb4;
       }
@@ -106,7 +106,7 @@
           _16 = _1;
           StorageLive(_17);
           _17 = _2;
--         _15 = unchecked_rem::<i32>(move _16, move _17) -> [return: bb5, unwind unreachable];
+-         _15 = unchecked_rem::<i32>(Spanned { node: move _16, span: $DIR/lower_intrinsics.rs:20:46: 20:47 (#0) }, Spanned { node: move _17, span: $DIR/lower_intrinsics.rs:20:49: 20:50 (#0) }) -> [return: bb5, unwind unreachable];
 +         _15 = Rem(move _16, move _17);
 +         goto -> bb5;
       }
@@ -119,7 +119,7 @@
           _19 = _1;
           StorageLive(_20);
           _20 = _2;
--         _18 = unchecked_shl::<i32>(move _19, move _20) -> [return: bb6, unwind unreachable];
+-         _18 = unchecked_shl::<i32>(Spanned { node: move _19, span: $DIR/lower_intrinsics.rs:21:46: 21:47 (#0) }, Spanned { node: move _20, span: $DIR/lower_intrinsics.rs:21:49: 21:50 (#0) }) -> [return: bb6, unwind unreachable];
 +         _18 = ShlUnchecked(move _19, move _20);
 +         goto -> bb6;
       }
@@ -132,7 +132,7 @@
           _22 = _1;
           StorageLive(_23);
           _23 = _2;
--         _21 = unchecked_shr::<i32>(move _22, move _23) -> [return: bb7, unwind unreachable];
+-         _21 = unchecked_shr::<i32>(Spanned { node: move _22, span: $DIR/lower_intrinsics.rs:22:46: 22:47 (#0) }, Spanned { node: move _23, span: $DIR/lower_intrinsics.rs:22:49: 22:50 (#0) }) -> [return: bb7, unwind unreachable];
 +         _21 = ShrUnchecked(move _22, move _23);
 +         goto -> bb7;
       }

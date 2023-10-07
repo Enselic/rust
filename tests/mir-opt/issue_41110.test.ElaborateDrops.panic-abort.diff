@@ -26,7 +26,7 @@
           StorageLive(_3);
           StorageLive(_4);
           _4 = move _2;
-          _3 = std::mem::drop::<S>(move _4) -> [return: bb1, unwind: bb7];
+          _3 = std::mem::drop::<S>(Spanned { node: move _4, span: $DIR/issue_41110.rs:17:10: 17:11 (#0) }) -> [return: bb1, unwind: bb7];
       }
   
       bb1: {

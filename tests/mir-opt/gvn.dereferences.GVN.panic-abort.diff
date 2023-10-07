@@ -57,7 +57,7 @@
           StorageLive(_4);
           StorageLive(_5);
           _5 = (*_1);
-          _4 = opaque::<u32>(move _5) -> [return: bb1, unwind unreachable];
+          _4 = opaque::<u32>(Spanned { node: move _5, span: $DIR/gvn.rs:197:12: 197:14 (#0) }) -> [return: bb1, unwind unreachable];
       }
   
       bb1: {
@@ -66,7 +66,7 @@
           StorageLive(_6);
           StorageLive(_7);
           _7 = (*_1);
-          _6 = opaque::<u32>(move _7) -> [return: bb2, unwind unreachable];
+          _6 = opaque::<u32>(Spanned { node: move _7, span: $DIR/gvn.rs:198:12: 198:14 (#0) }) -> [return: bb2, unwind unreachable];
       }
   
       bb2: {
@@ -77,7 +77,7 @@
           StorageLive(_9);
           StorageLive(_10);
           _10 = (*_8);
-          _9 = opaque::<u32>(move _10) -> [return: bb3, unwind unreachable];
+          _9 = opaque::<u32>(Spanned { node: move _10, span: $DIR/gvn.rs:200:21: 200:23 (#0) }) -> [return: bb3, unwind unreachable];
       }
   
       bb3: {
@@ -86,7 +86,7 @@
           StorageLive(_11);
           StorageLive(_12);
           _12 = (*_8);
-          _11 = opaque::<u32>(move _12) -> [return: bb4, unwind unreachable];
+          _11 = opaque::<u32>(Spanned { node: move _12, span: $DIR/gvn.rs:201:21: 201:23 (#0) }) -> [return: bb4, unwind unreachable];
       }
   
       bb4: {
@@ -97,7 +97,7 @@
           StorageLive(_14);
           StorageLive(_15);
           _15 = (*_13);
-          _14 = opaque::<u32>(move _15) -> [return: bb5, unwind unreachable];
+          _14 = opaque::<u32>(Spanned { node: move _15, span: $DIR/gvn.rs:203:21: 203:23 (#0) }) -> [return: bb5, unwind unreachable];
       }
   
       bb5: {
@@ -106,7 +106,7 @@
           StorageLive(_16);
           StorageLive(_17);
           _17 = (*_13);
-          _16 = opaque::<u32>(move _17) -> [return: bb6, unwind unreachable];
+          _16 = opaque::<u32>(Spanned { node: move _17, span: $DIR/gvn.rs:204:21: 204:23 (#0) }) -> [return: bb6, unwind unreachable];
       }
   
       bb6: {
@@ -117,8 +117,8 @@
           StorageLive(_19);
 -         StorageLive(_20);
           _20 = (*_18);
--         _19 = opaque::<u32>(move _20) -> [return: bb7, unwind unreachable];
-+         _19 = opaque::<u32>(_20) -> [return: bb7, unwind unreachable];
+-         _19 = opaque::<u32>(Spanned { node: move _20, span: $DIR/gvn.rs:206:12: 206:14 (#0) }) -> [return: bb7, unwind unreachable];
++         _19 = opaque::<u32>(Spanned { node: _20, span: $DIR/gvn.rs:206:12: 206:14 (#0) }) -> [return: bb7, unwind unreachable];
       }
   
       bb7: {
@@ -127,8 +127,8 @@
           StorageLive(_21);
 -         StorageLive(_22);
 -         _22 = (*_18);
--         _21 = opaque::<u32>(move _22) -> [return: bb8, unwind unreachable];
-+         _21 = opaque::<u32>(_20) -> [return: bb8, unwind unreachable];
+-         _21 = opaque::<u32>(Spanned { node: move _22, span: $DIR/gvn.rs:207:12: 207:14 (#0) }) -> [return: bb8, unwind unreachable];
++         _21 = opaque::<u32>(Spanned { node: _20, span: $DIR/gvn.rs:207:12: 207:14 (#0) }) -> [return: bb8, unwind unreachable];
       }
   
       bb8: {
@@ -137,7 +137,7 @@
           StorageLive(_23);
           StorageLive(_24);
           _24 = &(*_18);
-          _23 = opaque::<&u32>(move _24) -> [return: bb9, unwind unreachable];
+          _23 = opaque::<&u32>(Spanned { node: move _24, span: $DIR/gvn.rs:208:12: 208:15 (#0) }) -> [return: bb9, unwind unreachable];
       }
   
       bb9: {
@@ -146,7 +146,7 @@
           StorageLive(_25);
           StorageLive(_26);
           _26 = (*_2);
-          _25 = opaque::<impl Copy>(move _26) -> [return: bb10, unwind unreachable];
+          _25 = opaque::<impl Copy>(Spanned { node: move _26, span: $DIR/gvn.rs:209:12: 209:14 (#0) }) -> [return: bb10, unwind unreachable];
       }
   
       bb10: {
@@ -155,7 +155,7 @@
           StorageLive(_27);
           StorageLive(_28);
           _28 = (*_2);
-          _27 = opaque::<impl Copy>(move _28) -> [return: bb11, unwind unreachable];
+          _27 = opaque::<impl Copy>(Spanned { node: move _28, span: $DIR/gvn.rs:210:12: 210:14 (#0) }) -> [return: bb11, unwind unreachable];
       }
   
       bb11: {
@@ -164,8 +164,8 @@
           StorageLive(_29);
 -         StorageLive(_30);
           _30 = ((*_3).0: u32);
--         _29 = opaque::<u32>(move _30) -> [return: bb12, unwind unreachable];
-+         _29 = opaque::<u32>(_30) -> [return: bb12, unwind unreachable];
+-         _29 = opaque::<u32>(Spanned { node: move _30, span: $DIR/gvn.rs:211:12: 211:15 (#0) }) -> [return: bb12, unwind unreachable];
++         _29 = opaque::<u32>(Spanned { node: _30, span: $DIR/gvn.rs:211:12: 211:15 (#0) }) -> [return: bb12, unwind unreachable];
       }
   
       bb12: {
@@ -174,8 +174,8 @@
           StorageLive(_31);
 -         StorageLive(_32);
 -         _32 = ((*_3).0: u32);
--         _31 = opaque::<u32>(move _32) -> [return: bb13, unwind unreachable];
-+         _31 = opaque::<u32>(_30) -> [return: bb13, unwind unreachable];
+-         _31 = opaque::<u32>(Spanned { node: move _32, span: $DIR/gvn.rs:212:12: 212:15 (#0) }) -> [return: bb13, unwind unreachable];
++         _31 = opaque::<u32>(Spanned { node: _30, span: $DIR/gvn.rs:212:12: 212:15 (#0) }) -> [return: bb13, unwind unreachable];
       }
   
       bb13: {

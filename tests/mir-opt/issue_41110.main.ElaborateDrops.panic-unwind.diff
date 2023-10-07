@@ -21,13 +21,13 @@
           StorageLive(_3);
           StorageLive(_4);
           _4 = S;
-          _3 = S::id(move _4) -> [return: bb1, unwind: bb4];
+          _3 = S::id(Spanned { node: move _4, span: $DIR/issue_41110.rs:8:21: 8:22 (#0) }) -> [return: bb1, unwind: bb4];
       }
   
       bb1: {
           StorageDead(_4);
 +         _5 = const false;
-          _1 = S::other(move _2, move _3) -> [return: bb2, unwind: bb3];
+          _1 = S::other(Spanned { node: move _2, span: $DIR/issue_41110.rs:8:13: 8:14 (#0) }, Spanned { node: move _3, span: $DIR/issue_41110.rs:8:21: 8:27 (#0) }) -> [return: bb2, unwind: bb3];
       }
   
       bb2: {

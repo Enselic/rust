@@ -13,7 +13,7 @@
           _3 = &mut _1;
           StorageLive(_4);
           _4 = move _2;
-          _0 = <Box<dyn FnMut<I, Output = ()>> as FnMut<I>>::call_mut(move _3, move _4) -> [return: bb1, unwind unreachable];
+          _0 = <Box<dyn FnMut<I, Output = ()>> as FnMut<I>>::call_mut(Spanned { node: move _3, span: $DIR/dont_ice_on_generic_rust_call.rs:10:5: 10:9 (#0) }, Spanned { node: move _4, span: $DIR/dont_ice_on_generic_rust_call.rs:10:19: 10:24 (#0) }) -> [return: bb1, unwind unreachable];
       }
   
       bb1: {

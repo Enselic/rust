@@ -11,7 +11,7 @@
       bb0: {
           StorageLive(_2);
           _2 = &_1;
--         _0 = <fn(A, B) as Clone>::clone(move _2) -> [return: bb1, unwind unreachable];
+-         _0 = <fn(A, B) as Clone>::clone(Spanned { node: move _2, span: $DIR/inline_shims.rs:6:5: 6:6 (#0) }) -> [return: bb1, unwind unreachable];
 -     }
 - 
 -     bb1: {

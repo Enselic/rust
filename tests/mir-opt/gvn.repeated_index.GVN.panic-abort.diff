@@ -41,7 +41,7 @@
   
       bb1: {
           _6 = _3[_7];
-          _5 = opaque::<T>(move _6) -> [return: bb2, unwind unreachable];
+          _5 = opaque::<T>(Spanned { node: move _6, span: $DIR/gvn.rs:75:12: 75:16 (#0) }) -> [return: bb2, unwind unreachable];
       }
   
       bb2: {
@@ -61,7 +61,7 @@
   
       bb3: {
           _11 = _3[_12];
-          _10 = opaque::<T>(move _11) -> [return: bb4, unwind unreachable];
+          _10 = opaque::<T>(Spanned { node: move _11, span: $DIR/gvn.rs:76:12: 76:18 (#0) }) -> [return: bb4, unwind unreachable];
       }
   
       bb4: {

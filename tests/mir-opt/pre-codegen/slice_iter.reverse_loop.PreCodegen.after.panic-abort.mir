@@ -157,7 +157,7 @@ fn reverse_loop(_1: &[T], _2: impl Fn(&T)) -> () {
         _16 = &mut _15;
         StorageLive(_17);
         _17 = &mut (_15.0: std::slice::Iter<'_, T>);
-        _18 = <std::slice::Iter<'_, T> as DoubleEndedIterator>::next_back(move _17) -> [return: bb5, unwind unreachable];
+        _18 = <std::slice::Iter<'_, T> as DoubleEndedIterator>::next_back(Spanned { node: move _17, span: $SRC_DIR/core/src/iter/adapters/rev.rs:LL:COL (#0) }) -> [return: bb5, unwind unreachable];
     }
 
     bb5: {
@@ -182,7 +182,7 @@ fn reverse_loop(_1: &[T], _2: impl Fn(&T)) -> () {
         _21 = &_2;
         StorageLive(_22);
         _22 = (_20,);
-        _23 = <impl Fn(&T) as Fn<(&T,)>>::call(move _21, move _22) -> [return: bb9, unwind unreachable];
+        _23 = <impl Fn(&T) as Fn<(&T,)>>::call(Spanned { node: move _21, span: $DIR/slice_iter.rs:37:9: 37:10 (#0) }, Spanned { node: move _22, span: $DIR/slice_iter.rs:37:9: 37:13 (#0) }) -> [return: bb9, unwind unreachable];
     }
 
     bb9: {

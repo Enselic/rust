@@ -22,8 +22,8 @@
 +         _4 = const 1_i32;
 +         _3 = const 2_i32;
           StorageDead(_4);
--         _2 = foo(move _3) -> [return: bb1, unwind continue];
-+         _2 = foo(const 2_i32) -> [return: bb1, unwind continue];
+-         _2 = foo(Spanned { node: move _3, span: $DIR/terminator.rs:10:9: 10:14 (#0) }) -> [return: bb1, unwind continue];
++         _2 = foo(Spanned { node: const 2_i32, span: $DIR/terminator.rs:10:9: 10:14 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

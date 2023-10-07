@@ -122,7 +122,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
     }
 
     bb2: {
-        _4 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as IntoFuture>::into_future(move _5) -> [return: bb3, unwind unreachable];
+        _4 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as IntoFuture>::into_future(Spanned { node: move _5, span: $DIR/async_await.rs:15:5: 15:8 (#0) }) -> [return: bb3, unwind unreachable];
     }
 
     bb3: {
@@ -140,7 +140,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
         StorageLive(_12);
         _12 = &mut (((*(_1.0: &mut {async fn body@$DIR/async_await.rs:14:18: 17:2})) as variant#3).0: {async fn body@$DIR/async_await.rs:11:14: 11:16});
         _11 = &mut (*_12);
-        _10 = Pin::<&mut {async fn body@$DIR/async_await.rs:11:14: 11:16}>::new_unchecked(move _11) -> [return: bb5, unwind unreachable];
+        _10 = Pin::<&mut {async fn body@$DIR/async_await.rs:11:14: 11:16}>::new_unchecked(Spanned { node: move _11, span: $DIR/async_await.rs:15:9: 15:14 (#8) }) -> [return: bb5, unwind unreachable];
     }
 
     bb5: {
@@ -156,7 +156,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
     bb6: {
         _13 = &mut (*_14);
         StorageDead(_15);
-        _9 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as Future>::poll(move _10, move _13) -> [return: bb7, unwind unreachable];
+        _9 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as Future>::poll(Spanned { node: move _10, span: $DIR/async_await.rs:15:9: 15:14 (#8) }, Spanned { node: move _13, span: $DIR/async_await.rs:15:5: 15:14 (#9) }) -> [return: bb7, unwind unreachable];
     }
 
     bb7: {
@@ -218,7 +218,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
     }
 
     bb14: {
-        _21 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as IntoFuture>::into_future(move _22) -> [return: bb15, unwind unreachable];
+        _21 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as IntoFuture>::into_future(Spanned { node: move _22, span: $DIR/async_await.rs:16:5: 16:8 (#0) }) -> [return: bb15, unwind unreachable];
     }
 
     bb15: {
@@ -236,7 +236,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
         StorageLive(_28);
         _28 = &mut (((*(_1.0: &mut {async fn body@$DIR/async_await.rs:14:18: 17:2})) as variant#4).0: {async fn body@$DIR/async_await.rs:11:14: 11:16});
         _27 = &mut (*_28);
-        _26 = Pin::<&mut {async fn body@$DIR/async_await.rs:11:14: 11:16}>::new_unchecked(move _27) -> [return: bb17, unwind unreachable];
+        _26 = Pin::<&mut {async fn body@$DIR/async_await.rs:11:14: 11:16}>::new_unchecked(Spanned { node: move _27, span: $DIR/async_await.rs:16:9: 16:14 (#10) }) -> [return: bb17, unwind unreachable];
     }
 
     bb17: {
@@ -252,7 +252,7 @@ fn b::{closure#0}(_1: Pin<&mut {async fn body@$DIR/async_await.rs:14:18: 17:2}>,
     bb18: {
         _29 = &mut (*_30);
         StorageDead(_31);
-        _25 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as Future>::poll(move _26, move _29) -> [return: bb19, unwind unreachable];
+        _25 = <{async fn body@$DIR/async_await.rs:11:14: 11:16} as Future>::poll(Spanned { node: move _26, span: $DIR/async_await.rs:16:9: 16:14 (#10) }, Spanned { node: move _29, span: $DIR/async_await.rs:16:5: 16:14 (#11) }) -> [return: bb19, unwind unreachable];
     }
 
     bb19: {

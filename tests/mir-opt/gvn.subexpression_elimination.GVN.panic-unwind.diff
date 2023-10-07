@@ -204,9 +204,9 @@
 -         _5 = Add(move _6, move _7);
 -         StorageDead(_7);
 -         StorageDead(_6);
--         _4 = opaque::<u64>(move _5) -> [return: bb1, unwind continue];
+-         _4 = opaque::<u64>(Spanned { node: move _5, span: $DIR/gvn.rs:11:12: 11:17 (#0) }) -> [return: bb1, unwind continue];
 +         _5 = Add(_1, _2);
-+         _4 = opaque::<u64>(_5) -> [return: bb1, unwind continue];
++         _4 = opaque::<u64>(Spanned { node: _5, span: $DIR/gvn.rs:11:12: 11:17 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {
@@ -221,9 +221,9 @@
 -         _9 = Mul(move _10, move _11);
 -         StorageDead(_11);
 -         StorageDead(_10);
--         _8 = opaque::<u64>(move _9) -> [return: bb2, unwind continue];
+-         _8 = opaque::<u64>(Spanned { node: move _9, span: $DIR/gvn.rs:12:12: 12:17 (#0) }) -> [return: bb2, unwind continue];
 +         _9 = Mul(_1, _2);
-+         _8 = opaque::<u64>(_9) -> [return: bb2, unwind continue];
++         _8 = opaque::<u64>(Spanned { node: _9, span: $DIR/gvn.rs:12:12: 12:17 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {
@@ -238,9 +238,9 @@
 -         _13 = Sub(move _14, move _15);
 -         StorageDead(_15);
 -         StorageDead(_14);
--         _12 = opaque::<u64>(move _13) -> [return: bb3, unwind continue];
+-         _12 = opaque::<u64>(Spanned { node: move _13, span: $DIR/gvn.rs:13:12: 13:17 (#0) }) -> [return: bb3, unwind continue];
 +         _13 = Sub(_1, _2);
-+         _12 = opaque::<u64>(_13) -> [return: bb3, unwind continue];
++         _12 = opaque::<u64>(Spanned { node: _13, span: $DIR/gvn.rs:13:12: 13:17 (#0) }) -> [return: bb3, unwind continue];
       }
   
       bb3: {
@@ -262,9 +262,9 @@
 -         _17 = Div(move _18, move _19);
 -         StorageDead(_19);
 -         StorageDead(_18);
--         _16 = opaque::<u64>(move _17) -> [return: bb5, unwind continue];
+-         _16 = opaque::<u64>(Spanned { node: move _17, span: $DIR/gvn.rs:14:12: 14:17 (#0) }) -> [return: bb5, unwind continue];
 +         _17 = Div(_1, _2);
-+         _16 = opaque::<u64>(_17) -> [return: bb5, unwind continue];
++         _16 = opaque::<u64>(Spanned { node: _17, span: $DIR/gvn.rs:14:12: 14:17 (#0) }) -> [return: bb5, unwind continue];
       }
   
       bb5: {
@@ -285,9 +285,9 @@
 -         _22 = Rem(move _23, move _24);
 -         StorageDead(_24);
 -         StorageDead(_23);
--         _21 = opaque::<u64>(move _22) -> [return: bb7, unwind continue];
+-         _21 = opaque::<u64>(Spanned { node: move _22, span: $DIR/gvn.rs:15:12: 15:17 (#0) }) -> [return: bb7, unwind continue];
 +         _22 = Rem(_1, _2);
-+         _21 = opaque::<u64>(_22) -> [return: bb7, unwind continue];
++         _21 = opaque::<u64>(Spanned { node: _22, span: $DIR/gvn.rs:15:12: 15:17 (#0) }) -> [return: bb7, unwind continue];
       }
   
       bb7: {
@@ -302,9 +302,9 @@
 -         _27 = BitAnd(move _28, move _29);
 -         StorageDead(_29);
 -         StorageDead(_28);
--         _26 = opaque::<u64>(move _27) -> [return: bb8, unwind continue];
+-         _26 = opaque::<u64>(Spanned { node: move _27, span: $DIR/gvn.rs:16:12: 16:17 (#0) }) -> [return: bb8, unwind continue];
 +         _27 = BitAnd(_1, _2);
-+         _26 = opaque::<u64>(_27) -> [return: bb8, unwind continue];
++         _26 = opaque::<u64>(Spanned { node: _27, span: $DIR/gvn.rs:16:12: 16:17 (#0) }) -> [return: bb8, unwind continue];
       }
   
       bb8: {
@@ -319,9 +319,9 @@
 -         _31 = BitOr(move _32, move _33);
 -         StorageDead(_33);
 -         StorageDead(_32);
--         _30 = opaque::<u64>(move _31) -> [return: bb9, unwind continue];
+-         _30 = opaque::<u64>(Spanned { node: move _31, span: $DIR/gvn.rs:17:12: 17:17 (#0) }) -> [return: bb9, unwind continue];
 +         _31 = BitOr(_1, _2);
-+         _30 = opaque::<u64>(_31) -> [return: bb9, unwind continue];
++         _30 = opaque::<u64>(Spanned { node: _31, span: $DIR/gvn.rs:17:12: 17:17 (#0) }) -> [return: bb9, unwind continue];
       }
   
       bb9: {
@@ -336,9 +336,9 @@
 -         _35 = BitXor(move _36, move _37);
 -         StorageDead(_37);
 -         StorageDead(_36);
--         _34 = opaque::<u64>(move _35) -> [return: bb10, unwind continue];
+-         _34 = opaque::<u64>(Spanned { node: move _35, span: $DIR/gvn.rs:18:12: 18:17 (#0) }) -> [return: bb10, unwind continue];
 +         _35 = BitXor(_1, _2);
-+         _34 = opaque::<u64>(_35) -> [return: bb10, unwind continue];
++         _34 = opaque::<u64>(Spanned { node: _35, span: $DIR/gvn.rs:18:12: 18:17 (#0) }) -> [return: bb10, unwind continue];
       }
   
       bb10: {
@@ -353,9 +353,9 @@
 -         _39 = Shl(move _40, move _41);
 -         StorageDead(_41);
 -         StorageDead(_40);
--         _38 = opaque::<u64>(move _39) -> [return: bb11, unwind continue];
+-         _38 = opaque::<u64>(Spanned { node: move _39, span: $DIR/gvn.rs:19:12: 19:18 (#0) }) -> [return: bb11, unwind continue];
 +         _39 = Shl(_1, _2);
-+         _38 = opaque::<u64>(_39) -> [return: bb11, unwind continue];
++         _38 = opaque::<u64>(Spanned { node: _39, span: $DIR/gvn.rs:19:12: 19:18 (#0) }) -> [return: bb11, unwind continue];
       }
   
       bb11: {
@@ -370,9 +370,9 @@
 -         _43 = Shr(move _44, move _45);
 -         StorageDead(_45);
 -         StorageDead(_44);
--         _42 = opaque::<u64>(move _43) -> [return: bb12, unwind continue];
+-         _42 = opaque::<u64>(Spanned { node: move _43, span: $DIR/gvn.rs:20:12: 20:18 (#0) }) -> [return: bb12, unwind continue];
 +         _43 = Shr(_1, _2);
-+         _42 = opaque::<u64>(_43) -> [return: bb12, unwind continue];
++         _42 = opaque::<u64>(Spanned { node: _43, span: $DIR/gvn.rs:20:12: 20:18 (#0) }) -> [return: bb12, unwind continue];
       }
   
       bb12: {
@@ -385,7 +385,7 @@
 -         _47 = move _48 as u32 (IntToInt);
 -         StorageDead(_48);
 +         _47 = _1 as u32 (IntToInt);
-          _46 = opaque::<u32>(move _47) -> [return: bb13, unwind continue];
+          _46 = opaque::<u32>(Spanned { node: move _47, span: $DIR/gvn.rs:21:12: 21:20 (#0) }) -> [return: bb13, unwind continue];
       }
   
       bb13: {
@@ -398,7 +398,7 @@
 -         _50 = move _51 as f32 (IntToFloat);
 -         StorageDead(_51);
 +         _50 = _1 as f32 (IntToFloat);
-          _49 = opaque::<f32>(move _50) -> [return: bb14, unwind continue];
+          _49 = opaque::<f32>(Spanned { node: move _50, span: $DIR/gvn.rs:22:12: 22:20 (#0) }) -> [return: bb14, unwind continue];
       }
   
       bb14: {
@@ -410,9 +410,9 @@
 -         _54 = _1;
 -         _53 = S::<u64>(move _54);
 -         StorageDead(_54);
--         _52 = opaque::<S<u64>>(move _53) -> [return: bb15, unwind continue];
+-         _52 = opaque::<S<u64>>(Spanned { node: move _53, span: $DIR/gvn.rs:23:12: 23:16 (#0) }) -> [return: bb15, unwind continue];
 +         _53 = S::<u64>(_1);
-+         _52 = opaque::<S<u64>>(_53) -> [return: bb15, unwind continue];
++         _52 = opaque::<S<u64>>(Spanned { node: _53, span: $DIR/gvn.rs:23:12: 23:16 (#0) }) -> [return: bb15, unwind continue];
       }
   
       bb15: {
@@ -426,9 +426,9 @@
 -         _57 = S::<u64>(move _58);
 -         StorageDead(_58);
 -         _56 = (_57.0: u64);
--         _55 = opaque::<u64>(move _56) -> [return: bb16, unwind continue];
+-         _55 = opaque::<u64>(Spanned { node: move _56, span: $DIR/gvn.rs:24:12: 24:18 (#0) }) -> [return: bb16, unwind continue];
 +         _56 = (_53.0: u64);
-+         _55 = opaque::<u64>(_56) -> [return: bb16, unwind continue];
++         _55 = opaque::<u64>(Spanned { node: _56, span: $DIR/gvn.rs:24:12: 24:18 (#0) }) -> [return: bb16, unwind continue];
       }
   
       bb16: {
@@ -451,7 +451,7 @@
 +         _60 = Add(_5, move _64);
           StorageDead(_64);
 -         StorageDead(_61);
-          _59 = opaque::<u64>(move _60) -> [return: bb17, unwind continue];
+          _59 = opaque::<u64>(Spanned { node: move _60, span: $DIR/gvn.rs:27:12: 27:23 (#0) }) -> [return: bb17, unwind continue];
       }
   
       bb17: {
@@ -473,7 +473,7 @@
 +         _66 = Add(_9, move _70);
           StorageDead(_70);
 -         StorageDead(_67);
-          _65 = opaque::<u64>(move _66) -> [return: bb18, unwind continue];
+          _65 = opaque::<u64>(Spanned { node: move _66, span: $DIR/gvn.rs:28:12: 28:23 (#0) }) -> [return: bb18, unwind continue];
       }
   
       bb18: {
@@ -495,7 +495,7 @@
 +         _72 = Add(_13, move _76);
           StorageDead(_76);
 -         StorageDead(_73);
-          _71 = opaque::<u64>(move _72) -> [return: bb19, unwind continue];
+          _71 = opaque::<u64>(Spanned { node: move _72, span: $DIR/gvn.rs:29:12: 29:23 (#0) }) -> [return: bb19, unwind continue];
       }
   
       bb19: {
@@ -523,7 +523,7 @@
 +         _78 = Add(_17, move _83);
           StorageDead(_83);
 -         StorageDead(_79);
-          _77 = opaque::<u64>(move _78) -> [return: bb21, unwind continue];
+          _77 = opaque::<u64>(Spanned { node: move _78, span: $DIR/gvn.rs:30:12: 30:23 (#0) }) -> [return: bb21, unwind continue];
       }
   
       bb21: {
@@ -551,7 +551,7 @@
 +         _85 = Add(_22, move _90);
           StorageDead(_90);
 -         StorageDead(_86);
-          _84 = opaque::<u64>(move _85) -> [return: bb23, unwind continue];
+          _84 = opaque::<u64>(Spanned { node: move _85, span: $DIR/gvn.rs:31:12: 31:23 (#0) }) -> [return: bb23, unwind continue];
       }
   
       bb23: {
@@ -573,7 +573,7 @@
 +         _92 = Add(_27, move _96);
           StorageDead(_96);
 -         StorageDead(_93);
-          _91 = opaque::<u64>(move _92) -> [return: bb24, unwind continue];
+          _91 = opaque::<u64>(Spanned { node: move _92, span: $DIR/gvn.rs:32:12: 32:23 (#0) }) -> [return: bb24, unwind continue];
       }
   
       bb24: {
@@ -595,7 +595,7 @@
 +         _98 = Add(_31, move _102);
           StorageDead(_102);
 -         StorageDead(_99);
-          _97 = opaque::<u64>(move _98) -> [return: bb25, unwind continue];
+          _97 = opaque::<u64>(Spanned { node: move _98, span: $DIR/gvn.rs:33:12: 33:23 (#0) }) -> [return: bb25, unwind continue];
       }
   
       bb25: {
@@ -617,7 +617,7 @@
 +         _104 = Add(_35, move _108);
           StorageDead(_108);
 -         StorageDead(_105);
-          _103 = opaque::<u64>(move _104) -> [return: bb26, unwind continue];
+          _103 = opaque::<u64>(Spanned { node: move _104, span: $DIR/gvn.rs:34:12: 34:23 (#0) }) -> [return: bb26, unwind continue];
       }
   
       bb26: {
@@ -639,7 +639,7 @@
 +         _110 = Add(_39, move _114);
           StorageDead(_114);
 -         StorageDead(_111);
-          _109 = opaque::<u64>(move _110) -> [return: bb27, unwind continue];
+          _109 = opaque::<u64>(Spanned { node: move _110, span: $DIR/gvn.rs:35:12: 35:24 (#0) }) -> [return: bb27, unwind continue];
       }
   
       bb27: {
@@ -661,7 +661,7 @@
 +         _116 = Add(_43, move _120);
           StorageDead(_120);
 -         StorageDead(_117);
-          _115 = opaque::<u64>(move _116) -> [return: bb28, unwind continue];
+          _115 = opaque::<u64>(Spanned { node: move _116, span: $DIR/gvn.rs:36:12: 36:24 (#0) }) -> [return: bb28, unwind continue];
       }
   
       bb28: {
@@ -673,8 +673,8 @@
 -         _123 = _1;
 -         _122 = S::<u64>(move _123);
 -         StorageDead(_123);
--         _121 = opaque::<S<u64>>(move _122) -> [return: bb29, unwind continue];
-+         _121 = opaque::<S<u64>>(_53) -> [return: bb29, unwind continue];
+-         _121 = opaque::<S<u64>>(Spanned { node: move _122, span: $DIR/gvn.rs:37:12: 37:16 (#0) }) -> [return: bb29, unwind continue];
++         _121 = opaque::<S<u64>>(Spanned { node: _53, span: $DIR/gvn.rs:37:12: 37:16 (#0) }) -> [return: bb29, unwind continue];
       }
   
       bb29: {
@@ -688,8 +688,8 @@
 -         _126 = S::<u64>(move _127);
 -         StorageDead(_127);
 -         _125 = (_126.0: u64);
--         _124 = opaque::<u64>(move _125) -> [return: bb30, unwind continue];
-+         _124 = opaque::<u64>(_56) -> [return: bb30, unwind continue];
+-         _124 = opaque::<u64>(Spanned { node: move _125, span: $DIR/gvn.rs:38:12: 38:18 (#0) }) -> [return: bb30, unwind continue];
++         _124 = opaque::<u64>(Spanned { node: _56, span: $DIR/gvn.rs:38:12: 38:18 (#0) }) -> [return: bb30, unwind continue];
       }
   
       bb30: {
@@ -707,9 +707,9 @@
 -         _130 = Add(move _131, move _132);
 -         StorageDead(_132);
 -         StorageDead(_131);
--         _129 = opaque::<u64>(move _130) -> [return: bb31, unwind continue];
+-         _129 = opaque::<u64>(Spanned { node: move _130, span: $DIR/gvn.rs:42:12: 42:18 (#0) }) -> [return: bb31, unwind continue];
 +         _130 = Add(_131, _1);
-+         _129 = opaque::<u64>(_130) -> [return: bb31, unwind continue];
++         _129 = opaque::<u64>(Spanned { node: _130, span: $DIR/gvn.rs:42:12: 42:18 (#0) }) -> [return: bb31, unwind continue];
       }
   
       bb31: {
@@ -724,8 +724,8 @@
 -         _134 = Add(move _135, move _136);
 -         StorageDead(_136);
 -         StorageDead(_135);
--         _133 = opaque::<u64>(move _134) -> [return: bb32, unwind continue];
-+         _133 = opaque::<u64>(_130) -> [return: bb32, unwind continue];
+-         _133 = opaque::<u64>(Spanned { node: move _134, span: $DIR/gvn.rs:43:12: 43:18 (#0) }) -> [return: bb32, unwind continue];
++         _133 = opaque::<u64>(Spanned { node: _130, span: $DIR/gvn.rs:43:12: 43:18 (#0) }) -> [return: bb32, unwind continue];
       }
   
       bb32: {
@@ -743,7 +743,7 @@
 -         StorageDead(_141);
 +         _139 = Add(move _140, _1);
           StorageDead(_140);
-          _138 = opaque::<u64>(move _139) -> [return: bb33, unwind continue];
+          _138 = opaque::<u64>(Spanned { node: move _139, span: $DIR/gvn.rs:47:12: 47:18 (#0) }) -> [return: bb33, unwind continue];
       }
   
       bb33: {
@@ -759,7 +759,7 @@
 -         StorageDead(_145);
 +         _143 = Add(move _144, _1);
           StorageDead(_144);
-          _142 = opaque::<u64>(move _143) -> [return: bb34, unwind continue];
+          _142 = opaque::<u64>(Spanned { node: move _143, span: $DIR/gvn.rs:48:12: 48:18 (#0) }) -> [return: bb34, unwind continue];
       }
   
       bb34: {
@@ -778,7 +778,7 @@
 -         StorageDead(_151);
 +         _149 = Add(move _150, _1);
           StorageDead(_150);
-          _148 = opaque::<u64>(move _149) -> [return: bb35, unwind continue];
+          _148 = opaque::<u64>(Spanned { node: move _149, span: $DIR/gvn.rs:51:16: 51:22 (#0) }) -> [return: bb35, unwind continue];
       }
   
       bb35: {
@@ -794,7 +794,7 @@
 -         StorageDead(_155);
 +         _153 = Add(move _154, _1);
           StorageDead(_154);
-          _152 = opaque::<u64>(move _153) -> [return: bb36, unwind continue];
+          _152 = opaque::<u64>(Spanned { node: move _153, span: $DIR/gvn.rs:52:16: 52:22 (#0) }) -> [return: bb36, unwind continue];
       }
   
       bb36: {
@@ -812,7 +812,7 @@
 -         StorageDead(_160);
 +         _158 = Add(move _159, _1);
           StorageDead(_159);
-          _157 = opaque::<u64>(move _158) -> [return: bb37, unwind continue];
+          _157 = opaque::<u64>(Spanned { node: move _158, span: $DIR/gvn.rs:54:16: 54:22 (#0) }) -> [return: bb37, unwind continue];
       }
   
       bb37: {
@@ -828,7 +828,7 @@
 -         StorageDead(_164);
 +         _162 = Add(move _163, _1);
           StorageDead(_163);
-          _161 = opaque::<u64>(move _162) -> [return: bb38, unwind continue];
+          _161 = opaque::<u64>(Spanned { node: move _162, span: $DIR/gvn.rs:55:16: 55:22 (#0) }) -> [return: bb38, unwind continue];
       }
   
       bb38: {
@@ -849,9 +849,9 @@
 -         _167 = Add(move _168, move _169);
 -         StorageDead(_169);
 -         StorageDead(_168);
--         _166 = opaque::<u64>(move _167) -> [return: bb39, unwind continue];
+-         _166 = opaque::<u64>(Spanned { node: move _167, span: $DIR/gvn.rs:61:12: 61:18 (#0) }) -> [return: bb39, unwind continue];
 +         _167 = Add(_168, _1);
-+         _166 = opaque::<u64>(_167) -> [return: bb39, unwind continue];
++         _166 = opaque::<u64>(Spanned { node: _167, span: $DIR/gvn.rs:61:12: 61:18 (#0) }) -> [return: bb39, unwind continue];
       }
   
       bb39: {
@@ -866,8 +866,8 @@
 -         _171 = Add(move _172, move _173);
 -         StorageDead(_173);
 -         StorageDead(_172);
--         _170 = opaque::<u64>(move _171) -> [return: bb40, unwind continue];
-+         _170 = opaque::<u64>(_167) -> [return: bb40, unwind continue];
+-         _170 = opaque::<u64>(Spanned { node: move _171, span: $DIR/gvn.rs:62:12: 62:18 (#0) }) -> [return: bb40, unwind continue];
++         _170 = opaque::<u64>(Spanned { node: _167, span: $DIR/gvn.rs:62:12: 62:18 (#0) }) -> [return: bb40, unwind continue];
       }
   
       bb40: {

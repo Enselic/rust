@@ -9,9 +9,9 @@
       bb0: {
           StorageLive(_2);
 -         _2 = (const (), const 0_u8, const 0_u8);
--         _1 = encode(move _2) -> [return: bb1, unwind continue];
+-         _1 = encode(Spanned { node: move _2, span: $DIR/issue_66971.rs:18:12: 18:22 (#0) }) -> [return: bb1, unwind continue];
 +         _2 = const ((), 0_u8, 0_u8);
-+         _1 = encode(const ((), 0_u8, 0_u8)) -> [return: bb1, unwind continue];
++         _1 = encode(Spanned { node: const ((), 0_u8, 0_u8), span: $DIR/issue_66971.rs:18:12: 18:22 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

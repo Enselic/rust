@@ -22,7 +22,7 @@
           StorageLive(_3);
           StorageLive(_4);
           _4 = &raw const (*_1);
--         _3 = option_payload_ptr::<usize>(move _4) -> [return: bb1, unwind unreachable];
+-         _3 = option_payload_ptr::<usize>(Spanned { node: move _4, span: $DIR/lower_intrinsics.rs:148:55: 148:56 (#0) }) -> [return: bb1, unwind unreachable];
 +         _3 = &raw const (((*_4) as Some).0: usize);
 +         goto -> bb1;
       }
@@ -32,7 +32,7 @@
           StorageLive(_5);
           StorageLive(_6);
           _6 = &raw const (*_2);
--         _5 = option_payload_ptr::<String>(move _6) -> [return: bb2, unwind unreachable];
+-         _5 = option_payload_ptr::<String>(Spanned { node: move _6, span: $DIR/lower_intrinsics.rs:149:55: 149:56 (#0) }) -> [return: bb2, unwind unreachable];
 +         _5 = &raw const (((*_6) as Some).0: std::string::String);
 +         goto -> bb2;
       }

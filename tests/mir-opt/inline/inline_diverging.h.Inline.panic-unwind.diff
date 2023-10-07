@@ -22,21 +22,21 @@
   
       bb0: {
           StorageLive(_1);
--         _1 = call_twice::<!, fn() -> ! {sleep}>(sleep) -> unwind continue;
+-         _1 = call_twice::<!, fn() -> ! {sleep}>(Spanned { node: sleep, span: $DIR/inline_diverging.rs:23:16: 23:21 (#0) }) -> unwind continue;
 +         StorageLive(_2);
 +         _2 = sleep;
 +         StorageLive(_6);
 +         StorageLive(_4);
 +         StorageLive(_3);
 +         _3 = &_2;
-+         _4 = <fn() -> ! {sleep} as Fn<()>>::call(move _3, const ()) -> [return: bb1, unwind: bb5];
++         _4 = <fn() -> ! {sleep} as Fn<()>>::call(Spanned { node: move _3, span: $DIR/inline_diverging.rs:28:13: 28:14 (#0) }, Spanned { node: const (), span: $DIR/inline_diverging.rs:28:13: 28:16 (#0) }) -> [return: bb1, unwind: bb5];
 +     }
 + 
 +     bb1: {
 +         StorageDead(_3);
 +         StorageLive(_5);
 +         _5 = &_2;
-+         _6 = <fn() -> ! {sleep} as Fn<()>>::call(move _5, const ()) -> [return: bb2, unwind: bb4];
++         _6 = <fn() -> ! {sleep} as Fn<()>>::call(Spanned { node: move _5, span: $DIR/inline_diverging.rs:29:13: 29:14 (#0) }, Spanned { node: const (), span: $DIR/inline_diverging.rs:29:13: 29:16 (#0) }) -> [return: bb2, unwind: bb4];
 +     }
 + 
 +     bb2: {

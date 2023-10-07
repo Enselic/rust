@@ -23,6 +23,7 @@ use rustc_middle::util::CallKind;
 use rustc_mir_dataflow::move_paths::{InitKind, MoveOutIndex, MovePathIndex};
 use rustc_span::def_id::LocalDefId;
 use rustc_span::hygiene::DesugaringKind;
+use rustc_span::source_map::Spanned;
 use rustc_span::symbol::{kw, sym, Ident};
 use rustc_span::{BytePos, Span, Symbol};
 use rustc_trait_selection::infer::InferCtxtExt;
@@ -1247,7 +1248,10 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
                     return None;
                 };
                 debug!("checking call args for uses of inner_param: {:?}", args);
-                args.contains(&Operand::Move(inner_param)).then_some((loc, term))
+                args.iter()
+                    .map(|a| &a.node)
+                    .any(|a| a == &Operand::Move(inner_param))
+                    .then_some((loc, term))
             })
         else {
             debug!("no uses of inner_param found as a by-move call arg");
@@ -3172,7 +3176,10 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
                         assigned_to, args
                     );
                     for operand in args {
-                        let (Operand::Copy(assigned_from) | Operand::Move(assigned_from)) = operand
+                        let Spanned {
+                            node: Operand::Copy(assigned_from) | Operand::Move(assigned_from),
+                            ..
+                        } = operand
                         else {
                             continue;
                         };

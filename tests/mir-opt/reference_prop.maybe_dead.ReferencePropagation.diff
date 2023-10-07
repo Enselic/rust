@@ -27,17 +27,17 @@
       bb1: {
           StorageDead(_2);
           StorageDead(_3);
-          _0 = opaque::<i32>(_6) -> [return: bb2, unwind continue];
+          _0 = opaque::<i32>(Spanned { node: _6, span: $DIR/reference_prop.rs:489:31: 489:32 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {
           _7 = (*_4);
-          _0 = opaque::<i32>(_7) -> [return: bb3, unwind continue];
+          _0 = opaque::<i32>(Spanned { node: _7, span: $DIR/reference_prop.rs:494:31: 494:32 (#0) }) -> [return: bb3, unwind continue];
       }
   
       bb3: {
           _8 = (*_5);
-          _0 = opaque::<i32>(_8) -> [return: bb4, unwind continue];
+          _0 = opaque::<i32>(Spanned { node: _8, span: $DIR/reference_prop.rs:500:31: 500:32 (#0) }) -> [return: bb4, unwind continue];
       }
   
       bb4: {

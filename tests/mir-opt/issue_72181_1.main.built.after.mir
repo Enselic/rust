@@ -21,7 +21,7 @@ fn main() -> () {
         StorageLive(_2);
         StorageLive(_3);
         _3 = ();
-        _2 = transmute::<(), Void>(move _3) -> bb4;
+        _2 = transmute::<(), Void>(Spanned { node: move _3, span: $DIR/issue_72181_1.rs:17:41: 17:43 (#0) }) -> bb4;
     }
 
     bb1: {
@@ -31,7 +31,7 @@ fn main() -> () {
         StorageLive(_4);
         StorageLive(_5);
         _5 = move _2;
-        _4 = f(move _5) -> bb4;
+        _4 = f(Spanned { node: move _5, span: $DIR/issue_72181_1.rs:20:7: 20:8 (#0) }) -> bb4;
     }
 
     bb2: {

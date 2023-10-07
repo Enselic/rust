@@ -10,7 +10,7 @@
       }
   
       bb1: {
-          _2 = dummy(const 13_u8) -> [return: bb2, unwind continue];
+          _2 = dummy(Spanned { node: const 13_u8, span: $DIR/calls.rs:28:28: 28:30 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {

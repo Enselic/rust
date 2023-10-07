@@ -15,7 +15,7 @@
           _3 = &raw mut (*_1);
           StorageLive(_4);
           _4 = move _2;
--         _0 = write_via_move::<String>(move _3, move _4) -> [return: bb1, unwind unreachable];
+-         _0 = write_via_move::<String>(Spanned { node: move _3, span: $DIR/lower_intrinsics.rs:140:47: 140:48 (#0) }, Spanned { node: move _4, span: $DIR/lower_intrinsics.rs:140:50: 140:51 (#0) }) -> [return: bb1, unwind unreachable];
 +         (*_3) = move _4;
 +         goto -> bb1;
       }

@@ -27,7 +27,7 @@ fn filter_mapped(_1: impl Iterator<Item = T>, _2: impl Fn(T) -> Option<U>) -> ()
     }
 
     bb0: {
-        _3 = <impl Iterator<Item = T> as Iterator>::filter_map::<U, impl Fn(T) -> Option<U>>(move _1, move _2) -> [return: bb1, unwind continue];
+        _3 = <impl Iterator<Item = T> as Iterator>::filter_map::<U, impl Fn(T) -> Option<U>>(Spanned { node: move _1, span: $DIR/loops.rs:19:14: 19:18 (#0) }, Spanned { node: move _2, span: $DIR/loops.rs:19:30: 19:31 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {
@@ -43,7 +43,7 @@ fn filter_mapped(_1: impl Iterator<Item = T>, _2: impl Fn(T) -> Option<U>) -> ()
         _6 = &mut (_4.0: impl Iterator<Item = T>);
         StorageLive(_7);
         _7 = &mut (_4.1: impl Fn(T) -> Option<U>);
-        _8 = <impl Iterator<Item = T> as Iterator>::find_map::<U, &mut impl Fn(T) -> Option<U>>(move _6, move _7) -> [return: bb3, unwind: bb9];
+        _8 = <impl Iterator<Item = T> as Iterator>::find_map::<U, &mut impl Fn(T) -> Option<U>>(Spanned { node: move _6, span: $SRC_DIR/core/src/iter/adapters/filter_map.rs:62:9: 62:18 (#0) }, Spanned { node: move _7, span: $SRC_DIR/core/src/iter/adapters/filter_map.rs:LL:COL (#0) }) -> [return: bb3, unwind: bb9];
     }
 
     bb3: {
@@ -65,7 +65,7 @@ fn filter_mapped(_1: impl Iterator<Item = T>, _2: impl Fn(T) -> Option<U>) -> ()
 
     bb6: {
         _10 = move ((_8 as Some).0: U);
-        _11 = opaque::<U>(move _10) -> [return: bb7, unwind: bb9];
+        _11 = opaque::<U>(Spanned { node: move _10, span: $DIR/loops.rs:20:16: 20:17 (#0) }) -> [return: bb7, unwind: bb9];
     }
 
     bb7: {

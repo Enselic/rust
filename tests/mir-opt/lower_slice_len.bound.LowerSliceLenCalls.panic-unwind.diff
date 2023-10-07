@@ -20,7 +20,7 @@
           StorageLive(_5);
           StorageLive(_6);
           _6 = &(*_2);
--         _5 = core::slice::<impl [u8]>::len(move _6) -> [return: bb1, unwind continue];
+-         _5 = core::slice::<impl [u8]>::len(Spanned { node: move _6, span: $DIR/lower_slice_len.rs:6:16: 6:21 (#0) }) -> [return: bb1, unwind continue];
 +         _5 = Len((*_6));
 +         goto -> bb1;
       }

@@ -16,7 +16,7 @@ fn f(_1: usize) -> usize {
         _1 = _2;
         StorageLive(_4);
         _4 = _1;
-        _0 = id::<usize>(move _4) -> [return: bb1, unwind continue];
+        _0 = id::<usize>(Spanned { node: move _4, span: $DIR/dead_stores_better.rs:17:8: 17:9 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {

@@ -13,13 +13,13 @@
   
       bb0: {
           StorageLive(_1);
--         _1 = f::<fn() {g}>(g) -> [return: bb1, unwind continue];
+-         _1 = f::<fn() {g}>(Spanned { node: g, span: $DIR/cycle.rs:18:7: 18:8 (#0) }) -> [return: bb1, unwind continue];
 +         StorageLive(_2);
 +         _2 = g;
 +         StorageLive(_4);
 +         StorageLive(_3);
 +         _3 = &_2;
-+         _4 = <fn() {g} as Fn<()>>::call(move _3, const ()) -> [return: bb2, unwind: bb3];
++         _4 = <fn() {g} as Fn<()>>::call(Spanned { node: move _3, span: $DIR/cycle.rs:7:5: 7:6 (#0) }, Spanned { node: const (), span: $DIR/cycle.rs:7:5: 7:8 (#0) }) -> [return: bb2, unwind: bb3];
       }
   
       bb1: {

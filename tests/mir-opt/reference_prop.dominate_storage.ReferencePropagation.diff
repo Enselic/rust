@@ -22,7 +22,7 @@
   
       bb2: {
           _5 = (*_2);
-          _0 = opaque::<i32>(_5) -> [return: bb3, unwind continue];
+          _0 = opaque::<i32>(Spanned { node: _5, span: $DIR/reference_prop.rs:455:31: 455:32 (#0) }) -> [return: bb3, unwind continue];
       }
   
       bb3: {

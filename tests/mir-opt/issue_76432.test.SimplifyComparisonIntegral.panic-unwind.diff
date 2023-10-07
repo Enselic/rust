@@ -40,7 +40,7 @@
       }
   
       bb1: {
-          _14 = core::panicking::panic(const "internal error: entered unreachable code") -> unwind continue;
+          _14 = core::panicking::panic(Spanned { node: const "internal error: entered unreachable code", span: $SRC_DIR/core/src/panic.rs:LL:COL (#6) }) -> unwind continue;
       }
   
       bb2: {

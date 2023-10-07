@@ -14,7 +14,7 @@ fn hey(_1: &[T]) -> () {
         StorageLive(_3);
         StorageLive(_4);
         _4 = &(*_1);
-        _3 = <[T] as Index<usize>>::index(move _4, const 0_usize) -> [return: bb1, unwind: bb2];
+        _3 = <[T] as Index<usize>>::index(Spanned { node: move _4, span: $DIR/issue_91633.rs:7:15: 7:17 (#0) }, Spanned { node: const 0_usize, span: $DIR/issue_91633.rs:7:18: 7:19 (#0) }) -> [return: bb1, unwind: bb2];
     }
 
     bb1: {

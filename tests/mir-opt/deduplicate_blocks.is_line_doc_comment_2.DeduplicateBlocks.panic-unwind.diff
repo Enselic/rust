@@ -17,7 +17,7 @@
           StorageLive(_2);
           StorageLive(_3);
           _3 = &(*_1);
-          _2 = core::str::<impl str>::as_bytes(move _3) -> [return: bb1, unwind continue];
+          _2 = core::str::<impl str>::as_bytes(Spanned { node: move _3, span: $DIR/deduplicate_blocks.rs:6:11: 6:12 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

@@ -42,7 +42,7 @@ fn inclusive_loop(_1: u32, _2: u32, _3: impl Fn(u32)) -> () {
         StorageLive(_7);
         StorageLive(_6);
         _6 = &mut _5;
-        _7 = <RangeInclusive<u32> as iter::range::RangeInclusiveIteratorImpl>::spec_next(move _6) -> [return: bb2, unwind unreachable];
+        _7 = <RangeInclusive<u32> as iter::range::RangeInclusiveIteratorImpl>::spec_next(Spanned { node: move _6, span: $SRC_DIR/core/src/iter/range.rs:LL:COL (#0) }) -> [return: bb2, unwind unreachable];
     }
 
     bb2: {
@@ -67,7 +67,7 @@ fn inclusive_loop(_1: u32, _2: u32, _3: impl Fn(u32)) -> () {
         _10 = &_3;
         StorageLive(_11);
         _11 = (_9,);
-        _12 = <impl Fn(u32) as Fn<(u32,)>>::call(move _10, move _11) -> [return: bb6, unwind unreachable];
+        _12 = <impl Fn(u32) as Fn<(u32,)>>::call(Spanned { node: move _10, span: $DIR/range_iter.rs:29:9: 29:10 (#0) }, Spanned { node: move _11, span: $DIR/range_iter.rs:29:9: 29:13 (#0) }) -> [return: bb6, unwind unreachable];
     }
 
     bb6: {

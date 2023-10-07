@@ -31,6 +31,6 @@ fn std::ptr::drop_in_place(_1: *mut Vec<i32>) -> () {
 
     bb6: {
         _2 = &mut (*_1);
-        _3 = <Vec<i32> as Drop>::drop(move _2) -> [return: bb5, unwind: bb4];
+        _3 = <Vec<i32> as Drop>::drop(Spanned { node: move _2, span: no-location (#0) }) -> [return: bb5, unwind: bb4];
     }
 }

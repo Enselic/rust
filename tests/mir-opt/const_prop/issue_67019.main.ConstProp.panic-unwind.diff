@@ -15,8 +15,8 @@
 +         _3 = const (1_u8, 2_u8);
 +         _2 = const ((1_u8, 2_u8),);
           StorageDead(_3);
--         _1 = test(move _2) -> [return: bb1, unwind continue];
-+         _1 = test(const ((1_u8, 2_u8),)) -> [return: bb1, unwind continue];
+-         _1 = test(Spanned { node: move _2, span: $DIR/issue_67019.rs:13:10: 13:19 (#0) }) -> [return: bb1, unwind continue];
++         _1 = test(Spanned { node: const ((1_u8, 2_u8),), span: $DIR/issue_67019.rs:13:10: 13:19 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

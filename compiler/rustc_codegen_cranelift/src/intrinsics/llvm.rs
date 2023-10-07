@@ -1,6 +1,7 @@
 //! Emulate LLVM intrinsics
 
 use rustc_middle::ty::GenericArgsRef;
+use rustc_span::source_map::Spanned;
 
 use crate::intrinsics::*;
 use crate::prelude::*;
@@ -9,7 +10,7 @@ pub(crate) fn codegen_llvm_intrinsic_call<'tcx>(
     fx: &mut FunctionCx<'_, '_, 'tcx>,
     intrinsic: &str,
     generic_args: GenericArgsRef<'tcx>,
-    args: &[mir::Operand<'tcx>],
+    args: &[Spanned<mir::Operand<'tcx>>],
     ret: CPlace<'tcx>,
     target: Option<BasicBlock>,
 ) {

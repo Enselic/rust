@@ -23,7 +23,7 @@ fn main() -> () {
         StorageLive(_4);
         StorageLive(_5);
         _5 = const 1_u8;
-        _4 = foo(const 1_u8) -> [return: bb1, unwind continue];
+        _4 = foo(Spanned { node: const 1_u8, span: $DIR/aggregate.rs:9:9: 9:10 (#0) }) -> [return: bb1, unwind continue];
     }
 
     bb1: {

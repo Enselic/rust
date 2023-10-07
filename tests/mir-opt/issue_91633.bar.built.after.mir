@@ -12,7 +12,7 @@ fn bar(_1: Box<[T]>) -> () {
         StorageLive(_2);
         StorageLive(_3);
         _3 = &(*_1);
-        _2 = <[T] as Index<usize>>::index(move _3, const 0_usize) -> [return: bb1, unwind: bb3];
+        _2 = <[T] as Index<usize>>::index(Spanned { node: move _3, span: $DIR/issue_91633.rs:15:14: 15:16 (#0) }, Spanned { node: const 0_usize, span: $DIR/issue_91633.rs:15:17: 15:18 (#0) }) -> [return: bb1, unwind: bb3];
     }
 
     bb1: {

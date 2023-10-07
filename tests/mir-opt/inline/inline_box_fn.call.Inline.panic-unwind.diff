@@ -14,7 +14,7 @@
           _3 = &_1;
           StorageLive(_4);
           _4 = (const 1_i32,);
-          _2 = <Box<dyn Fn(i32)> as Fn<(i32,)>>::call(move _3, move _4) -> [return: bb1, unwind: bb3];
+          _2 = <Box<dyn Fn(i32)> as Fn<(i32,)>>::call(Spanned { node: move _3, span: $DIR/inline_box_fn.rs:7:5: 7:6 (#0) }, Spanned { node: move _4, span: $DIR/inline_box_fn.rs:7:5: 7:9 (#0) }) -> [return: bb1, unwind: bb3];
       }
   
       bb1: {

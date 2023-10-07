@@ -14,7 +14,7 @@
           _3 = &_1;
           StorageLive(_4);
           _4 = ();
-          _2 = <impl Fn() as Fn<()>>::call(move _3, move _4) -> [return: bb1, unwind: bb3];
+          _2 = <impl Fn() as Fn<()>>::call(Spanned { node: move _3, span: $DIR/cycle.rs:7:5: 7:6 (#0) }, Spanned { node: move _4, span: $DIR/cycle.rs:7:5: 7:8 (#0) }) -> [return: bb1, unwind: bb3];
       }
   
       bb1: {

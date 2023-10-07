@@ -214,7 +214,7 @@
           StorageLive(_7);
           StorageLive(_8);
           _8 = ();
-          _7 = opaque::<()>(move _8) -> [return: bb1, unwind continue];
+          _7 = opaque::<()>(Spanned { node: move _8, span: $DIR/reference_prop.rs:304:16: 304:18 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {
@@ -241,7 +241,7 @@
           StorageLive(_15);
           StorageLive(_16);
           _16 = ();
-          _15 = opaque::<()>(move _16) -> [return: bb2, unwind continue];
+          _15 = opaque::<()>(Spanned { node: move _16, span: $DIR/reference_prop.rs:315:16: 315:18 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {
@@ -265,7 +265,7 @@
           StorageLive(_22);
           StorageLive(_23);
           _23 = _20;
-          _22 = opaque::<&*mut usize>(move _23) -> [return: bb3, unwind continue];
+          _22 = opaque::<&*mut usize>(Spanned { node: move _23, span: $DIR/reference_prop.rs:324:16: 324:17 (#0) }) -> [return: bb3, unwind continue];
       }
   
       bb3: {
@@ -289,7 +289,7 @@
           StorageLive(_29);
           StorageLive(_30);
           _30 = _27;
-          _29 = opaque::<*mut *mut usize>(move _30) -> [return: bb4, unwind continue];
+          _29 = opaque::<*mut *mut usize>(Spanned { node: move _30, span: $DIR/reference_prop.rs:333:16: 333:17 (#0) }) -> [return: bb4, unwind continue];
       }
   
       bb4: {
@@ -311,7 +311,7 @@
           StorageLive(_35);
           StorageLive(_36);
           _36 = _33;
-          _35 = opaque::<*mut usize>(move _36) -> [return: bb5, unwind continue];
+          _35 = opaque::<*mut usize>(Spanned { node: move _36, span: $DIR/reference_prop.rs:341:16: 341:17 (#0) }) -> [return: bb5, unwind continue];
       }
   
       bb5: {
@@ -338,7 +338,7 @@
           StorageLive(_44);
           StorageLive(_45);
           _45 = _43;
-          _44 = opaque::<*mut usize>(move _45) -> [return: bb6, unwind continue];
+          _44 = opaque::<*mut usize>(Spanned { node: move _45, span: $DIR/reference_prop.rs:354:16: 354:18 (#0) }) -> [return: bb6, unwind continue];
       }
   
       bb6: {
@@ -361,7 +361,7 @@
           StorageLive(_49);
           StorageLive(_50);
           _50 = ();
-          _49 = opaque::<()>(move _50) -> [return: bb7, unwind continue];
+          _49 = opaque::<()>(Spanned { node: move _50, span: $DIR/reference_prop.rs:361:16: 361:18 (#0) }) -> [return: bb7, unwind continue];
       }
   
       bb7: {
@@ -383,7 +383,7 @@
           StorageLive(_55);
           StorageLive(_56);
           _56 = ();
-          _55 = opaque::<()>(move _56) -> [return: bb8, unwind continue];
+          _55 = opaque::<()>(Spanned { node: move _56, span: $DIR/reference_prop.rs:369:16: 369:18 (#0) }) -> [return: bb8, unwind continue];
       }
   
       bb8: {
@@ -405,7 +405,7 @@
           StorageLive(_62);
           StorageLive(_63);
           _63 = ();
-          _62 = opaque::<()>(move _63) -> [return: bb9, unwind continue];
+          _62 = opaque::<()>(Spanned { node: move _63, span: $DIR/reference_prop.rs:378:16: 378:18 (#0) }) -> [return: bb9, unwind continue];
       }
   
       bb9: {
@@ -428,7 +428,7 @@
           StorageLive(_68);
           StorageLive(_69);
           _69 = ();
-          _68 = opaque::<()>(move _69) -> [return: bb10, unwind continue];
+          _68 = opaque::<()>(Spanned { node: move _69, span: $DIR/reference_prop.rs:387:16: 387:18 (#0) }) -> [return: bb10, unwind continue];
       }
   
       bb10: {

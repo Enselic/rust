@@ -12,11 +12,11 @@
   
       bb0: {
           StorageLive(_1);
--         _1 = call::<fn() {f}>(f) -> [return: bb1, unwind continue];
+-         _1 = call::<fn() {f}>(Spanned { node: f, span: $DIR/inline_cycle.rs:50:10: 50:11 (#0) }) -> [return: bb1, unwind continue];
 +         StorageLive(_2);
 +         _2 = f;
 +         StorageLive(_3);
-+         _3 = <fn() {f} as FnOnce<()>>::call_once(move _2, const ()) -> [return: bb1, unwind continue];
++         _3 = <fn() {f} as FnOnce<()>>::call_once(Spanned { node: move _2, span: $DIR/inline_cycle.rs:55:5: 55:6 (#0) }, Spanned { node: const (), span: $DIR/inline_cycle.rs:55:5: 55:8 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

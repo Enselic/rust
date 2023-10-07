@@ -117,7 +117,7 @@
 -         _5 = move _6 as u8 (IntToInt);
 -         StorageDead(_6);
 +         _5 = const 1_i64 as u8 (IntToInt);
-          _4 = opaque::<u8>(move _5) -> [return: bb1, unwind continue];
+          _4 = opaque::<u8>(Spanned { node: move _5, span: $DIR/gvn.rs:137:12: 137:19 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {
@@ -130,7 +130,7 @@
 -         _8 = move _9 as u16 (IntToInt);
 -         StorageDead(_9);
 +         _8 = const 1_i64 as u16 (IntToInt);
-          _7 = opaque::<u16>(move _8) -> [return: bb2, unwind continue];
+          _7 = opaque::<u16>(Spanned { node: move _8, span: $DIR/gvn.rs:138:12: 138:20 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {
@@ -143,7 +143,7 @@
 -         _11 = move _12 as u32 (IntToInt);
 -         StorageDead(_12);
 +         _11 = const 1_i64 as u32 (IntToInt);
-          _10 = opaque::<u32>(move _11) -> [return: bb3, unwind continue];
+          _10 = opaque::<u32>(Spanned { node: move _11, span: $DIR/gvn.rs:139:12: 139:20 (#0) }) -> [return: bb3, unwind continue];
       }
   
       bb3: {
@@ -156,7 +156,7 @@
 -         _14 = move _15 as u64 (IntToInt);
 -         StorageDead(_15);
 +         _14 = const 1_i64 as u64 (IntToInt);
-          _13 = opaque::<u64>(move _14) -> [return: bb4, unwind continue];
+          _13 = opaque::<u64>(Spanned { node: move _14, span: $DIR/gvn.rs:140:12: 140:20 (#0) }) -> [return: bb4, unwind continue];
       }
   
       bb4: {
@@ -169,7 +169,7 @@
 -         _17 = move _18 as i8 (IntToInt);
 -         StorageDead(_18);
 +         _17 = const 1_i64 as i8 (IntToInt);
-          _16 = opaque::<i8>(move _17) -> [return: bb5, unwind continue];
+          _16 = opaque::<i8>(Spanned { node: move _17, span: $DIR/gvn.rs:141:12: 141:19 (#0) }) -> [return: bb5, unwind continue];
       }
   
       bb5: {
@@ -182,7 +182,7 @@
 -         _20 = move _21 as i16 (IntToInt);
 -         StorageDead(_21);
 +         _20 = const 1_i64 as i16 (IntToInt);
-          _19 = opaque::<i16>(move _20) -> [return: bb6, unwind continue];
+          _19 = opaque::<i16>(Spanned { node: move _20, span: $DIR/gvn.rs:142:12: 142:20 (#0) }) -> [return: bb6, unwind continue];
       }
   
       bb6: {
@@ -195,7 +195,7 @@
 -         _23 = move _24 as i32 (IntToInt);
 -         StorageDead(_24);
 +         _23 = const 1_i64 as i32 (IntToInt);
-          _22 = opaque::<i32>(move _23) -> [return: bb7, unwind continue];
+          _22 = opaque::<i32>(Spanned { node: move _23, span: $DIR/gvn.rs:143:12: 143:20 (#0) }) -> [return: bb7, unwind continue];
       }
   
       bb7: {
@@ -204,8 +204,8 @@
           StorageLive(_25);
 -         StorageLive(_26);
 -         _26 = _1;
--         _25 = opaque::<i64>(move _26) -> [return: bb8, unwind continue];
-+         _25 = opaque::<i64>(const 1_i64) -> [return: bb8, unwind continue];
+-         _25 = opaque::<i64>(Spanned { node: move _26, span: $DIR/gvn.rs:144:12: 144:20 (#0) }) -> [return: bb8, unwind continue];
++         _25 = opaque::<i64>(Spanned { node: const 1_i64, span: $DIR/gvn.rs:144:12: 144:20 (#0) }) -> [return: bb8, unwind continue];
       }
   
       bb8: {
@@ -218,7 +218,7 @@
 -         _28 = move _29 as f32 (IntToFloat);
 -         StorageDead(_29);
 +         _28 = const 1_i64 as f32 (IntToFloat);
-          _27 = opaque::<f32>(move _28) -> [return: bb9, unwind continue];
+          _27 = opaque::<f32>(Spanned { node: move _28, span: $DIR/gvn.rs:145:12: 145:20 (#0) }) -> [return: bb9, unwind continue];
       }
   
       bb9: {
@@ -231,7 +231,7 @@
 -         _31 = move _32 as f64 (IntToFloat);
 -         StorageDead(_32);
 +         _31 = const 1_i64 as f64 (IntToFloat);
-          _30 = opaque::<f64>(move _31) -> [return: bb10, unwind continue];
+          _30 = opaque::<f64>(Spanned { node: move _31, span: $DIR/gvn.rs:146:12: 146:20 (#0) }) -> [return: bb10, unwind continue];
       }
   
       bb10: {
@@ -244,7 +244,7 @@
 -         _34 = move _35 as u8 (IntToInt);
 -         StorageDead(_35);
 +         _34 = const 1_u64 as u8 (IntToInt);
-          _33 = opaque::<u8>(move _34) -> [return: bb11, unwind continue];
+          _33 = opaque::<u8>(Spanned { node: move _34, span: $DIR/gvn.rs:147:12: 147:19 (#0) }) -> [return: bb11, unwind continue];
       }
   
       bb11: {
@@ -257,7 +257,7 @@
 -         _37 = move _38 as u16 (IntToInt);
 -         StorageDead(_38);
 +         _37 = const 1_u64 as u16 (IntToInt);
-          _36 = opaque::<u16>(move _37) -> [return: bb12, unwind continue];
+          _36 = opaque::<u16>(Spanned { node: move _37, span: $DIR/gvn.rs:148:12: 148:20 (#0) }) -> [return: bb12, unwind continue];
       }
   
       bb12: {
@@ -270,7 +270,7 @@
 -         _40 = move _41 as u32 (IntToInt);
 -         StorageDead(_41);
 +         _40 = const 1_u64 as u32 (IntToInt);
-          _39 = opaque::<u32>(move _40) -> [return: bb13, unwind continue];
+          _39 = opaque::<u32>(Spanned { node: move _40, span: $DIR/gvn.rs:149:12: 149:20 (#0) }) -> [return: bb13, unwind continue];
       }
   
       bb13: {
@@ -279,8 +279,8 @@
           StorageLive(_42);
 -         StorageLive(_43);
 -         _43 = _2;
--         _42 = opaque::<u64>(move _43) -> [return: bb14, unwind continue];
-+         _42 = opaque::<u64>(const 1_u64) -> [return: bb14, unwind continue];
+-         _42 = opaque::<u64>(Spanned { node: move _43, span: $DIR/gvn.rs:150:12: 150:20 (#0) }) -> [return: bb14, unwind continue];
++         _42 = opaque::<u64>(Spanned { node: const 1_u64, span: $DIR/gvn.rs:150:12: 150:20 (#0) }) -> [return: bb14, unwind continue];
       }
   
       bb14: {
@@ -293,7 +293,7 @@
 -         _45 = move _46 as i8 (IntToInt);
 -         StorageDead(_46);
 +         _45 = const 1_u64 as i8 (IntToInt);
-          _44 = opaque::<i8>(move _45) -> [return: bb15, unwind continue];
+          _44 = opaque::<i8>(Spanned { node: move _45, span: $DIR/gvn.rs:151:12: 151:19 (#0) }) -> [return: bb15, unwind continue];
       }
   
       bb15: {
@@ -306,7 +306,7 @@
 -         _48 = move _49 as i16 (IntToInt);
 -         StorageDead(_49);
 +         _48 = const 1_u64 as i16 (IntToInt);
-          _47 = opaque::<i16>(move _48) -> [return: bb16, unwind continue];
+          _47 = opaque::<i16>(Spanned { node: move _48, span: $DIR/gvn.rs:152:12: 152:20 (#0) }) -> [return: bb16, unwind continue];
       }
   
       bb16: {
@@ -319,7 +319,7 @@
 -         _51 = move _52 as i32 (IntToInt);
 -         StorageDead(_52);
 +         _51 = const 1_u64 as i32 (IntToInt);
-          _50 = opaque::<i32>(move _51) -> [return: bb17, unwind continue];
+          _50 = opaque::<i32>(Spanned { node: move _51, span: $DIR/gvn.rs:153:12: 153:20 (#0) }) -> [return: bb17, unwind continue];
       }
   
       bb17: {
@@ -332,7 +332,7 @@
 -         _54 = move _55 as i64 (IntToInt);
 -         StorageDead(_55);
 +         _54 = const 1_u64 as i64 (IntToInt);
-          _53 = opaque::<i64>(move _54) -> [return: bb18, unwind continue];
+          _53 = opaque::<i64>(Spanned { node: move _54, span: $DIR/gvn.rs:154:12: 154:20 (#0) }) -> [return: bb18, unwind continue];
       }
   
       bb18: {
@@ -345,7 +345,7 @@
 -         _57 = move _58 as f32 (IntToFloat);
 -         StorageDead(_58);
 +         _57 = const 1_u64 as f32 (IntToFloat);
-          _56 = opaque::<f32>(move _57) -> [return: bb19, unwind continue];
+          _56 = opaque::<f32>(Spanned { node: move _57, span: $DIR/gvn.rs:155:12: 155:20 (#0) }) -> [return: bb19, unwind continue];
       }
   
       bb19: {
@@ -358,7 +358,7 @@
 -         _60 = move _61 as f64 (IntToFloat);
 -         StorageDead(_61);
 +         _60 = const 1_u64 as f64 (IntToFloat);
-          _59 = opaque::<f64>(move _60) -> [return: bb20, unwind continue];
+          _59 = opaque::<f64>(Spanned { node: move _60, span: $DIR/gvn.rs:156:12: 156:20 (#0) }) -> [return: bb20, unwind continue];
       }
   
       bb20: {
@@ -371,7 +371,7 @@
 -         _63 = move _64 as u8 (FloatToInt);
 -         StorageDead(_64);
 +         _63 = const 1f64 as u8 (FloatToInt);
-          _62 = opaque::<u8>(move _63) -> [return: bb21, unwind continue];
+          _62 = opaque::<u8>(Spanned { node: move _63, span: $DIR/gvn.rs:157:12: 157:19 (#0) }) -> [return: bb21, unwind continue];
       }
   
       bb21: {
@@ -384,7 +384,7 @@
 -         _66 = move _67 as u16 (FloatToInt);
 -         StorageDead(_67);
 +         _66 = const 1f64 as u16 (FloatToInt);
-          _65 = opaque::<u16>(move _66) -> [return: bb22, unwind continue];
+          _65 = opaque::<u16>(Spanned { node: move _66, span: $DIR/gvn.rs:158:12: 158:20 (#0) }) -> [return: bb22, unwind continue];
       }
   
       bb22: {
@@ -397,7 +397,7 @@
 -         _69 = move _70 as u32 (FloatToInt);
 -         StorageDead(_70);
 +         _69 = const 1f64 as u32 (FloatToInt);
-          _68 = opaque::<u32>(move _69) -> [return: bb23, unwind continue];
+          _68 = opaque::<u32>(Spanned { node: move _69, span: $DIR/gvn.rs:159:12: 159:20 (#0) }) -> [return: bb23, unwind continue];
       }
   
       bb23: {
@@ -410,7 +410,7 @@
 -         _72 = move _73 as u64 (FloatToInt);
 -         StorageDead(_73);
 +         _72 = const 1f64 as u64 (FloatToInt);
-          _71 = opaque::<u64>(move _72) -> [return: bb24, unwind continue];
+          _71 = opaque::<u64>(Spanned { node: move _72, span: $DIR/gvn.rs:160:12: 160:20 (#0) }) -> [return: bb24, unwind continue];
       }
   
       bb24: {
@@ -423,7 +423,7 @@
 -         _75 = move _76 as i8 (FloatToInt);
 -         StorageDead(_76);
 +         _75 = const 1f64 as i8 (FloatToInt);
-          _74 = opaque::<i8>(move _75) -> [return: bb25, unwind continue];
+          _74 = opaque::<i8>(Spanned { node: move _75, span: $DIR/gvn.rs:161:12: 161:19 (#0) }) -> [return: bb25, unwind continue];
       }
   
       bb25: {
@@ -436,7 +436,7 @@
 -         _78 = move _79 as i16 (FloatToInt);
 -         StorageDead(_79);
 +         _78 = const 1f64 as i16 (FloatToInt);
-          _77 = opaque::<i16>(move _78) -> [return: bb26, unwind continue];
+          _77 = opaque::<i16>(Spanned { node: move _78, span: $DIR/gvn.rs:162:12: 162:20 (#0) }) -> [return: bb26, unwind continue];
       }
   
       bb26: {
@@ -449,7 +449,7 @@
 -         _81 = move _82 as i32 (FloatToInt);
 -         StorageDead(_82);
 +         _81 = const 1f64 as i32 (FloatToInt);
-          _80 = opaque::<i32>(move _81) -> [return: bb27, unwind continue];
+          _80 = opaque::<i32>(Spanned { node: move _81, span: $DIR/gvn.rs:163:12: 163:20 (#0) }) -> [return: bb27, unwind continue];
       }
   
       bb27: {
@@ -462,7 +462,7 @@
 -         _84 = move _85 as i64 (FloatToInt);
 -         StorageDead(_85);
 +         _84 = const 1f64 as i64 (FloatToInt);
-          _83 = opaque::<i64>(move _84) -> [return: bb28, unwind continue];
+          _83 = opaque::<i64>(Spanned { node: move _84, span: $DIR/gvn.rs:164:12: 164:20 (#0) }) -> [return: bb28, unwind continue];
       }
   
       bb28: {
@@ -475,7 +475,7 @@
 -         _87 = move _88 as f32 (FloatToFloat);
 -         StorageDead(_88);
 +         _87 = const 1f64 as f32 (FloatToFloat);
-          _86 = opaque::<f32>(move _87) -> [return: bb29, unwind continue];
+          _86 = opaque::<f32>(Spanned { node: move _87, span: $DIR/gvn.rs:165:12: 165:20 (#0) }) -> [return: bb29, unwind continue];
       }
   
       bb29: {
@@ -484,8 +484,8 @@
           StorageLive(_89);
 -         StorageLive(_90);
 -         _90 = _3;
--         _89 = opaque::<f64>(move _90) -> [return: bb30, unwind continue];
-+         _89 = opaque::<f64>(const 1f64) -> [return: bb30, unwind continue];
+-         _89 = opaque::<f64>(Spanned { node: move _90, span: $DIR/gvn.rs:166:12: 166:20 (#0) }) -> [return: bb30, unwind continue];
++         _89 = opaque::<f64>(Spanned { node: const 1f64, span: $DIR/gvn.rs:166:12: 166:20 (#0) }) -> [return: bb30, unwind continue];
       }
   
       bb30: {

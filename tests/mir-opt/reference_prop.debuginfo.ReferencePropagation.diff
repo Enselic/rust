@@ -99,7 +99,7 @@
           _13 = &(*_26);
           StorageLive(_15);
           _15 = RangeFull;
-          _12 = <[i32; 10] as Index<RangeFull>>::index(move _13, move _15) -> [return: bb5, unwind continue];
+          _12 = <[i32; 10] as Index<RangeFull>>::index(Spanned { node: move _13, span: $DIR/reference_prop.rs:547:83: 547:90 (#0) }, Spanned { node: move _15, span: $DIR/reference_prop.rs:547:91: 547:93 (#0) }) -> [return: bb5, unwind continue];
       }
   
       bb5: {

@@ -11,6 +11,7 @@ use cranelift_module::ModuleError;
 use rustc_middle::middle::codegen_fn_attrs::CodegenFnAttrFlags;
 use rustc_middle::ty::layout::FnAbiOf;
 use rustc_session::Session;
+use rustc_span::source_map::Spanned;
 use rustc_target::abi::call::{Conv, FnAbi};
 use rustc_target::spec::abi::Abi;
 
@@ -355,11 +356,11 @@ struct CallArgument<'tcx> {
 // FIXME avoid intermediate `CValue` before calling `adjust_arg_for_abi`
 fn codegen_call_argument_operand<'tcx>(
     fx: &mut FunctionCx<'_, '_, 'tcx>,
-    operand: &Operand<'tcx>,
+    operand: &Spanned<Operand<'tcx>>,
 ) -> CallArgument<'tcx> {
     CallArgument {
-        value: codegen_operand(fx, operand),
-        is_owned: matches!(operand, Operand::Move(_)),
+        value: codegen_operand(fx, &operand.node),
+        is_owned: matches!(operand.node, Operand::Move(_)),
     }
 }
 
@@ -367,7 +368,7 @@ pub(crate) fn codegen_terminator_call<'tcx>(
     fx: &mut FunctionCx<'_, '_, 'tcx>,
     source_info: mir::SourceInfo,
     func: &Operand<'tcx>,
-    args: &[Operand<'tcx>],
+    args: &[Spanned<Operand<'tcx>>],
     destination: Place<'tcx>,
     target: Option<BasicBlock>,
 ) {
@@ -421,7 +422,7 @@ pub(crate) fn codegen_terminator_call<'tcx>(
 
     let extra_args = &args[fn_sig.inputs().skip_binder().len()..];
     let extra_args = fx.tcx.mk_type_list_from_iter(
-        extra_args.iter().map(|op_arg| fx.monomorphize(op_arg.ty(fx.mir, fx.tcx))),
+        extra_args.iter().map(|op_arg| fx.monomorphize(op_arg.node.ty(fx.mir, fx.tcx))),
     );
     let fn_abi = if let Some(instance) = instance {
         RevealAllLayoutCx(fx.tcx).fn_abi_of_instance(instance, extra_args)

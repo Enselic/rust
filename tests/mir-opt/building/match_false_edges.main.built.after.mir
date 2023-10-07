@@ -124,7 +124,7 @@ fn main() -> () {
         StorageLive(_12);
         StorageLive(_13);
         _13 = (*_11);
-        _12 = guard2(move _13) -> [return: bb15, unwind: bb20];
+        _12 = guard2(Spanned { node: move _13, span: $DIR/match_false_edges.rs:36:27: 36:28 (#0) }) -> [return: bb15, unwind: bb20];
     }
 
     bb15: {

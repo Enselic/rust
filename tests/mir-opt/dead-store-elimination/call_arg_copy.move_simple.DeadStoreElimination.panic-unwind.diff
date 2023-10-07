@@ -10,8 +10,8 @@
   
       bb0: {
           StorageLive(_2);
--         _2 = use_both(_1, _1) -> [return: bb1, unwind continue];
-+         _2 = use_both(_1, move _1) -> [return: bb1, unwind continue];
+-         _2 = use_both(Spanned { node: _1, span: $DIR/call_arg_copy.rs:16:14: 16:15 (#0) }, Spanned { node: _1, span: $DIR/call_arg_copy.rs:16:17: 16:18 (#0) }) -> [return: bb1, unwind continue];
++         _2 = use_both(Spanned { node: _1, span: $DIR/call_arg_copy.rs:16:14: 16:15 (#0) }, Spanned { node: move _1, span: $DIR/call_arg_copy.rs:16:17: 16:18 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {

@@ -34,7 +34,7 @@
           StorageLive(_4);
           StorageLive(_5);
           _5 = (*_3);
-          _4 = opaque::<i32>(move _5) -> [return: bb1, unwind continue];
+          _4 = opaque::<i32>(Spanned { node: move _5, span: $DIR/reference_prop.rs:524:25: 524:27 (#0) }) -> [return: bb1, unwind continue];
       }
   
       bb1: {
@@ -47,7 +47,7 @@
           StorageLive(_7);
 -         _7 = (*_1);
 +         _7 = (*_3);
-          _6 = opaque::<i32>(move _7) -> [return: bb2, unwind continue];
+          _6 = opaque::<i32>(Spanned { node: move _7, span: $DIR/reference_prop.rs:528:21: 528:23 (#0) }) -> [return: bb2, unwind continue];
       }
   
       bb2: {

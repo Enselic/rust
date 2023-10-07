@@ -39,13 +39,13 @@
 -     bb1: {
 +         _4 = {generator@$DIR/inline_generator.rs:16:5: 16:8 (#0)};
           _3 = &mut _4;
--         _2 = Pin::<&mut {generator@$DIR/inline_generator.rs:16:5: 16:8}>::new(move _3) -> [return: bb2, unwind: bb5];
+-         _2 = Pin::<&mut {generator@$DIR/inline_generator.rs:16:5: 16:8}>::new(Spanned { node: move _3, span: $DIR/inline_generator.rs:10:23: 10:31 (#0) }) -> [return: bb2, unwind: bb5];
 -     }
 - 
 -     bb2: {
 +         _2 = Pin::<&mut {generator@$DIR/inline_generator.rs:16:5: 16:8}> { pointer: move _3 };
           StorageDead(_3);
--         _1 = <{generator@$DIR/inline_generator.rs:16:5: 16:8} as Generator<bool>>::resume(move _2, const false) -> [return: bb3, unwind: bb5];
+-         _1 = <{generator@$DIR/inline_generator.rs:16:5: 16:8} as Generator<bool>>::resume(Spanned { node: move _2, span: $DIR/inline_generator.rs:10:14: 10:32 (#0) }, Spanned { node: const false, span: $DIR/inline_generator.rs:10:40: 10:45 (#0) }) -> [return: bb3, unwind: bb5];
 +         StorageLive(_5);
 +         _5 = const false;
 +         StorageLive(_6);

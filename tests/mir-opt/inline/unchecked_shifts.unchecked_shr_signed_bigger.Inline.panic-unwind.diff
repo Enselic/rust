@@ -20,7 +20,7 @@
           _3 = _1;
           StorageLive(_4);
           _4 = _2;
--         _0 = core::num::<impl i64>::unchecked_shr(move _3, move _4) -> [return: bb1, unwind continue];
+-         _0 = core::num::<impl i64>::unchecked_shr(Spanned { node: move _3, span: $DIR/unchecked_shifts.rs:29:5: 29:6 (#0) }, Spanned { node: move _4, span: $DIR/unchecked_shifts.rs:29:21: 29:22 (#0) }) -> [return: bb1, unwind continue];
 -     }
 - 
 -     bb1: {

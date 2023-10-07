@@ -20,7 +20,7 @@ fn unwrap(_1: Option<T>) -> T {
 
     bb1: {
         StorageLive(_4);
-        _4 = begin_panic::<&str>(const "explicit panic") -> unwind unreachable;
+        _4 = begin_panic::<&str>(Spanned { node: const "explicit panic", span: $SRC_DIR/std/src/panic.rs:LL:COL (#7) }) -> unwind unreachable;
     }
 
     bb2: {
