@@ -442,7 +442,7 @@ impl<'a, 'tcx> Visitor<'tcx> for CfgChecker<'a, 'tcx> {
                 }
                 let mut has_duplicates = false;
                 for arg in args {
-                    if let Operand::Move(place) = arg {
+                    if let Operand::Move(place) = &arg.node {
                         has_duplicates |= !self.place_cache.insert(place.as_ref());
                         if is_within_packed(self.tcx, &self.body.local_decls, *place).is_some() {
                             // This is bad! The callee will expect the memory to be aligned.
