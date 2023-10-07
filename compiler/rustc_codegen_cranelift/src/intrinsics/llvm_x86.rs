@@ -9,7 +9,7 @@ pub(crate) fn codegen_x86_llvm_intrinsic_call<'tcx>(
     fx: &mut FunctionCx<'_, '_, 'tcx>,
     intrinsic: &str,
     _args: GenericArgsRef<'tcx>,
-    args: &[mir::Operand<'tcx>],
+    args: &[Spanned<mir::Operand<'tcx>>],
     ret: CPlace<'tcx>,
     target: Option<BasicBlock>,
 ) {
@@ -72,9 +72,9 @@ pub(crate) fn codegen_x86_llvm_intrinsic_call<'tcx>(
                 [x, y, kind] => (x, y, kind),
                 _ => bug!("wrong number of args for intrinsic {intrinsic}"),
             };
-            let x = codegen_operand(fx, x);
-            let y = codegen_operand(fx, y);
-            let kind = match kind {
+            let x = codegen_operand(fx, &x.node);
+            let y = codegen_operand(fx, &y.node);
+            let kind = match &kind.node {
                 Operand::Constant(const_) => crate::constant::eval_mir_constant(fx, const_).0,
                 Operand::Copy(_) | Operand::Move(_) => unreachable!("{kind:?}"),
             };
@@ -184,8 +184,8 @@ pub(crate) fn codegen_x86_llvm_intrinsic_call<'tcx>(
                 [a, b] => (a, b),
                 _ => bug!("wrong number of args for intrinsic {intrinsic}"),
             };
-            let a = codegen_operand(fx, a);
-            let b = codegen_operand(fx, b);
+            let a = codegen_operand(fx, &a.node);
+            let b = codegen_operand(fx, &b.node);
 
             // Based on the pseudocode at https://github.com/rust-lang/stdarch/blob/1cfbca8b38fd9b4282b2f054f61c6ca69fc7ce29/crates/core_arch/src/x86/avx2.rs#L2319-L2332
             let zero = fx.bcx.ins().iconst(types::I8, 0);
@@ -218,9 +218,9 @@ pub(crate) fn codegen_x86_llvm_intrinsic_call<'tcx>(
                 [a, b, imm8] => (a, b, imm8),
                 _ => bug!("wrong number of args for intrinsic {intrinsic}"),
             };
-            let a = codegen_operand(fx, a);
-            let b = codegen_operand(fx, b);
-            let imm8 = codegen_operand(fx, imm8).load_scalar(fx);
+            let a = codegen_operand(fx, &a.node);
+            let b = codegen_operand(fx, &b.node);
+            let imm8 = codegen_operand(fx, &imm8.node).load_scalar(fx);
 
             let a_0 = a.value_lane(fx, 0).load_scalar(fx);
             let a_1 = a.value_lane(fx, 1).load_scalar(fx);
@@ -275,7 +275,7 @@ pub(crate) fn codegen_x86_llvm_intrinsic_call<'tcx>(
                 [a] => a,
                 _ => bug!("wrong number of args for intrinsic {intrinsic}"),
             };
-            let a = codegen_operand(fx, a);
+            let a = codegen_operand(fx, &a.node);
 
             simd_for_each_lane(fx, a, ret, &|fx, _lane_ty, _res_lane_ty, lane| {
                 fx.bcx.ins().iabs(lane)

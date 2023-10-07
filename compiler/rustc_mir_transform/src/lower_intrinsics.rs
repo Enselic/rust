@@ -47,9 +47,9 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             kind: StatementKind::Intrinsic(Box::new(
                                 NonDivergingIntrinsic::CopyNonOverlapping(
                                     rustc_middle::mir::CopyNonOverlapping {
-                                        src: args.next().unwrap(),
-                                        dst: args.next().unwrap(),
-                                        count: args.next().unwrap(),
+                                        src: args.next().unwrap().node,
+                                        dst: args.next().unwrap().node,
+                                        count: args.next().unwrap().node,
                                     },
                                 ),
                             )),
@@ -68,7 +68,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                         block.statements.push(Statement {
                             source_info: terminator.source_info,
                             kind: StatementKind::Intrinsic(Box::new(
-                                NonDivergingIntrinsic::Assume(args.next().unwrap()),
+                                NonDivergingIntrinsic::Assume(args.next().unwrap().node),
                             )),
                         });
                         assert_eq!(
@@ -114,7 +114,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             source_info: terminator.source_info,
                             kind: StatementKind::Assign(Box::new((
                                 *destination,
-                                Rvalue::BinaryOp(bin_op, Box::new((lhs, rhs))),
+                                Rvalue::BinaryOp(bin_op, Box::new((lhs.node, rhs.node))),
                             ))),
                         });
                         terminator.kind = TerminatorKind::Goto { target };
@@ -138,7 +138,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                                 source_info: terminator.source_info,
                                 kind: StatementKind::Assign(Box::new((
                                     *destination,
-                                    Rvalue::CheckedBinaryOp(bin_op, Box::new((lhs, rhs))),
+                                    Rvalue::CheckedBinaryOp(bin_op, Box::new((lhs.node, rhs.node))),
                                 ))),
                             });
                             terminator.kind = TerminatorKind::Goto { target };
@@ -167,7 +167,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             span_bug!(terminator.source_info.span, "Wrong number of arguments");
                         };
                         let derefed_place =
-                            if let Some(place) = arg.place() && let Some(local) = place.as_local() {
+                            if let Some(place) = arg.node.place() && let Some(local) = place.as_local() {
                                 tcx.mk_place_deref(local.into())
                             } else {
                                 span_bug!(terminator.source_info.span, "Only passing a local is supported");
@@ -199,7 +199,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             );
                         };
                         let derefed_place =
-                            if let Some(place) = ptr.place() && let Some(local) = place.as_local() {
+                            if let Some(place) = ptr.node.place() && let Some(local) = place.as_local() {
                                 tcx.mk_place_deref(local.into())
                             } else {
                                 span_bug!(terminator.source_info.span, "Only passing a local is supported");
@@ -208,13 +208,13 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             source_info: terminator.source_info,
                             kind: StatementKind::Assign(Box::new((
                                 derefed_place,
-                                Rvalue::Use(val),
+                                Rvalue::Use(val.node),
                             ))),
                         });
                         terminator.kind = TerminatorKind::Goto { target };
                     }
                     sym::discriminant_value => {
-                        if let (Some(target), Some(arg)) = (*target, args[0].place()) {
+                        if let (Some(target), Some(arg)) = (*target, args[0].node.place()) {
                             let arg = tcx.mk_place_deref(arg);
                             block.statements.push(Statement {
                                 source_info: terminator.source_info,
@@ -238,13 +238,13 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             source_info: terminator.source_info,
                             kind: StatementKind::Assign(Box::new((
                                 *destination,
-                                Rvalue::BinaryOp(BinOp::Offset, Box::new((ptr, delta))),
+                                Rvalue::BinaryOp(BinOp::Offset, Box::new((ptr.node, delta.node))),
                             ))),
                         });
                         terminator.kind = TerminatorKind::Goto { target };
                     }
                     sym::option_payload_ptr => {
-                        if let (Some(target), Some(arg)) = (*target, args[0].place()) {
+                        if let (Some(target), Some(arg)) = (*target, args[0].node.place()) {
                             let ty::RawPtr(ty::TypeAndMut { ty: dest_ty, .. }) =
                                 destination.ty(local_decls, tcx).ty.kind()
                             else {
@@ -290,7 +290,7 @@ impl<'tcx> MirPass<'tcx> for LowerIntrinsics {
                             source_info: terminator.source_info,
                             kind: StatementKind::Assign(Box::new((
                                 *destination,
-                                Rvalue::Cast(CastKind::Transmute, arg, dst_ty),
+                                Rvalue::Cast(CastKind::Transmute, arg.node, dst_ty),
                             ))),
                         });
 

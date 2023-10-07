@@ -133,7 +133,7 @@ impl<'cx, 'tcx> Visitor<'tcx> for InvalidationGenerator<'cx, 'tcx> {
             } => {
                 self.consume_operand(location, func);
                 for arg in args {
-                    self.consume_operand(location, arg);
+                    self.consume_operand(location, &arg.node);
                 }
                 self.mutate_place(location, *destination, Deep);
             }
