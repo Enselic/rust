@@ -482,7 +482,7 @@ impl<'b, 'a, 'tcx> Gatherer<'b, 'a, 'tcx> {
             } => {
                 self.gather_operand(func);
                 for arg in args {
-                    self.gather_operand(arg);
+                    self.gather_operand(&arg.node);
                 }
                 if let Some(_bb) = target {
                     self.create_move_path(destination);

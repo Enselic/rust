@@ -45,7 +45,7 @@ pub fn eliminate<'tcx>(tcx: TyCtxt<'tcx>, body: &mut Body<'tcx>, borrowed: &BitS
             live.seek_to_block_end(bb);
             let mut state = live.get().clone();
 
-            for (index, arg) in args.iter().enumerate().rev() {
+            for (index, arg) in args.iter().map(|a| &a.node).enumerate().rev() {
                 if let Operand::Copy(place) = *arg
                     && !place.is_indirect()
                     && !borrowed.contains(place.local)
@@ -110,7 +110,7 @@ pub fn eliminate<'tcx>(tcx: TyCtxt<'tcx>, body: &mut Body<'tcx>, borrowed: &BitS
         let TerminatorKind::Call { ref mut args, .. } = bbs[block].terminator_mut().kind else {
             bug!()
         };
-        let arg = &mut args[argument_index];
+        let arg = &mut args[argument_index].node;
         let Operand::Copy(place) = *arg else { bug!() };
         *arg = Operand::Move(place);
     }
