@@ -671,6 +671,9 @@ pub enum TerminatorKind<'tcx> {
         /// This allows the memory occupied by "by-value" arguments to be
         /// reused across function calls without duplicating the contents.
         args: Vec<Operand<'tcx>>,
+        /// The spans of the args
+        /// (e.g. `a` and `b` in `x.foo(a, b)`).
+        arg_spans: Vec<Span>,
         /// Where the returned value will be written
         destination: Place<'tcx>,
         /// Where to go after this call returns. If none, the call necessarily diverges.
