@@ -2009,6 +2009,7 @@ impl<'a: 'ast, 'b, 'ast, 'tcx> LateResolutionVisitor<'a, 'b, 'ast, 'tcx> {
     /// Resolve inside function parameters and parameter types.
     /// Returns the lifetime for elision in fn return type,
     /// or diagnostic information in case of elision failure.
+    /// 
     fn resolve_fn_params(
         &mut self,
         has_self: bool,
