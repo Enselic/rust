@@ -9,21 +9,25 @@
 
 #![feature(rustc_attrs)]
 #![crate_type = "rlib"]
-#![rustc_expected_cgu_reuse(module = "cgu_keeps_identical_fn-foo", cfg = "cfail2", kind = "no")]
+#![rustc_expected_cgu_reuse(
+    module = "cgu_keeps_identical_fn-foo",
+    cfg = "cfail2",
+    kind = "pre-lto"
+)]
 #![rustc_expected_cgu_reuse(
     module = "cgu_keeps_identical_fn-foo",
     cfg = "cfail3",
-    kind = "post-lto"
+    kind = "pre-lto"
 )]
 #![rustc_expected_cgu_reuse(
     module = "cgu_keeps_identical_fn-bar",
     cfg = "cfail2",
-    kind = "post-lto"
+    kind = "pre-lto"
 )]
 #![rustc_expected_cgu_reuse(
     module = "cgu_keeps_identical_fn-bar",
     cfg = "cfail3",
-    kind = "post-lto"
+    kind = "pre-lto"
 )]
 
 mod foo {
