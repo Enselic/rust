@@ -622,7 +622,7 @@ impl SubdiagnosticVariant {
         // We require `#[must_use]` on all diagnostic structs, so we must allow
         // it as a no-op attr here.
         if name == "must_use" {
-            return Ok(None)
+            return Ok(None);
         }
 
         let mut kind = match name {
