@@ -194,6 +194,7 @@ pub(crate) struct FeatureNotAllowed {
 #[derive(Diagnostic)]
 #[diag(expand_recursion_limit_reached)]
 #[help]
+#[must_use]
 pub(crate) struct RecursionLimitReached<'a> {
     #[primary_span]
     pub span: Span,
@@ -286,6 +287,7 @@ pub(crate) struct UnsupportedKeyValue {
 #[derive(Diagnostic)]
 #[diag(expand_incomplete_parse)]
 #[note]
+#[must_use]
 pub(crate) struct IncompleteParse<'a> {
     #[primary_span]
     pub span: Span,
@@ -343,6 +345,7 @@ pub(crate) struct ModuleInBlockName {
 #[diag(expand_module_file_not_found, code = "E0583")]
 #[help]
 #[note]
+#[must_use]
 pub(crate) struct ModuleFileNotFound {
     #[primary_span]
     pub span: Span,
@@ -354,6 +357,7 @@ pub(crate) struct ModuleFileNotFound {
 #[derive(Diagnostic)]
 #[diag(expand_module_multiple_candidates, code = "E0761")]
 #[help]
+#[must_use]
 pub(crate) struct ModuleMultipleCandidates {
     #[primary_span]
     pub span: Span,
@@ -364,6 +368,7 @@ pub(crate) struct ModuleMultipleCandidates {
 
 #[derive(Diagnostic)]
 #[diag(expand_trace_macro)]
+#[must_use]
 #[must_use]
 pub struct TraceMacro {
     #[primary_span]
@@ -388,6 +393,7 @@ pub(crate) struct ProcMacroPanickedHelp {
 #[derive(Diagnostic)]
 #[diag(expand_proc_macro_derive_tokens)]
 #[must_use]
+#[must_use]
 pub struct ProcMacroDeriveTokens {
     #[primary_span]
     pub span: Span,
@@ -395,6 +401,7 @@ pub struct ProcMacroDeriveTokens {
 
 #[derive(Diagnostic)]
 #[diag(expand_duplicate_matcher_binding)]
+#[must_use]
 #[must_use]
 pub struct DuplicateMatcherBinding {
     #[primary_span]

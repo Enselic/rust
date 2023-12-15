@@ -33,6 +33,7 @@ pub struct IncorrectCguReuseType<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_cgu_not_recorded)]
 #[must_use]
+#[must_use]
 pub struct CguNotRecorded<'a> {
     pub cgu_user_name: &'a str,
     pub cgu_name: &'a str,
@@ -40,6 +41,7 @@ pub struct CguNotRecorded<'a> {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unknown_reuse_kind)]
+#[must_use]
 #[must_use]
 pub struct UnknownReuseKind {
     #[primary_span]
@@ -50,6 +52,7 @@ pub struct UnknownReuseKind {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_missing_query_depgraph)]
 #[must_use]
+#[must_use]
 pub struct MissingQueryDepGraph {
     #[primary_span]
     pub span: Span,
@@ -57,6 +60,7 @@ pub struct MissingQueryDepGraph {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_malformed_cgu_name)]
+#[must_use]
 #[must_use]
 pub struct MalformedCguName {
     #[primary_span]
@@ -67,6 +71,7 @@ pub struct MalformedCguName {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_no_module_named)]
+#[must_use]
 #[must_use]
 pub struct NoModuleNamed<'a> {
     #[primary_span]
@@ -79,6 +84,7 @@ pub struct NoModuleNamed<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_field_associated_value_expected)]
 #[must_use]
+#[must_use]
 pub struct FieldAssociatedValueExpected {
     #[primary_span]
     pub span: Span,
@@ -87,6 +93,7 @@ pub struct FieldAssociatedValueExpected {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_no_field)]
+#[must_use]
 #[must_use]
 pub struct NoField {
     #[primary_span]
@@ -97,12 +104,14 @@ pub struct NoField {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_lib_def_write_failure)]
 #[must_use]
+#[must_use]
 pub struct LibDefWriteFailure {
     pub error: Error,
 }
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_version_script_write_failure)]
+#[must_use]
 #[must_use]
 pub struct VersionScriptWriteFailure {
     pub error: Error,
@@ -111,6 +120,7 @@ pub struct VersionScriptWriteFailure {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_symbol_file_write_failure)]
 #[must_use]
+#[must_use]
 pub struct SymbolFileWriteFailure {
     pub error: Error,
 }
@@ -118,20 +128,24 @@ pub struct SymbolFileWriteFailure {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_ld64_unimplemented_modifier)]
 #[must_use]
+#[must_use]
 pub struct Ld64UnimplementedModifier;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_linker_unsupported_modifier)]
+#[must_use]
 #[must_use]
 pub struct LinkerUnsupportedModifier;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_L4Bender_exporting_symbols_unimplemented)]
 #[must_use]
+#[must_use]
 pub struct L4BenderExportingSymbolsUnimplemented;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_no_natvis_directory)]
+#[must_use]
 #[must_use]
 pub struct NoNatvisDirectory {
     pub error: Error,
@@ -139,6 +153,7 @@ pub struct NoNatvisDirectory {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_copy_path_buf)]
+#[must_use]
 #[must_use]
 pub struct CopyPathBuf {
     pub source_file: PathBuf,
@@ -149,6 +164,7 @@ pub struct CopyPathBuf {
 // Reports Paths using `Debug` implementation rather than Path's `Display` implementation.
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_copy_path)]
+#[must_use]
 #[must_use]
 pub struct CopyPath<'a> {
     from: DebugArgPath<'a>,
@@ -173,12 +189,14 @@ impl IntoDiagnosticArg for DebugArgPath<'_> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_binary_output_to_tty)]
 #[must_use]
+#[must_use]
 pub struct BinaryOutputToTty {
     pub shorthand: &'static str,
 }
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_ignoring_emit_path)]
+#[must_use]
 #[must_use]
 pub struct IgnoringEmitPath {
     pub extension: String,
@@ -187,12 +205,14 @@ pub struct IgnoringEmitPath {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_ignoring_output)]
 #[must_use]
+#[must_use]
 pub struct IgnoringOutput {
     pub extension: String,
 }
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_create_temp_dir)]
+#[must_use]
 #[must_use]
 pub struct CreateTempDir {
     pub error: Error,
@@ -201,6 +221,7 @@ pub struct CreateTempDir {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_add_native_library)]
 #[must_use]
+#[must_use]
 pub struct AddNativeLibrary {
     pub library_path: PathBuf,
     pub error: Error,
@@ -208,6 +229,7 @@ pub struct AddNativeLibrary {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_multiple_external_func_decl)]
+#[must_use]
 #[must_use]
 pub struct MultipleExternalFuncDecl<'a> {
     #[primary_span]
@@ -459,25 +481,30 @@ impl IntoDiagnostic<'_> for LinkingFailed<'_> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_link_exe_unexpected_error)]
 #[must_use]
+#[must_use]
 pub struct LinkExeUnexpectedError;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_repair_vs_build_tools)]
+#[must_use]
 #[must_use]
 pub struct RepairVSBuildTools;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_missing_cpp_build_tool_component)]
 #[must_use]
+#[must_use]
 pub struct MissingCppBuildToolComponent;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_select_cpp_build_tool_workload)]
 #[must_use]
+#[must_use]
 pub struct SelectCppBuildToolWorkload;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_visual_studio_not_installed)]
+#[must_use]
 #[must_use]
 pub struct VisualStudioNotInstalled;
 
@@ -494,6 +521,7 @@ pub struct LinkerNotFound {
 #[diag(codegen_ssa_unable_to_exe_linker)]
 #[note]
 #[note(codegen_ssa_command_note)]
+#[must_use]
 pub struct UnableToExeLinker {
     pub linker_path: PathBuf,
     pub error: Error,
@@ -503,15 +531,18 @@ pub struct UnableToExeLinker {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_msvc_missing_linker)]
 #[must_use]
+#[must_use]
 pub struct MsvcMissingLinker;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_check_installed_visual_studio)]
 #[must_use]
+#[must_use]
 pub struct CheckInstalledVisualStudio;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_insufficient_vs_code_product)]
+#[must_use]
 #[must_use]
 pub struct InsufficientVSCodeProduct;
 
@@ -545,6 +576,7 @@ pub struct StrippingDebugInfoFailed<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unable_to_run)]
 #[must_use]
+#[must_use]
 pub struct UnableToRun<'a> {
     pub util: &'a str,
     pub error: Error,
@@ -553,15 +585,18 @@ pub struct UnableToRun<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_linker_file_stem)]
 #[must_use]
+#[must_use]
 pub struct LinkerFileStem;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_static_library_native_artifacts)]
 #[must_use]
+#[must_use]
 pub struct StaticLibraryNativeArtifacts;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_static_library_native_artifacts_to_file)]
+#[must_use]
 #[must_use]
 pub struct StaticLibraryNativeArtifactsToFile<'a> {
     pub path: &'a Path,
@@ -570,10 +605,12 @@ pub struct StaticLibraryNativeArtifactsToFile<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_link_script_unavailable)]
 #[must_use]
+#[must_use]
 pub struct LinkScriptUnavailable;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_link_script_write_failure)]
+#[must_use]
 #[must_use]
 pub struct LinkScriptWriteFailure {
     pub path: PathBuf,
@@ -583,6 +620,7 @@ pub struct LinkScriptWriteFailure {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_failed_to_write)]
 #[must_use]
+#[must_use]
 pub struct FailedToWrite {
     pub path: PathBuf,
     pub error: Error,
@@ -591,6 +629,7 @@ pub struct FailedToWrite {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unable_to_write_debugger_visualizer)]
 #[must_use]
+#[must_use]
 pub struct UnableToWriteDebuggerVisualizer {
     pub path: PathBuf,
     pub error: Error,
@@ -598,6 +637,7 @@ pub struct UnableToWriteDebuggerVisualizer {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_rlib_archive_build_failure)]
+#[must_use]
 #[must_use]
 pub struct RlibArchiveBuildFailure {
     pub error: Error,
@@ -633,6 +673,7 @@ pub enum ExtractBundledLibsError<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unsupported_arch)]
 #[must_use]
+#[must_use]
 pub struct UnsupportedArch<'a> {
     pub arch: &'a str,
     pub os: &'a str,
@@ -647,12 +688,14 @@ pub enum AppleSdkRootError<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_read_file)]
 #[must_use]
+#[must_use]
 pub struct ReadFileError {
     pub message: std::io::Error,
 }
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unsupported_link_self_contained)]
+#[must_use]
 #[must_use]
 pub struct UnsupportedLinkSelfContained;
 
@@ -675,6 +718,7 @@ pub struct UnknownArchiveKind<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_expected_coverage_symbol)]
 #[must_use]
+#[must_use]
 pub struct ExpectedCoverageSymbol {
     #[primary_span]
     pub span: Span,
@@ -682,6 +726,7 @@ pub struct ExpectedCoverageSymbol {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_expected_used_symbol)]
+#[must_use]
 #[must_use]
 pub struct ExpectedUsedSymbol {
     #[primary_span]
@@ -700,6 +745,7 @@ pub struct MultipleMainFunctions {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_metadata_object_file_write)]
 #[must_use]
+#[must_use]
 pub struct MetadataObjectFileWrite {
     pub error: Error,
 }
@@ -707,12 +753,14 @@ pub struct MetadataObjectFileWrite {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_invalid_windows_subsystem)]
 #[must_use]
+#[must_use]
 pub struct InvalidWindowsSubsystem {
     pub subsystem: Symbol,
 }
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_shuffle_indices_evaluation)]
+#[must_use]
 #[must_use]
 pub struct ShuffleIndicesEvaluation {
     #[primary_span]
@@ -722,20 +770,24 @@ pub struct ShuffleIndicesEvaluation {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_missing_memory_ordering)]
 #[must_use]
+#[must_use]
 pub struct MissingMemoryOrdering;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unknown_atomic_ordering)]
+#[must_use]
 #[must_use]
 pub struct UnknownAtomicOrdering;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_atomic_compare_exchange)]
 #[must_use]
+#[must_use]
 pub struct AtomicCompareExchange;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_unknown_atomic_operation)]
+#[must_use]
 #[must_use]
 pub struct UnknownAtomicOperation;
 
@@ -1141,6 +1193,7 @@ pub struct InvalidLinkOrdinalFormat {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_target_feature_safe_trait)]
 #[must_use]
+#[must_use]
 pub struct TargetFeatureSafeTrait {
     #[primary_span]
     #[label]
@@ -1152,6 +1205,7 @@ pub struct TargetFeatureSafeTrait {
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_failed_to_get_layout)]
 #[must_use]
+#[must_use]
 pub struct FailedToGetLayout<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -1161,6 +1215,7 @@ pub struct FailedToGetLayout<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_error_creating_remark_dir)]
+#[must_use]
 #[must_use]
 pub struct ErrorCreatingRemarkDir {
     pub error: std::io::Error,

@@ -47,6 +47,7 @@ pub struct CycleUsage {
 #[derive(Diagnostic)]
 #[diag(query_system_cycle, code = "E0391")]
 #[must_use]
+#[must_use]
 pub struct Cycle {
     #[primary_span]
     pub span: Span,
@@ -65,6 +66,7 @@ pub struct Cycle {
 
 #[derive(Diagnostic)]
 #[diag(query_system_reentrant)]
+#[must_use]
 #[must_use]
 pub struct Reentrant;
 

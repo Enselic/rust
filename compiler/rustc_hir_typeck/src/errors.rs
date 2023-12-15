@@ -17,6 +17,7 @@ use rustc_span::{
 #[derive(Diagnostic)]
 #[diag(hir_typeck_field_multiply_specified_in_initializer, code = "E0062")]
 #[must_use]
+#[must_use]
 pub struct FieldMultiplySpecifiedInInitializer {
     #[primary_span]
     #[label]
@@ -28,6 +29,7 @@ pub struct FieldMultiplySpecifiedInInitializer {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_return_stmt_outside_of_fn_body, code = "E0572")]
+#[must_use]
 #[must_use]
 pub struct ReturnStmtOutsideOfFnBody {
     #[primary_span]
@@ -59,6 +61,7 @@ impl IntoDiagnosticArg for ReturnLikeStatementKind {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_rustcall_incorrect_args)]
 #[must_use]
+#[must_use]
 pub struct RustCallIncorrectArgs {
     #[primary_span]
     pub span: Span,
@@ -66,6 +69,7 @@ pub struct RustCallIncorrectArgs {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_yield_expr_outside_of_coroutine, code = "E0627")]
+#[must_use]
 #[must_use]
 pub struct YieldExprOutsideOfCoroutine {
     #[primary_span]
@@ -75,7 +79,8 @@ pub struct YieldExprOutsideOfCoroutine {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_struct_expr_non_exhaustive, code = "E0639")]
 #[must_use]
-pub struct StructExprNonExhaustive {
+#[must_use]
+pub struct structExprNonExhaustive {
     #[primary_span]
     pub span: Span,
     pub what: &'static str,
@@ -83,6 +88,7 @@ pub struct StructExprNonExhaustive {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_method_call_on_unknown_raw_pointee, code = "E0699")]
+#[must_use]
 #[must_use]
 pub struct MethodCallOnUnknownRawPointee {
     #[primary_span]
@@ -101,13 +107,15 @@ pub struct MissingFnLangItems {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_functional_record_update_on_non_struct, code = "E0436")]
 #[must_use]
-pub struct FunctionalRecordUpdateOnNonStruct {
+#[must_use]
+pub struct FunctionalRecordUpdateOnNonstruct {
     #[primary_span]
     pub span: Span,
 }
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_address_of_temporary_taken, code = "E0745")]
+#[must_use]
 #[must_use]
 pub struct AddressOfTemporaryTaken {
     #[primary_span]
@@ -156,6 +164,7 @@ pub enum ExpectedReturnTypeLabel<'tcx> {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_explicit_destructor, code = "E0040")]
 #[must_use]
+#[must_use]
 pub struct ExplicitDestructorCall {
     #[primary_span]
     #[label]
@@ -179,6 +188,7 @@ pub enum ExplicitDestructorCallSugg {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_missing_parentheses_in_range, code = "E0689")]
+#[must_use]
 #[must_use]
 pub struct MissingParenthesesInRange {
     #[primary_span]
@@ -206,6 +216,7 @@ pub struct AddMissingParenthesesInRange {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_op_trait_generic_params)]
+#[must_use]
 #[must_use]
 pub struct OpMethodGenericParams {
     #[primary_span]
@@ -335,6 +346,7 @@ impl HelpUseLatestEdition {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_invalid_callee, code = "E0618")]
 #[must_use]
+#[must_use]
 pub struct InvalidCallee {
     #[primary_span]
     pub span: Span,
@@ -343,6 +355,7 @@ pub struct InvalidCallee {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_int_to_fat, code = "E0606")]
+#[must_use]
 #[must_use]
 pub struct IntToWide<'tcx> {
     #[primary_span]
@@ -435,6 +448,7 @@ pub struct ConstSelectMustBeConst {
 #[diag(hir_typeck_const_select_must_be_fn)]
 #[note]
 #[help]
+#[must_use]
 pub struct ConstSelectMustBeFn<'a> {
     #[primary_span]
     pub span: Span,
@@ -444,6 +458,7 @@ pub struct ConstSelectMustBeFn<'a> {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_union_pat_multiple_fields)]
 #[must_use]
+#[must_use]
 pub struct UnionPatMultipleFields {
     #[primary_span]
     pub span: Span,
@@ -451,6 +466,7 @@ pub struct UnionPatMultipleFields {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_union_pat_dotdot)]
+#[must_use]
 #[must_use]
 pub struct UnionPatDotDot {
     #[primary_span]
@@ -473,6 +489,7 @@ pub struct UseIsEmpty {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_arg_mismatch_indeterminate)]
+#[must_use]
 #[must_use]
 pub struct ArgMismatchIndeterminate {
     #[primary_span]
@@ -530,6 +547,7 @@ pub struct TrivialCast<'tcx> {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_no_associated_item, code = "E0599")]
 #[must_use]
+#[must_use]
 pub struct NoAssociatedItem {
     #[primary_span]
     pub span: Span,
@@ -553,6 +571,7 @@ pub struct CandidateTraitNote {
 #[derive(Diagnostic)]
 #[diag(hir_typeck_cannot_cast_to_bool, code = "E0054")]
 #[must_use]
+#[must_use]
 pub struct CannotCastToBool<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -570,6 +589,7 @@ pub struct CastEnumDrop<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_cast_unknown_pointer, code = "E0641")]
+#[must_use]
 #[must_use]
 pub struct CastUnknownPointer {
     #[primary_span]
@@ -622,6 +642,7 @@ pub enum CannotCastToBoolHelp {
 
 #[derive(Diagnostic)]
 #[diag(hir_typeck_ctor_is_private, code = "E0603")]
+#[must_use]
 #[must_use]
 pub struct CtorIsPrivate {
     #[primary_span]

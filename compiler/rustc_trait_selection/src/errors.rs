@@ -10,6 +10,7 @@ use rustc_span::{Span, Symbol};
 #[derive(Diagnostic)]
 #[diag(trait_selection_dump_vtable_entries)]
 #[must_use]
+#[must_use]
 pub struct DumpVTableEntries<'a> {
     #[primary_span]
     pub span: Span,
@@ -20,6 +21,7 @@ pub struct DumpVTableEntries<'a> {
 #[derive(Diagnostic)]
 #[diag(trait_selection_unable_to_construct_constant_value)]
 #[must_use]
+#[must_use]
 pub struct UnableToConstructConstantValue<'a> {
     #[primary_span]
     pub span: Span,
@@ -29,6 +31,7 @@ pub struct UnableToConstructConstantValue<'a> {
 #[derive(Diagnostic)]
 #[diag(trait_selection_empty_on_clause_in_rustc_on_unimplemented, code = "E0232")]
 #[must_use]
+#[must_use]
 pub struct EmptyOnClauseInOnUnimplemented {
     #[primary_span]
     #[label]
@@ -37,6 +40,7 @@ pub struct EmptyOnClauseInOnUnimplemented {
 
 #[derive(Diagnostic)]
 #[diag(trait_selection_invalid_on_clause_in_rustc_on_unimplemented, code = "E0232")]
+#[must_use]
 #[must_use]
 pub struct InvalidOnClauseInOnUnimplemented {
     #[primary_span]
@@ -101,6 +105,7 @@ impl IntoDiagnostic<'_> for NegativePositiveConflict<'_> {
 #[derive(Diagnostic)]
 #[diag(trait_selection_inherent_projection_normalization_overflow)]
 #[must_use]
+#[must_use]
 pub struct InherentProjectionNormalizationOverflow {
     #[primary_span]
     pub span: Span,
@@ -140,6 +145,7 @@ impl AddToDiagnostic for AdjustSignatureBorrow {
 
 #[derive(Diagnostic)]
 #[diag(trait_selection_closure_kind_mismatch, code = "E0525")]
+#[must_use]
 #[must_use]
 pub struct ClosureKindMismatch {
     #[primary_span]

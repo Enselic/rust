@@ -176,6 +176,7 @@ pub(crate) enum InvalidComparisonOperatorSub {
 #[derive(Diagnostic)]
 #[diag(parse_invalid_logical_operator)]
 #[note]
+#[must_use]
 pub(crate) struct InvalidLogicalOperator {
     #[primary_span]
     pub span: Span,
@@ -298,6 +299,7 @@ pub(crate) struct UnexpectedTokenAfterLabelSugg {
 #[derive(Diagnostic)]
 #[diag(parse_require_colon_after_labeled_expression)]
 #[note]
+#[must_use]
 pub(crate) struct RequireColonAfterLabeledExpression {
     #[primary_span]
     pub span: Span,
@@ -310,6 +312,7 @@ pub(crate) struct RequireColonAfterLabeledExpression {
 #[derive(Diagnostic)]
 #[diag(parse_do_catch_syntax_removed)]
 #[note]
+#[must_use]
 pub(crate) struct DoCatchSyntaxRemoved {
     #[primary_span]
     #[suggestion(applicability = "machine-applicable", code = "try")]
@@ -411,6 +414,7 @@ pub(crate) struct IfExpressionMissingCondition {
 #[derive(Diagnostic)]
 #[diag(parse_expected_expression_found_let)]
 #[note]
+#[must_use]
 pub(crate) struct ExpectedExpressionFoundLet {
     #[primary_span]
     pub span: Span,
@@ -531,6 +535,7 @@ pub(crate) struct MissingExpressionInForLoop {
 #[derive(Diagnostic)]
 #[diag(parse_loop_else)]
 #[note]
+#[must_use]
 pub(crate) struct LoopElseNotSupported {
     #[primary_span]
     pub span: Span,
@@ -550,6 +555,7 @@ pub(crate) struct MissingCommaAfterMatchArm {
 #[derive(Diagnostic)]
 #[diag(parse_catch_after_try)]
 #[help]
+#[must_use]
 pub(crate) struct CatchAfterTry {
     #[primary_span]
     pub span: Span,
@@ -558,6 +564,7 @@ pub(crate) struct CatchAfterTry {
 #[derive(Diagnostic)]
 #[diag(parse_gen_fn)]
 #[help]
+#[must_use]
 pub(crate) struct GenFn {
     #[primary_span]
     pub span: Span,
@@ -566,7 +573,8 @@ pub(crate) struct GenFn {
 #[derive(Diagnostic)]
 #[diag(parse_comma_after_base_struct)]
 #[note]
-pub(crate) struct CommaAfterBaseStruct {
+#[must_use]
+pub(crate) struct CommaAfterBasestruct {
     #[primary_span]
     pub span: Span,
     #[suggestion(style = "short", applicability = "machine-applicable", code = "")]
@@ -769,6 +777,7 @@ pub(crate) struct MatchArmBodyWithoutBraces {
 #[derive(Diagnostic)]
 #[diag(parse_inclusive_range_extra_equals)]
 #[note]
+#[must_use]
 pub(crate) struct InclusiveRangeExtraEquals {
     #[primary_span]
     #[suggestion(
@@ -794,6 +803,7 @@ pub(crate) struct InclusiveRangeMatchArrow {
 #[derive(Diagnostic)]
 #[diag(parse_inclusive_range_no_end, code = "E0586")]
 #[note]
+#[must_use]
 pub(crate) struct InclusiveRangeNoEnd {
     #[primary_span]
     #[suggestion(
@@ -888,6 +898,7 @@ pub(crate) struct MismatchedClosingDelimiter {
 #[derive(Diagnostic)]
 #[diag(parse_incorrect_visibility_restriction, code = "E0704")]
 #[help]
+#[must_use]
 pub(crate) struct IncorrectVisibilityRestriction {
     #[primary_span]
     #[suggestion(code = "in {inner_str}", applicability = "machine-applicable")]
@@ -912,6 +923,7 @@ pub(crate) struct ExpectedStatementAfterOuterAttr {
 #[derive(Diagnostic)]
 #[diag(parse_doc_comment_does_not_document_anything, code = "E0585")]
 #[help]
+#[must_use]
 pub(crate) struct DocCommentDoesNotDocumentAnything {
     #[primary_span]
     pub span: Span,
@@ -949,6 +961,7 @@ pub(crate) struct InvalidCurlyInLetElse {
 #[derive(Diagnostic)]
 #[diag(parse_compound_assignment_expression_in_let)]
 #[help]
+#[must_use]
 pub(crate) struct CompoundAssignmentExpressionInLet {
     #[primary_span]
     #[suggestion(style = "short", code = "=", applicability = "maybe-incorrect")]
@@ -958,6 +971,7 @@ pub(crate) struct CompoundAssignmentExpressionInLet {
 #[derive(Diagnostic)]
 #[diag(parse_suffixed_literal_in_attribute)]
 #[help]
+#[must_use]
 pub(crate) struct SuffixedLiteralInAttribute {
     #[primary_span]
     pub span: Span,
@@ -1562,6 +1576,7 @@ pub(crate) struct SelfArgumentPointer {
 #[derive(Diagnostic)]
 #[diag(parse_unexpected_token_after_dot)]
 #[must_use]
+#[must_use]
 pub struct UnexpectedTokenAfterDot<'a> {
     #[primary_span]
     pub span: Span,
@@ -1571,6 +1586,7 @@ pub struct UnexpectedTokenAfterDot<'a> {
 #[derive(Diagnostic)]
 #[diag(parse_visibility_not_followed_by_item)]
 #[help]
+#[must_use]
 pub(crate) struct VisibilityNotFollowedByItem {
     #[primary_span]
     #[label]
@@ -1581,6 +1597,7 @@ pub(crate) struct VisibilityNotFollowedByItem {
 #[derive(Diagnostic)]
 #[diag(parse_default_not_followed_by_item)]
 #[note]
+#[must_use]
 pub(crate) struct DefaultNotFollowedByItem {
     #[primary_span]
     #[label]
@@ -1590,7 +1607,8 @@ pub(crate) struct DefaultNotFollowedByItem {
 #[derive(Diagnostic)]
 pub(crate) enum MissingKeywordForItemDefinition {
     #[diag(parse_missing_struct_for_struct_definition)]
-    Struct {
+#[must_use]
+    struct {
         #[primary_span]
         #[suggestion(style = "short", applicability = "maybe-incorrect", code = " struct ")]
         span: Span,
@@ -1724,6 +1742,7 @@ pub(crate) struct ExternCrateNameWithDashesSugg {
 #[derive(Diagnostic)]
 #[diag(parse_extern_item_cannot_be_const)]
 #[note]
+#[must_use]
 pub(crate) struct ExternItemCannotBeConst {
     #[primary_span]
     pub ident_span: Span,
@@ -1814,6 +1833,7 @@ impl UnexpectedTokenAfterStructName {
 #[derive(Diagnostic)]
 #[diag(parse_unexpected_self_in_generic_parameters)]
 #[note]
+#[must_use]
 pub(crate) struct UnexpectedSelfInGenericParameters {
     #[primary_span]
     pub span: Span,
@@ -1879,6 +1899,7 @@ pub(crate) enum TopLevelOrPatternNotAllowed {
 #[derive(Diagnostic)]
 #[diag(parse_cannot_be_raw_ident)]
 #[must_use]
+#[must_use]
 pub struct CannotBeRawIdent {
     #[primary_span]
     pub span: Span,
@@ -1887,6 +1908,7 @@ pub struct CannotBeRawIdent {
 
 #[derive(Diagnostic)]
 #[diag(parse_cr_doc_comment)]
+#[must_use]
 #[must_use]
 pub struct CrDocComment {
     #[primary_span]
@@ -1897,6 +1919,7 @@ pub struct CrDocComment {
 #[derive(Diagnostic)]
 #[diag(parse_no_digits_literal, code = "E0768")]
 #[must_use]
+#[must_use]
 pub struct NoDigitsLiteral {
     #[primary_span]
     pub span: Span,
@@ -1904,6 +1927,7 @@ pub struct NoDigitsLiteral {
 
 #[derive(Diagnostic)]
 #[diag(parse_invalid_digit_literal)]
+#[must_use]
 #[must_use]
 pub struct InvalidDigitLiteral {
     #[primary_span]
@@ -1914,6 +1938,7 @@ pub struct InvalidDigitLiteral {
 #[derive(Diagnostic)]
 #[diag(parse_empty_exponent_float)]
 #[must_use]
+#[must_use]
 pub struct EmptyExponentFloat {
     #[primary_span]
     pub span: Span,
@@ -1921,6 +1946,7 @@ pub struct EmptyExponentFloat {
 
 #[derive(Diagnostic)]
 #[diag(parse_float_literal_unsupported_base)]
+#[must_use]
 #[must_use]
 pub struct FloatLiteralUnsupportedBase {
     #[primary_span]
@@ -1968,6 +1994,7 @@ pub enum UnknownPrefixSugg {
 #[derive(Diagnostic)]
 #[diag(parse_too_many_hashes)]
 #[must_use]
+#[must_use]
 pub struct TooManyHashes {
     #[primary_span]
     pub span: Span,
@@ -1976,6 +2003,7 @@ pub struct TooManyHashes {
 
 #[derive(Diagnostic)]
 #[diag(parse_unknown_start_of_token)]
+#[must_use]
 #[must_use]
 pub struct UnknownTokenStart {
     #[primary_span]
@@ -2236,6 +2264,7 @@ pub(crate) enum TopLevelOrPatternNotAllowedSugg {
 #[derive(Diagnostic)]
 #[diag(parse_unexpected_vert_vert_before_function_parameter)]
 #[note(parse_note_pattern_alternatives_use_single_vert)]
+#[must_use]
 pub(crate) struct UnexpectedVertVertBeforeFunctionParam {
     #[primary_span]
     #[suggestion(code = "", applicability = "machine-applicable")]
@@ -2290,6 +2319,7 @@ pub(crate) struct PatternOnWrongSideOfAt {
 #[derive(Diagnostic)]
 #[diag(parse_expected_binding_left_of_at)]
 #[note]
+#[must_use]
 pub(crate) struct ExpectedBindingLeftOfAt {
     #[primary_span]
     pub whole_span: Span,
@@ -2455,6 +2485,7 @@ pub(crate) struct NestedCVariadicType {
 #[derive(Diagnostic)]
 #[diag(parse_invalid_dyn_keyword)]
 #[help]
+#[must_use]
 pub(crate) struct InvalidDynKeyword {
     #[primary_span]
     #[suggestion(code = "", applicability = "machine-applicable")]
@@ -2484,6 +2515,7 @@ impl HelpUseLatestEdition {
 
 #[derive(Diagnostic)]
 #[diag(parse_box_syntax_removed)]
+#[must_use]
 #[must_use]
 pub struct BoxSyntaxRemoved<'a> {
     #[primary_span]
@@ -2554,6 +2586,7 @@ pub(crate) struct GenericsInPath {
 #[derive(Diagnostic)]
 #[diag(parse_assoc_lifetime)]
 #[help]
+#[must_use]
 pub(crate) struct AssocLifetime {
     #[primary_span]
     pub span: Span,
@@ -2615,6 +2648,7 @@ pub(crate) struct ExpectedLabelFoundIdent {
 #[derive(Diagnostic)]
 #[diag(parse_inappropriate_default)]
 #[note]
+#[must_use]
 pub(crate) struct InappropriateDefault {
     #[primary_span]
     #[label]
@@ -2635,6 +2669,7 @@ pub(crate) struct RecoverImportAsUse {
 #[derive(Diagnostic)]
 #[diag(parse_single_colon_import_path)]
 #[note]
+#[must_use]
 pub(crate) struct SingleColonImportPath {
     #[primary_span]
     #[suggestion(code = "::", applicability = "machine-applicable", style = "short")]
@@ -2644,6 +2679,7 @@ pub(crate) struct SingleColonImportPath {
 #[derive(Diagnostic)]
 #[diag(parse_bad_item_kind)]
 #[help]
+#[must_use]
 pub(crate) struct BadItemKind {
     #[primary_span]
     pub span: Span,
@@ -2696,6 +2732,7 @@ pub(crate) struct MacroRulesVisibility<'a> {
 #[derive(Diagnostic)]
 #[diag(parse_macro_invocation_visibility)]
 #[help]
+#[must_use]
 pub(crate) struct MacroInvocationVisibility<'a> {
     #[primary_span]
     #[suggestion(code = "", applicability = "machine-applicable")]
@@ -2823,6 +2860,7 @@ pub(crate) struct MetaBadDelimSugg {
 #[derive(Diagnostic)]
 #[diag(parse_malformed_cfg_attr)]
 #[note]
+#[must_use]
 pub(crate) struct MalformedCfgAttr {
     #[primary_span]
     #[suggestion(code = "{sugg}")]

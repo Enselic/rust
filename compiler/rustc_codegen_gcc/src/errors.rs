@@ -10,6 +10,7 @@ use crate::fluent_generated as fluent;
 #[derive(Diagnostic)]
 #[diag(codegen_gcc_unknown_ctarget_feature_prefix)]
 #[note]
+#[must_use]
 pub(crate) struct UnknownCTargetFeaturePrefix<'a> {
     pub feature: &'a str,
 }
@@ -17,6 +18,7 @@ pub(crate) struct UnknownCTargetFeaturePrefix<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_gcc_unknown_ctarget_feature)]
 #[note]
+#[must_use]
 pub(crate) struct UnknownCTargetFeature<'a> {
     pub feature: &'a str,
     #[subdiagnostic]
@@ -63,6 +65,7 @@ pub(crate) struct InvalidMinimumAlignment {
 #[derive(Diagnostic)]
 #[diag(codegen_gcc_tied_target_features)]
 #[help]
+#[must_use]
 pub(crate) struct TiedTargetFeatures {
     #[primary_span]
     pub span: Span,
@@ -78,6 +81,7 @@ pub(crate) struct CopyBitcode {
 #[derive(Diagnostic)]
 #[diag(codegen_gcc_dynamic_linking_with_lto)]
 #[note]
+#[must_use]
 pub(crate) struct DynamicLinkingWithLTO;
 
 #[derive(Diagnostic)]

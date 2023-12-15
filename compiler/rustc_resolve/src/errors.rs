@@ -13,11 +13,13 @@ pub(crate) struct ParentModuleResetForBinding;
 #[derive(Diagnostic)]
 #[diag(resolve_ampersand_used_without_explicit_lifetime_name, code = "E0637")]
 #[note]
+#[must_use]
 pub(crate) struct AmpersandUsedWithoutExplicitLifetimeName(#[primary_span] pub(crate) Span);
 
 #[derive(Diagnostic)]
 #[diag(resolve_underscore_lifetime_name_cannot_be_used_here, code = "E0637")]
 #[note]
+#[must_use]
 pub(crate) struct UnderscoreLifetimeNameCannotBeUsedHere(#[primary_span] pub(crate) Span);
 
 #[derive(Diagnostic)]
@@ -235,6 +237,7 @@ pub(crate) struct SelfImportOnlyInImportListWithNonEmptyPrefix {
 #[derive(Diagnostic)]
 #[diag(resolve_cannot_capture_dynamic_environment_in_fn_item, code = "E0434")]
 #[help]
+#[must_use]
 pub(crate) struct CannotCaptureDynamicEnvironmentInFnItem {
     #[primary_span]
     pub(crate) span: Span,
@@ -414,6 +417,7 @@ pub(crate) enum ParamKindInNonTrivialAnonConst {
 #[derive(Diagnostic)]
 #[diag(resolve_unreachable_label, code = "E0767")]
 #[note]
+#[must_use]
 pub(crate) struct UnreachableLabel {
     #[primary_span]
     #[label]
@@ -472,6 +476,7 @@ pub(crate) struct TraitImplMismatch {
 #[derive(Diagnostic)]
 #[diag(resolve_invalid_asm_sym)]
 #[help]
+#[must_use]
 pub(crate) struct InvalidAsmSym {
     #[primary_span]
     #[label]
@@ -593,6 +598,7 @@ pub(crate) struct MacroUseExternCrateSelf {
 #[derive(Diagnostic)]
 #[diag(resolve_accessible_unsure)]
 #[note]
+#[must_use]
 pub(crate) struct CfgAccessibleUnsure {
     #[primary_span]
     pub(crate) span: Span,
@@ -698,6 +704,7 @@ pub(crate) struct CannotDetermineImportResolution {
 #[derive(Diagnostic)]
 #[diag(resolve_cannot_determine_macro_resolution)]
 #[note]
+#[must_use]
 pub(crate) struct CannotDetermineMacroResolution {
     #[primary_span]
     pub(crate) span: Span,
@@ -724,6 +731,7 @@ pub(crate) struct CannotBeReexportedCratePublic {
 #[derive(Diagnostic)]
 #[diag(resolve_cannot_be_reexported_private, code = "E0365")]
 #[note(resolve_consider_declaring_with_pub)]
+#[must_use]
 pub(crate) struct CannotBeReexportedPrivateNS {
     #[primary_span]
     #[label(resolve_reexport_of_private)]
@@ -734,6 +742,7 @@ pub(crate) struct CannotBeReexportedPrivateNS {
 #[derive(Diagnostic)]
 #[diag(resolve_cannot_be_reexported_crate_public, code = "E0365")]
 #[note(resolve_consider_declaring_with_pub)]
+#[must_use]
 pub(crate) struct CannotBeReexportedCratePublicNS {
     #[primary_span]
     #[label(resolve_reexport_of_crate_public)]

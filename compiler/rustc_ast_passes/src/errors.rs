@@ -10,6 +10,7 @@ use crate::fluent_generated as fluent;
 #[derive(Diagnostic)]
 #[diag(ast_passes_keyword_lifetime)]
 #[must_use]
+#[must_use]
 pub struct KeywordLifetime {
     #[primary_span]
     pub span: Span,
@@ -17,6 +18,7 @@ pub struct KeywordLifetime {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_invalid_label)]
+#[must_use]
 #[must_use]
 pub struct InvalidLabel {
     #[primary_span]
@@ -26,6 +28,7 @@ pub struct InvalidLabel {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_visibility_not_permitted, code = "E0449")]
+#[must_use]
 #[must_use]
 pub struct VisibilityNotPermitted {
     #[primary_span]
@@ -49,6 +52,7 @@ pub enum VisibilityNotPermittedNote {
 #[derive(Diagnostic)]
 #[diag(ast_passes_trait_fn_const, code = "E0379")]
 #[must_use]
+#[must_use]
 pub struct TraitFnConst {
     #[primary_span]
     #[label]
@@ -58,6 +62,7 @@ pub struct TraitFnConst {
 #[derive(Diagnostic)]
 #[diag(ast_passes_forbidden_lifetime_bound)]
 #[must_use]
+#[must_use]
 pub struct ForbiddenLifetimeBound {
     #[primary_span]
     pub spans: Vec<Span>,
@@ -65,6 +70,7 @@ pub struct ForbiddenLifetimeBound {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_param_too_many)]
+#[must_use]
 #[must_use]
 pub struct FnParamTooMany {
     #[primary_span]
@@ -75,6 +81,7 @@ pub struct FnParamTooMany {
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_param_c_var_args_only)]
 #[must_use]
+#[must_use]
 pub struct FnParamCVarArgsOnly {
     #[primary_span]
     pub span: Span,
@@ -82,6 +89,7 @@ pub struct FnParamCVarArgsOnly {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_param_c_var_args_not_last)]
+#[must_use]
 #[must_use]
 pub struct FnParamCVarArgsNotLast {
     #[primary_span]
@@ -91,6 +99,7 @@ pub struct FnParamCVarArgsNotLast {
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_param_doc_comment)]
 #[must_use]
+#[must_use]
 pub struct FnParamDocComment {
     #[primary_span]
     #[label]
@@ -99,6 +108,7 @@ pub struct FnParamDocComment {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_param_forbidden_attr)]
+#[must_use]
 #[must_use]
 pub struct FnParamForbiddenAttr {
     #[primary_span]
@@ -118,6 +128,7 @@ pub struct FnParamForbiddenSelf {
 #[derive(Diagnostic)]
 #[diag(ast_passes_forbidden_default)]
 #[must_use]
+#[must_use]
 pub struct ForbiddenDefault {
     #[primary_span]
     pub span: Span,
@@ -127,6 +138,7 @@ pub struct ForbiddenDefault {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_assoc_const_without_body)]
+#[must_use]
 #[must_use]
 pub struct AssocConstWithoutBody {
     #[primary_span]
@@ -138,6 +150,7 @@ pub struct AssocConstWithoutBody {
 #[derive(Diagnostic)]
 #[diag(ast_passes_assoc_fn_without_body)]
 #[must_use]
+#[must_use]
 pub struct AssocFnWithoutBody {
     #[primary_span]
     pub span: Span,
@@ -147,6 +160,7 @@ pub struct AssocFnWithoutBody {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_assoc_type_without_body)]
+#[must_use]
 #[must_use]
 pub struct AssocTypeWithoutBody {
     #[primary_span]
@@ -158,6 +172,7 @@ pub struct AssocTypeWithoutBody {
 #[derive(Diagnostic)]
 #[diag(ast_passes_const_without_body)]
 #[must_use]
+#[must_use]
 pub struct ConstWithoutBody {
     #[primary_span]
     pub span: Span,
@@ -167,6 +182,7 @@ pub struct ConstWithoutBody {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_static_without_body)]
+#[must_use]
 #[must_use]
 pub struct StaticWithoutBody {
     #[primary_span]
@@ -178,6 +194,7 @@ pub struct StaticWithoutBody {
 #[derive(Diagnostic)]
 #[diag(ast_passes_ty_alias_without_body)]
 #[must_use]
+#[must_use]
 pub struct TyAliasWithoutBody {
     #[primary_span]
     pub span: Span,
@@ -187,6 +204,7 @@ pub struct TyAliasWithoutBody {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_fn_without_body)]
+#[must_use]
 #[must_use]
 pub struct FnWithoutBody {
     #[primary_span]
@@ -218,6 +236,7 @@ pub enum ExternBlockSuggestion {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_bound_in_context)]
+#[must_use]
 #[must_use]
 pub struct BoundInContext<'a> {
     #[primary_span]
@@ -258,6 +277,7 @@ pub struct BodyInExtern<'a> {
 #[diag(ast_passes_fn_body_extern)]
 #[help]
 #[note(ast_passes_extern_keyword_link)]
+#[must_use]
 pub struct FnBodyInExtern {
     #[primary_span]
     #[label(ast_passes_cannot_have)]
@@ -270,6 +290,7 @@ pub struct FnBodyInExtern {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_extern_fn_qualifiers)]
+#[must_use]
 #[must_use]
 pub struct FnQualifierInExtern {
     #[primary_span]
@@ -294,6 +315,7 @@ pub struct ExternItemAscii {
 #[derive(Diagnostic)]
 #[diag(ast_passes_bad_c_variadic)]
 #[must_use]
+#[must_use]
 pub struct BadCVariadic {
     #[primary_span]
     pub span: Vec<Span>,
@@ -301,6 +323,7 @@ pub struct BadCVariadic {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_item_underscore)]
+#[must_use]
 #[must_use]
 pub struct ItemUnderscore<'a> {
     #[primary_span]
@@ -311,6 +334,7 @@ pub struct ItemUnderscore<'a> {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_nomangle_ascii, code = "E0754")]
+#[must_use]
 #[must_use]
 pub struct NoMangleAscii {
     #[primary_span]
@@ -330,6 +354,7 @@ pub struct ModuleNonAscii {
 #[derive(Diagnostic)]
 #[diag(ast_passes_auto_generic, code = "E0567")]
 #[must_use]
+#[must_use]
 pub struct AutoTraitGeneric {
     #[primary_span]
     #[suggestion(code = "", applicability = "machine-applicable")]
@@ -340,6 +365,7 @@ pub struct AutoTraitGeneric {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_auto_super_lifetime, code = "E0568")]
+#[must_use]
 #[must_use]
 pub struct AutoTraitBounds {
     #[primary_span]
@@ -352,6 +378,7 @@ pub struct AutoTraitBounds {
 #[derive(Diagnostic)]
 #[diag(ast_passes_auto_items, code = "E0380")]
 #[must_use]
+#[must_use]
 pub struct AutoTraitItems {
     #[primary_span]
     pub spans: Vec<Span>,
@@ -363,6 +390,7 @@ pub struct AutoTraitItems {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_generic_before_constraints)]
+#[must_use]
 #[must_use]
 pub struct ArgsBeforeConstraint {
     #[primary_span]
@@ -400,6 +428,7 @@ impl AddToDiagnostic for EmptyLabelManySpans {
 #[derive(Diagnostic)]
 #[diag(ast_passes_pattern_in_fn_pointer, code = "E0561")]
 #[must_use]
+#[must_use]
 pub struct PatternFnPointer {
     #[primary_span]
     pub span: Span,
@@ -407,6 +436,7 @@ pub struct PatternFnPointer {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_trait_object_single_bound, code = "E0226")]
+#[must_use]
 #[must_use]
 pub struct TraitObjectBound {
     #[primary_span]
@@ -416,6 +446,7 @@ pub struct TraitObjectBound {
 #[derive(Diagnostic)]
 #[diag(ast_passes_impl_trait_path, code = "E0667")]
 #[must_use]
+#[must_use]
 pub struct ImplTraitPath {
     #[primary_span]
     pub span: Span,
@@ -423,6 +454,7 @@ pub struct ImplTraitPath {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_nested_impl_trait, code = "E0666")]
+#[must_use]
 #[must_use]
 pub struct NestedImplTrait {
     #[primary_span]
@@ -436,6 +468,7 @@ pub struct NestedImplTrait {
 #[derive(Diagnostic)]
 #[diag(ast_passes_at_least_one_trait)]
 #[must_use]
+#[must_use]
 pub struct AtLeastOneTrait {
     #[primary_span]
     pub span: Span,
@@ -443,6 +476,7 @@ pub struct AtLeastOneTrait {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_out_of_order_params)]
+#[must_use]
 #[must_use]
 pub struct OutOfOrderParams<'a> {
     #[primary_span]
@@ -466,6 +500,7 @@ pub struct ObsoleteAuto {
 #[derive(Diagnostic)]
 #[diag(ast_passes_unsafe_negative_impl, code = "E0198")]
 #[must_use]
+#[must_use]
 pub struct UnsafeNegativeImpl {
     #[primary_span]
     pub span: Span,
@@ -477,6 +512,7 @@ pub struct UnsafeNegativeImpl {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_inherent_cannot_be)]
+#[must_use]
 #[must_use]
 pub struct InherentImplCannot<'a> {
     #[primary_span]
@@ -493,6 +529,7 @@ pub struct InherentImplCannot<'a> {
 #[derive(Diagnostic)]
 #[diag(ast_passes_inherent_cannot_be, code = "E0197")]
 #[must_use]
+#[must_use]
 pub struct InherentImplCannotUnsafe<'a> {
     #[primary_span]
     pub span: Span,
@@ -506,6 +543,7 @@ pub struct InherentImplCannotUnsafe<'a> {
 #[derive(Diagnostic)]
 #[diag(ast_passes_unsafe_item)]
 #[must_use]
+#[must_use]
 pub struct UnsafeItem {
     #[primary_span]
     pub span: Span,
@@ -514,6 +552,7 @@ pub struct UnsafeItem {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_fieldless_union)]
+#[must_use]
 #[must_use]
 pub struct FieldlessUnion {
     #[primary_span]
@@ -559,6 +598,7 @@ pub struct WhereClauseBeforeTypeAliasSugg {
 #[derive(Diagnostic)]
 #[diag(ast_passes_generic_default_trailing)]
 #[must_use]
+#[must_use]
 pub struct GenericDefaultTrailing {
     #[primary_span]
     pub span: Span,
@@ -566,6 +606,7 @@ pub struct GenericDefaultTrailing {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_nested_lifetimes, code = "E0316")]
+#[must_use]
 #[must_use]
 pub struct NestedLifetimes {
     #[primary_span]
@@ -585,6 +626,7 @@ pub struct OptionalTraitSupertrait {
 #[derive(Diagnostic)]
 #[diag(ast_passes_optional_trait_object)]
 #[must_use]
+#[must_use]
 pub struct OptionalTraitObject {
     #[primary_span]
     pub span: Span,
@@ -592,6 +634,7 @@ pub struct OptionalTraitObject {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_tilde_const_disallowed)]
+#[must_use]
 #[must_use]
 pub struct TildeConstDisallowed {
     #[primary_span]
@@ -628,6 +671,7 @@ pub enum TildeConstReason {
 #[derive(Diagnostic)]
 #[diag(ast_passes_optional_const_exclusive)]
 #[must_use]
+#[must_use]
 pub struct OptionalConstExclusive {
     #[primary_span]
     pub span: Span,
@@ -636,6 +680,7 @@ pub struct OptionalConstExclusive {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_const_and_async)]
+#[must_use]
 #[must_use]
 pub struct ConstAndAsync {
     #[primary_span]
@@ -651,6 +696,7 @@ pub struct ConstAndAsync {
 #[derive(Diagnostic)]
 #[diag(ast_passes_const_and_c_variadic)]
 #[must_use]
+#[must_use]
 pub struct ConstAndCVariadic {
     #[primary_span]
     pub spans: Vec<Span>,
@@ -663,6 +709,7 @@ pub struct ConstAndCVariadic {
 #[derive(Diagnostic)]
 #[diag(ast_passes_pattern_in_foreign, code = "E0130")]
 #[must_use]
+#[must_use]
 pub struct PatternInForeign {
     #[primary_span]
     #[label]
@@ -671,6 +718,7 @@ pub struct PatternInForeign {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_pattern_in_bodiless, code = "E0642")]
+#[must_use]
 #[must_use]
 pub struct PatternInBodiless {
     #[primary_span]
@@ -722,6 +770,7 @@ pub struct AssociatedSuggestion2 {
 #[derive(Diagnostic)]
 #[diag(ast_passes_stability_outside_std, code = "E0734")]
 #[must_use]
+#[must_use]
 pub struct StabilityOutsideStd {
     #[primary_span]
     pub span: Span,
@@ -729,6 +778,7 @@ pub struct StabilityOutsideStd {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_feature_on_non_nightly, code = "E0554")]
+#[must_use]
 #[must_use]
 pub struct FeatureOnNonNightly {
     #[primary_span]
@@ -773,6 +823,7 @@ pub struct IncompatibleFeatures {
 #[derive(Diagnostic)]
 #[diag(ast_passes_show_span)]
 #[must_use]
+#[must_use]
 pub struct ShowSpan {
     #[primary_span]
     pub span: Span,
@@ -782,6 +833,7 @@ pub struct ShowSpan {
 #[derive(Diagnostic)]
 #[diag(ast_passes_negative_bound_not_supported)]
 #[must_use]
+#[must_use]
 pub struct NegativeBoundUnsupported {
     #[primary_span]
     pub span: Span,
@@ -790,6 +842,7 @@ pub struct NegativeBoundUnsupported {
 #[derive(Diagnostic)]
 #[diag(ast_passes_constraint_on_negative_bound)]
 #[must_use]
+#[must_use]
 pub struct ConstraintOnNegativeBound {
     #[primary_span]
     pub span: Span,
@@ -797,6 +850,7 @@ pub struct ConstraintOnNegativeBound {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_invalid_unnamed_field_ty)]
+#[must_use]
 #[must_use]
 pub struct InvalidUnnamedFieldTy {
     #[primary_span]
@@ -808,6 +862,7 @@ pub struct InvalidUnnamedFieldTy {
 #[derive(Diagnostic)]
 #[diag(ast_passes_invalid_unnamed_field)]
 #[must_use]
+#[must_use]
 pub struct InvalidUnnamedField {
     #[primary_span]
     pub span: Span,
@@ -818,7 +873,8 @@ pub struct InvalidUnnamedField {
 #[derive(Diagnostic)]
 #[diag(ast_passes_anon_struct_or_union_not_allowed)]
 #[must_use]
-pub struct AnonStructOrUnionNotAllowed {
+#[must_use]
+pub struct AnonstructOrUnionNotAllowed {
     #[primary_span]
     #[label]
     pub span: Span,
@@ -827,6 +883,7 @@ pub struct AnonStructOrUnionNotAllowed {
 
 #[derive(Diagnostic)]
 #[diag(ast_passes_match_arm_with_no_body)]
+#[must_use]
 #[must_use]
 pub struct MatchArmWithNoBody {
     #[primary_span]

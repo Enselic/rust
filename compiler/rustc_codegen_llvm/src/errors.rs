@@ -13,6 +13,7 @@ use rustc_span::Span;
 #[derive(Diagnostic)]
 #[diag(codegen_llvm_unknown_ctarget_feature_prefix)]
 #[note]
+#[must_use]
 pub(crate) struct UnknownCTargetFeaturePrefix<'a> {
     pub feature: &'a str,
 }
@@ -20,6 +21,7 @@ pub(crate) struct UnknownCTargetFeaturePrefix<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_llvm_unknown_ctarget_feature)]
 #[note]
+#[must_use]
 pub(crate) struct UnknownCTargetFeature<'a> {
     pub feature: &'a str,
     #[subdiagnostic]
@@ -29,6 +31,7 @@ pub(crate) struct UnknownCTargetFeature<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_llvm_unstable_ctarget_feature)]
 #[note]
+#[must_use]
 pub(crate) struct UnstableCTargetFeature<'a> {
     pub feature: &'a str,
 }
@@ -97,6 +100,7 @@ pub(crate) struct DlltoolFailImportLibrary<'a> {
 #[derive(Diagnostic)]
 #[diag(codegen_llvm_dynamic_linking_with_lto)]
 #[note]
+#[must_use]
 pub(crate) struct DynamicLinkingWithLTO;
 
 pub(crate) struct ParseTargetMachineConfig<'a>(pub LlvmError<'a>);
@@ -241,6 +245,7 @@ pub(crate) struct CopyBitcode {
 
 #[derive(Diagnostic)]
 #[diag(codegen_llvm_unknown_debuginfo_compression)]
+#[must_use]
 #[must_use]
 pub struct UnknownCompression {
     pub algorithm: &'static str,

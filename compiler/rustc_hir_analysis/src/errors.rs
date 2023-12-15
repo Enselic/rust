@@ -12,6 +12,7 @@ use rustc_span::{symbol::Ident, Span, Symbol};
 #[derive(Diagnostic)]
 #[diag(hir_analysis_ambiguous_assoc_item)]
 #[must_use]
+#[must_use]
 pub struct AmbiguousAssocItem<'a> {
     #[primary_span]
     #[label]
@@ -23,6 +24,7 @@ pub struct AmbiguousAssocItem<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_assoc_kind_mismatch)]
+#[must_use]
 #[must_use]
 pub struct AssocKindMismatch {
     #[primary_span]
@@ -55,6 +57,7 @@ pub struct AssocKindMismatchWrapInBracesSugg {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_assoc_item_not_found, code = "E0220")]
+#[must_use]
 #[must_use]
 pub struct AssocItemNotFound<'a> {
     #[primary_span]
@@ -127,6 +130,7 @@ pub enum AssocItemNotFoundSugg<'a> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_unrecognized_atomic_operation, code = "E0092")]
 #[must_use]
+#[must_use]
 pub struct UnrecognizedAtomicOperation<'a> {
     #[primary_span]
     #[label]
@@ -136,6 +140,7 @@ pub struct UnrecognizedAtomicOperation<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_wrong_number_of_generic_arguments_to_intrinsic, code = "E0094")]
+#[must_use]
 #[must_use]
 pub struct WrongNumberOfGenericArgumentsToIntrinsic<'a> {
     #[primary_span]
@@ -149,6 +154,7 @@ pub struct WrongNumberOfGenericArgumentsToIntrinsic<'a> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_unrecognized_intrinsic_function, code = "E0093")]
 #[must_use]
+#[must_use]
 pub struct UnrecognizedIntrinsicFunction {
     #[primary_span]
     #[label]
@@ -158,6 +164,7 @@ pub struct UnrecognizedIntrinsicFunction {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_lifetimes_or_bounds_mismatch_on_trait, code = "E0195")]
+#[must_use]
 #[must_use]
 pub struct LifetimesOrBoundsMismatchOnTrait {
     #[primary_span]
@@ -176,6 +183,7 @@ pub struct LifetimesOrBoundsMismatchOnTrait {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_async_trait_impl_should_be_async)]
 #[must_use]
+#[must_use]
 pub struct AsyncTraitImplShouldBeAsync {
     #[primary_span]
     // #[label]
@@ -188,6 +196,7 @@ pub struct AsyncTraitImplShouldBeAsync {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_drop_impl_on_wrong_item, code = "E0120")]
 #[must_use]
+#[must_use]
 pub struct DropImplOnWrongItem {
     #[primary_span]
     #[label]
@@ -196,6 +205,7 @@ pub struct DropImplOnWrongItem {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_field_already_declared, code = "E0124")]
+#[must_use]
 #[must_use]
 pub struct FieldAlreadyDeclared {
     pub field_name: Ident,
@@ -209,6 +219,7 @@ pub struct FieldAlreadyDeclared {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_copy_impl_on_type_with_dtor, code = "E0184")]
 #[must_use]
+#[must_use]
 pub struct CopyImplOnTypeWithDtor {
     #[primary_span]
     #[label]
@@ -218,6 +229,7 @@ pub struct CopyImplOnTypeWithDtor {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_multiple_relaxed_default_bounds, code = "E0203")]
 #[must_use]
+#[must_use]
 pub struct MultipleRelaxedDefaultBounds {
     #[primary_span]
     pub spans: Vec<Span>,
@@ -225,6 +237,7 @@ pub struct MultipleRelaxedDefaultBounds {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_copy_impl_on_non_adt, code = "E0206")]
+#[must_use]
 #[must_use]
 pub struct CopyImplOnNonAdt {
     #[primary_span]
@@ -235,6 +248,7 @@ pub struct CopyImplOnNonAdt {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_const_param_ty_impl_on_non_adt)]
 #[must_use]
+#[must_use]
 pub struct ConstParamTyImplOnNonAdt {
     #[primary_span]
     #[label]
@@ -243,6 +257,7 @@ pub struct ConstParamTyImplOnNonAdt {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_trait_object_declared_with_no_traits, code = "E0224")]
+#[must_use]
 #[must_use]
 pub struct TraitObjectDeclaredWithNoTraits {
     #[primary_span]
@@ -254,6 +269,7 @@ pub struct TraitObjectDeclaredWithNoTraits {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_ambiguous_lifetime_bound, code = "E0227")]
 #[must_use]
+#[must_use]
 pub struct AmbiguousLifetimeBound {
     #[primary_span]
     pub span: Span,
@@ -261,6 +277,7 @@ pub struct AmbiguousLifetimeBound {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_assoc_type_binding_not_allowed, code = "E0229")]
+#[must_use]
 #[must_use]
 pub struct AssocTypeBindingNotAllowed {
     #[primary_span]
@@ -283,6 +300,7 @@ pub struct ParenthesizedFnTraitExpansion {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_typeof_reserved_keyword_used, code = "E0516")]
 #[must_use]
+#[must_use]
 pub struct TypeofReservedKeywordUsed<'tcx> {
     pub ty: Ty<'tcx>,
     #[primary_span]
@@ -295,7 +313,8 @@ pub struct TypeofReservedKeywordUsed<'tcx> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_value_of_associated_struct_already_specified, code = "E0719")]
 #[must_use]
-pub struct ValueOfAssociatedStructAlreadySpecified {
+#[must_use]
+pub struct ValueOfAssociatedstructAlreadySpecified {
     #[primary_span]
     #[label]
     pub span: Span,
@@ -409,6 +428,7 @@ pub struct ManualImplementation {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_substs_on_overridden_impl)]
 #[must_use]
+#[must_use]
 pub struct SubstsOnOverriddenImpl {
     #[primary_span]
     pub span: Span,
@@ -416,6 +436,7 @@ pub struct SubstsOnOverriddenImpl {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_const_impl_for_non_const_trait)]
+#[must_use]
 #[must_use]
 pub struct ConstImplForNonConstTrait {
     #[primary_span]
@@ -432,6 +453,7 @@ pub struct ConstImplForNonConstTrait {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_const_bound_for_non_const_trait)]
 #[must_use]
+#[must_use]
 pub struct ConstBoundForNonConstTrait {
     #[primary_span]
     pub span: Span,
@@ -439,6 +461,7 @@ pub struct ConstBoundForNonConstTrait {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_self_in_impl_self)]
+#[must_use]
 #[must_use]
 pub struct SelfInImplSelf {
     #[primary_span]
@@ -714,6 +737,7 @@ pub(crate) struct AssociatedTypeTraitUninferredGenericParamsMultipartSuggestion 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_enum_discriminant_overflowed, code = "E0370")]
 #[note]
+#[must_use]
 pub(crate) struct EnumDiscriminantOverflowed {
     #[primary_span]
     #[label]
@@ -726,6 +750,7 @@ pub(crate) struct EnumDiscriminantOverflowed {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_paren_sugar_attribute)]
 #[help]
+#[must_use]
 pub(crate) struct ParenSugarAttribute {
     #[primary_span]
     pub span: Span,
@@ -786,6 +811,7 @@ pub(crate) struct FunctionNotFoundInTrait {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_functions_names_duplicated)]
 #[note]
+#[must_use]
 pub(crate) struct FunctionNamesDuplicated {
     #[primary_span]
     pub spans: Vec<Span>,
@@ -794,6 +820,7 @@ pub(crate) struct FunctionNamesDuplicated {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_simd_ffi_highly_experimental)]
 #[help]
+#[must_use]
 pub(crate) struct SIMDFFIHighlyExperimental {
     #[primary_span]
     pub span: Span,
@@ -887,6 +914,7 @@ pub(crate) struct MissingOneOfTraitItem {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_missing_trait_item_unstable, code = "E0046")]
 #[note]
+#[must_use]
 pub(crate) struct MissingTraitItemUnstable {
     #[primary_span]
     pub span: Span,
@@ -947,6 +975,7 @@ pub(crate) struct TooLargeStatic {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_specialization_trait)]
 #[help]
+#[must_use]
 pub(crate) struct SpecializationTrait {
     #[primary_span]
     pub span: Span,
@@ -1085,6 +1114,7 @@ pub struct InherentTyOutside {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0378")]
 #[must_use]
+#[must_use]
 pub struct DispatchFromDynCoercion<'a> {
     #[primary_span]
     pub span: Span,
@@ -1097,6 +1127,7 @@ pub struct DispatchFromDynCoercion<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_dispatch_from_dyn_repr, code = "E0378")]
+#[must_use]
 #[must_use]
 pub struct DispatchFromDynRepr {
     #[primary_span]
@@ -1186,6 +1217,7 @@ pub struct DispatchFromDynZST<'a> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0378")]
 #[must_use]
+#[must_use]
 pub struct DispatchFromDynSingle<'a> {
     #[primary_span]
     pub span: Span,
@@ -1210,7 +1242,8 @@ pub struct DispatchFromDynMulti {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0376")]
 #[must_use]
-pub struct DispatchFromDynStruct<'a> {
+#[must_use]
+pub struct DispatchFromDynstruct<'a> {
     #[primary_span]
     pub span: Span,
     pub trait_name: &'a str,
@@ -1218,6 +1251,7 @@ pub struct DispatchFromDynStruct<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0377")]
+#[must_use]
 #[must_use]
 pub struct DispatchFromDynSame<'a> {
     #[primary_span]
@@ -1231,6 +1265,7 @@ pub struct DispatchFromDynSame<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0374")]
+#[must_use]
 #[must_use]
 pub struct CoerceUnsizedOneField<'a> {
     #[primary_span]
@@ -1257,6 +1292,7 @@ pub struct CoerceUnsizedMulti {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0378")]
 #[must_use]
+#[must_use]
 pub struct CoerceUnsizedMay<'a> {
     #[primary_span]
     pub span: Span,
@@ -1265,6 +1301,7 @@ pub struct CoerceUnsizedMay<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_trait_cannot_impl_for_ty, code = "E0204")]
+#[must_use]
 #[must_use]
 pub struct TraitCannotImplForTy {
     #[primary_span]
@@ -1301,6 +1338,7 @@ pub struct TraitsWithDefaultImpl<'a> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_cross_crate_traits, code = "E0321")]
 #[must_use]
+#[must_use]
 pub struct CrossCrateTraits<'a> {
     #[primary_span]
     #[label]
@@ -1311,6 +1349,7 @@ pub struct CrossCrateTraits<'a> {
 
 #[derive(Diagnostic)]
 #[diag(hir_analysis_cross_crate_traits_defined, code = "E0321")]
+#[must_use]
 #[must_use]
 pub struct CrossCrateTraitsDefined {
     #[primary_span]

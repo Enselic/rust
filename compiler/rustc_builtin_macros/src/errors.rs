@@ -75,6 +75,7 @@ pub(crate) struct CfgAccessibleIndeterminate {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_concat_missing_literal)]
 #[note]
+#[must_use]
 pub(crate) struct ConcatMissingLiteral {
     #[primary_span]
     pub(crate) spans: Vec<Span>,
@@ -225,6 +226,7 @@ pub(crate) struct ConcatBytesNonU8 {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_concat_bytes_missing_literal)]
 #[note]
+#[must_use]
 pub(crate) struct ConcatBytesMissingLiteral {
     #[primary_span]
     pub(crate) spans: Vec<Span>,
@@ -319,6 +321,7 @@ pub(crate) struct DerivePathArgsValue {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_no_default_variant)]
 #[help]
+#[must_use]
 pub(crate) struct NoDefaultVariant {
     #[primary_span]
     pub(crate) span: Span,
@@ -342,6 +345,7 @@ pub(crate) struct NoDefaultVariantSugg {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_multiple_defaults)]
 #[note]
+#[must_use]
 pub(crate) struct MultipleDefaults {
     #[primary_span]
     pub(crate) span: Span,
@@ -368,6 +372,7 @@ pub(crate) struct MultipleDefaultsSugg {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_non_unit_default)]
 #[help]
+#[must_use]
 pub(crate) struct NonUnitDefault {
     #[primary_span]
     pub(crate) span: Span,
@@ -376,6 +381,7 @@ pub(crate) struct NonUnitDefault {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_non_exhaustive_default)]
 #[help]
+#[must_use]
 pub(crate) struct NonExhaustiveDefault {
     #[primary_span]
     pub(crate) span: Span,
@@ -386,6 +392,7 @@ pub(crate) struct NonExhaustiveDefault {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_multiple_default_attrs)]
 #[note]
+#[must_use]
 pub(crate) struct MultipleDefaultAttrs {
     #[primary_span]
     pub(crate) span: Span,
@@ -568,6 +575,7 @@ pub(crate) enum InvalidFormatStringSuggestion {
 #[diag(builtin_macros_format_no_arg_named)]
 #[note]
 #[note(builtin_macros_note2)]
+#[must_use]
 pub(crate) struct FormatNoArgNamed {
     #[primary_span]
     pub(crate) span: Span,
@@ -577,6 +585,7 @@ pub(crate) struct FormatNoArgNamed {
 #[derive(Diagnostic)]
 #[diag(builtin_macros_format_unknown_trait)]
 #[note]
+#[must_use]
 pub(crate) struct FormatUnknownTrait<'a> {
     #[primary_span]
     pub(crate) span: Span,

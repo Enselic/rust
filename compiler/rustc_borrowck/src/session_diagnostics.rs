@@ -56,6 +56,7 @@ pub(crate) struct VarNeedNotMut {
 #[diag(borrowck_var_cannot_escape_closure)]
 #[note]
 #[note(borrowck_cannot_escape)]
+#[must_use]
 pub(crate) struct FnMutError {
     #[primary_span]
     pub span: Span,

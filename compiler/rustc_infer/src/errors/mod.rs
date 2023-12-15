@@ -23,6 +23,7 @@ pub mod note_and_explain;
 #[derive(Diagnostic)]
 #[diag(infer_opaque_hidden_type)]
 #[must_use]
+#[must_use]
 pub struct OpaqueHiddenTypeDiag {
     #[primary_span]
     #[label]
@@ -35,6 +36,7 @@ pub struct OpaqueHiddenTypeDiag {
 
 #[derive(Diagnostic)]
 #[diag(infer_type_annotations_needed, code = "E0282")]
+#[must_use]
 #[must_use]
 pub struct AnnotationRequired<'a> {
     #[primary_span]
@@ -55,6 +57,7 @@ pub struct AnnotationRequired<'a> {
 #[derive(Diagnostic)]
 #[diag(infer_type_annotations_needed, code = "E0283")]
 #[must_use]
+#[must_use]
 pub struct AmbiguousImpl<'a> {
     #[primary_span]
     pub span: Span,
@@ -73,6 +76,7 @@ pub struct AmbiguousImpl<'a> {
 // Copy of `AnnotationRequired` for E0284
 #[derive(Diagnostic)]
 #[diag(infer_type_annotations_needed, code = "E0284")]
+#[must_use]
 #[must_use]
 pub struct AmbiguousReturn<'a> {
     #[primary_span]
@@ -433,6 +437,7 @@ impl AddToDiagnostic for AddLifetimeParamsSuggestion<'_> {
 #[derive(Diagnostic)]
 #[diag(infer_lifetime_mismatch, code = "E0623")]
 #[must_use]
+#[must_use]
 pub struct LifetimeMismatch<'a> {
     #[primary_span]
     pub span: Span,
@@ -491,6 +496,7 @@ pub enum ImplicitStaticLifetimeSubdiag {
 
 #[derive(Diagnostic)]
 #[diag(infer_mismatched_static_lifetime)]
+#[must_use]
 #[must_use]
 pub struct MismatchedStaticLifetime<'a> {
     #[primary_span]
@@ -747,6 +753,7 @@ impl<'tcx> ActualImplExplNotes<'tcx> {
 #[derive(Diagnostic)]
 #[diag(infer_trait_placeholder_mismatch)]
 #[must_use]
+#[must_use]
 pub struct TraitPlaceholderMismatch<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -788,6 +795,7 @@ pub struct RelationshipHelp;
 
 #[derive(Diagnostic)]
 #[diag(infer_trait_impl_diff)]
+#[must_use]
 #[must_use]
 pub struct TraitImplDiff {
     #[primary_span]
@@ -834,6 +842,7 @@ impl AddToDiagnostic for DynTraitConstraintSuggestion {
 
 #[derive(Diagnostic)]
 #[diag(infer_but_calling_introduces, code = "E0772")]
+#[must_use]
 #[must_use]
 pub struct ButCallingIntroduces {
     #[label(infer_label1)]
@@ -895,6 +904,7 @@ impl AddToDiagnostic for MoreTargeted {
 #[derive(Diagnostic)]
 #[diag(infer_but_needs_to_satisfy, code = "E0759")]
 #[must_use]
+#[must_use]
 pub struct ButNeedsToSatisfy {
     #[primary_span]
     pub sp: Span,
@@ -922,6 +932,7 @@ pub struct ButNeedsToSatisfy {
 #[derive(Diagnostic)]
 #[diag(infer_outlives_content, code = "E0312")]
 #[must_use]
+#[must_use]
 pub struct OutlivesContent<'a> {
     #[primary_span]
     pub span: Span,
@@ -932,6 +943,7 @@ pub struct OutlivesContent<'a> {
 #[derive(Diagnostic)]
 #[diag(infer_outlives_bound, code = "E0476")]
 #[must_use]
+#[must_use]
 pub struct OutlivesBound<'a> {
     #[primary_span]
     pub span: Span,
@@ -941,6 +953,7 @@ pub struct OutlivesBound<'a> {
 
 #[derive(Diagnostic)]
 #[diag(infer_fulfill_req_lifetime, code = "E0477")]
+#[must_use]
 #[must_use]
 pub struct FulfillReqLifetime<'a> {
     #[primary_span]
@@ -953,6 +966,7 @@ pub struct FulfillReqLifetime<'a> {
 #[derive(Diagnostic)]
 #[diag(infer_lf_bound_not_satisfied, code = "E0478")]
 #[must_use]
+#[must_use]
 pub struct LfBoundNotSatisfied<'a> {
     #[primary_span]
     pub span: Span,
@@ -962,6 +976,7 @@ pub struct LfBoundNotSatisfied<'a> {
 
 #[derive(Diagnostic)]
 #[diag(infer_ref_longer_than_data, code = "E0491")]
+#[must_use]
 #[must_use]
 pub struct RefLongerThanData<'a> {
     #[primary_span]
@@ -1139,6 +1154,7 @@ pub enum PlaceholderRelationLfNotSatisfied {
 
 #[derive(Diagnostic)]
 #[diag(infer_opaque_captures_lifetime, code = "E0700")]
+#[must_use]
 #[must_use]
 pub struct OpaqueCapturesLifetime<'tcx> {
     #[primary_span]
