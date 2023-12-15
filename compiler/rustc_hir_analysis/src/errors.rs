@@ -834,7 +834,6 @@ pub(crate) struct SIMDFFIHighlyExperimental {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum ImplNotMarkedDefault {
     #[diag(hir_analysis_impl_not_marked_default, code = "E0520")]
     #[note]
@@ -1399,7 +1398,6 @@ pub struct TyParamSome<'a> {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum OnlyCurrentTraits<'a> {
     #[diag(hir_analysis_only_current_traits_outside, code = "E0117")]
     Outside {

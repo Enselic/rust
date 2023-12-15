@@ -2146,7 +2146,6 @@ pub struct UnknownTokenRepeat {
 pub struct UnknownTokenNull;
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum UnescapeError {
     #[diag(parse_invalid_unicode_escape)]
     #[help]

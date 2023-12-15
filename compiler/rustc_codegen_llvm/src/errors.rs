@@ -173,7 +173,6 @@ pub(crate) struct LtoBitcodeFromRlib {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum LlvmError<'a> {
     #[diag(codegen_llvm_write_output)]
     WriteOutput { path: &'a Path },

@@ -1541,7 +1541,6 @@ pub struct UnrecognizedReprHint {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum AttrApplication {
     #[diag(passes_attr_application_enum, code = "E0517")]
     Enum {

@@ -413,7 +413,6 @@ pub struct InclusiveRangeWithNoEnd {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub enum BadReturnTypeNotation {
     #[diag(ast_lowering_bad_return_type_notation_inputs)]
     Inputs {
