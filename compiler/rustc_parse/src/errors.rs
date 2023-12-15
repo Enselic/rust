@@ -497,7 +497,7 @@ pub(crate) struct ExpectedElseBlock {
 #[derive(Diagnostic)]
 #[diag(parse_expected_struct_field)]
 #[must_use]
-pub(crate) struct ExpectedstructField {
+pub(crate) struct ExpectedStructField {
     #[primary_span]
     #[label]
     pub span: Span,
@@ -604,7 +604,7 @@ pub(crate) struct GenFn {
 #[diag(parse_comma_after_base_struct)]
 #[note]
 #[must_use]
-pub(crate) struct CommaAfterBasestruct {
+pub(crate) struct CommaAfterBaseStruct {
     #[primary_span]
     pub span: Span,
     #[suggestion(style = "short", applicability = "machine-applicable", code = "")]
@@ -737,7 +737,7 @@ pub(crate) struct LeadingPlusNotSupported {
 #[derive(Diagnostic)]
 #[diag(parse_parentheses_with_struct_fields)]
 #[must_use]
-pub(crate) struct ParenthesesWithstructFields {
+pub(crate) struct ParenthesesWithStructFields {
     #[primary_span]
     pub span: Span,
     pub r#type: Path,
@@ -1599,7 +1599,7 @@ pub(crate) struct ColonAsSemi {
 #[derive(Diagnostic)]
 #[diag(parse_where_clause_before_tuple_struct_body)]
 #[must_use]
-pub(crate) struct WhereClauseBeforeTuplestructBody {
+pub(crate) struct WhereClauseBeforeTupleStructBody {
     #[primary_span]
     #[label]
     pub span: Span,
@@ -1867,14 +1867,13 @@ pub(crate) struct MissingConstType {
 #[derive(Diagnostic)]
 #[must_use]
 #[diag(parse_enum_struct_mutually_exclusive)]
-pub(crate) struct EnumstructMutuallyExclusive {
+pub(crate) struct EnumStructMutuallyExclusive {
     #[primary_span]
     #[suggestion(code = "enum", applicability = "machine-applicable")]
     pub span: Span,
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum UnexpectedTokenAfterStructName {
     #[diag(parse_unexpected_token_after_struct_name_found_reserved_identifier)]
     ReservedIdentifier {
@@ -1956,7 +1955,6 @@ pub(crate) struct MultipleWhereClauses {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum UnexpectedNonterminal {
     #[diag(parse_nonterminal_expected_item_keyword)]
     Item(#[primary_span] Span),
@@ -1977,7 +1975,6 @@ pub(crate) enum UnexpectedNonterminal {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum TopLevelOrPatternNotAllowed {
     #[diag(parse_or_pattern_not_allowed_in_let_binding)]
     LetBinding {
@@ -2454,7 +2451,6 @@ pub(crate) struct RefMutOrderIncorrect {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum InvalidMutInPattern {
     #[diag(parse_mut_on_nested_ident_pattern)]
     #[note(parse_note_mut_pattern_usage)]
@@ -2824,7 +2820,7 @@ pub(crate) struct SingleColonStructType {
 #[derive(Diagnostic)]
 #[diag(parse_equals_struct_default)]
 #[must_use]
-pub(crate) struct EqualsstructDefault {
+pub(crate) struct EqualsStructDefault {
     #[primary_span]
     #[suggestion(code = "", applicability = "machine-applicable")]
     pub span: Span,

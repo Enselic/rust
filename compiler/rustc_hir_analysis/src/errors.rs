@@ -584,7 +584,6 @@ pub(crate) struct VariadicFunctionCompatibleConvention<'a> {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum CannotCaptureLateBound {
     #[diag(hir_analysis_cannot_capture_late_bound_ty)]
     Type {
@@ -1040,7 +1039,6 @@ pub(crate) struct MissingTildeConst {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum DropImplPolarity {
     #[diag(hir_analysis_drop_impl_negative)]
     Negative {
@@ -1055,7 +1053,6 @@ pub(crate) enum DropImplPolarity {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum ReturnTypeNotationIllegalParam {
     #[diag(hir_analysis_return_type_notation_illegal_param_type)]
     Type {
@@ -1074,7 +1071,6 @@ pub(crate) enum ReturnTypeNotationIllegalParam {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum LateBoundInApit {
     #[diag(hir_analysis_late_bound_type_in_apit)]
     Type {

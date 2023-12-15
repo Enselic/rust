@@ -260,7 +260,6 @@ pub(crate) struct RemoveExprNotSupported {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum InvalidCfg {
     #[diag(expand_invalid_cfg_no_parens)]
     NotFollowedByParens {
