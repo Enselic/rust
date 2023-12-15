@@ -123,18 +123,16 @@ impl<'a> DiagnosticDeriveVariantBuilder<'a> {
     /// Generates calls to `code` and similar functions based on the attributes on the type or
     /// variant.
     pub(crate) fn preamble(&mut self, variant: &VariantInfo<'_>) -> TokenStream {
-        let mut found_must_use = false;
-
         let ast = variant.ast();
         let attrs = &ast.attrs;
-        let preamble = attrs.iter().map(|attr| {
-            found_must_use |= attr.path().segments.last().unwrap().ident == "must_use";
-            self.generate_structure_code_for_attr(attr).unwrap_or_else(|v| v.to_compile_error())
-        });
 
-        if !found_must_use {
+        if !attrs.iter().any(|attr| attr.path().segments.last().unwrap().ident == "must_use") {
             panic!("hej");
         }
+
+        let preamble = attrs.iter().map(|attr| {
+            self.generate_structure_code_for_attr(attr).unwrap_or_else(|v| v.to_compile_error())
+        });
 
         quote! {
             #(#preamble)*;
