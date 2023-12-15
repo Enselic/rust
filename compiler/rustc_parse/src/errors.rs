@@ -883,7 +883,7 @@ pub(crate) enum MatchArmBodyWithoutBracesSugg {
 #[derive(Diagnostic)]
 #[diag(parse_struct_literal_not_allowed_here)]
 #[must_use]
-pub(crate) struct structLiteralNotAllowedHere {
+pub(crate) struct StructLiteralNotAllowedHere {
     #[primary_span]
     pub span: Span,
     #[subdiagnostic]
@@ -1214,7 +1214,7 @@ pub(crate) enum ExpectedSemiSugg {
 #[derive(Diagnostic)]
 #[diag(parse_struct_literal_body_without_path)]
 #[must_use]
-pub(crate) struct structLiteralBodyWithoutPath {
+pub(crate) struct StructLiteralBodyWithoutPath {
     #[primary_span]
     pub span: Span,
     #[subdiagnostic]
@@ -1233,7 +1233,7 @@ pub(crate) struct StructLiteralBodyWithoutPathSugg {
 #[derive(Diagnostic)]
 #[diag(parse_struct_literal_needing_parens)]
 #[must_use]
-pub(crate) struct structLiteralNeedingParens {
+pub(crate) struct StructLiteralNeedingParens {
     #[primary_span]
     pub span: Span,
     #[subdiagnostic]
@@ -1687,12 +1687,9 @@ pub(crate) struct DefaultNotFollowedByItem {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 pub(crate) enum MissingKeywordForItemDefinition {
-#[must_use]
     #[diag(parse_missing_struct_for_struct_definition)]
-#[must_use]
-    struct {
+    Struct {
         #[primary_span]
         #[suggestion(style = "short", applicability = "maybe-incorrect", code = " struct ")]
         span: Span,
@@ -1870,7 +1867,6 @@ pub(crate) struct MissingConstType {
 #[derive(Diagnostic)]
 #[must_use]
 #[diag(parse_enum_struct_mutually_exclusive)]
-#[must_use]
 pub(crate) struct EnumstructMutuallyExclusive {
     #[primary_span]
     #[suggestion(code = "enum", applicability = "machine-applicable")]
@@ -1880,7 +1876,6 @@ pub(crate) struct EnumstructMutuallyExclusive {
 #[derive(Diagnostic)]
 #[must_use]
 pub(crate) enum UnexpectedTokenAfterStructName {
-#[must_use]
     #[diag(parse_unexpected_token_after_struct_name_found_reserved_identifier)]
     ReservedIdentifier {
         #[primary_span]
@@ -2497,7 +2492,6 @@ pub(crate) struct DotDotDotRangeToPatternNotAllowed {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(parse_enum_pattern_instead_of_identifier)]
 #[must_use]
 pub(crate) struct EnumPatternInsteadOfIdentifier {
@@ -2821,7 +2815,7 @@ pub(crate) struct BadItemKind {
 #[derive(Diagnostic)]
 #[diag(parse_single_colon_struct_type)]
 #[must_use]
-pub(crate) struct SingleColonstructType {
+pub(crate) struct SingleColonStructType {
     #[primary_span]
     #[suggestion(code = "::", applicability = "maybe-incorrect", style = "verbose")]
     pub span: Span,
