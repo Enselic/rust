@@ -506,6 +506,7 @@ pub struct MismatchedStaticLifetime<'a> {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum ExplicitLifetimeRequired<'a> {
     #[diag(infer_explicit_lifetime_required_with_ident, code = "E0621")]
     WithIdent {
@@ -1079,6 +1080,7 @@ pub enum ConsiderAddingAwait {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum PlaceholderRelationLfNotSatisfied {
     #[diag(infer_lf_bound_not_satisfied)]
     HasBoth {
@@ -1399,6 +1401,7 @@ pub enum TypeErrorAdditionalDiags {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum ObligationCauseFailureCode {
     #[diag(infer_oc_method_compat, code = "E0308")]
     MethodCompat {

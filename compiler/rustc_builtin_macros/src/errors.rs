@@ -60,6 +60,7 @@ pub(crate) struct AssertMissingComma {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum CfgAccessibleInvalid {
     #[diag(builtin_macros_cfg_accessible_unspecified_path)]
     UnspecifiedPath(#[primary_span] Span),
@@ -503,6 +504,7 @@ impl<'a> IntoDiagnostic<'a> for EnvNotDefinedWithUserMessage {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum EnvNotDefined<'a> {
     #[diag(builtin_macros_env_not_defined)]
     #[help(builtin_macros_cargo)]

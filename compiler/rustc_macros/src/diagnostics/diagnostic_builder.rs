@@ -126,10 +126,6 @@ impl<'a> DiagnosticDeriveVariantBuilder<'a> {
         let ast = variant.ast();
         let attrs = &ast.attrs;
 
-        if !attrs.iter().any(|attr| attr.path().segments.last().unwrap().ident == "must_use") {
-            panic!("hej");
-        }
-
         let preamble = attrs.iter().map(|attr| {
             self.generate_structure_code_for_attr(attr).unwrap_or_else(|v| v.to_compile_error())
         });

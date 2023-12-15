@@ -118,6 +118,7 @@ pub struct TrackedCallerWrongLocation {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(passes_should_be_applied_to_struct_enum, code = "E0701")]
 #[must_use]
 pub struct NonExhaustiveWrongLocation {
@@ -1540,6 +1541,7 @@ pub struct UnrecognizedReprHint {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum AttrApplication {
     #[diag(passes_attr_application_enum, code = "E0517")]
     Enum {

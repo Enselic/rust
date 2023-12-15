@@ -584,6 +584,7 @@ pub(crate) struct VariadicFunctionCompatibleConvention<'a> {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum CannotCaptureLateBound {
     #[diag(hir_analysis_cannot_capture_late_bound_ty)]
     Type {
@@ -734,6 +735,7 @@ pub(crate) struct AssociatedTypeTraitUninferredGenericParamsMultipartSuggestion 
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(hir_analysis_enum_discriminant_overflowed, code = "E0370")]
 #[note]
 #[must_use]
@@ -832,6 +834,7 @@ pub(crate) struct SIMDFFIHighlyExperimental {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum ImplNotMarkedDefault {
     #[diag(hir_analysis_impl_not_marked_default, code = "E0520")]
     #[note]
@@ -934,6 +937,7 @@ pub(crate) struct MissingTraitItemUnstable {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(hir_analysis_transparent_enum_variant, code = "E0731")]
 #[must_use]
 pub(crate) struct TransparentEnumVariant {
@@ -949,6 +953,7 @@ pub(crate) struct TransparentEnumVariant {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(hir_analysis_transparent_non_zero_sized_enum, code = "E0690")]
 #[must_use]
 pub(crate) struct TransparentNonZeroSizedEnum<'a> {
@@ -1036,6 +1041,7 @@ pub(crate) struct MissingTildeConst {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum DropImplPolarity {
     #[diag(hir_analysis_drop_impl_negative)]
     Negative {
@@ -1050,6 +1056,7 @@ pub(crate) enum DropImplPolarity {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum ReturnTypeNotationIllegalParam {
     #[diag(hir_analysis_return_type_notation_illegal_param_type)]
     Type {
@@ -1068,6 +1075,7 @@ pub(crate) enum ReturnTypeNotationIllegalParam {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum LateBoundInApit {
     #[diag(hir_analysis_late_bound_type_in_apit)]
     Type {
@@ -1391,6 +1399,7 @@ pub struct TyParamSome<'a> {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum OnlyCurrentTraits<'a> {
     #[diag(hir_analysis_only_current_traits_outside, code = "E0117")]
     Outside {

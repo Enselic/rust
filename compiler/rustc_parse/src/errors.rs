@@ -1687,6 +1687,7 @@ pub(crate) struct DefaultNotFollowedByItem {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum MissingKeywordForItemDefinition {
 #[must_use]
     #[diag(parse_missing_struct_for_struct_definition)]
@@ -1867,6 +1868,7 @@ pub(crate) struct MissingConstType {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(parse_enum_struct_mutually_exclusive)]
 #[must_use]
 pub(crate) struct EnumstructMutuallyExclusive {
@@ -1876,6 +1878,7 @@ pub(crate) struct EnumstructMutuallyExclusive {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum UnexpectedTokenAfterStructName {
 #[must_use]
     #[diag(parse_unexpected_token_after_struct_name_found_reserved_identifier)]
@@ -1958,6 +1961,7 @@ pub(crate) struct MultipleWhereClauses {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum UnexpectedNonterminal {
     #[diag(parse_nonterminal_expected_item_keyword)]
     Item(#[primary_span] Span),
@@ -1978,6 +1982,7 @@ pub(crate) enum UnexpectedNonterminal {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum TopLevelOrPatternNotAllowed {
     #[diag(parse_or_pattern_not_allowed_in_let_binding)]
     LetBinding {
@@ -2141,6 +2146,7 @@ pub struct UnknownTokenRepeat {
 pub struct UnknownTokenNull;
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum UnescapeError {
     #[diag(parse_invalid_unicode_escape)]
     #[help]
@@ -2454,6 +2460,7 @@ pub(crate) struct RefMutOrderIncorrect {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub(crate) enum InvalidMutInPattern {
     #[diag(parse_mut_on_nested_ident_pattern)]
     #[note(parse_note_mut_pattern_usage)]
@@ -2491,6 +2498,7 @@ pub(crate) struct DotDotDotRangeToPatternNotAllowed {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 #[diag(parse_enum_pattern_instead_of_identifier)]
 #[must_use]
 pub(crate) struct EnumPatternInsteadOfIdentifier {

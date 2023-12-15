@@ -217,6 +217,7 @@ pub struct MultipleExternalFuncDecl<'a> {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum LinkRlibError {
     #[diag(codegen_ssa_rlib_missing_format)]
     MissingFormat,
@@ -605,6 +606,7 @@ pub struct RlibArchiveBuildFailure {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum ExtractBundledLibsError<'a> {
     #[diag(codegen_ssa_extract_bundled_libs_open_file)]
     OpenFile { rlib: &'a Path, error: Box<dyn std::error::Error> },
@@ -640,6 +642,7 @@ pub struct UnsupportedArch<'a> {
 }
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum AppleSdkRootError<'a> {
     #[diag(codegen_ssa_apple_sdk_error_sdk_path)]
     SdkPath { sdk_name: &'a str, error: Error },
@@ -741,6 +744,7 @@ pub struct AtomicCompareExchange;
 pub struct UnknownAtomicOperation;
 
 #[derive(Diagnostic)]
+#[must_use]
 pub enum InvalidMonomorphization<'tcx> {
     #[diag(codegen_ssa_invalid_monomorphization_basic_integer_type, code = "E0511")]
     BasicIntegerType {
