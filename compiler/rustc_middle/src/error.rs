@@ -21,7 +21,6 @@ pub struct DropCheckOverflow<'tcx> {
 #[derive(Diagnostic)]
 #[diag(middle_opaque_hidden_type_mismatch)]
 #[must_use]
-#[must_use]
 pub struct OpaqueHiddenTypeMismatch<'tcx> {
     pub self_ty: Ty<'tcx>,
     pub other_ty: Ty<'tcx>,
@@ -49,7 +48,6 @@ pub enum TypeMismatchReason {
 #[derive(Diagnostic)]
 #[diag(middle_limit_invalid)]
 #[must_use]
-#[must_use]
 pub struct LimitInvalid<'a> {
     #[primary_span]
     pub span: Span,
@@ -70,7 +68,6 @@ pub struct RecursionLimitReached<'tcx> {
 #[derive(Diagnostic)]
 #[diag(middle_const_eval_non_int)]
 #[must_use]
-#[must_use]
 pub struct ConstEvalNonIntError {
     #[primary_span]
     pub span: Span,
@@ -78,6 +75,7 @@ pub struct ConstEvalNonIntError {
 
 #[derive(Diagnostic)]
 #[diag(middle_strict_coherence_needs_negative_coherence)]
+#[must_use]
 pub(crate) struct StrictCoherenceNeedsNegativeCoherence {
     #[primary_span]
     pub span: Span,
@@ -87,6 +85,7 @@ pub(crate) struct StrictCoherenceNeedsNegativeCoherence {
 
 #[derive(Diagnostic)]
 #[diag(middle_requires_lang_item)]
+#[must_use]
 pub(crate) struct RequiresLangItem {
     #[primary_span]
     pub span: Option<Span>,
@@ -95,6 +94,7 @@ pub(crate) struct RequiresLangItem {
 
 #[derive(Diagnostic)]
 #[diag(middle_const_not_used_in_type_alias)]
+#[must_use]
 pub(super) struct ConstNotUsedTraitAlias {
     pub ct: String,
     #[primary_span]
@@ -148,7 +148,6 @@ pub enum LayoutError<'tcx> {
 #[derive(Diagnostic)]
 #[diag(middle_adjust_for_foreign_abi_error)]
 #[must_use]
-#[must_use]
 pub struct UnsupportedFnAbi {
     pub arch: Symbol,
     pub abi: &'static str,
@@ -156,7 +155,6 @@ pub struct UnsupportedFnAbi {
 
 #[derive(Diagnostic)]
 #[diag(middle_erroneous_constant)]
-#[must_use]
 #[must_use]
 pub struct ErroneousConstant {
     #[primary_span]

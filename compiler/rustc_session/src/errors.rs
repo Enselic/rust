@@ -50,18 +50,15 @@ pub struct CliFeatureDiagnosticHelp {
 #[derive(Diagnostic)]
 #[diag(session_not_circumvent_feature)]
 #[must_use]
-#[must_use]
 pub struct NotCircumventFeature;
 
 #[derive(Diagnostic)]
 #[diag(session_linker_plugin_lto_windows_not_supported)]
 #[must_use]
-#[must_use]
 pub struct LinkerPluginToWindowsNotSupported;
 
 #[derive(Diagnostic)]
 #[diag(session_profile_use_file_does_not_exist)]
-#[must_use]
 #[must_use]
 pub struct ProfileUseFileDoesNotExist<'a> {
     pub path: &'a std::path::Path,
@@ -70,7 +67,6 @@ pub struct ProfileUseFileDoesNotExist<'a> {
 #[derive(Diagnostic)]
 #[diag(session_profile_sample_use_file_does_not_exist)]
 #[must_use]
-#[must_use]
 pub struct ProfileSampleUseFileDoesNotExist<'a> {
     pub path: &'a std::path::Path,
 }
@@ -78,12 +74,10 @@ pub struct ProfileSampleUseFileDoesNotExist<'a> {
 #[derive(Diagnostic)]
 #[diag(session_target_requires_unwind_tables)]
 #[must_use]
-#[must_use]
 pub struct TargetRequiresUnwindTables;
 
 #[derive(Diagnostic)]
 #[diag(session_instrumentation_not_supported)]
-#[must_use]
 #[must_use]
 pub struct InstrumentationNotSupported {
     pub us: String,
@@ -92,7 +86,6 @@ pub struct InstrumentationNotSupported {
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_not_supported)]
 #[must_use]
-#[must_use]
 pub struct SanitizerNotSupported {
     pub us: String,
 }
@@ -100,14 +93,12 @@ pub struct SanitizerNotSupported {
 #[derive(Diagnostic)]
 #[diag(session_sanitizers_not_supported)]
 #[must_use]
-#[must_use]
 pub struct SanitizersNotSupported {
     pub us: String,
 }
 
 #[derive(Diagnostic)]
 #[diag(session_cannot_mix_and_match_sanitizers)]
-#[must_use]
 #[must_use]
 pub struct CannotMixAndMatchSanitizers {
     pub first: String,
@@ -117,54 +108,45 @@ pub struct CannotMixAndMatchSanitizers {
 #[derive(Diagnostic)]
 #[diag(session_cannot_enable_crt_static_linux)]
 #[must_use]
-#[must_use]
 pub struct CannotEnableCrtStaticLinux;
 
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_cfi_requires_lto)]
-#[must_use]
 #[must_use]
 pub struct SanitizerCfiRequiresLto;
 
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_cfi_requires_single_codegen_unit)]
 #[must_use]
-#[must_use]
 pub struct SanitizerCfiRequiresSingleCodegenUnit;
 
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_cfi_canonical_jump_tables_requires_cfi)]
-#[must_use]
 #[must_use]
 pub struct SanitizerCfiCanonicalJumpTablesRequiresCfi;
 
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_cfi_generalize_pointers_requires_cfi)]
 #[must_use]
-#[must_use]
 pub struct SanitizerCfiGeneralizePointersRequiresCfi;
 
 #[derive(Diagnostic)]
 #[diag(session_sanitizer_cfi_normalize_integers_requires_cfi)]
-#[must_use]
 #[must_use]
 pub struct SanitizerCfiNormalizeIntegersRequiresCfi;
 
 #[derive(Diagnostic)]
 #[diag(session_split_lto_unit_requires_lto)]
 #[must_use]
-#[must_use]
 pub struct SplitLtoUnitRequiresLto;
 
 #[derive(Diagnostic)]
 #[diag(session_unstable_virtual_function_elimination)]
 #[must_use]
-#[must_use]
 pub struct UnstableVirtualFunctionElimination;
 
 #[derive(Diagnostic)]
 #[diag(session_unsupported_dwarf_version)]
-#[must_use]
 #[must_use]
 pub struct UnsupportedDwarfVersion {
     pub dwarf_version: u32,
@@ -172,7 +154,6 @@ pub struct UnsupportedDwarfVersion {
 
 #[derive(Diagnostic)]
 #[diag(session_target_stack_protector_not_supported)]
-#[must_use]
 #[must_use]
 pub struct StackProtectorNotSupportedForTarget<'a> {
     pub stack_protector: StackProtector,
@@ -182,12 +163,10 @@ pub struct StackProtectorNotSupportedForTarget<'a> {
 #[derive(Diagnostic)]
 #[diag(session_branch_protection_requires_aarch64)]
 #[must_use]
-#[must_use]
 pub(crate) struct BranchProtectionRequiresAArch64;
 
 #[derive(Diagnostic)]
 #[diag(session_split_debuginfo_unstable_platform)]
-#[must_use]
 #[must_use]
 pub struct SplitDebugInfoUnstablePlatform {
     pub debuginfo: SplitDebuginfo,
@@ -196,14 +175,12 @@ pub struct SplitDebugInfoUnstablePlatform {
 #[derive(Diagnostic)]
 #[diag(session_file_is_not_writeable)]
 #[must_use]
-#[must_use]
 pub struct FileIsNotWriteable<'a> {
     pub file: &'a std::path::Path,
 }
 
 #[derive(Diagnostic)]
 #[diag(session_file_write_fail)]
-#[must_use]
 #[must_use]
 pub(crate) struct FileWriteFail<'a> {
     pub path: &'a std::path::Path,
@@ -212,7 +189,6 @@ pub(crate) struct FileWriteFail<'a> {
 
 #[derive(Diagnostic)]
 #[diag(session_crate_name_does_not_match)]
-#[must_use]
 #[must_use]
 pub struct CrateNameDoesNotMatch {
     #[primary_span]
@@ -224,14 +200,12 @@ pub struct CrateNameDoesNotMatch {
 #[derive(Diagnostic)]
 #[diag(session_crate_name_invalid)]
 #[must_use]
-#[must_use]
 pub struct CrateNameInvalid<'a> {
     pub s: &'a str,
 }
 
 #[derive(Diagnostic)]
 #[diag(session_crate_name_empty)]
-#[must_use]
 #[must_use]
 pub struct CrateNameEmpty {
     #[primary_span]
@@ -240,7 +214,6 @@ pub struct CrateNameEmpty {
 
 #[derive(Diagnostic)]
 #[diag(session_invalid_character_in_create_name)]
-#[must_use]
 #[must_use]
 pub struct InvalidCharacterInCrateName {
     #[primary_span]
@@ -275,7 +248,6 @@ impl ExprParenthesesNeeded {
 #[derive(Diagnostic)]
 #[diag(session_skipping_const_checks)]
 #[must_use]
-#[must_use]
 pub struct SkippingConstChecks {
     #[subdiagnostic]
     pub unleashed_features: Vec<UnleashedFeatureHelp>,
@@ -298,7 +270,6 @@ pub enum UnleashedFeatureHelp {
 
 #[derive(Diagnostic)]
 #[diag(session_invalid_literal_suffix)]
-#[must_use]
 #[must_use]
 pub(crate) struct InvalidLiteralSuffix<'a> {
     #[primary_span]
@@ -375,7 +346,6 @@ pub(crate) struct IntLiteralTooLarge {
 #[derive(Diagnostic)]
 #[diag(session_hexadecimal_float_literal_not_supported)]
 #[must_use]
-#[must_use]
 pub(crate) struct HexadecimalFloatLiteralNotSupported {
     #[primary_span]
     #[label(session_not_supported)]
@@ -384,7 +354,6 @@ pub(crate) struct HexadecimalFloatLiteralNotSupported {
 
 #[derive(Diagnostic)]
 #[diag(session_octal_float_literal_not_supported)]
-#[must_use]
 #[must_use]
 pub(crate) struct OctalFloatLiteralNotSupported {
     #[primary_span]
@@ -395,7 +364,6 @@ pub(crate) struct OctalFloatLiteralNotSupported {
 #[derive(Diagnostic)]
 #[diag(session_binary_float_literal_not_supported)]
 #[must_use]
-#[must_use]
 pub(crate) struct BinaryFloatLiteralNotSupported {
     #[primary_span]
     #[label(session_not_supported)]
@@ -404,7 +372,6 @@ pub(crate) struct BinaryFloatLiteralNotSupported {
 
 #[derive(Diagnostic)]
 #[diag(session_nul_in_c_str)]
-#[must_use]
 #[must_use]
 pub(crate) struct NulInCStr {
     #[primary_span]
@@ -501,7 +468,6 @@ pub fn report_lit_error(sess: &ParseSess, err: LitError, lit: token::Lit, span: 
 #[derive(Diagnostic)]
 #[diag(session_optimization_fuel_exhausted)]
 #[must_use]
-#[must_use]
 pub struct OptimisationFuelExhausted {
     pub msg: String,
 }
@@ -518,18 +484,15 @@ pub struct IncompatibleLinkerFlavor {
 #[derive(Diagnostic)]
 #[diag(session_function_return_requires_x86_or_x86_64)]
 #[must_use]
-#[must_use]
 pub(crate) struct FunctionReturnRequiresX86OrX8664;
 
 #[derive(Diagnostic)]
 #[diag(session_function_return_thunk_extern_requires_non_large_code_model)]
 #[must_use]
-#[must_use]
 pub(crate) struct FunctionReturnThunkExternRequiresNonLargeCodeModel;
 
 #[derive(Diagnostic)]
 #[diag(session_failed_to_create_profiler)]
-#[must_use]
 #[must_use]
 pub struct FailedToCreateProfiler {
     pub err: String,

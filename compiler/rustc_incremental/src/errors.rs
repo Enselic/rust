@@ -5,7 +5,6 @@ use std::path::{Path, PathBuf};
 #[derive(Diagnostic)]
 #[diag(incremental_unrecognized_depnode)]
 #[must_use]
-#[must_use]
 pub struct UnrecognizedDepNode {
     #[primary_span]
     pub span: Span,
@@ -15,7 +14,6 @@ pub struct UnrecognizedDepNode {
 #[derive(Diagnostic)]
 #[diag(incremental_missing_depnode)]
 #[must_use]
-#[must_use]
 pub struct MissingDepNode {
     #[primary_span]
     pub span: Span,
@@ -23,7 +21,6 @@ pub struct MissingDepNode {
 
 #[derive(Diagnostic)]
 #[diag(incremental_missing_if_this_changed)]
-#[must_use]
 #[must_use]
 pub struct MissingIfThisChanged {
     #[primary_span]
@@ -33,7 +30,6 @@ pub struct MissingIfThisChanged {
 #[derive(Diagnostic)]
 #[diag(incremental_ok)]
 #[must_use]
-#[must_use]
 pub struct Ok {
     #[primary_span]
     pub span: Span,
@@ -41,7 +37,6 @@ pub struct Ok {
 
 #[derive(Diagnostic)]
 #[diag(incremental_no_path)]
-#[must_use]
 #[must_use]
 pub struct NoPath {
     #[primary_span]
@@ -53,7 +48,6 @@ pub struct NoPath {
 #[derive(Diagnostic)]
 #[diag(incremental_assertion_auto)]
 #[must_use]
-#[must_use]
 pub struct AssertionAuto<'a> {
     #[primary_span]
     pub span: Span,
@@ -64,7 +58,6 @@ pub struct AssertionAuto<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_undefined_clean_dirty_assertions_item)]
 #[must_use]
-#[must_use]
 pub struct UndefinedCleanDirtyItem {
     #[primary_span]
     pub span: Span,
@@ -73,7 +66,6 @@ pub struct UndefinedCleanDirtyItem {
 
 #[derive(Diagnostic)]
 #[diag(incremental_undefined_clean_dirty_assertions)]
-#[must_use]
 #[must_use]
 pub struct UndefinedCleanDirty {
     #[primary_span]
@@ -84,7 +76,6 @@ pub struct UndefinedCleanDirty {
 #[derive(Diagnostic)]
 #[diag(incremental_repeated_depnode_label)]
 #[must_use]
-#[must_use]
 pub struct RepeatedDepNodeLabel<'a> {
     #[primary_span]
     pub span: Span,
@@ -93,7 +84,6 @@ pub struct RepeatedDepNodeLabel<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_unrecognized_depnode_label)]
-#[must_use]
 #[must_use]
 pub struct UnrecognizedDepNodeLabel<'a> {
     #[primary_span]
@@ -104,7 +94,6 @@ pub struct UnrecognizedDepNodeLabel<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_not_dirty)]
 #[must_use]
-#[must_use]
 pub struct NotDirty<'a> {
     #[primary_span]
     pub span: Span,
@@ -113,7 +102,6 @@ pub struct NotDirty<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_not_clean)]
-#[must_use]
 #[must_use]
 pub struct NotClean<'a> {
     #[primary_span]
@@ -124,7 +112,6 @@ pub struct NotClean<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_not_loaded)]
 #[must_use]
-#[must_use]
 pub struct NotLoaded<'a> {
     #[primary_span]
     pub span: Span,
@@ -133,7 +120,6 @@ pub struct NotLoaded<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_unknown_item)]
-#[must_use]
 #[must_use]
 pub struct UnknownItem {
     #[primary_span]
@@ -144,7 +130,6 @@ pub struct UnknownItem {
 #[derive(Diagnostic)]
 #[diag(incremental_no_cfg)]
 #[must_use]
-#[must_use]
 pub struct NoCfg {
     #[primary_span]
     pub span: Span,
@@ -152,7 +137,6 @@ pub struct NoCfg {
 
 #[derive(Diagnostic)]
 #[diag(incremental_associated_value_expected_for)]
-#[must_use]
 #[must_use]
 pub struct AssociatedValueExpectedFor {
     #[primary_span]
@@ -163,7 +147,6 @@ pub struct AssociatedValueExpectedFor {
 #[derive(Diagnostic)]
 #[diag(incremental_associated_value_expected)]
 #[must_use]
-#[must_use]
 pub struct AssociatedValueExpected {
     #[primary_span]
     pub span: Span,
@@ -172,7 +155,6 @@ pub struct AssociatedValueExpected {
 #[derive(Diagnostic)]
 #[diag(incremental_unchecked_clean)]
 #[must_use]
-#[must_use]
 pub struct UncheckedClean {
     #[primary_span]
     pub span: Span,
@@ -180,7 +162,6 @@ pub struct UncheckedClean {
 
 #[derive(Diagnostic)]
 #[diag(incremental_delete_old)]
-#[must_use]
 #[must_use]
 pub struct DeleteOld<'a> {
     pub name: &'a str,
@@ -191,7 +172,6 @@ pub struct DeleteOld<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_create_new)]
 #[must_use]
-#[must_use]
 pub struct CreateNew<'a> {
     pub name: &'a str,
     pub path: PathBuf,
@@ -200,7 +180,6 @@ pub struct CreateNew<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_write_new)]
-#[must_use]
 #[must_use]
 pub struct WriteNew<'a> {
     pub name: &'a str,
@@ -211,7 +190,6 @@ pub struct WriteNew<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_canonicalize_path)]
 #[must_use]
-#[must_use]
 pub struct CanonicalizePath {
     pub path: PathBuf,
     pub err: std::io::Error,
@@ -219,7 +197,6 @@ pub struct CanonicalizePath {
 
 #[derive(Diagnostic)]
 #[diag(incremental_create_incr_comp_dir)]
-#[must_use]
 #[must_use]
 pub struct CreateIncrCompDir<'a> {
     pub tag: &'a str,
@@ -229,7 +206,6 @@ pub struct CreateIncrCompDir<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_create_lock)]
-#[must_use]
 #[must_use]
 pub struct CreateLock<'a> {
     pub lock_err: std::io::Error,
@@ -244,7 +220,6 @@ pub struct CreateLock<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_delete_lock)]
 #[must_use]
-#[must_use]
 pub struct DeleteLock<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -253,14 +228,12 @@ pub struct DeleteLock<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_hard_link_failed)]
 #[must_use]
-#[must_use]
 pub struct HardLinkFailed<'a> {
     pub path: &'a Path,
 }
 
 #[derive(Diagnostic)]
 #[diag(incremental_delete_partial)]
-#[must_use]
 #[must_use]
 pub struct DeletePartial<'a> {
     pub path: &'a Path,
@@ -270,7 +243,6 @@ pub struct DeletePartial<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_delete_full)]
 #[must_use]
-#[must_use]
 pub struct DeleteFull<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -278,7 +250,6 @@ pub struct DeleteFull<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_finalize)]
-#[must_use]
 #[must_use]
 pub struct Finalize<'a> {
     pub path: &'a Path,
@@ -288,7 +259,6 @@ pub struct Finalize<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_invalid_gc_failed)]
 #[must_use]
-#[must_use]
 pub struct InvalidGcFailed<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -296,7 +266,6 @@ pub struct InvalidGcFailed<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_finalized_gc_failed)]
-#[must_use]
 #[must_use]
 pub struct FinalizedGcFailed<'a> {
     pub path: &'a Path,
@@ -306,7 +275,6 @@ pub struct FinalizedGcFailed<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_session_gc_failed)]
 #[must_use]
-#[must_use]
 pub struct SessionGcFailed<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -315,18 +283,15 @@ pub struct SessionGcFailed<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_assert_not_loaded)]
 #[must_use]
-#[must_use]
 pub struct AssertNotLoaded;
 
 #[derive(Diagnostic)]
 #[diag(incremental_assert_loaded)]
 #[must_use]
-#[must_use]
 pub struct AssertLoaded;
 
 #[derive(Diagnostic)]
 #[diag(incremental_delete_incompatible)]
-#[must_use]
 #[must_use]
 pub struct DeleteIncompatible {
     pub path: PathBuf,
@@ -336,7 +301,6 @@ pub struct DeleteIncompatible {
 #[derive(Diagnostic)]
 #[diag(incremental_load_dep_graph)]
 #[must_use]
-#[must_use]
 pub struct LoadDepGraph {
     pub path: PathBuf,
     pub err: std::io::Error,
@@ -345,7 +309,6 @@ pub struct LoadDepGraph {
 #[derive(Diagnostic)]
 #[diag(incremental_write_dep_graph)]
 #[must_use]
-#[must_use]
 pub struct WriteDepGraph<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -353,7 +316,6 @@ pub struct WriteDepGraph<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_move_dep_graph)]
-#[must_use]
 #[must_use]
 pub struct MoveDepGraph<'a> {
     pub from: &'a Path,
@@ -364,7 +326,6 @@ pub struct MoveDepGraph<'a> {
 #[derive(Diagnostic)]
 #[diag(incremental_create_dep_graph)]
 #[must_use]
-#[must_use]
 pub struct CreateDepGraph<'a> {
     pub path: &'a Path,
     pub err: std::io::Error,
@@ -372,7 +333,6 @@ pub struct CreateDepGraph<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_copy_workproduct_to_cache)]
-#[must_use]
 #[must_use]
 pub struct CopyWorkProductToCache<'a> {
     pub from: &'a Path,
@@ -382,7 +342,6 @@ pub struct CopyWorkProductToCache<'a> {
 
 #[derive(Diagnostic)]
 #[diag(incremental_delete_workproduct)]
-#[must_use]
 #[must_use]
 pub struct DeleteWorkProduct<'a> {
     pub path: &'a Path,

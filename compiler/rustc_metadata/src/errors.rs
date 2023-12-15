@@ -15,14 +15,12 @@ use crate::locator::CrateFlavor;
 #[derive(Diagnostic)]
 #[diag(metadata_rlib_required)]
 #[must_use]
-#[must_use]
 pub struct RlibRequired {
     pub crate_name: Symbol,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_lib_required)]
-#[must_use]
 #[must_use]
 pub struct LibRequired<'a> {
     pub crate_name: Symbol,
@@ -49,7 +47,6 @@ pub struct CrateDepMultiple {
 #[derive(Diagnostic)]
 #[diag(metadata_two_panic_runtimes)]
 #[must_use]
-#[must_use]
 pub struct TwoPanicRuntimes {
     pub prev_name: Symbol,
     pub cur_name: Symbol,
@@ -58,7 +55,6 @@ pub struct TwoPanicRuntimes {
 #[derive(Diagnostic)]
 #[diag(metadata_bad_panic_strategy)]
 #[must_use]
-#[must_use]
 pub struct BadPanicStrategy {
     pub runtime: Symbol,
     pub strategy: PanicStrategy,
@@ -66,7 +62,6 @@ pub struct BadPanicStrategy {
 
 #[derive(Diagnostic)]
 #[diag(metadata_required_panic_strategy)]
-#[must_use]
 #[must_use]
 pub struct RequiredPanicStrategy {
     pub crate_name: Symbol,
@@ -77,7 +72,6 @@ pub struct RequiredPanicStrategy {
 #[derive(Diagnostic)]
 #[diag(metadata_incompatible_panic_in_drop_strategy)]
 #[must_use]
-#[must_use]
 pub struct IncompatiblePanicInDropStrategy {
     pub crate_name: Symbol,
     pub found_strategy: PanicStrategy,
@@ -87,7 +81,6 @@ pub struct IncompatiblePanicInDropStrategy {
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_names_in_link)]
 #[must_use]
-#[must_use]
 pub struct MultipleNamesInLink {
     #[primary_span]
     pub span: Span,
@@ -95,7 +88,6 @@ pub struct MultipleNamesInLink {
 
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_kinds_in_link)]
-#[must_use]
 #[must_use]
 pub struct MultipleKindsInLink {
     #[primary_span]
@@ -105,7 +97,6 @@ pub struct MultipleKindsInLink {
 #[derive(Diagnostic)]
 #[diag(metadata_link_name_form)]
 #[must_use]
-#[must_use]
 pub struct LinkNameForm {
     #[primary_span]
     pub span: Span,
@@ -113,7 +104,6 @@ pub struct LinkNameForm {
 
 #[derive(Diagnostic)]
 #[diag(metadata_link_kind_form)]
-#[must_use]
 #[must_use]
 pub struct LinkKindForm {
     #[primary_span]
@@ -123,7 +113,6 @@ pub struct LinkKindForm {
 #[derive(Diagnostic)]
 #[diag(metadata_link_modifiers_form)]
 #[must_use]
-#[must_use]
 pub struct LinkModifiersForm {
     #[primary_span]
     pub span: Span,
@@ -131,7 +120,6 @@ pub struct LinkModifiersForm {
 
 #[derive(Diagnostic)]
 #[diag(metadata_link_cfg_form)]
-#[must_use]
 #[must_use]
 pub struct LinkCfgForm {
     #[primary_span]
@@ -141,7 +129,6 @@ pub struct LinkCfgForm {
 #[derive(Diagnostic)]
 #[diag(metadata_wasm_import_form)]
 #[must_use]
-#[must_use]
 pub struct WasmImportForm {
     #[primary_span]
     pub span: Span,
@@ -149,7 +136,6 @@ pub struct WasmImportForm {
 
 #[derive(Diagnostic)]
 #[diag(metadata_empty_link_name, code = "E0454")]
-#[must_use]
 #[must_use]
 pub struct EmptyLinkName {
     #[primary_span]
@@ -160,7 +146,6 @@ pub struct EmptyLinkName {
 #[derive(Diagnostic)]
 #[diag(metadata_link_framework_apple, code = "E0455")]
 #[must_use]
-#[must_use]
 pub struct LinkFrameworkApple {
     #[primary_span]
     pub span: Span,
@@ -169,7 +154,6 @@ pub struct LinkFrameworkApple {
 #[derive(Diagnostic)]
 #[diag(metadata_framework_only_windows, code = "E0455")]
 #[must_use]
-#[must_use]
 pub struct FrameworkOnlyWindows {
     #[primary_span]
     pub span: Span,
@@ -177,7 +161,6 @@ pub struct FrameworkOnlyWindows {
 
 #[derive(Diagnostic)]
 #[diag(metadata_unknown_link_kind, code = "E0458")]
-#[must_use]
 #[must_use]
 pub struct UnknownLinkKind<'a> {
     #[primary_span]
@@ -189,7 +172,6 @@ pub struct UnknownLinkKind<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_link_modifiers)]
 #[must_use]
-#[must_use]
 pub struct MultipleLinkModifiers {
     #[primary_span]
     pub span: Span,
@@ -197,7 +179,6 @@ pub struct MultipleLinkModifiers {
 
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_cfgs)]
-#[must_use]
 #[must_use]
 pub struct MultipleCfgs {
     #[primary_span]
@@ -207,7 +188,6 @@ pub struct MultipleCfgs {
 #[derive(Diagnostic)]
 #[diag(metadata_link_cfg_single_predicate)]
 #[must_use]
-#[must_use]
 pub struct LinkCfgSinglePredicate {
     #[primary_span]
     pub span: Span,
@@ -215,7 +195,6 @@ pub struct LinkCfgSinglePredicate {
 
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_wasm_import)]
-#[must_use]
 #[must_use]
 pub struct MultipleWasmImport {
     #[primary_span]
@@ -225,7 +204,6 @@ pub struct MultipleWasmImport {
 #[derive(Diagnostic)]
 #[diag(metadata_unexpected_link_arg)]
 #[must_use]
-#[must_use]
 pub struct UnexpectedLinkArg {
     #[primary_span]
     pub span: Span,
@@ -234,7 +212,6 @@ pub struct UnexpectedLinkArg {
 #[derive(Diagnostic)]
 #[diag(metadata_invalid_link_modifier)]
 #[must_use]
-#[must_use]
 pub struct InvalidLinkModifier {
     #[primary_span]
     pub span: Span,
@@ -242,7 +219,6 @@ pub struct InvalidLinkModifier {
 
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_modifiers)]
-#[must_use]
 #[must_use]
 pub struct MultipleModifiers<'a> {
     #[primary_span]
@@ -253,7 +229,6 @@ pub struct MultipleModifiers<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_bundle_needs_static)]
 #[must_use]
-#[must_use]
 pub struct BundleNeedsStatic {
     #[primary_span]
     pub span: Span,
@@ -261,7 +236,6 @@ pub struct BundleNeedsStatic {
 
 #[derive(Diagnostic)]
 #[diag(metadata_whole_archive_needs_static)]
-#[must_use]
 #[must_use]
 pub struct WholeArchiveNeedsStatic {
     #[primary_span]
@@ -271,7 +245,6 @@ pub struct WholeArchiveNeedsStatic {
 #[derive(Diagnostic)]
 #[diag(metadata_as_needed_compatibility)]
 #[must_use]
-#[must_use]
 pub struct AsNeededCompatibility {
     #[primary_span]
     pub span: Span,
@@ -279,7 +252,6 @@ pub struct AsNeededCompatibility {
 
 #[derive(Diagnostic)]
 #[diag(metadata_unknown_link_modifier)]
-#[must_use]
 #[must_use]
 pub struct UnknownLinkModifier<'a> {
     #[primary_span]
@@ -290,7 +262,6 @@ pub struct UnknownLinkModifier<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_incompatible_wasm_link)]
 #[must_use]
-#[must_use]
 pub struct IncompatibleWasmLink {
     #[primary_span]
     pub span: Span,
@@ -298,7 +269,6 @@ pub struct IncompatibleWasmLink {
 
 #[derive(Diagnostic)]
 #[diag(metadata_link_requires_name, code = "E0459")]
-#[must_use]
 #[must_use]
 pub struct LinkRequiresName {
     #[primary_span]
@@ -309,7 +279,6 @@ pub struct LinkRequiresName {
 #[derive(Diagnostic)]
 #[diag(metadata_raw_dylib_no_nul)]
 #[must_use]
-#[must_use]
 pub struct RawDylibNoNul {
     #[primary_span]
     pub span: Span,
@@ -317,7 +286,6 @@ pub struct RawDylibNoNul {
 
 #[derive(Diagnostic)]
 #[diag(metadata_link_ordinal_raw_dylib)]
-#[must_use]
 #[must_use]
 pub struct LinkOrdinalRawDylib {
     #[primary_span]
@@ -327,12 +295,10 @@ pub struct LinkOrdinalRawDylib {
 #[derive(Diagnostic)]
 #[diag(metadata_lib_framework_apple)]
 #[must_use]
-#[must_use]
 pub struct LibFrameworkApple;
 
 #[derive(Diagnostic)]
 #[diag(metadata_empty_renaming_target)]
-#[must_use]
 #[must_use]
 pub struct EmptyRenamingTarget<'a> {
     pub lib_name: &'a str,
@@ -341,7 +307,6 @@ pub struct EmptyRenamingTarget<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_renaming_no_link)]
 #[must_use]
-#[must_use]
 pub struct RenamingNoLink<'a> {
     pub lib_name: &'a str,
 }
@@ -349,14 +314,12 @@ pub struct RenamingNoLink<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_renamings)]
 #[must_use]
-#[must_use]
 pub struct MultipleRenamings<'a> {
     pub lib_name: &'a str,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_no_link_mod_override)]
-#[must_use]
 #[must_use]
 pub struct NoLinkModOverride {
     #[primary_span]
@@ -366,7 +329,6 @@ pub struct NoLinkModOverride {
 #[derive(Diagnostic)]
 #[diag(metadata_unsupported_abi_i686)]
 #[must_use]
-#[must_use]
 pub struct UnsupportedAbiI686 {
     #[primary_span]
     pub span: Span,
@@ -374,7 +336,6 @@ pub struct UnsupportedAbiI686 {
 
 #[derive(Diagnostic)]
 #[diag(metadata_unsupported_abi)]
-#[must_use]
 #[must_use]
 pub struct UnsupportedAbi {
     #[primary_span]
@@ -384,14 +345,12 @@ pub struct UnsupportedAbi {
 #[derive(Diagnostic)]
 #[diag(metadata_fail_create_file_encoder)]
 #[must_use]
-#[must_use]
 pub struct FailCreateFileEncoder {
     pub err: Error,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_fail_write_file)]
-#[must_use]
 #[must_use]
 pub struct FailWriteFile<'a> {
     pub path: &'a Path,
@@ -401,14 +360,12 @@ pub struct FailWriteFile<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_crate_not_panic_runtime)]
 #[must_use]
-#[must_use]
 pub struct CrateNotPanicRuntime {
     pub crate_name: Symbol,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_no_panic_strategy)]
-#[must_use]
 #[must_use]
 pub struct NoPanicStrategy {
     pub crate_name: Symbol,
@@ -418,12 +375,10 @@ pub struct NoPanicStrategy {
 #[derive(Diagnostic)]
 #[diag(metadata_profiler_builtins_needs_core)]
 #[must_use]
-#[must_use]
 pub struct ProfilerBuiltinsNeedsCore;
 
 #[derive(Diagnostic)]
 #[diag(metadata_not_profiler_runtime)]
-#[must_use]
 #[must_use]
 pub struct NotProfilerRuntime {
     pub crate_name: Symbol,
@@ -431,7 +386,6 @@ pub struct NotProfilerRuntime {
 
 #[derive(Diagnostic)]
 #[diag(metadata_no_multiple_global_alloc)]
-#[must_use]
 #[must_use]
 pub struct NoMultipleGlobalAlloc {
     #[primary_span]
@@ -444,7 +398,6 @@ pub struct NoMultipleGlobalAlloc {
 #[derive(Diagnostic)]
 #[diag(metadata_no_multiple_alloc_error_handler)]
 #[must_use]
-#[must_use]
 pub struct NoMultipleAllocErrorHandler {
     #[primary_span]
     #[label]
@@ -456,7 +409,6 @@ pub struct NoMultipleAllocErrorHandler {
 #[derive(Diagnostic)]
 #[diag(metadata_conflicting_global_alloc)]
 #[must_use]
-#[must_use]
 pub struct ConflictingGlobalAlloc {
     pub crate_name: Symbol,
     pub other_crate_name: Symbol,
@@ -464,7 +416,6 @@ pub struct ConflictingGlobalAlloc {
 
 #[derive(Diagnostic)]
 #[diag(metadata_conflicting_alloc_error_handler)]
-#[must_use]
 #[must_use]
 pub struct ConflictingAllocErrorHandler {
     pub crate_name: Symbol,
@@ -474,12 +425,10 @@ pub struct ConflictingAllocErrorHandler {
 #[derive(Diagnostic)]
 #[diag(metadata_global_alloc_required)]
 #[must_use]
-#[must_use]
 pub struct GlobalAllocRequired;
 
 #[derive(Diagnostic)]
 #[diag(metadata_no_transitive_needs_dep)]
-#[must_use]
 #[must_use]
 pub struct NoTransitiveNeedsDep<'a> {
     pub crate_name: Symbol,
@@ -490,7 +439,6 @@ pub struct NoTransitiveNeedsDep<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_failed_write_error)]
 #[must_use]
-#[must_use]
 pub struct FailedWriteError {
     pub filename: PathBuf,
     pub err: Error,
@@ -498,7 +446,6 @@ pub struct FailedWriteError {
 
 #[derive(Diagnostic)]
 #[diag(metadata_failed_copy_to_stdout)]
-#[must_use]
 #[must_use]
 pub struct FailedCopyToStdout {
     pub filename: PathBuf,
@@ -508,12 +455,10 @@ pub struct FailedCopyToStdout {
 #[derive(Diagnostic)]
 #[diag(metadata_binary_output_to_tty)]
 #[must_use]
-#[must_use]
 pub struct BinaryOutputToTty;
 
 #[derive(Diagnostic)]
 #[diag(metadata_missing_native_library)]
-#[must_use]
 #[must_use]
 pub struct MissingNativeLibrary<'a> {
     libname: &'a str,
@@ -558,14 +503,12 @@ pub struct SuggestLibraryName<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_failed_create_tempdir)]
 #[must_use]
-#[must_use]
 pub struct FailedCreateTempdir {
     pub err: Error,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_failed_create_file)]
-#[must_use]
 #[must_use]
 pub struct FailedCreateFile<'a> {
     pub filename: &'a Path,
@@ -575,14 +518,12 @@ pub struct FailedCreateFile<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_failed_create_encoded_metadata)]
 #[must_use]
-#[must_use]
 pub struct FailedCreateEncodedMetadata {
     pub err: Error,
 }
 
 #[derive(Diagnostic)]
 #[diag(metadata_non_ascii_name)]
-#[must_use]
 #[must_use]
 pub struct NonAsciiName {
     #[primary_span]
@@ -593,7 +534,6 @@ pub struct NonAsciiName {
 #[derive(Diagnostic)]
 #[diag(metadata_extern_location_not_exist)]
 #[must_use]
-#[must_use]
 pub struct ExternLocationNotExist<'a> {
     #[primary_span]
     pub span: Span,
@@ -603,7 +543,6 @@ pub struct ExternLocationNotExist<'a> {
 
 #[derive(Diagnostic)]
 #[diag(metadata_extern_location_not_file)]
-#[must_use]
 #[must_use]
 pub struct ExternLocationNotFile<'a> {
     #[primary_span]
@@ -639,7 +578,6 @@ impl IntoDiagnostic<'_> for MultipleCandidates {
 #[derive(Diagnostic)]
 #[diag(metadata_symbol_conflicts_current, code = "E0519")]
 #[must_use]
-#[must_use]
 pub struct SymbolConflictsCurrent {
     #[primary_span]
     pub span: Span,
@@ -648,7 +586,6 @@ pub struct SymbolConflictsCurrent {
 
 #[derive(Diagnostic)]
 #[diag(metadata_stable_crate_id_collision)]
-#[must_use]
 #[must_use]
 pub struct StableCrateIdCollision {
     #[primary_span]
@@ -659,7 +596,6 @@ pub struct StableCrateIdCollision {
 
 #[derive(Diagnostic)]
 #[diag(metadata_dl_error)]
-#[must_use]
 #[must_use]
 pub struct DlError {
     #[primary_span]
@@ -814,7 +750,6 @@ impl IntoDiagnostic<'_> for CannotFindCrate {
 #[derive(Diagnostic)]
 #[diag(metadata_crate_location_unknown_type)]
 #[must_use]
-#[must_use]
 pub struct CrateLocationUnknownType<'a> {
     #[primary_span]
     pub span: Span,
@@ -824,7 +759,6 @@ pub struct CrateLocationUnknownType<'a> {
 
 #[derive(Diagnostic)]
 #[diag(metadata_lib_filename_form)]
-#[must_use]
 #[must_use]
 pub struct LibFilenameForm<'a> {
     #[primary_span]
@@ -836,7 +770,6 @@ pub struct LibFilenameForm<'a> {
 #[derive(Diagnostic)]
 #[diag(metadata_multiple_import_name_type)]
 #[must_use]
-#[must_use]
 pub struct MultipleImportNameType {
     #[primary_span]
     pub span: Span,
@@ -844,7 +777,6 @@ pub struct MultipleImportNameType {
 
 #[derive(Diagnostic)]
 #[diag(metadata_import_name_type_form)]
-#[must_use]
 #[must_use]
 pub struct ImportNameTypeForm {
     #[primary_span]
@@ -854,7 +786,6 @@ pub struct ImportNameTypeForm {
 #[derive(Diagnostic)]
 #[diag(metadata_import_name_type_x86)]
 #[must_use]
-#[must_use]
 pub struct ImportNameTypeX86 {
     #[primary_span]
     pub span: Span,
@@ -862,7 +793,6 @@ pub struct ImportNameTypeX86 {
 
 #[derive(Diagnostic)]
 #[diag(metadata_unknown_import_name_type)]
-#[must_use]
 #[must_use]
 pub struct UnknownImportNameType<'a> {
     #[primary_span]
@@ -872,7 +802,6 @@ pub struct UnknownImportNameType<'a> {
 
 #[derive(Diagnostic)]
 #[diag(metadata_import_name_type_raw)]
-#[must_use]
 #[must_use]
 pub struct ImportNameTypeRaw {
     #[primary_span]

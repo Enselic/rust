@@ -23,7 +23,6 @@ use synstructure::Structure;
 /// #[derive(Diagnostic)]
 /// #[diag(borrowck_move_out_of_borrow, code = "E0505")]
 /// #[must_use]
-#[must_use]
 /// pub struct MoveOutOfBorrowError<'tcx> {
 ///     pub name: Ident,
 ///     pub ty: Ty<'tcx>,

@@ -7,7 +7,6 @@ use rustc_span::Span;
 #[derive(Diagnostic)]
 #[diag(ty_utils_needs_drop_overflow)]
 #[must_use]
-#[must_use]
 pub struct NeedsDropOverflow<'tcx> {
     pub query_ty: Ty<'tcx>,
 }
@@ -74,7 +73,6 @@ pub enum GenericConstantTooComplexSub {
 #[derive(Diagnostic)]
 #[diag(ty_utils_unexpected_fnptr_associated_item)]
 #[must_use]
-#[must_use]
 pub struct UnexpectedFnPtrAssociatedItem {
     #[primary_span]
     pub span: Span,
@@ -83,7 +81,6 @@ pub struct UnexpectedFnPtrAssociatedItem {
 #[derive(Diagnostic)]
 #[diag(ty_utils_zero_length_simd_type)]
 #[must_use]
-#[must_use]
 pub struct ZeroLengthSimdType<'tcx> {
     pub ty: Ty<'tcx>,
 }
@@ -91,14 +88,12 @@ pub struct ZeroLengthSimdType<'tcx> {
 #[derive(Diagnostic)]
 #[diag(ty_utils_multiple_array_fields_simd_type)]
 #[must_use]
-#[must_use]
 pub struct MultipleArrayFieldsSimdType<'tcx> {
     pub ty: Ty<'tcx>,
 }
 
 #[derive(Diagnostic)]
 #[diag(ty_utils_oversized_simd_type)]
-#[must_use]
 #[must_use]
 pub struct OversizedSimdType<'tcx> {
     pub ty: Ty<'tcx>,
@@ -108,7 +103,6 @@ pub struct OversizedSimdType<'tcx> {
 #[derive(Diagnostic)]
 #[diag(ty_utils_non_primitive_simd_type)]
 #[must_use]
-#[must_use]
 pub struct NonPrimitiveSimdType<'tcx> {
     pub ty: Ty<'tcx>,
     pub e_ty: Ty<'tcx>,
@@ -116,7 +110,6 @@ pub struct NonPrimitiveSimdType<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(ty_utils_impl_trait_duplicate_arg)]
-#[must_use]
 #[must_use]
 pub struct DuplicateArg<'tcx> {
     pub arg: GenericArg<'tcx>,
@@ -129,7 +122,6 @@ pub struct DuplicateArg<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(ty_utils_impl_trait_not_param, code = "E0792")]
-#[must_use]
 #[must_use]
 pub struct NotParam<'tcx> {
     pub arg: GenericArg<'tcx>,

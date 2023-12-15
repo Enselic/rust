@@ -16,6 +16,7 @@ use rustc_target::abi::{Size, WrappingRange};
 
 #[derive(Diagnostic)]
 #[diag(const_eval_dangling_ptr_in_final)]
+#[must_use]
 pub(crate) struct DanglingPtrInFinal {
     #[primary_span]
     pub span: Span,
@@ -23,6 +24,7 @@ pub(crate) struct DanglingPtrInFinal {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unstable_in_stable)]
+#[must_use]
 pub(crate) struct UnstableInStable {
     pub gate: String,
     #[primary_span]
@@ -42,6 +44,7 @@ pub(crate) struct UnstableInStable {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_thread_local_access, code = "E0625")]
+#[must_use]
 pub(crate) struct NonConstOpErr {
     #[primary_span]
     pub span: Span,
@@ -81,6 +84,7 @@ pub(crate) struct RawPtrComparisonErr {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_panic_non_str)]
+#[must_use]
 pub(crate) struct PanicNonStrErr {
     #[primary_span]
     pub span: Span,
@@ -88,6 +92,7 @@ pub(crate) struct PanicNonStrErr {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_mut_deref, code = "E0658")]
+#[must_use]
 pub(crate) struct MutDerefErr {
     #[primary_span]
     pub span: Span,
@@ -96,6 +101,7 @@ pub(crate) struct MutDerefErr {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_transient_mut_borrow, code = "E0658")]
+#[must_use]
 pub(crate) struct TransientMutBorrowErr {
     #[primary_span]
     pub span: Span,
@@ -104,6 +110,7 @@ pub(crate) struct TransientMutBorrowErr {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_transient_mut_borrow_raw, code = "E0658")]
+#[must_use]
 pub(crate) struct TransientMutBorrowErrRaw {
     #[primary_span]
     pub span: Span,
@@ -112,6 +119,7 @@ pub(crate) struct TransientMutBorrowErrRaw {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_max_num_nodes_in_const)]
+#[must_use]
 pub(crate) struct MaxNumNodesInConstErr {
     #[primary_span]
     pub span: Option<Span>,
@@ -120,6 +128,7 @@ pub(crate) struct MaxNumNodesInConstErr {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_fn_pointer_call)]
+#[must_use]
 pub(crate) struct UnallowedFnPointerCall {
     #[primary_span]
     pub span: Span,
@@ -128,6 +137,7 @@ pub(crate) struct UnallowedFnPointerCall {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unstable_const_fn)]
+#[must_use]
 pub(crate) struct UnstableConstFn {
     #[primary_span]
     pub span: Span,
@@ -136,6 +146,7 @@ pub(crate) struct UnstableConstFn {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_mutable_refs, code = "E0764")]
+#[must_use]
 pub(crate) struct UnallowedMutableRefs {
     #[primary_span]
     pub span: Span,
@@ -146,6 +157,7 @@ pub(crate) struct UnallowedMutableRefs {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_mutable_refs_raw, code = "E0764")]
+#[must_use]
 pub(crate) struct UnallowedMutableRefsRaw {
     #[primary_span]
     pub span: Span,
@@ -155,6 +167,7 @@ pub(crate) struct UnallowedMutableRefsRaw {
 }
 #[derive(Diagnostic)]
 #[diag(const_eval_non_const_fmt_macro_call, code = "E0015")]
+#[must_use]
 pub(crate) struct NonConstFmtMacroCall {
     #[primary_span]
     pub span: Span,
@@ -163,6 +176,7 @@ pub(crate) struct NonConstFmtMacroCall {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_non_const_fn_call, code = "E0015")]
+#[must_use]
 pub(crate) struct NonConstFnCall {
     #[primary_span]
     pub span: Span,
@@ -172,6 +186,7 @@ pub(crate) struct NonConstFnCall {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_op_in_const_context)]
+#[must_use]
 pub(crate) struct UnallowedOpInConstContext {
     #[primary_span]
     pub span: Span,
@@ -180,6 +195,7 @@ pub(crate) struct UnallowedOpInConstContext {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_heap_allocations, code = "E0010")]
+#[must_use]
 pub(crate) struct UnallowedHeapAllocations {
     #[primary_span]
     #[label]
@@ -191,6 +207,7 @@ pub(crate) struct UnallowedHeapAllocations {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_unallowed_inline_asm, code = "E0015")]
+#[must_use]
 pub(crate) struct UnallowedInlineAsm {
     #[primary_span]
     pub span: Span,
@@ -208,6 +225,7 @@ pub(crate) struct UnsupportedUntypedPointer {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_interior_mutable_data_refer, code = "E0492")]
+#[must_use]
 pub(crate) struct InteriorMutableDataRefer {
     #[primary_span]
     #[label]
@@ -221,6 +239,7 @@ pub(crate) struct InteriorMutableDataRefer {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_interior_mutability_borrow)]
+#[must_use]
 pub(crate) struct InteriorMutabilityBorrow {
     #[primary_span]
     pub span: Span,
@@ -236,7 +255,6 @@ pub struct LongRunning {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_long_running)]
-#[must_use]
 #[must_use]
 pub struct LongRunningWarn {
     #[primary_span]
@@ -287,7 +305,6 @@ pub struct NonConstMatchEq<'tcx> {
 #[derive(Diagnostic)]
 #[diag(const_eval_for_loop_into_iter_non_const, code = "E0015")]
 #[must_use]
-#[must_use]
 pub struct NonConstForLoopIntoIter<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -297,7 +314,6 @@ pub struct NonConstForLoopIntoIter<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_question_branch_non_const, code = "E0015")]
-#[must_use]
 #[must_use]
 pub struct NonConstQuestionBranch<'tcx> {
     #[primary_span]
@@ -309,7 +325,6 @@ pub struct NonConstQuestionBranch<'tcx> {
 #[derive(Diagnostic)]
 #[diag(const_eval_question_from_residual_non_const, code = "E0015")]
 #[must_use]
-#[must_use]
 pub struct NonConstQuestionFromResidual<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -319,7 +334,6 @@ pub struct NonConstQuestionFromResidual<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_try_block_from_output_non_const, code = "E0015")]
-#[must_use]
 #[must_use]
 pub struct NonConstTryBlockFromOutput<'tcx> {
     #[primary_span]
@@ -331,7 +345,6 @@ pub struct NonConstTryBlockFromOutput<'tcx> {
 #[derive(Diagnostic)]
 #[diag(const_eval_await_non_const, code = "E0015")]
 #[must_use]
-#[must_use]
 pub struct NonConstAwait<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -341,7 +354,6 @@ pub struct NonConstAwait<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_closure_non_const, code = "E0015")]
-#[must_use]
 #[must_use]
 pub struct NonConstClosure {
     #[primary_span]
@@ -377,7 +389,6 @@ pub struct ConsiderDereferencing {
 #[derive(Diagnostic)]
 #[diag(const_eval_operator_non_const, code = "E0015")]
 #[must_use]
-#[must_use]
 pub struct NonConstOperator {
     #[primary_span]
     pub span: Span,
@@ -403,7 +414,6 @@ pub struct NonConstDerefCoercion<'tcx> {
 #[derive(Diagnostic)]
 #[diag(const_eval_live_drop, code = "E0493")]
 #[must_use]
-#[must_use]
 pub struct LiveDrop<'tcx> {
     #[primary_span]
     #[label]
@@ -416,7 +426,6 @@ pub struct LiveDrop<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_error, code = "E0080")]
-#[must_use]
 #[must_use]
 pub struct ConstEvalError {
     #[primary_span]
@@ -438,7 +447,6 @@ pub struct WriteThroughImmutablePointer {
 #[derive(Diagnostic)]
 #[diag(const_eval_nullary_intrinsic_fail)]
 #[must_use]
-#[must_use]
 pub struct NullaryIntrinsicError {
     #[primary_span]
     pub span: Span,
@@ -446,7 +454,6 @@ pub struct NullaryIntrinsicError {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_undefined_behavior, code = "E0080")]
-#[must_use]
 #[must_use]
 pub struct UndefinedBehavior {
     #[primary_span]

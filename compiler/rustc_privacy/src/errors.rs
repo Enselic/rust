@@ -5,7 +5,6 @@ use rustc_span::{Span, Symbol};
 #[derive(Diagnostic)]
 #[diag(privacy_field_is_private, code = "E0451")]
 #[must_use]
-#[must_use]
 pub struct FieldIsPrivate {
     #[primary_span]
     pub span: Span,
@@ -34,7 +33,6 @@ pub enum FieldIsPrivateLabel {
 #[derive(Diagnostic)]
 #[diag(privacy_item_is_private)]
 #[must_use]
-#[must_use]
 pub struct ItemIsPrivate<'a> {
     #[primary_span]
     #[label]
@@ -46,7 +44,6 @@ pub struct ItemIsPrivate<'a> {
 #[derive(Diagnostic)]
 #[diag(privacy_unnamed_item_is_private)]
 #[must_use]
-#[must_use]
 pub struct UnnamedItemIsPrivate {
     #[primary_span]
     pub span: Span,
@@ -55,7 +52,6 @@ pub struct UnnamedItemIsPrivate {
 
 #[derive(Diagnostic)]
 #[diag(privacy_in_public_interface, code = "E0446")]
-#[must_use]
 #[must_use]
 pub struct InPublicInterface<'a> {
     #[primary_span]
@@ -70,7 +66,6 @@ pub struct InPublicInterface<'a> {
 
 #[derive(Diagnostic)]
 #[diag(privacy_report_effective_visibility)]
-#[must_use]
 #[must_use]
 pub struct ReportEffectiveVisibility {
     #[primary_span]
