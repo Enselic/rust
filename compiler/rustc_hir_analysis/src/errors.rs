@@ -295,7 +295,7 @@ pub struct TypeofReservedKeywordUsed<'tcx> {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_value_of_associated_struct_already_specified, code = "E0719")]
 #[must_use]
-pub struct ValueOfAssociatedstructAlreadySpecified {
+pub struct ValueOfAssociatedStructAlreadySpecified {
     #[primary_span]
     #[label]
     pub span: Span,
@@ -734,7 +734,6 @@ pub(crate) struct AssociatedTypeTraitUninferredGenericParamsMultipartSuggestion 
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(hir_analysis_enum_discriminant_overflowed, code = "E0370")]
 #[note]
 #[must_use]
@@ -935,7 +934,6 @@ pub(crate) struct MissingTraitItemUnstable {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(hir_analysis_transparent_enum_variant, code = "E0731")]
 #[must_use]
 pub(crate) struct TransparentEnumVariant {
@@ -951,7 +949,6 @@ pub(crate) struct TransparentEnumVariant {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(hir_analysis_transparent_non_zero_sized_enum, code = "E0690")]
 #[must_use]
 pub(crate) struct TransparentNonZeroSizedEnum<'a> {
@@ -1257,7 +1254,7 @@ pub struct DispatchFromDynMulti {
 #[derive(Diagnostic)]
 #[diag(hir_analysis_coerce_unsized_may, code = "E0376")]
 #[must_use]
-pub struct DispatchFromDynstruct<'a> {
+pub struct DispatchFromDynStruct<'a> {
     #[primary_span]
     pub span: Span,
     pub trait_name: &'a str,

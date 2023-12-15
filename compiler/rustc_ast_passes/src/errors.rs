@@ -819,7 +819,7 @@ pub struct InvalidUnnamedField {
 #[derive(Diagnostic)]
 #[diag(ast_passes_anon_struct_or_union_not_allowed)]
 #[must_use]
-pub struct AnonstructOrUnionNotAllowed {
+pub struct AnonStructOrUnionNotAllowed {
     #[primary_span]
     #[label]
     pub span: Span,
