@@ -641,7 +641,6 @@ pub(crate) struct CfgAccessibleUnsure {
 
 #[derive(Debug)]
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(resolve_param_in_enum_discriminant)]
 #[must_use]
 pub(crate) struct ParamInEnumDiscriminant {

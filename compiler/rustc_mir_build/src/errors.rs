@@ -788,7 +788,6 @@ pub struct UnionPattern {
 
 #[derive(Diagnostic)]
 #[diag(mir_build_type_not_structural)]
-#[must_use]
 #[note(mir_build_type_not_structural_tip)]
 #[must_use]
 #[note(mir_build_type_not_structural_more_info)]

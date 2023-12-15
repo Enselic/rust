@@ -118,7 +118,6 @@ pub struct TrackedCallerWrongLocation {
 }
 
 #[derive(Diagnostic)]
-#[must_use]
 #[diag(passes_should_be_applied_to_struct_enum, code = "E0701")]
 #[must_use]
 pub struct NonExhaustiveWrongLocation {
@@ -504,7 +503,7 @@ pub struct ExportName {
 #[derive(Diagnostic)]
 #[diag(passes_rustc_layout_scalar_valid_range_not_struct)]
 #[must_use]
-pub struct RustcLayoutScalarValidRangeNotstruct {
+pub struct RustcLayoutScalarValidRangeNotStruct {
     #[primary_span]
     pub attr_span: Span,
     #[label]
