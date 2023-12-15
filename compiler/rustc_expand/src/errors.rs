@@ -364,6 +364,7 @@ pub(crate) struct ModuleMultipleCandidates {
 
 #[derive(Diagnostic)]
 #[diag(expand_trace_macro)]
+#[must_use]
 pub struct TraceMacro {
     #[primary_span]
     pub span: Span,
@@ -386,6 +387,7 @@ pub(crate) struct ProcMacroPanickedHelp {
 
 #[derive(Diagnostic)]
 #[diag(expand_proc_macro_derive_tokens)]
+#[must_use]
 pub struct ProcMacroDeriveTokens {
     #[primary_span]
     pub span: Span,
@@ -393,6 +395,7 @@ pub struct ProcMacroDeriveTokens {
 
 #[derive(Diagnostic)]
 #[diag(expand_duplicate_matcher_binding)]
+#[must_use]
 pub struct DuplicateMatcherBinding {
     #[primary_span]
     #[label]

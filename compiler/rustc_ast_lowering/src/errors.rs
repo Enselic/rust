@@ -24,6 +24,7 @@ pub struct UseAngleBrackets {
 #[derive(Diagnostic)]
 #[diag(ast_lowering_invalid_abi, code = "E0703")]
 #[note]
+#[must_use]
 pub struct InvalidAbi {
     #[primary_span]
     #[label]
@@ -90,6 +91,7 @@ pub enum AssocTyParenthesesSub {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_misplaced_impl_trait, code = "E0562")]
+#[must_use]
 pub struct MisplacedImplTrait<'a> {
     #[primary_span]
     pub span: Span,
@@ -98,6 +100,7 @@ pub struct MisplacedImplTrait<'a> {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_misplaced_assoc_ty_binding)]
+#[must_use]
 pub struct MisplacedAssocTyBinding<'a> {
     #[primary_span]
     pub span: Span,
@@ -203,6 +206,7 @@ pub struct ClobberAbiNotSupported {
 #[derive(Diagnostic)]
 #[note]
 #[diag(ast_lowering_invalid_abi_clobber_abi)]
+#[must_use]
 pub struct InvalidAbiClobberAbi {
     #[primary_span]
     pub abi_span: Span,
@@ -229,6 +233,7 @@ pub struct InvalidRegisterClass<'a> {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_invalid_asm_template_modifier_reg_class)]
+#[must_use]
 pub struct InvalidAsmTemplateModifierRegClass {
     #[primary_span]
     #[label(ast_lowering_template_modifier)]
@@ -342,6 +347,7 @@ pub struct NotSupportedForLifetimeBinderAsyncClosure {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_match_arm_with_no_body)]
+#[must_use]
 pub struct MatchArmWithNoBody {
     #[primary_span]
     pub span: Span,
@@ -351,6 +357,7 @@ pub struct MatchArmWithNoBody {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_never_pattern_with_body)]
+#[must_use]
 pub struct NeverPatternWithBody {
     #[primary_span]
     #[label]
@@ -360,6 +367,7 @@ pub struct NeverPatternWithBody {
 
 #[derive(Diagnostic)]
 #[diag(ast_lowering_never_pattern_with_guard)]
+#[must_use]
 pub struct NeverPatternWithGuard {
     #[primary_span]
     #[suggestion(code = "", applicability = "maybe-incorrect")]

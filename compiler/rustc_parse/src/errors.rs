@@ -385,6 +385,7 @@ pub(crate) enum IfExpressionMissingThenBlockSub {
 #[derive(Diagnostic)]
 #[diag(parse_ternary_operator)]
 #[help]
+#[must_use]
 pub struct TernaryOperator {
     #[primary_span]
     pub span: Span,
@@ -1560,6 +1561,7 @@ pub(crate) struct SelfArgumentPointer {
 
 #[derive(Diagnostic)]
 #[diag(parse_unexpected_token_after_dot)]
+#[must_use]
 pub struct UnexpectedTokenAfterDot<'a> {
     #[primary_span]
     pub span: Span,
@@ -1876,6 +1878,7 @@ pub(crate) enum TopLevelOrPatternNotAllowed {
 
 #[derive(Diagnostic)]
 #[diag(parse_cannot_be_raw_ident)]
+#[must_use]
 pub struct CannotBeRawIdent {
     #[primary_span]
     pub span: Span,
@@ -1884,6 +1887,7 @@ pub struct CannotBeRawIdent {
 
 #[derive(Diagnostic)]
 #[diag(parse_cr_doc_comment)]
+#[must_use]
 pub struct CrDocComment {
     #[primary_span]
     pub span: Span,
@@ -1892,6 +1896,7 @@ pub struct CrDocComment {
 
 #[derive(Diagnostic)]
 #[diag(parse_no_digits_literal, code = "E0768")]
+#[must_use]
 pub struct NoDigitsLiteral {
     #[primary_span]
     pub span: Span,
@@ -1899,6 +1904,7 @@ pub struct NoDigitsLiteral {
 
 #[derive(Diagnostic)]
 #[diag(parse_invalid_digit_literal)]
+#[must_use]
 pub struct InvalidDigitLiteral {
     #[primary_span]
     pub span: Span,
@@ -1907,6 +1913,7 @@ pub struct InvalidDigitLiteral {
 
 #[derive(Diagnostic)]
 #[diag(parse_empty_exponent_float)]
+#[must_use]
 pub struct EmptyExponentFloat {
     #[primary_span]
     pub span: Span,
@@ -1914,6 +1921,7 @@ pub struct EmptyExponentFloat {
 
 #[derive(Diagnostic)]
 #[diag(parse_float_literal_unsupported_base)]
+#[must_use]
 pub struct FloatLiteralUnsupportedBase {
     #[primary_span]
     pub span: Span,
@@ -1923,6 +1931,7 @@ pub struct FloatLiteralUnsupportedBase {
 #[derive(Diagnostic)]
 #[diag(parse_unknown_prefix)]
 #[note]
+#[must_use]
 pub struct UnknownPrefix<'a> {
     #[primary_span]
     #[label]
@@ -1958,6 +1967,7 @@ pub enum UnknownPrefixSugg {
 
 #[derive(Diagnostic)]
 #[diag(parse_too_many_hashes)]
+#[must_use]
 pub struct TooManyHashes {
     #[primary_span]
     pub span: Span,
@@ -1966,6 +1976,7 @@ pub struct TooManyHashes {
 
 #[derive(Diagnostic)]
 #[diag(parse_unknown_start_of_token)]
+#[must_use]
 pub struct UnknownTokenStart {
     #[primary_span]
     pub span: Span,
@@ -2473,6 +2484,7 @@ impl HelpUseLatestEdition {
 
 #[derive(Diagnostic)]
 #[diag(parse_box_syntax_removed)]
+#[must_use]
 pub struct BoxSyntaxRemoved<'a> {
     #[primary_span]
     #[suggestion(

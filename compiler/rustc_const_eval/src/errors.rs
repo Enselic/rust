@@ -232,6 +232,7 @@ pub struct LongRunning {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_long_running)]
+#[must_use]
 pub struct LongRunningWarn {
     #[primary_span]
     #[label]
@@ -270,6 +271,7 @@ pub struct RawBytesNote {
 #[derive(Diagnostic)]
 #[diag(const_eval_match_eq_non_const, code = "E0015")]
 #[note]
+#[must_use]
 pub struct NonConstMatchEq<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -279,6 +281,7 @@ pub struct NonConstMatchEq<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_for_loop_into_iter_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstForLoopIntoIter<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -288,6 +291,7 @@ pub struct NonConstForLoopIntoIter<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_question_branch_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstQuestionBranch<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -297,6 +301,7 @@ pub struct NonConstQuestionBranch<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_question_from_residual_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstQuestionFromResidual<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -306,6 +311,7 @@ pub struct NonConstQuestionFromResidual<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_try_block_from_output_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstTryBlockFromOutput<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -315,6 +321,7 @@ pub struct NonConstTryBlockFromOutput<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_await_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstAwait<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -324,6 +331,7 @@ pub struct NonConstAwait<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_closure_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstClosure {
     #[primary_span]
     pub span: Span,
@@ -357,6 +365,7 @@ pub struct ConsiderDereferencing {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_operator_non_const, code = "E0015")]
+#[must_use]
 pub struct NonConstOperator {
     #[primary_span]
     pub span: Span,
@@ -368,6 +377,7 @@ pub struct NonConstOperator {
 #[derive(Diagnostic)]
 #[diag(const_eval_deref_coercion_non_const, code = "E0015")]
 #[note]
+#[must_use]
 pub struct NonConstDerefCoercion<'tcx> {
     #[primary_span]
     pub span: Span,
@@ -380,6 +390,7 @@ pub struct NonConstDerefCoercion<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_live_drop, code = "E0493")]
+#[must_use]
 pub struct LiveDrop<'tcx> {
     #[primary_span]
     #[label]
@@ -392,6 +403,7 @@ pub struct LiveDrop<'tcx> {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_error, code = "E0080")]
+#[must_use]
 pub struct ConstEvalError {
     #[primary_span]
     pub span: Span,
@@ -411,6 +423,7 @@ pub struct WriteThroughImmutablePointer {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_nullary_intrinsic_fail)]
+#[must_use]
 pub struct NullaryIntrinsicError {
     #[primary_span]
     pub span: Span,
@@ -418,6 +431,7 @@ pub struct NullaryIntrinsicError {
 
 #[derive(Diagnostic)]
 #[diag(const_eval_undefined_behavior, code = "E0080")]
+#[must_use]
 pub struct UndefinedBehavior {
     #[primary_span]
     pub span: Span,
