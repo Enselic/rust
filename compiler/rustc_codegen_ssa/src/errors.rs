@@ -19,6 +19,7 @@ use std::process::ExitStatus;
 
 #[derive(Diagnostic)]
 #[diag(codegen_ssa_incorrect_cgu_reuse_type)]
+#[cfg_attr(not(bootstrap), must_use)]
 pub struct IncorrectCguReuseType<'a> {
     #[primary_span]
     pub span: Span,

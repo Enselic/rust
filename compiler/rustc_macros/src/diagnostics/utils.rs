@@ -616,10 +616,14 @@ impl SubdiagnosticVariant {
             return Ok(None);
         }
 
-        let span = attr.span().unwrap();
-
         let name = attr.path().segments.last().unwrap().ident.to_string();
         let name = name.as_str();
+
+        // We require `#[must_use]` on all diagnostic structs, so we must allow
+        // it as a no-op attr here.
+        if name == "must_use" {
+            return Ok(None)
+        }
 
         let mut kind = match name {
             "label" => SubdiagnosticKind::Label,
@@ -666,6 +670,8 @@ impl SubdiagnosticVariant {
                 }
             }
         };
+
+        let span = attr.span().unwrap();
 
         let list = match &attr.meta {
             Meta::List(list) => {
