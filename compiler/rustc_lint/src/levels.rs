@@ -136,6 +136,7 @@ fn lint_expectations(tcx: TyCtxt<'_>, (): ()) -> Vec<(LintExpectationId, LintExp
             empty: FxHashMap::default(),
         },
         lint_added_lints: false,
+        supress_crate_lints: false,
         store,
         registered_tools: tcx.registered_tools(()),
     };
@@ -165,6 +166,7 @@ fn shallow_lint_levels_on(tcx: TyCtxt<'_>, owner: hir::OwnerId) -> ShallowLintLe
             attrs,
         },
         lint_added_lints: false,
+        supress_crate_lints: false,
         store,
         registered_tools: tcx.registered_tools(()),
     };
@@ -452,6 +454,7 @@ pub struct LintLevelsBuilder<'s, P> {
     features: &'s Features,
     provider: P,
     lint_added_lints: bool,
+    pub supress_crate_lints: bool,
     store: &'s LintStore,
     registered_tools: &'s RegisteredTools,
 }
@@ -473,6 +476,7 @@ impl<'s> LintLevelsBuilder<'s, TopDown> {
             features,
             provider: TopDown { sets: LintLevelSets::new(), cur: COMMAND_LINE },
             lint_added_lints,
+            supress_crate_lints: false,
             store,
             registered_tools,
         };
@@ -1029,7 +1033,7 @@ impl<'s, P: LintLevelsProvider> LintLevelsBuilder<'s, P> {
             }
         }
 
-        if self.lint_added_lints && !is_crate_node {
+        if !self.supress_crate_lints && self.lint_added_lints && !is_crate_node {
             for (id, &(level, ref src)) in self.current_specs().iter() {
                 if !id.lint.crate_level_only {
                     continue;

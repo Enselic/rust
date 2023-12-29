@@ -116,10 +116,13 @@ impl<'a, T: EarlyLintPass> ast_visit::Visitor<'a> for EarlyContextAndPass<'a, T>
     }
 
     fn visit_expr(&mut self, e: &'a ast::Expr) {
+        let old_lint_added_lints = self.context.builder.supress_crate_lints;
+        self.context.builder.supress_crate_lints = true;
         self.with_lint_attrs(e.id, &e.attrs, |cx| {
             lint_callback!(cx, check_expr, e);
             ast_visit::walk_expr(cx, e);
-        })
+        });
+        self.context.builder.supress_crate_lints = old_lint_added_lints;
     }
 
     fn visit_expr_field(&mut self, f: &'a ast::ExprField) {
