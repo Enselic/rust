@@ -176,7 +176,6 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                     call_source: if *from_hir_call { CallSource::Normal } else {
                         CallSource::OverloadedOperator
                     },
-                    fn_span: *fn_span,
                 })
             },
         )
