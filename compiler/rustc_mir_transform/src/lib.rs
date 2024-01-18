@@ -157,7 +157,7 @@ fn remap_mir_for_const_eval_select<'tcx>(
         let terminator = bb.terminator.as_mut().expect("invalid terminator");
         match terminator.kind {
             TerminatorKind::Call {
-                func: Spanned { node: Operand::Constant(box ConstOperand { ref const_, .. }), .. },
+                func: Spanned { node: Operand::Constant(box ConstOperand { ref const_, .. }), span },
                 ref mut args,
                 destination,
                 target,
@@ -179,9 +179,9 @@ fn remap_mir_for_const_eval_select<'tcx>(
                         Operand::Constant(_) => {
                             // there is no good way of extracting a tuple arg from a constant (const generic stuff)
                             // so we just create a temporary and deconstruct that.
-                            let local = body.local_decls.push(LocalDecl::new(ty, fn_span));
+                            let local = body.local_decls.push(LocalDecl::new(ty, span));
                             bb.statements.push(Statement {
-                                source_info: SourceInfo::outermost(fn_span),
+                                source_info: SourceInfo::outermost(span),
                                 kind: StatementKind::Assign(Box::new((
                                     local.into(),
                                     Rvalue::Use(tupled_args.node.clone()),
