@@ -202,8 +202,11 @@ impl PeekCall {
         use mir::Operand;
 
         let span = terminator.source_info.span;
-        if let mir::TerminatorKind::Call { func: Spanned { node: Operand::Constant(func), .. }, args, .. } =
-            &terminator.kind
+        if let mir::TerminatorKind::Call {
+            func: Spanned { node: Operand::Constant(func), .. },
+            args,
+            ..
+        } = &terminator.kind
         {
             if let ty::FnDef(def_id, fn_args) = *func.const_.ty().kind() {
                 let name = tcx.item_name(def_id);

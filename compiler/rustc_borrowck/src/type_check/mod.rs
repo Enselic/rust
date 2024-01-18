@@ -1441,7 +1441,15 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                         .add_location(region_vid, term_location);
                 }
 
-                self.check_call_inputs(body, term, &func.node, &sig, args, term_location, *call_source);
+                self.check_call_inputs(
+                    body,
+                    term,
+                    &func.node,
+                    &sig,
+                    args,
+                    term_location,
+                    *call_source,
+                );
             }
             TerminatorKind::Assert { cond, msg, .. } => {
                 self.check_operand(cond, term_location);

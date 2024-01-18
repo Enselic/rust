@@ -855,7 +855,8 @@ impl<'cx, 'tcx> MirBorrowckCtxt<'cx, 'tcx> {
         debug!("move_spans: target_temp = {:?}", target_temp);
 
         if let Some(Terminator {
-            kind: TerminatorKind::Call { func: Spanned { span: fn_span, ..  }, call_source, .. }, ..
+            kind: TerminatorKind::Call { func: Spanned { span: fn_span, .. }, call_source, .. },
+            ..
         }) = &self.body[location.block].terminator
         {
             let Some((method_did, method_args)) = rustc_middle::util::find_self_call(

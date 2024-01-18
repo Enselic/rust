@@ -650,11 +650,13 @@ where
                 kind: TerminatorKind::Call {
                     func: Spanned {
                         node: Operand::function_handle(
-                        tcx,
-                        drop_fn,
-                        [ty.into()],
-                        self.source_info.span,
-                    ), span: self.source_info.span, },
+                            tcx,
+                            drop_fn,
+                            [ty.into()],
+                            self.source_info.span,
+                        ),
+                        span: self.source_info.span,
+                    },
                     args: vec![Spanned {
                         node: Operand::Move(Place::from(ref_place)),
                         span: DUMMY_SP,

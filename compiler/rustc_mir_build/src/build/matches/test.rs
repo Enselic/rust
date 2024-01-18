@@ -516,17 +516,20 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
             block,
             source_info,
             TerminatorKind::Call {
-                func: Spanned { node: Operand::Constant(Box::new(ConstOperand {
+                func: Spanned {
+                    node: Operand::Constant(Box::new(ConstOperand {
+                        span: source_info.span,
+
+                        // FIXME(#54571): This constant comes from user input (a
+                        // constant in a pattern). Are there forms where users can add
+                        // type annotations here?  For example, an associated constant?
+                        // Need to experiment.
+                        user_ty: None,
+
+                        const_: method,
+                    })),
                     span: source_info.span,
-
-                    // FIXME(#54571): This constant comes from user input (a
-                    // constant in a pattern). Are there forms where users can add
-                    // type annotations here?  For example, an associated constant?
-                    // Need to experiment.
-                    user_ty: None,
-
-                    const_: method,
-                })), span: source_info.span },
+                },
                 args: vec![
                     Spanned { node: Operand::Copy(val), span: DUMMY_SP },
                     Spanned { node: expect, span: DUMMY_SP },

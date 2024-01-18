@@ -828,8 +828,8 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
 
         if intrinsic == Some(sym::caller_location) {
             return if let Some(target) = target {
-                let location =
-                    self.get_caller_location(bx, mir::SourceInfo { span: func.span, ..source_info });
+                let location = self
+                    .get_caller_location(bx, mir::SourceInfo { span: func.span, ..source_info });
 
                 if let ReturnDest::IndirectOperand(tmp, _) = ret_dest {
                     location.val.store(bx, tmp);
