@@ -516,7 +516,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
             block,
             source_info,
             TerminatorKind::Call {
-                func: Operand::Constant(Box::new(ConstOperand {
+                func: Spanned { node: Operand::Constant(Box::new(ConstOperand {
                     span: source_info.span,
 
                     // FIXME(#54571): This constant comes from user input (a
@@ -526,7 +526,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                     user_ty: None,
 
                     const_: method,
-                })),
+                })), span: source_info.span },
                 args: vec![
                     Spanned { node: Operand::Copy(val), span: DUMMY_SP },
                     Spanned { node: expect, span: DUMMY_SP },
@@ -535,7 +535,6 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                 target: Some(eq_block),
                 unwind: UnwindAction::Continue,
                 call_source: CallSource::MatchCmp,
-                fn_span: source_info.span,
             },
         );
         self.diverge_from(block);
