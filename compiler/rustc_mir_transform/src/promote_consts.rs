@@ -727,9 +727,7 @@ impl<'a, 'tcx> Promoter<'a, 'tcx> {
             };
 
             match terminator.kind {
-                TerminatorKind::Call {
-                    mut func, mut args, call_source: desugar, ..
-                } => {
+                TerminatorKind::Call { mut func, mut args, call_source: desugar, .. } => {
                     self.visit_operand(&mut func.node, loc);
                     for arg in &mut args {
                         self.visit_operand(&mut arg.node, loc);

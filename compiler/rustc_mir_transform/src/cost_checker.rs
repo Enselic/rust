@@ -68,7 +68,11 @@ impl<'tcx> Visitor<'tcx> for CostChecker<'_, 'tcx> {
                     self.cost += INSTR_COST;
                 }
             }
-            TerminatorKind::Call { func: Spanned { node: Operand::Constant(ref f), .. }, unwind, .. } => {
+            TerminatorKind::Call {
+                func: Spanned { node: Operand::Constant(ref f), .. },
+                unwind,
+                ..
+            } => {
                 let fn_ty = self.instantiate_ty(f.const_.ty());
                 self.cost += if let ty::FnDef(def_id, _) = *fn_ty.kind()
                     && tcx.is_intrinsic(def_id)
