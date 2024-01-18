@@ -741,7 +741,7 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
         helper: TerminatorCodegenHelper<'tcx>,
         bx: &mut Bx,
         terminator: &mir::Terminator<'tcx>,
-        func: &mir::Operand<'tcx>,
+        func: &Spanned<mir::Operand<'tcx>>,
         args: &[Spanned<mir::Operand<'tcx>>],
         destination: mir::Place<'tcx>,
         target: Option<mir::BasicBlock>,
@@ -1256,7 +1256,6 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
                 target,
                 unwind,
                 call_source: _,
-                fn_span,
             } => self.codegen_call_terminator(
                 helper,
                 bx,

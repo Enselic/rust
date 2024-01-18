@@ -365,7 +365,7 @@ impl<'tcx> Inliner<'tcx> {
     ) -> Option<CallSite<'tcx>> {
         // Only consider direct calls to functions
         let terminator = bb_data.terminator();
-        if let TerminatorKind::Call { ref func, fn_span, .. } = terminator.kind {
+        if let TerminatorKind::Call { ref func, .. } = terminator.kind {
             let func_ty = func.ty(caller_body, self.tcx);
             if let ty::FnDef(def_id, args) = *func_ty.kind() {
                 // To resolve an instance its args have to be fully normalized.

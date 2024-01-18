@@ -1,3 +1,13 @@
+use rustc_span::symbol::{sym, Symbol};
+use rustc_span::Span;
+
+use rustc_index::bit_set::ChunkedBitSet;
+use rustc_middle::mir::MirPass;
+use rustc_middle::mir::{self, Body, Local, Location};
+use rustc_middle::ty::{self, Ty, TyCtxt};
+
+use rustc_span::source_map::Spanned;
+
 use crate::errors::{
     PeekArgumentNotALocal, PeekArgumentUntracked, PeekBitNotSet, PeekMustBeNotTemporary,
     PeekMustBePlaceOrRefPlace, StopAfterDataFlowEndedCompilation,
@@ -12,12 +22,6 @@ use crate::MoveDataParamEnv;
 use crate::{Analysis, JoinSemiLattice, ResultsCursor};
 use rustc_ast::MetaItem;
 use rustc_hir::def_id::DefId;
-use rustc_index::bit_set::ChunkedBitSet;
-use rustc_middle::mir::MirPass;
-use rustc_middle::mir::{self, Body, Local, Location};
-use rustc_middle::ty::{self, Ty, TyCtxt};
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
 
 pub struct SanityCheck;
 
@@ -198,7 +202,7 @@ impl PeekCall {
         use mir::Operand;
 
         let span = terminator.source_info.span;
-        if let mir::TerminatorKind::Call { func: Operand::Constant(func), args, .. } =
+        if let mir::TerminatorKind::Call { func: Spanned { node: Operand::Constant(func), .. }, args, .. } =
             &terminator.kind
         {
             if let ty::FnDef(def_id, fn_args) = *func.const_.ty().kind() {
