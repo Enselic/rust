@@ -168,7 +168,7 @@ impl<'tcx, 'body> ParseCtxt<'tcx, 'body> {
                     )
                     .collect::<PResult<Vec<_>>>()?;
                 Ok(TerminatorKind::Call {
-                    func: fun,
+                    func: Spanned { node: fun, span: *fn_span },
                     args,
                     destination,
                     target: Some(target),

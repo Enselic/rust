@@ -267,17 +267,16 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
                         block,
                         source_info,
                         TerminatorKind::Call {
-                            func: Operand::Constant(Box::new(ConstOperand {
+                            func: Spanned { node: Operand::Constant(Box::new(ConstOperand {
                                 span: test.span,
                                 user_ty: None,
                                 const_: method,
-                            })),
+                            })), span: source_info.span },
                             args: vec![Spanned { node: Operand::Move(ref_string), span: DUMMY_SP }],
                             destination: ref_str,
                             target: Some(eq_block),
                             unwind: UnwindAction::Continue,
                             call_source: CallSource::Misc,
-                            fn_span: source_info.span,
                         },
                     );
                     self.non_scalar_compare(

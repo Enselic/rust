@@ -157,12 +157,11 @@ fn remap_mir_for_const_eval_select<'tcx>(
         let terminator = bb.terminator.as_mut().expect("invalid terminator");
         match terminator.kind {
             TerminatorKind::Call {
-                func: Operand::Constant(box ConstOperand { ref const_, .. }),
+                func: Spanned { node: Operand::Constant(box ConstOperand { ref const_, .. }), .. },
                 ref mut args,
                 destination,
                 target,
                 unwind,
-                fn_span,
                 ..
             } if let ty::FnDef(def_id, _) = *const_.ty().kind()
                 && tcx.item_name(def_id) == sym::const_eval_select
@@ -204,13 +203,12 @@ fn remap_mir_for_const_eval_select<'tcx>(
                     })
                     .collect();
                 terminator.kind = TerminatorKind::Call {
-                    func: func.node,
+                    func: func,
                     args: arguments,
                     destination,
                     target,
                     unwind,
                     call_source: CallSource::Misc,
-                    fn_span,
                 };
             }
             _ => {}
