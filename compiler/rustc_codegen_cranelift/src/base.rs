@@ -426,15 +426,14 @@ fn codegen_fn_body(fx: &mut FunctionCx<'_, '_, '_>, start_block: Block) {
                 args,
                 destination,
                 target,
-                fn_span,
                 unwind: _,
                 call_source: _,
             } => {
                 fx.tcx.prof.generic_activity("codegen call").run(|| {
                     crate::abi::codegen_terminator_call(
                         fx,
-                        mir::SourceInfo { span: *fn_span, ..source_info },
-                        func,
+                        mir::SourceInfo { span: func.span, ..source_info },
+                        &func.node,
                         args,
                         *destination,
                         *target,
