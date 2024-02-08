@@ -1255,7 +1255,6 @@ pub struct ExternMain {
 pub struct UnixSigpipeValues {
     #[primary_span]
     pub span: Span,
-    pub value: Symbol,
 }
 
 pub struct NoMainErr {

@@ -211,7 +211,7 @@ impl<'a> Visitor<'a> for PostExpansionVisitor<'a> {
                 attr.span,
                 format!(
                     "the `#[unix_sigpipe = \"{}\"]` attribute is an experimental feature",
-                    forbidden_value.as_str()
+                    value.as_str()
                 )
             );
         }
