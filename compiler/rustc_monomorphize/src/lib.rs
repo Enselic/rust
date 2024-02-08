@@ -1,5 +1,6 @@
 #![feature(array_windows)]
 #![feature(is_sorted)]
+#![feature(let_chains)]
 #![allow(rustc::potential_query_instability)]
 #![deny(rustc::untranslatable_diagnostic)]
 #![deny(rustc::diagnostic_outside_of_impl)]

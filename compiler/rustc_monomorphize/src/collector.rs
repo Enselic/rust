@@ -630,7 +630,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         let source_info = self.body.source_info(location);
         debug!(?source_info);
 
-        if let Some(too_large_size) = self.operand_size_if_too_large(limit, operand) {
+        if let Some(too_large_size) = self.operand_size_if_too_large(limit, operand, false) {
             self.lint_large_assignment(limit.0, too_large_size, location, source_info.span);
         };
     }
@@ -666,7 +666,7 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         debug!(?def_id, ?fn_span);
 
         for arg in args {
-            if let Some(too_large_size) = self.operand_size_if_too_large(limit, &arg.node) {
+            if let Some(too_large_size) = self.operand_size_if_too_large(limit, &arg.node, true) {
                 self.lint_large_assignment(limit.0, too_large_size, location, arg.span);
             };
         }
@@ -676,7 +676,11 @@ impl<'a, 'tcx> MirUsedCollector<'a, 'tcx> {
         &mut self,
         limit: Limit,
         operand: &mir::Operand<'tcx>,
+        allow_move: bool,
     ) -> Option<Size> {
+        if allow_move && let mir::Operand::Move(_) = operand {
+            return None;
+        }
         let ty = operand.ty(self.body, self.tcx);
         let ty = self.monomorphize(ty);
         let Ok(layout) = self.tcx.layout_of(ty::ParamEnv::reveal_all().and(ty)) else {
