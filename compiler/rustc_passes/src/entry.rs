@@ -160,8 +160,12 @@ fn sigpipe(tcx: TyCtxt<'_>, def_id: DefId) -> u8 {
                 // an excellent error message
                 sigpipe::DEFAULT
             }
+            (Some(value), _) => {
+                tcx.dcx().emit_err(UnixSigpipeValues { span: attr.span, value });
+                sigpipe::DEFAULT
+            }
             _ => {
-                tcx.dcx().emit_err(UnixSigpipeValues { span: attr.span });
+                tcx.dcx().emit_err(UnixSigpipeValues { span: attr.span, value: sym::inherit });
                 sigpipe::DEFAULT
             }
         }

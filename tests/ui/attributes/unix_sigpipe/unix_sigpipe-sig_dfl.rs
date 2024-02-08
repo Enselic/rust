@@ -1,8 +1,6 @@
 // run-pass
 // aux-build:sigpipe-utils.rs
 
-#![feature(unix_sigpipe)]
-
 #[unix_sigpipe = "sig_dfl"]
 fn main() {
     extern crate sigpipe_utils;
