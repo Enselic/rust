@@ -2,9 +2,9 @@ This PR stabilizes `#[unix_sigpipe = "sig_dfl"]`.
 
 The attribute has been available in nightly since `nightly-2022-09-04`.
 
-It has been used by rustc and rustdoc themselves, and also by third party code ([1](https://github.com/moonrepo/espresso/blob/e3f429b01bfd9a0a8956f11b1bc9120084c42d3c/crates/cli/src/main.rs#L18), [2](https://github.com/trinitronx/intro-to-rust-kvstore/blob/2c26260a837c33f193cf26cecf49279675c3a6a3/src/main.rs#L8)).
+It is being used rustc and rustdoc themselves, and also by third party code ([1](https://github.com/moonrepo/espresso/blob/e3f429b01bfd9a0a8956f11b1bc9120084c42d3c/crates/cli/src/main.rs#L18), [2](https://github.com/trinitronx/intro-to-rust-kvstore/blob/2c26260a837c33f193cf26cecf49279675c3a6a3/src/main.rs#L8)).
 
-I have monitored the keyword `sigpipe` on `rust-lang/rust` during all this time, and no problems have been reported that would suggest we can't stabilize this attribute.
+I have monitored the keyword `sigpipe` on `rust-lang/rust` during all this time, and no problems have been reported regarding the attribute. To the contrary. It's infrastructure is used to implement a [bugfix](https://github.com/rust-lang/rust/pull/101077/files).
 
 ## Summary and examples
 
