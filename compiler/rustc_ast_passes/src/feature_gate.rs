@@ -201,9 +201,10 @@ impl<'a> Visitor<'a> for PostExpansionVisitor<'a> {
             }
         }
         // Check unstable flavors of the `#[unix_sigpipe]` attribute.
+        let stabilized_value = sym::sig_dfl;
         if attr.has_name(sym::unix_sigpipe)
             && let Some(value) = attr.value_str()
-            && value != sym::sig_dfl
+            && value != stabilized_value
         {
             gate!(
                 self,
