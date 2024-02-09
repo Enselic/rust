@@ -1,7 +1,7 @@
 This PR stabilizes `#[unix_sigpipe = "sig_dfl"]`.
 
 The `#[unix_sigpipe = "sig_dfl"]` attribute has been available in nightly since
-[`nightly-2022-09-04`](https://github.com/rust-lang/rust/pull/97802#issuecomment-1235978689).
+[`nightly-2022-09-04`](https://github.com/rust-lang/rust/pull/97802#issuecomment-1235978689) (17 months ago).
 
 It is being used by
 [rustc](https://github.com/rust-lang/rust/blob/c29082fe7dc6e902169cacbae165562a7e4a1fd6/compiler/rustc/src/main.rs#L37)
@@ -18,7 +18,7 @@ It's infrastructure was used to implement a
 
 ## Summary and examples
 
-Everything you need to know about the stabilized attribute should be documented in the reference: TODO link
+Everything you need to know about the stabilized attribute should be documented in the reference: TODO link. Rendered: TODO
 
 ## Test cases
 
@@ -47,7 +47,10 @@ There are many reasons for this:
 
 ## Potential future work
 
-There is a discussion about changing the default `SIGPIPE` handler. See [here](https://github.com/rust-lang/rust/issues/62569). Changing the default would require us to also stabilize `#[unix_sigpipe = "sig_ign"]`. But doing that and discussing that is out of scope of this PR.
+There is a discussion about changing the default `SIGPIPE` handler. See
+[here](https://github.com/rust-lang/rust/issues/62569). Changing the default
+would require us to also stabilize `#[unix_sigpipe = "sig_ign"]`. But doing that
+and discussing changing the default is out of scope of this PR.
 
 ## TODO
 
@@ -56,3 +59,5 @@ There is a discussion about changing the default `SIGPIPE` handler. See [here](h
 ## FCP
 
 Since we can't close the [tracking issue](https://github.com/rust-lang/rust/issues/97889) entirely, my hope is that we can do an FCP on this PR rather than on the tracking issue.
+
+If 
