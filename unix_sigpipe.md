@@ -13,7 +13,7 @@ themselves, and also by third party code
 
 I have monitored the keyword `sigpipe` on `rust-lang/rust` during all this time,
 and no problems have been reported regarding the attribute. To the contrary.
-It's infrastructure is used to implement a
+It's infrastructure was used to implement a
 [bugfix](https://github.com/rust-lang/rust/pull/101077/files) in a backwards compatible way.
 
 ## Summary and examples
@@ -28,7 +28,7 @@ Everything you need to know about the stabilized attribute should be documented 
 
 None that I am aware of. But it is worth noting that using `#[unix_sigpipe =
 "sig_dfl"]` and receiving a `SIGPIPE` means destructors will not run since the
-process will be immediately killed.
+process will be immediately killed. I documented this in The Reference.
 
 ## Unresolved questions
 
@@ -52,3 +52,7 @@ There is a discussion about changing the default `SIGPIPE` handler. See [here](h
 ## TODO
 
 * Update the unstable book [page](https://doc.rust-lang.org/beta/unstable-book/language-features/unix-sigpipe.html) of `unix_sigpipe` if we merge this.
+
+## FCP
+
+Since we can't close the [tracking issue](https://github.com/rust-lang/rust/issues/97889) entirely, my hope is that we can do an FCP on this PR rather than on the tracking issue.
