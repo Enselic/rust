@@ -39,8 +39,16 @@ None. See [tracking issue](https://github.com/rust-lang/rust/issues/97889).
 This PR does NOT stabilize any other variant of the attribute, namely
 `#[unix_sigpipe = "sig_ign"]` and `#[unix_sigpipe = "inherit"]`.
 
-The reason being that we want to minimize risk of problems, and I have seen no usage of these attributes in the wild. Arguably, we could probably stabilize `#[unix_sigpipe = "sig_ign"]`, but I think it is better to wait with that until we need to. Before we change the default (see [here](https://github.com/rust-lang/rust/issues/62569)) we don't need to. Obviously it is a bit of a chicken and egg problem. But let's wait with solving it for now.
+There are many reasons for this:
+
+* Avoids choice paralysis between leaving `SIGPIPE` be the default (`SIG_IGN`) and explicitly setting it to `SIG_IGN` with `#[unix_sigpipe = "sig_ign"]`
+* I have found no one using `#[unix_sigpipe = "sig_ign"]` nor `#[unix_sigpipe = "inherit"]` in the wild, so they are much less tested, and there seems to be no desire for them.
+* Stabilizing something means committing to its existence for all eternity, so we should not stabilize attributes that are not absolutely needed.
+
+## Potential future work
+
+There is a discussion about changing the default `SIGPIPE` handler. See [here](https://github.com/rust-lang/rust/issues/62569). Changing the default would require us to also stabilize `#[unix_sigpipe = "sig_ign"]`. But doing that and discussing that is out of scope of this PR.
 
 ## TODO
 
-* Update the unstable book if we merge this.
+* Update the unstable book [page](https://doc.rust-lang.org/beta/unstable-book/language-features/unix-sigpipe.html) of `unix_sigpipe` if we merge this.
