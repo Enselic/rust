@@ -22,7 +22,7 @@ Set the `SIGPIPE` handler to `SIG_DFL`. This will result in your program getting
 ### Example
 
 ```rust,no_run
-#![feature(unix_sigpipe)] // TODO: Document for stable Rust
+#![feature(unix_sigpipe)]
 #[unix_sigpipe = "sig_dfl"]
 fn main() { loop { println!("hello world"); } }
 ```

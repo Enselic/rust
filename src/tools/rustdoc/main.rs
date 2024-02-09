@@ -1,4 +1,6 @@
-// TODO: Fix #[cfg_attr(bootstrap, unix_sigpipe = "sig_dfl")]
+#![cfg_attr(bootstrap, feature(unix_sigpipe))]
+
+#[unix_sigpipe = "sig_dfl"]
 fn main() {
     rustdoc::main()
 }
