@@ -200,6 +200,21 @@ impl<'a> Visitor<'a> for PostExpansionVisitor<'a> {
                 );
             }
         }
+        // Check unstable flavors of the `#[unix_sigpipe]` attribute.
+        if attr.has_name(sym::unix_sigpipe)
+            && let Some(value) = attr.value_str()
+            && (value == sym::sig_ign || value == sym::inherit)
+        {
+            gate!(
+                self,
+                unix_sigpipe,
+                attr.span,
+                format!(
+                    "the `#[unix_sigpipe = \"{}\"]` attribute is an experimental feature",
+                    value.as_str()
+                )
+            );
+        }
         if !attr.is_doc_comment()
             && let [seg, _] = attr.get_normal_item().path.segments.as_slice()
             && seg.ident.name == sym::diagnostic
