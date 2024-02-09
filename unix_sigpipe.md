@@ -1,8 +1,9 @@
 This PR stabilizes `#[unix_sigpipe = "sig_dfl"]`.
 
-The attribute has been available in nightly since `nightly-2022-09-04`.
+The `#[unix_sigpipe = "sig_dfl"]` attribute has been available in nightly since
+[`nightly-2022-09-04`](https://github.com/rust-lang/rust/pull/97802#issuecomment-1235978689).
 
-It is being used
+It is being used by
 [rustc](https://github.com/rust-lang/rust/blob/c29082fe7dc6e902169cacbae165562a7e4a1fd6/compiler/rustc/src/main.rs#L37)
 and
 [rustdoc](https://github.com/rust-lang/rust/blob/c29082fe7dc6e902169cacbae165562a7e4a1fd6/src/tools/rustdoc/main.rs#L3)
@@ -25,7 +26,9 @@ Everything you need to know about the stabilized attribute should be documented 
 
 ## Edge cases
 
-None that I am aware of.
+None that I am aware of. But it is worth noting that using `#[unix_sigpipe =
+"sig_dfl"]` and receiving a `SIGPIPE` means destructors will not run since the
+process will be immediately killed.
 
 ## Unresolved questions
 
@@ -33,7 +36,10 @@ None. See [tracking issue](https://github.com/rust-lang/rust/issues/97889).
 
 ## Worth noting
 
-This does not stabilize `#[unix_sigpipe = "sig_ign"]` nor `#[unix_sigpipe = "inherit"]`. The reason being that we want to minimize risk of problems, and I have seen no usage of these attributes in the wild. Arguably, we could probably stabilize `#[unix_sigpipe = "sig_ign"]`, but I think it is better to wait with that until we need to. Before we change the default (see [here](https://github.com/rust-lang/rust/issues/62569)) we don't need to. Obviously it is a bit of a chicken and egg problem. But let's wait with solving it for now.
+This PR does NOT stabilize any other variant of the attribute, namely
+`#[unix_sigpipe = "sig_ign"]` and `#[unix_sigpipe = "inherit"]`.
+
+The reason being that we want to minimize risk of problems, and I have seen no usage of these attributes in the wild. Arguably, we could probably stabilize `#[unix_sigpipe = "sig_ign"]`, but I think it is better to wait with that until we need to. Before we change the default (see [here](https://github.com/rust-lang/rust/issues/62569)) we don't need to. Obviously it is a bit of a chicken and egg problem. But let's wait with solving it for now.
 
 ## TODO
 
