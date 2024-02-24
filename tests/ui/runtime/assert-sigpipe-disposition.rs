@@ -1,51 +1,26 @@
-
 #![feature(start, rustc_private)]
 
 extern crate libc;
 
-use std::ffi::CStr;
-use std::process::{Command, Output};
-use std::panic;
-use std::str;
-
-// Use #[start] to not have a runtime that messes with SIGPIPE.
+// Use #[start] so we don't have a runtime that messes with SIGPIPE.
 #[start]
 fn start(argc: isize, argv: *const *const u8) -> isize {
-    assert_eq!(argc, 2);
-    if argc > 1 {
-        unsafe {
-            match **argv.offset(1) as char {
-                '1' => {}
-                '2' => println!("foo"),
-                '3' => assert!(panic::catch_unwind(|| {}).is_ok()),
-                '4' => assert!(panic::catch_unwind(|| panic!()).is_err()),
-                '5' => assert!(Command::new("test").spawn().is_err()),
-                _ => panic!()
-            }
-        }
-        return 0
-    }
+    assert_eq!(argc, 2, "Usage: assert-sigpipe-disposition <SIG_IGN|SIG_DFL>");
 
-    let args = unsafe {
-        (0..argc as usize).map(|i| {
-            let ptr = *argv.add(i) as *const _;
-            CStr::from_ptr(ptr).to_bytes().to_vec()
-        }).collect::<Vec<_>>()
+    let actual = unsafe {
+        let mut actual: libc::sigaction = std::mem::zeroed();
+        libc::sigaction(libc::SIGPIPE, std::ptr::null(), &mut actual);
+        actual.sa_sigaction
     };
-    let me = String::from_utf8(args[0].to_vec()).unwrap();
 
-    pass(Command::new(&me).arg("1").output().unwrap());
-    pass(Command::new(&me).arg("2").output().unwrap());
-    pass(Command::new(&me).arg("3").output().unwrap());
-    pass(Command::new(&me).arg("4").output().unwrap());
-    pass(Command::new(&me).arg("5").output().unwrap());
+    let expected =
+        match unsafe { std::ffi::CStr::from_ptr(*argv.offset(1) as *const i8) }.to_str().unwrap() {
+            "ignore" => libc::SIG_IGN,
+            "default" => libc::SIG_DFL,
+            _ => panic!("expected 'ignore' or 'default'"),
+        };
 
-    0
-}
+    assert_eq!(actual, expected, "actual and expected SIGPIPE disposition differs");
 
-fn pass(output: Output) {
-    if !output.status.success() {
-        println!("{:?}", str::from_utf8(&output.stdout));
-        println!("{:?}", str::from_utf8(&output.stderr));
-    }
+    return 0;
 }
