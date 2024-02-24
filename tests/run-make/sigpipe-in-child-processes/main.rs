@@ -27,5 +27,5 @@ fn main() {
     let expected = "SIG_IGN";
 
     let child_program = std::env::args().nth(1).unwrap();
-    assert!(std::process::Command::new(child_program).status().unwrap().success());
+    assert!(std::process::Command::new(child_program).arg(expected).status().unwrap().success());
 }
