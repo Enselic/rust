@@ -800,6 +800,7 @@ impl<'tcx> TyCtxt<'tcx> {
         let common_lifetimes = CommonLifetimes::new(&interners);
         let common_consts = CommonConsts::new(&interners, &common_types, s, &untracked);
 
+        #[allow(large_assignments)]
         GlobalCtxt {
             sess: s,
             crate_types,

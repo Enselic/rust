@@ -3,6 +3,7 @@
 //@ ignore-pass
 
 #![feature(coroutines, coroutine_trait)]
+#![allow(large_assignments)]
 
 use std::ops::Coroutine;
 
