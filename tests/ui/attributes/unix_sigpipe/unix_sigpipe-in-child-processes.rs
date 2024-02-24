@@ -3,7 +3,6 @@
 //@ run-pass
 //@ ignore-emscripten
 //@ ignore-horizon
-//@ aux-build:sigpipe-utils.rs
 
 // Checks the signal disposition of `SIGPIPE`` in child processes. Without any
 // unix_sigpipe attribute, `SIG_IGN` is the default. But there is a difference
