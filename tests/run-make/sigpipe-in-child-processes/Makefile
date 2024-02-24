@@ -1,6 +1,8 @@
 # ignore-cross-compile because we run the compiled code
 # only-unix
 
+# See main.rs for a description of this test.
+
 include ../tools.mk
 
 all:

@@ -26,11 +26,6 @@ fn main() {
     #[cfg(sig_ign)]
     let expected = "SIG_IGN";
 
-    assert!(
-        std::process::Command::new("/home/martin/src/rust/assert-sigpipe-disposition")
-            .arg(expected)
-            .status()
-            .unwrap()
-            .success()
-    );
+    let child_program = std::env::args().nth(1).unwrap();
+    assert!(std::process::Command::new(child_program).status().unwrap().success());
 }
