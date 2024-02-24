@@ -1,3 +1,5 @@
+#![allow(large_assignments)]
+
 use std::{
     collections::{vec_deque, VecDeque},
     mem,
