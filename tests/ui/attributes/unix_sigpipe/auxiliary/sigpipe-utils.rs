@@ -17,10 +17,17 @@ pub fn assert_sigpipe_handler(expected_handler: SignalHandler) {
         target_os = "android",
     )))]
     {
-        let actual = unsafe {
+        let actual_sigaction = unsafe {
             let mut actual: libc::sigaction = std::mem::zeroed();
             libc::sigaction(libc::SIGPIPE, std::ptr::null(), &mut actual);
             actual.sa_sigaction
+        };
+        let actual = if actual_sigaction > 10000 {
+            // Assume this is the memory address of our custom noop handler
+            // `_rustc_sigpipe_sigaction_noop`.
+            libc::SIG_IGN
+        } else {
+            actual_sigaction
         };
 
         let expected = match expected_handler {

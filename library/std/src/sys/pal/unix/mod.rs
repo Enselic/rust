@@ -196,7 +196,26 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
                 UNIX_SIGPIPE_ATTR_SPECIFIED.store(true, crate::sync::atomic::Ordering::Relaxed);
             }
             if let Some(handler) = handler {
-                rtassert!(signal(libc::SIGPIPE, handler) != libc::SIG_ERR);
+                if handler == libc::SIG_IGN {
+                    // FIXME: Only do this with `#[unix_sigpipe = "sig_ign"]`, not by default?
+                    // Implements https://github.com/rust-lang/rust/issues/62569#issuecomment-1961586025
+                    use crate::mem;
+                    use crate::ptr;
+                    let current = {
+                        let mut current: libc::sigaction = mem::zeroed();
+                        libc::sigaction(libc::SIGPIPE, ptr::null(), &mut current);
+                        current.sa_sigaction
+                    };
+                    if current != libc::SIG_IGN {
+                        extern "C" fn _rustc_sigpipe_sigaction_noop(_: libc::c_int) {}
+                        let mut new: libc::sigaction = mem::zeroed();
+                        new.sa_sigaction = _rustc_sigpipe_sigaction_noop as libc::sighandler_t;
+                        new.sa_flags = libc::SA_RESTART;
+                        libc::sigaction(libc::SIGPIPE, &new, ptr::null_mut());
+                    }
+                } else {
+                    rtassert!(signal(libc::SIGPIPE, handler) != libc::SIG_ERR);
+                }
                 #[cfg(target_os = "hurd")]
                 {
                     rtassert!(signal(libc::SIGLOST, handler) != libc::SIG_ERR);
