@@ -1,7 +1,4 @@
-# only-linux
-#
-# This test ensures that `panic=abort` code (without `C-unwind`, that is) should not have any
-# unwinding related `.eh_frame` sections emitted.
+# only-unix
 
 include ../tools.mk
 
