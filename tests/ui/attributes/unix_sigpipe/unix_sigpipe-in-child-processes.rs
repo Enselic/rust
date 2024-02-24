@@ -4,7 +4,7 @@
 //@ ignore-horizon
 
 // Checks the signal disposition of `SIGPIPE` in child processes. Without any
-// `unix_sigpipe`` attribute, `SIG_IGN` is the default. But there is a
+// `unix_sigpipe` attribute, `SIG_IGN` is the default. But there is a
 // difference in how `SIGPIPE` is treated in child processes with and without
 // the attribute. Search for `unix_sigpipe_attr_specified()` in the code base to
 // learn more.
@@ -14,10 +14,17 @@
 #[cfg_attr(sig_dfl, unix_sigpipe = "sig_dfl")]
 #[cfg_attr(sig_ign, unix_sigpipe = "sig_ign")]
 fn main() {
-    #[cfg(any(default, sig_ign))]
-    let expected = "SIG_IGN";
+    // By default, we get SIG_IGN but the child gets SIG_DFL.
+    #[cfg(default)]
+    let expected = "SIG_DFL";
+
+    // With #[unix_sigpipe = "sig_dfl"] we get SIG_DFL and the child does too.
     #[cfg(sig_dfl)]
     let expected = "SIG_DFL";
+
+    // With #[unix_sigpipe = "sig_ign"] we get SIG_IGN and the child does too.
+    #[cfg(sig_ign)]
+    let expected = "SIG_IGN";
 
     assert!(
         std::process::Command::new("/home/martin/src/rust/assert-sigpipe-disposition")
