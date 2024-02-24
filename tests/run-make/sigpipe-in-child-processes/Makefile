@@ -9,5 +9,5 @@ all:
 	$(RUSTC) assert-sigpipe-disposition.rs -o $(TMPDIR)/assert-sigpipe-disposition; \
 	for revision in default sig_dfl sig_ign; do \
 		$(RUSTC) main.rs --cfg $$revision -o $(TMPDIR)/main.$$revision; \
-		$(TMPDIR)/main.$$revision $(TMPDIR)/assert-sigpipe-disposition; \
+		$(TMPDIR)/main.$$revision $(TMPDIR)/assert-sigpipe-disposition || exit 1; \
 	done
