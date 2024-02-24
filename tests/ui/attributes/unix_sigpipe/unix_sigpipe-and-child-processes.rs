@@ -34,10 +34,13 @@ fn main() {
     #[cfg(sig_dfl)]
     let (we_expect, child_expects) = (SignalHandler::Default, "SIG_DFL");
 
-    // With #[unix_sigpipe = "sig_ign"] we get SIG_IGN and the child does too
-    // without any special code running before exec.
+    // With #[unix_sigpipe = "sig_ign"] we get SIG_IGN but the child gets
+    // SIG_DFL. This is because we have installed a custom handler
+    // _rustc_sigpipe_sigaction_noop, and that handler function only exists in
+    // our parent process, and the OS sorts that out by resetting SIGPIPE to
+    // SIG_DFL in the child.
     #[cfg(sig_ign)]
-    let (we_expect, child_expects) = (SignalHandler::Ignore, "SIG_IGN");
+    let (we_expect, child_expects) = (SignalHandler::Ignore, "SIG_DFL");
 
     // With #[unix_sigpipe = "inherit"] we get SIG_DFL and the child does too
     // without any special code running before exec.
