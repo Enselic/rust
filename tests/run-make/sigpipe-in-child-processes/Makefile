@@ -1,7 +1,9 @@
+# ignore-cross-compile because we run the compiled code
 # only-unix
 
 include ../tools.mk
 
 all:
-	$(RUSTC) foo.rs --crate-type=lib --emit=obj=$(TMPDIR)/foo.o -Cpanic=abort --edition 2021 -Z validate-mir
-	objdump --dwarf=frames $(TMPDIR)/foo.o | $(CGREP) -v 'DW_CFA'
+	$(RUSTC) main.rs -o $(TMPDIR)/main
+	$(RUSTC) assert-sigpipe-disposition.rs -o $(TMPDIR)/assert-sigpipe-disposition
+	$(TMPDIR)/main $(TMPDIR)/assert-sigpipe-disposition
