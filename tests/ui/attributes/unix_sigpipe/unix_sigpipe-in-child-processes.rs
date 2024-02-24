@@ -12,7 +12,6 @@
 
 #![feature(rustc_private)]
 #![allow(dead_code)]
-
 #![cfg_attr(any(sig_dfl, sig_ign), feature(unix_sigpipe))]
 
 mod sigpipe_utils {
@@ -53,9 +52,7 @@ mod sigpipe_utils {
 #[cfg_attr(sig_dfl, unix_sigpipe = "sig_dfl")]
 #[cfg_attr(sig_ign, unix_sigpipe = "sig_ign")]
 fn main() {
-    let mut args = std::env::args();
-    let me = args.next().unwrap();
-    let is_child = args.next().is_some();
+    let is_child = std::env::args().nth(1).is_some();
 
     if is_child {
         #[cfg(any(default, sig_ign))]
@@ -64,6 +61,6 @@ fn main() {
         let expected = sigpipe_utils::SignalHandler::Default;
         sigpipe_utils::assert_sigpipe_handler(expected);
     } else {
-        assert!(std::process::Command::new(&me).arg("child").status().unwrap().success());
+        assert!(std::process::Command::new("&me").arg("child").status().unwrap().success());
     }
 }
