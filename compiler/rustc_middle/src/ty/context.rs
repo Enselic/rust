@@ -814,6 +814,7 @@ impl<'tcx> TyCtxt<'tcx> {
             lifetimes: common_lifetimes,
             consts: common_consts,
             untracked,
+            #[allow(large_assignments)] // moving 62872 bytes
             query_system,
             query_kinds,
             ty_rcache: Default::default(),
