@@ -29,9 +29,9 @@ pub fn provide(providers: &mut Providers) {
             // are compiling tests (with `--test`). If the user wants to adjust
             // `#![move_size_limit]`, then `#![feature(large_assignments)]` is
             // needed.
-            tcx.sess.opts.unstable_opts.move_size_limit.unwrap_or(
-                if tcx.sess.is_nightly_build() && !tcx.sess.is_test_crate() { 4096 } else { 0 },
-            ),
+            tcx.sess.opts.unstable_opts.move_size_limit.unwrap_or({
+                if tcx.sess.is_nightly_build() && !tcx.sess.is_test_crate() { 4096 } else { 0 }
+            }),
         ),
         type_length_limit: get_limit(
             tcx.hir().krate_attrs(),
