@@ -662,7 +662,6 @@ pub fn create_global_ctxt<'tcx>(
 
     sess.time("setup_global_ctxt", || {
         gcx_cell.get_or_init(move || {
-            #[allow(large_assignments)]
             TyCtxt::create_global_ctxt(
                 sess,
                 crate_types,

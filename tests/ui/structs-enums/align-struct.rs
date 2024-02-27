@@ -1,5 +1,5 @@
 //@ run-pass
-#![allow(dead_code, unused_allocation, large_assignments)]
+#![allow(dead_code, unused_allocation)]
 
 use std::mem;
 

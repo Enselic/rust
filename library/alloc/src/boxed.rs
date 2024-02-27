@@ -838,7 +838,6 @@ impl<T, A: Allocator> Box<mem::MaybeUninit<T>, A> {
     ///
     /// ```
     /// #![feature(new_uninit)]
-    /// #![allow(large_assignments)]
     ///
     /// let big_box = Box::<[usize; 1024]>::new_uninit();
     ///

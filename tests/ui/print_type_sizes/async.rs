@@ -3,7 +3,7 @@
 //@ build-pass
 //@ ignore-pass
 
-#![allow(dropping_copy_types, large_assignments)]
+#![allow(dropping_copy_types)]
 
 async fn wait() {}
 

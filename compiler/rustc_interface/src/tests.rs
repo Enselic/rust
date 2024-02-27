@@ -1,4 +1,4 @@
-#![allow(rustc::bad_opt_access, large_assignments)]
+#![allow(rustc::bad_opt_access)]
 use crate::interface::parse_cfg;
 use rustc_data_structures::profiling::TimePassesFormat;
 use rustc_errors::{emitter::HumanReadableErrorType, registry, ColorConfig};

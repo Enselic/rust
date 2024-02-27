@@ -1,5 +1,3 @@
-#![allow(large_assignments)]
-
 use test::black_box;
 use test::Bencher;
 
