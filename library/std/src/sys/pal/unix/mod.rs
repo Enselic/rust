@@ -207,8 +207,9 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
                         current.sa_sigaction
                     };
                     if current != libc::SIG_IGN {
+                        extern "C" fn _rustc_sigpipe_sigaction_noop(_: libc::c_int) {}
                         let mut new: libc::sigaction = mem::zeroed();
-                        new.sa_sigaction = _rustc_sigaction_noop as libc::sighandler_t;
+                        new.sa_sigaction = _rustc_sigpipe_sigaction_noop as libc::sighandler_t;
                         new.sa_flags = libc::SA_RESTART;
                         libc::sigaction(libc::SIGPIPE, &new, ptr::null_mut());
                     }
@@ -243,14 +244,6 @@ static UNIX_SIGPIPE_ATTR_SPECIFIED: crate::sync::atomic::AtomicBool =
 pub(crate) fn unix_sigpipe_attr_specified() -> bool {
     UNIX_SIGPIPE_ATTR_SPECIFIED.load(crate::sync::atomic::Ordering::Relaxed)
 }
-
-#[cfg(not(any(
-    target_os = "espidf",
-    target_os = "emscripten",
-    target_os = "fuchsia",
-    target_os = "horizon",
-)))]
-extern "C" fn _rustc_sigaction_noop(_: libc::c_int) {}
 
 // SAFETY: must be called only once during runtime cleanup.
 // NOTE: this is not guaranteed to run, for example when the program aborts.
