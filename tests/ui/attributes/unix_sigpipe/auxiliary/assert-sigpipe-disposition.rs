@@ -1,3 +1,5 @@
+#![crate_type = "bin"]
+
 #![feature(start, rustc_private)]
 
 extern crate libc;
