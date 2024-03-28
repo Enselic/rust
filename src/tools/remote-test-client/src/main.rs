@@ -189,6 +189,7 @@ fn start_qemu_emulator(target: &str, rootfs: &Path, server: &Path, tmpdir: &Path
                 .arg("user,id=net0,hostfwd=tcp::12345-:12345")
                 .arg("-device")
                 .arg("virtio-net-device,netdev=net0,mac=00:00:00:00:00:00");
+            eprintln!("NORDH {cmd:?}");
             t!(cmd.spawn());
         }
         "aarch64-unknown-linux-gnu" => {
