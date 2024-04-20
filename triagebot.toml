@@ -185,6 +185,7 @@ trigger_files = [
     "library/core",
     "library/panic_abort",
     "library/panic_unwind",
+    "library/sigpipe_impl",
     "library/std",
     "library/stdarch",
     "library/term",
@@ -1015,6 +1016,7 @@ project-exploit-mitigations = [
 "/library/panic_abort" =                                 ["libs"]
 "/library/panic_unwind" =                                ["libs"]
 "/library/proc_macro" =                                  ["@petrochenkov"]
+"/library/sigpipe_impl" =                                ["libs"]
 "/library/std" =                                         ["libs", "@ChrisDenton"]
 "/library/std/src/sys/pal/windows" =                     ["@ChrisDenton"]
 "/library/stdarch" =                                     ["libs"]

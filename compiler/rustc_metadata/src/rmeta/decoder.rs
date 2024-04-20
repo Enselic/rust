@@ -1645,6 +1645,7 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
                                     "panic_abort",
                                     "panic_unwind",
                                     "profiler_builtins",
+                                    "sigpipe_impl",
                                     "rtstartup",
                                     "rustc-std-workspace-core",
                                     "rustc-std-workspace-alloc",

@@ -760,6 +760,7 @@ impl<'a, 'tcx> CrateLoader<'a, 'tcx> {
             PanicStrategy::Unwind => sym::panic_unwind,
             PanicStrategy::Abort => sym::panic_abort,
         };
+        // TODO: sigpipe_impl
         info!("panic runtime not found -- loading {}", name);
 
         let Some(cnum) = self.resolve_crate(name, DUMMY_SP, CrateDepKind::Implicit) else {
@@ -1033,6 +1034,7 @@ impl<'a, 'tcx> CrateLoader<'a, 'tcx> {
     pub fn postprocess(&mut self, krate: &ast::Crate) {
         self.inject_forced_externs();
         self.inject_profiler_runtime(krate);
+        self.inject_sigpipe_runtime(krate);
         self.inject_allocator_crate(krate);
         self.inject_panic_runtime(krate);
 

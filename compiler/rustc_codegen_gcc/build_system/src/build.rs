@@ -103,6 +103,7 @@ pub fn build_sysroot(env: &HashMap<String, String>, config: &ConfigInfo) -> Resu
 
     // Builds libs
     let mut rustflags = env.get("RUSTFLAGS").cloned().unwrap_or_default();
+
     if config.sysroot_panic_abort {
         rustflags.push_str(" -Cpanic=abort -Zpanic-abort-tests");
     }
