@@ -10,10 +10,20 @@ Note: The ui for this feature was previously an attribute named `#[unix_sigpipe 
 
 ---
 
-The `-Zon-broken-pipe=...` compiler flag  can be used to specify how libstd shall setup `SIGPIPE` on Unix platforms before invoking `fn main()`. This flag is ignored on non-Unix targets. There are three variants:
-* `-Zon-broken-pipe=inherit`
-* `-Zon-broken-pipe=kill`
+The `-Zon-broken-pipe=...` compiler flag can be used to specify how libstd shall setup `SIGPIPE` on Unix platforms before invoking `fn main()`. This flag is ignored on non-Unix targets.
+
+The flag can be used with three different values or be omitted entirely:
+
+| Flag                       | `SIGPIPE` in this process | `SIGPIPE` action before exec |
+| `-Zon-broken-pipe=kill`    | 
+
+There flag are three variants:
+* 
+* 
 * `-Zon-broken-pipe=error`
+But also a fourth setting:
+* Not used
+
 
 ## `-Zon-broken-pipe=inherit`
 
@@ -63,6 +73,10 @@ thread 'main' panicked at library/std/src/io/stdio.rs:1118:9:
 failed printing to stdout: Broken pipe (os error 32)
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
+
+## Not used
+
+
 
 ### Note on child processes
 
