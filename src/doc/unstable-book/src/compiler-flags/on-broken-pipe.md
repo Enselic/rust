@@ -82,9 +82,3 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 Leave `SIGPIPE` untouched before entering `fn main()`. Unless the parent process has changed the default `SIGPIPE` handler from `SIG_DFL` to something else, this will behave the same as `-Zon-broken-pipe=kill`.
 
 When spawning child processes, `SIGPIPE` will not be touched. This normally means child processes inherit `SIG_DFL` for `SIGPIPE`.
-
-### Note on child processes
-
-When spawning child processes, the legacy Rust behavior if `-Zon-broken-pipe=...` is not specified is to reset `SIGPIPE` to `SIG_DFL` first.
-
-If `-Zon-broken-pipe=...` is specified, no matter what its value is, the signal disposition of `SIGPIPE` is no longer reset. This means that the child inherits the parent's `SIGPIPE` behavior.
