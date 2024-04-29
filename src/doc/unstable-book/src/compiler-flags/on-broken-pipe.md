@@ -32,7 +32,7 @@ When spawning child processes, `SIGPIPE` will be set to `SIG_DFL` before doing t
 
 ## `-Zon-broken-pipe=kill`
 
-Set the `SIGPIPE` handler to `SIG_DFL`. This will result in your program getting killed if it tries to write to a closed pipe. This is normally what you want if your program produces textual output.
+Set the `SIGPIPE` handler to `SIG_DFL` before invoking `fn main()`. This will result in your program getting killed if it tries to write to a closed pipe. This is normally what you want if your program produces textual output.
 
 When spawning child processes, `SIGPIPE` will not be touched. This normally means child processes inherit `SIG_DFL` for `SIGPIPE`.
 
