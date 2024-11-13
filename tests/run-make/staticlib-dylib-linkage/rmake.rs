@@ -19,12 +19,12 @@ fn main() {
         .print("native-static-libs")
         .arg("-Zstaticlib-allow-rdylib-deps")
         .run()
-        .assert_stderr_contains("note: native-static-libs: ")
-        .stderr_utf8();
-    let re = regex::Regex::new(r#"note: native-static-libs:\s*(.+)"#).unwrap();
+        .assert_stdout_contains("native-static-libs: ")
+        .stdout_utf8();
+    let re = regex::Regex::new(r#"native-static-libs:\s*(.+)"#).unwrap();
     let libs = re.find(&libs).unwrap().as_str().trim();
     // remove the note
-    let (_, native_link_args) = libs.split_once("note: native-static-libs: ").unwrap();
+    let (_, native_link_args) = libs.split_once("native-static-libs: ").unwrap();
     // divide the command-line arguments in a vec
     let mut native_link_args = native_link_args.split(' ').collect::<Vec<&str>>();
     if is_msvc() {

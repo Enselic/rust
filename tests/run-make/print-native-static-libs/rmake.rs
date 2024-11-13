@@ -28,8 +28,8 @@ fn main() {
         .run();
 
     let mut found_note = false;
-    for l in output.stderr_utf8().lines() {
-        let Some(args) = l.strip_prefix("note: native-static-libs:") else {
+    for l in output.stdout_utf8().lines() {
+        let Some(args) = l.strip_prefix("native-static-libs:") else {
             continue;
         };
         assert!(!found_note);
