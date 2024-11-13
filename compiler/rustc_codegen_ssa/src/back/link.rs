@@ -1629,7 +1629,7 @@ fn print_native_static_libs(
                 sess.dcx().emit_note(errors::StaticLibraryNativeArtifacts);
                 // Prefix for greppability
                 // Note: This must not be translated as tools are allowed to depend on this exact string.
-                sess.dcx().note(format!("native-static-libs: {}", lib_args.join(" ")));
+                println!("native-static-libs: {}", lib_args.join(" "));
             }
         }
     }
