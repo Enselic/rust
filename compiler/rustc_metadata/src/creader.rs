@@ -698,11 +698,14 @@ impl<'a, 'tcx> CrateLoader<'a, 'tcx> {
         Ok(unsafe { *load_symbol_from_dylib::<*const &[ProcMacro]>(path, &sym_name)? })
     }
 
+    fn only_rlib(&mut self) -> bool {
+        self.tcx.crate_types().iter().all(|ct| *ct == CrateType::Rlib)
+    }
+
     fn inject_panic_runtime(&mut self, krate: &ast::Crate) {
         // If we're only compiling an rlib, then there's no need to select a
         // panic runtime, so we just skip this section entirely.
-        let only_rlib = self.tcx.crate_types().iter().all(|ct| *ct == CrateType::Rlib);
-        if only_rlib {
+        if self.only_rlib() {
             info!("panic runtime injection skipped, only generating rlib");
             return;
         }
@@ -777,6 +780,13 @@ impl<'a, 'tcx> CrateLoader<'a, 'tcx> {
     }
 
     fn inject_profiler_runtime(&mut self, krate: &ast::Crate) {
+        // If we're only compiling an rlib, then there's no need to select a
+        // profiler runtime, so we just skip this section entirely.
+        if self.only_rlib() {
+            info!("profiler runtime injection skipped, only generating rlib");
+            return;
+        }
+
         if self.sess.opts.unstable_opts.no_profiler_runtime
             || !(self.sess.instrument_coverage() || self.sess.opts.cg.profile_generate.enabled())
         {
