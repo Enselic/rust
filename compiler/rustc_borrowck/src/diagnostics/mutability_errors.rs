@@ -1205,7 +1205,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 {
                     err.multipart_suggestion_verbose(
                         format!(
-                            "consider changing this to be a mutable {pointer_desc}{}",
+                            "consider nordh changing this to be a mutable {pointer_desc}{}",
                             if is_trait_sig {
                                 " in the `impl` method and the `trait` definition"
                             } else {
