@@ -3,5 +3,5 @@
 fn main() {
     let val = 2;
     let ptr = &raw const val;
-    unsafe { *ptr = 3; }
+    unsafe { *ptr = 3; } //~ ERROR cannot assign to `*ptr`, which is behind a `*const` pointer
 }
