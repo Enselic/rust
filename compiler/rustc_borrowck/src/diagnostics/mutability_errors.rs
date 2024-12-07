@@ -1205,12 +1205,17 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     None
                 };
 
-                if let Some(hir_id) = hir_id
+                let is_raw = if let Some(hir_id) = hir_id
                     && let hir::Node::LetStmt(local) = self.infcx.tcx.hir_node(hir_id)
                     && let Some(expr) = local.init
                     && let hir::ExprKind::AddrOf(kind, _, _) = expr.kind
                     && kind != rustc_hir::BorrowKind::Raw
                 {
+                    true
+                } else {
+                    false
+                };
+                if !is_raw {
                     let mut sugg = vec![(err_help_span, suggested_code)];
                     if let Some(s) = additional {
                         sugg.push(s);
