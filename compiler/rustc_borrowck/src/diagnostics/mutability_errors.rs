@@ -1196,26 +1196,44 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         match label {
             Some((true, err_help_span, suggested_code, additional)) => {
-                let mut sugg = vec![(err_help_span, suggested_code)];
-                if let Some(s) = additional {
-                    sugg.push(s);
-                }
-
-                if sugg.iter().all(|(span, _)| !self.infcx.tcx.sess.source_map().is_imported(*span))
+                let def_id = self.body.source.def_id();
+                let hir_id = if let Some(local_def_id) = def_id.as_local()
+                    && let Some(body) = self.infcx.tcx.hir().maybe_body_owned_by(local_def_id)
                 {
-                    err.multipart_suggestion_verbose(
-                        format!(
-                            "consider nordh changing this to be a mutable {pointer_desc}{}",
-                            if is_trait_sig {
-                                " in the `impl` method and the `trait` definition"
-                            } else {
-                                ""
-                            }
-                        ),
-                        sugg,
-                        Applicability::MachineApplicable,
-                    );
-                }
+                    BindingFinder { span: err_help_span }.visit_body(&body).break_value()
+                } else {
+                    None
+                };
+
+                if let Some(hir_id) = hir_id
+                    && let hir::Node::LetStmt(local) = self.infcx.tcx.hir_node(hir_id)
+                    && let Some(expr) = local.init
+                    && let hir::ExprKind::AddrOf(kind, _, _) = expr.kind
+                    && kind != rustc_hir::BorrowKind::Raw
+                {
+                    let mut sugg = vec![(err_help_span, suggested_code)];
+                    if let Some(s) = additional {
+                        sugg.push(s);
+                    }
+
+                    if sugg
+                        .iter()
+                        .all(|(span, _)| !self.infcx.tcx.sess.source_map().is_imported(*span))
+                    {
+                        err.multipart_suggestion_verbose(
+                            format!(
+                                "consider nordh changing this to be a mutable {pointer_desc}{}",
+                                if is_trait_sig {
+                                    " in the `impl` method and the `trait` definition"
+                                } else {
+                                    ""
+                                }
+                            ),
+                            sugg,
+                            Applicability::MachineApplicable,
+                        );
+                    }
+                };
             }
             Some((false, err_label_span, message, _)) => {
                 let def_id = self.body.source.def_id();
