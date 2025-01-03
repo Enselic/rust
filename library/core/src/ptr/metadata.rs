@@ -61,7 +61,7 @@ pub trait Pointee {
     // NOTE: Keep trait bounds in `static_assert_expected_bounds_for_metadata`
     // in `library/core/src/ptr/metadata.rs`
     // in sync with those here:
-    type Metadata: fmt::Debug + Copy + Send + Sync + Ord + Hash + Unpin + Freeze;
+    type Metadata: fmt::Debug + Copy + Send + Sync + Ord + Hash + Unpin + Freeze + 'static;
 }
 
 /// Pointers to types implementing this trait alias are “thin”.
