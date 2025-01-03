@@ -1,0 +1,6 @@
+*mut i32: $HEX
+*const i32: $HEX
+*mut [i32]: $HEX
+*const [i32]: $HEX
+*mut dyn Display: $HEX
+*const dyn Display: $HEX
