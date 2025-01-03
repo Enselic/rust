@@ -2770,11 +2770,10 @@ impl<T: ?Sized> Pointer for *const T {
         if core::mem::size_of::<<T as core::ptr::Pointee>::Metadata>() == 0 {
             pointer_fmt_inner(self.expose_provenance(), f)
         } else {
-            f.write_str("Pointer { addr: ")?;
-            pointer_fmt_inner(self.expose_provenance(), f)?;
-            f.write_str(", metadata: ")?;
-            Debug::fmt(&core::ptr::metadata(*self), f)?;
-            f.write_str(" }")
+            f.debug_struct("Pointer")
+                .field_with("addr", |f| pointer_fmt_inner(self.expose_provenance(), f))
+                .field("metadata", &core::ptr::metadata(*self))
+                .finish()
         }
     }
 }
