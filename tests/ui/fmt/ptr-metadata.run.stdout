@@ -1,6 +1,6 @@
 *mut i32: $HEX
 *const i32: $HEX
-*mut [i32]: $HEX
-*const [i32]: $HEX
-*mut dyn Display: $HEX
-*const dyn Display: $HEX
+*mut [i32]: Pointer { addr: $HEX, metadata: 3 }
+*const [i32]: Pointer { addr: $HEX, metadata: 3 }
+*mut dyn Display: Pointer { addr: $HEX, metadata: DynMetadata($HEX) }
+*const dyn Display: Pointer { addr: $HEX, metadata: DynMetadata($HEX) }
