@@ -1,0 +1,26 @@
+
+thread 'main' panicked at $DIR/panic-main.rs:27:5:
+moop
+stack backtrace:
+   0:     0x55582b9644e6 - <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt::h00e2d72cd9743920
+   1:     0x55582b992e43 - core::fmt::write::h764ca229a1173cda
+   2:     0x55582b96fb1f - std::io::Write::write_fmt::h17858ed1c889e0d9
+   3:     0x55582b964bb1 - std::panicking::default_hook::{{closure}}::h56b0e803131e1019
+   4:     0x55582b964a5d - std::panicking::default_hook::hb9e5e84535617bc0
+   5:     0x55582b96521e - std::panicking::rust_panic_with_hook::hbebe0ed68cc4b4c2
+   6:     0x55582b9650ec - std::panicking::begin_panic::{{closure}}::h19f56c3294e855b0
+   7:     0x55582b964709 - std::sys::backtrace::__rust_end_short_backtrace::h22c79babf3c48d57
+   8:     0x55582b95439f - std::panicking::begin_panic::hff65da8d5aff3222
+   9:     0x55582b955a3a - panic_main::main::h6da456ec3ac14e23
+  10:     0x55582b955a03 - core::ops::function::FnOnce::call_once::h7c623be6ad8de15e
+  11:     0x55582b9559a6 - std::sys::backtrace::__rust_begin_short_backtrace::h40aca2a4a5309b67
+  12:     0x55582b955989 - std::rt::lang_start::{{closure}}::he13031eb6ef060ff
+  13:     0x55582b96ebe5 - std::rt::lang_start_internal::h34e2ceabe64b6525
+  14:     0x55582b955971 - std::rt::lang_start::hb9663c87d7ca95ae
+  15:     0x55582b955a55 - main
+  16:     0x7f8b26ac11ca - __libc_start_call_main
+                               at ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+  17:     0x7f8b26ac128b - __libc_start_main_impl
+                               at ./csu/../csu/libc-start.c:360:3
+  18:     0x55582b955885 - _start
+  19:                0x0 - <unknown>

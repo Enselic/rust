@@ -1,0 +1,14 @@
+
+thread 'main' panicked at $DIR/panic-main.rs:27:5:
+moop
+stack backtrace:
+   0:     0x564a023a94f6 - <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt::h00e2d72cd9743920
+   1:     0x564a023d7a93 - core::fmt::write::h764ca229a1173cda
+   2:     0x564a023b498f - std::io::Write::write_fmt::h17858ed1c889e0d9
+   3:     0x564a023a9a22 - std::panicking::default_hook::{{closure}}::h56b0e803131e1019
+   4:     0x564a023a98ce - std::panicking::default_hook::hb9e5e84535617bc0
+   5:     0x564a023aa08e - std::panicking::rust_panic_with_hook::hbebe0ed68cc4b4c2
+   6:     0x564a023a9f5c - std::panicking::begin_panic::{{closure}}::h19f56c3294e855b0
+   7:     0x564a023a9719 - std::sys::backtrace::__rust_end_short_backtrace::h22c79babf3c48d57
+   8:     0x564a0239939f - std::panicking::begin_panic::hff65da8d5aff3222
+   9:     0x564a0239aa4a - panic_main::main::h6da456ec3ac14e23

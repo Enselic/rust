@@ -1,0 +1,4 @@
+
+thread 'main' panicked at $DIR/panic-main.rs:27:5:
+moop
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
