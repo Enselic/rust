@@ -20,7 +20,7 @@
 
 //@ no-prefer-dynamic
 //@ run-fail
-//@ check-run-results
+//@ error-pattern:moop
 //@ needs-subprocess
 
 fn main() {
