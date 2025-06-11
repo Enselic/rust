@@ -1,0 +1,13 @@
+<<<<<<< HEAD:tests/ui/panics/issue-47429-short-backtraces.run.stderr
+
+thread 'main' panicked at $DIR/issue-47429-short-backtraces.rs:24:5:
+||||||| 4a216a25d14 (Share inline(never) generics across crates):tests/ui/panics/issue-47429-short-backtraces.run.stderr
+thread 'main' panicked at $DIR/issue-47429-short-backtraces.rs:24:5:
+=======
+thread 'main' panicked at $DIR/issue-47429-short-backtraces.rs:23:5:
+>>>>>>> parent of 4a216a25d14 (Share inline(never) generics across crates):tests/ui/panics/issue-47429-short-backtraces.legacy.run.stderr
+explicit panic
+stack backtrace:
+   0: std::panicking::begin_panic
+   1: issue_47429_short_backtraces::main
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.

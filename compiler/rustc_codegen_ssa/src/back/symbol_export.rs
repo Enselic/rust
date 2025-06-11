@@ -308,7 +308,7 @@ fn exported_symbols_provider_local<'tcx>(
         ));
     }
 
-    if tcx.local_crate_exports_generics() {
+    if tcx.sess.opts.share_generics() && tcx.local_crate_exports_generics() {
         use rustc_middle::mir::mono::{Linkage, MonoItem, Visibility};
         use rustc_middle::ty::InstanceKind;
 

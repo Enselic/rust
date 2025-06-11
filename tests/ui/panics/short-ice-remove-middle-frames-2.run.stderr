@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 
 thread 'main' panicked at $DIR/short-ice-remove-middle-frames-2.rs:62:5:
+||||||| 4a216a25d14 (Share inline(never) generics across crates)
+thread 'main' panicked at $DIR/short-ice-remove-middle-frames-2.rs:61:5:
+=======
+thread 'main' panicked at $DIR/short-ice-remove-middle-frames-2.rs:56:5:
+>>>>>>> parent of 4a216a25d14 (Share inline(never) generics across crates)
 debug!!!
 stack backtrace:
    0: std::panicking::begin_panic

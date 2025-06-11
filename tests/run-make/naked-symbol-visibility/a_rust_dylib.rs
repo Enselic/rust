@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 #![feature(linkage)]
+||||||| 4a216a25d14 (Share inline(never) generics across crates)
+#![feature(naked_functions, linkage)]
+=======
+#![feature(naked_functions, asm_const, linkage)]
+>>>>>>> parent of 4a216a25d14 (Share inline(never) generics across crates)
 #![crate_type = "dylib"]
 
 use std::arch::naked_asm;
@@ -38,8 +44,16 @@ pub extern "C" fn public_vanilla() -> u32 {
 
 #[unsafe(naked)]
 #[no_mangle]
+<<<<<<< HEAD
 pub extern "C" fn public_naked_nongeneric() -> u32 {
     naked_asm!("mov rax, 42", "ret")
+||||||| 4a216a25d14 (Share inline(never) generics across crates)
+pub extern "C" fn public_naked_nongeneric() -> u32 {
+    unsafe { naked_asm!("mov rax, 42", "ret") }
+=======
+pub extern "C" fn public_naked() -> u32 {
+    unsafe { naked_asm!("mov rax, 42", "ret") }
+>>>>>>> parent of 4a216a25d14 (Share inline(never) generics across crates)
 }
 
 pub extern "C" fn public_vanilla_generic<T: TraitWithConst>() -> u32 {

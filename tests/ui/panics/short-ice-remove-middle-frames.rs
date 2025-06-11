@@ -9,6 +9,7 @@
 //@ ignore-fuchsia Backtraces not symbolized
 //@ ignore-msvc the `__rust_{begin,end}_short_backtrace` symbols aren't reliable.
 
+<<<<<<< HEAD
 // This is needed to avoid test output differences across std being built with v0 symbols vs legacy
 // symbols.
 //@ normalize-stderr: "begin_panic::<&str>" -> "begin_panic"
@@ -16,6 +17,14 @@
 //@ normalize-stderr: " begin_panic<&str>" -> " std::panicking::begin_panic"
 // And this is for differences between std with and without debuginfo.
 //@ normalize-stderr: "\n +at [^\n]+" -> ""
+||||||| 4a216a25d14 (Share inline(never) generics across crates)
+// This is needed to avoid test output differences across std being built with v0 symbols vs legacy
+// symbols.
+//@ normalize-stderr-test: "begin_panic::<&str>" -> "begin_panic"
+// And this is for differences between std with and without debuginfo.
+//@ normalize-stderr-test: "\n +at [^\n]+" -> ""
+=======
+>>>>>>> parent of 4a216a25d14 (Share inline(never) generics across crates)
 
 #[inline(never)]
 fn __rust_begin_short_backtrace<T, F: FnOnce() -> T>(f: F) -> T {
