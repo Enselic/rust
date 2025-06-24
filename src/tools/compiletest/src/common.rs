@@ -124,7 +124,7 @@ enum RunFailMode {
 pub enum FailMode {
     Check,
     Build,
-    Run,
+    Run(RunFailMode),
 }
 
 string_enum! {
