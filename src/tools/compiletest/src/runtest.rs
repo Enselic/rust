@@ -296,6 +296,10 @@ impl<'test> TestCx<'test> {
         }
     }
 
+    fn must_have_exit_code(&self) -> bool {
+        self.props.fail_mode == Some(FailMode::Run(RunFailMode::WithExitCode))
+    }
+
     fn should_compile_successfully(&self, pm: Option<PassMode>) -> bool {
         match self.config.mode {
             RustdocJs => true,

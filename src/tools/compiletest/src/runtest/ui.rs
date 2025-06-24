@@ -157,8 +157,12 @@ impl TestCx<'_> {
                 if detailed_exit_status != DetailedExitStatus::ExitWithSuccess {
                     self.fatal_proc_rec("test run failed!", &proc_res);
                 }
-            } else if detailed_exit_status != DetailedExitStatus::ExitWithFailure {
-                self.fatal_proc_rec("test run succeeded or was terminated by a signal!", &proc_res);
+            } else if self.must_have_exit_code() {
+                if detailed_exit_status != DetailedExitStatus::ExitWithFailure {
+                    self.fatal_proc_rec("test run succeeded or was terminated by a signal!", &proc_res);
+                    self.fatal_proc_rec("test run did not fail as expected!", &proc_res);
+                }
+            } {
             }
 
             self.get_output(&proc_res)
