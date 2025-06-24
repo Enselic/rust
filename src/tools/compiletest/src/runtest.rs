@@ -277,7 +277,7 @@ impl<'test> TestCx<'test> {
 
     fn should_run(&self, pm: Option<PassMode>) -> WillExecute {
         let test_should_run = match self.config.mode {
-            Ui if pm == Some(PassMode::Run) || self.props.fail_mode == Some(FailMode::Run) => true,
+            Ui if pm == Some(PassMode::Run) || matches!(self.props.fail_mode, Some(FailMode::Run(_))) => true,
             MirOpt if pm == Some(PassMode::Run) => true,
             Ui | MirOpt => false,
             mode => panic!("unimplemented for mode {:?}", mode),

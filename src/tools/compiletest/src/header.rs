@@ -9,6 +9,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 use semver::Version;
 use tracing::*;
 
+use crate::common::RunFailMode;
 use crate::common::{Config, Debugger, FailMode, Mode, PassMode};
 use crate::debuggers::{extract_cdb_version, extract_gdb_version};
 use crate::errors::ErrorKind;
@@ -655,7 +656,10 @@ impl TestProps {
             Some(FailMode::Build)
         } else if config.parse_name_directive(ln, "run-fail") {
             check_ui("run");
-            Some(FailMode::Run)
+            Some(FailMode::Run(RunFailMode::WithExitCode))
+        } else if config.parse_name_directive(ln, "run-fail-without-exit-code") {
+            check_ui("run");
+            Some(FailMode::Run(RunFailMode::WithoutExitCode))
         } else {
             None
         };
