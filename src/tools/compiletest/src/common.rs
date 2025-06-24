@@ -111,6 +111,16 @@ string_enum! {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+enum RunFailMode {
+    /// Running the program must exit with a non-zero exit code.
+    RequireNonZeroExitCode,
+    /// The running program must not exit with an exit code but be terminated by
+    /// something like a Unix signal (e.g. SIGABRT, SIGSEGV) or Windows
+    /// exception.
+    RequireNoExitCode,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub enum FailMode {
     Check,
     Build,
