@@ -140,7 +140,7 @@ impl TestCx<'_> {
                     &proc_res,
                 );
             }
-            #[derive(PartialEq)]
+            #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
             enum DetailedExitStatus {
                 ExitWithSuccess,
                 ExitWithFailure,
@@ -161,7 +161,7 @@ impl TestCx<'_> {
                 DetailedExitStatus::TerminatedBySignal
             };
             if actual_detailed_exit_status != expected_detailed_exit_status {
-                self.fatal_proc_rec("expected {expected_detailed_exit_status} but got {actual_detailed_exit_status}!", &proc_res);
+                self.fatal_proc_rec(&format!("expected {expected_detailed_exit_status:?} but got {actual_detailed_exit_status:?}!"), &proc_res);
             }
 
             self.get_output(&proc_res)
