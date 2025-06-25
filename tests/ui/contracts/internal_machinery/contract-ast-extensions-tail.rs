@@ -5,8 +5,8 @@
 //@ [unchk_fail_post] run-pass
 //@ [chk_pass] run-pass
 //
-//@ [chk_fail_pre] run-fail
-//@ [chk_fail_post] run-fail
+//@ [chk_fail_pre] run-fail-without-exit-code
+//@ [chk_fail_post] run-fail-without-exit-code
 //
 //@ [unchk_pass] compile-flags: -Zcontract-checks=no
 //@ [unchk_fail_pre] compile-flags: -Zcontract-checks=no

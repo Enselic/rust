@@ -140,12 +140,28 @@ impl TestCx<'_> {
                     &proc_res,
                 );
             }
-            if self.should_run_successfully(pm) {
-                if !proc_res.status.success() {
-                    self.fatal_proc_rec("test run failed!", &proc_res);
-                }
-            } else if proc_res.status.success() {
-                self.fatal_proc_rec("test run succeeded!", &proc_res);
+            #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+            enum DetailedExitStatus {
+                ExitWithSuccess,
+                ExitWithFailure,
+                TerminatedBySignal,
+            }
+            let actual_detailed_exit_status = if proc_res.status.success() {
+                DetailedExitStatus::ExitWithSuccess
+            } else if proc_res.status.code().is_some() {
+                DetailedExitStatus::ExitWithFailure
+            } else {
+                DetailedExitStatus::TerminatedBySignal
+            };
+            let expected_detailed_exit_status = if self.should_run_successfully(pm) {
+                DetailedExitStatus::ExitWithSuccess
+            } else if self.must_have_exit_code() {
+                DetailedExitStatus::ExitWithFailure
+            } else {
+                DetailedExitStatus::TerminatedBySignal
+            };
+            if actual_detailed_exit_status != expected_detailed_exit_status {
+                self.fatal_proc_rec(&format!("expected {expected_detailed_exit_status:?} but got {actual_detailed_exit_status:?}!"), &proc_res);
             }
 
             self.get_output(&proc_res)
