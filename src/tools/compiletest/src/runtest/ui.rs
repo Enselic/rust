@@ -6,8 +6,8 @@ use rustfix::{Filter, apply_suggestions, get_suggestions_from_json};
 use tracing::debug;
 
 use super::{
-    AllowUnused, Emit, FailMode, LinkToAux, PassMode, TargetLocation, TestCx, TestOutput,
-    Truncated, UI_FIXED, WillExecute,
+    AllowUnused, Emit, FailMode, LinkToAux, PassMode, RunFailMode, RunResult, TargetLocation,
+    TestCx, TestOutput, Truncated, UI_FIXED, WillExecute,
 };
 use crate::json;
 
@@ -140,12 +140,55 @@ impl TestCx<'_> {
                     &proc_res,
                 );
             }
+            let code = proc_res.status.code();
+            let run_result = proc_res.run_result();
             if self.should_run_successfully(pm) {
-                if !proc_res.status.success() {
-                    self.fatal_proc_rec("test run failed!", &proc_res);
+                if run_result != RunResult::Pass {
+                    self.fatal_proc_rec(
+                        &format!(
+                            "test did not exit with success! instead `{run_result}` (code={code:?})"
+                        ),
+                        &proc_res,
+                    );
                 }
-            } else if proc_res.status.success() {
-                self.fatal_proc_rec("test run succeeded!", &proc_res);
+            } else if self.props.fail_mode == Some(FailMode::Run(RunFailMode::Fail)) {
+                // If the test is marked as `run-fail` but do not support
+                // unwinding we allow it to crash, since a panic will trigger an
+                // abort (crash) instead of unwind (exit with code 101).
+                let crash_is_ok = !self.config.can_unwind();
+                if run_result != RunResult::Fail && !(crash_is_ok && run_result == RunResult::Crash)
+                {
+                    let extra_failure_msg = if crash_is_ok {
+                        &format!(
+                            " or crash (crash allowed since `{}` does not support unwinding)",
+                            self.config.target
+                        )
+                    } else {
+                        ""
+                    };
+                    self.fatal_proc_rec(
+                        &format!(
+                            "test did not exit with failure code 1..=127{extra_failure_msg}! instead `{run_result}` code={code:?}",
+                        ),
+                        &proc_res,
+                    );
+                }
+            } else if self.props.fail_mode == Some(FailMode::Run(RunFailMode::Crash)) {
+                if run_result != RunResult::Crash {
+                    self.fatal_proc_rec(
+                        &format!("test did not crash! instead `{run_result}` (code={code:?})"),
+                        &proc_res,
+                    );
+                }
+            } else if self.props.fail_mode == Some(FailMode::Run(RunFailMode::FailOrCrash)) {
+                if run_result != RunResult::Fail && run_result != RunResult::Crash {
+                    self.fatal_proc_rec(
+                        &format!("test did not exit with failure code 1..=127 or crash! instead `{run_result}` (code={code:?})"),
+                        &proc_res,
+                    );
+                }
+            } else {
+                unreachable!("run_ui_test() must not be called if the test should not run");
             }
 
             self.get_output(&proc_res)
