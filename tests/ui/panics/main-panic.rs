@@ -3,5 +3,8 @@
 //@ needs-subprocess
 
 fn main() {
-    panic!()
+    unsafe {
+        let null: *mut u32 = std::ptr::null_mut();
+        *null = 42;
+    }
 }
