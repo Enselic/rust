@@ -9,8 +9,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 use semver::Version;
 use tracing::*;
 
-use crate::common::RunFailMode;
-use crate::common::{Config, Debugger, FailMode, Mode, PassMode};
+use crate::common::{Config, Debugger, FailMode, Mode, PassMode, RunFailMode};
 use crate::debuggers::{extract_cdb_version, extract_gdb_version};
 use crate::errors::ErrorKind;
 use crate::executor::{CollectedTestDesc, ShouldPanic};
