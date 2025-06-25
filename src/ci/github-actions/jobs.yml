@@ -122,37 +122,18 @@ jobs:
 # These jobs automatically inherit envs.pr, to avoid repeating
 # it in each job definition.
 pr:
-  - name: mingw-check-1
-    <<: *job-linux-4c
-  - name: mingw-check-2
-    <<: *job-linux-4c
-  - name: mingw-check-tidy
-    continue_on_error: true
-    free_disk: false
+  # x86_64-msvc is split into two jobs to run tests in parallel.
+  - name: x86_64-msvc-1
     env:
-      # This submodule is expensive to checkout, and it should not be needed for
-      # tidy. This speeds up the PR CI job by ~1 minute.
-      SKIP_SUBMODULES: src/gcc
-    <<: *job-linux-4c
-  - name: x86_64-gnu-llvm-19
+      RUST_CONFIGURE_ARGS: --build=x86_64-pc-windows-msvc --enable-sanitizers --enable-profiler
+      SCRIPT: make ci-msvc-py
+    <<: *job-windows-25
+
+  - name: x86_64-msvc-2
     env:
-      ENABLE_GCC_CODEGEN: "1"
-      DOCKER_SCRIPT: x86_64-gnu-llvm.sh
-    <<: *job-linux-4c
-  - name: aarch64-gnu-llvm-19-1
-    env:
-      IMAGE: aarch64-gnu-llvm-19
-      DOCKER_SCRIPT: stage_2_test_set1.sh
-    <<: *job-aarch64-linux
-  - name: aarch64-gnu-llvm-19-2
-    env:
-      IMAGE: aarch64-gnu-llvm-19
-      DOCKER_SCRIPT: stage_2_test_set2.sh
-    <<: *job-aarch64-linux
-  - name: x86_64-gnu-tools
-    <<: *job-linux-4c
-  - name: x86_64-gnu-miri
-    <<: *job-linux-4c
+      RUST_CONFIGURE_ARGS: --build=x86_64-pc-windows-msvc --enable-sanitizers --enable-profiler
+      SCRIPT: make ci-msvc-ps1
+    <<: *job-windows-25
 
 # Jobs that run when you perform a try build (@bors try)
 # These jobs automatically inherit envs.try, to avoid repeating
