@@ -8,8 +8,8 @@
 //
 //@ [all_pass] run-pass
 //
-//@ [runtime_fail_pre] run-fail
-//@ [runtime_fail_post] run-fail
+//@ [runtime_fail_pre] run-fail-without-exit-code
+//@ [runtime_fail_post] run-fail-without-exit-code
 //
 //@ [all_pass] compile-flags: -Zcontract-checks=yes
 //@ [runtime_fail_pre] compile-flags: -Zcontract-checks=yes
