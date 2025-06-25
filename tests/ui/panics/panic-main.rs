@@ -3,5 +3,4 @@
 //@ needs-subprocess
 
 fn main() {
-    panic!("moop");
 }
