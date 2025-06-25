@@ -1,4 +1,4 @@
-//@ run-fail
+//@ run-fail-without-exit-code
 //@ exec-env:RUST_BACKTRACE=0
 //@ check-run-results
 //@ error-pattern: panic in a destructor during cleanup

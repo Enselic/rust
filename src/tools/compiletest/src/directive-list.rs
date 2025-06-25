@@ -242,6 +242,7 @@ const KNOWN_DIRECTIVE_NAMES: &[&str] = &[
     "remap-src-base",
     "revisions",
     "run-fail",
+    "run-fail-without-exit-code",
     "run-flags",
     "run-pass",
     "run-rustfix",
