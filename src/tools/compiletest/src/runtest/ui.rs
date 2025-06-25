@@ -140,14 +140,45 @@ impl TestCx<'_> {
                     &proc_res,
                 );
             }
-            if self.should_run_successfully(pm) {
-                if !proc_res.status.success() {
-                    self.fatal_proc_rec("test run failed!", &proc_res);
-                }
-            } else if proc_res.status.success() {
-                self.fatal_proc_rec("test run succeeded!", &proc_res);
+            #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+            enum DetailedExitStatus {
+                ExitWithSuccess,
+                ExitWithFailure { code: i32 },
+                Crashed { code: Option<i32> },
             }
-
+            fn code_is_proper_failure_exit_code(code: i32) -> bool {
+                code >= 1 && code <= 127
+            }
+            let code = proc_res.status.code();
+            let actual_status = if proc_res.status.success() {
+                DetailedExitStatus::ExitWithSuccess
+            } else if let Some(code) = code
+                && code_is_proper_failure_exit_code(code)
+            {
+                DetailedExitStatus::ExitWithFailure { code }
+            } else {
+                DetailedExitStatus::Crashed { code }
+            };
+            if self.should_run_successfully(pm) {
+                if actual_status != DetailedExitStatus::ExitWithSuccess {
+                    self.fatal_proc_rec(
+                        &format!("test run failed! got {actual_status:?}"),
+                        &proc_res,
+                    );
+                }
+            } else if self.must_have_exit_code() {
+                if !matches!(actual_status, DetailedExitStatus::ExitWithFailure { .. }) {
+                    self.fatal_proc_rec(
+                        &format!("test did not exit with failure code! got {actual_status:?}"),
+                        &proc_res,
+                    );
+                }
+            } else if !matches!(actual_status, DetailedExitStatus::Crashed { .. }) {
+                self.fatal_proc_rec(
+                    &format!("test did not crash! got {actual_status:?}"),
+                    &proc_res,
+                );
+            }
             self.get_output(&proc_res)
         } else {
             self.get_output(&proc_res)
