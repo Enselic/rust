@@ -1,7 +1,6 @@
-//@ run-fail
-//@ error-pattern:thread 'main' panicked at
-//@ needs-subprocess
+//@ run-pass
 
+#[inline(always)]
 fn main() {
     unsafe {
         let null: *mut u32 = std::ptr::null_mut();

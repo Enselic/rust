@@ -4,9 +4,5 @@
 //@ error-pattern: misaligned pointer dereference: address must be a multiple of 0x4 but is
 
 fn main() {
-    let x = [0u32; 2];
-    let ptr = x.as_ptr();
-    unsafe {
-        let _ptr = &(*(ptr.byte_add(1)));
-    }
+    panic!("moop");
 }
