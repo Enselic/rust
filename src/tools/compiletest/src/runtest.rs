@@ -297,7 +297,10 @@ impl<'test> TestCx<'test> {
     }
 
     fn must_have_exit_code(&self) -> bool {
-        self.props.fail_mode == Some(FailMode::Run(RunFailMode::WithExitCode))
+        match self.config.mode {
+            Ui => pm == self.props.fail_mode == Some(FailMode::Run(RunFailMode::WithExitCode)),
+            mode => panic!("unimplemented for mode {:?}", mode),
+        }
     }
 
     fn should_compile_successfully(&self, pm: Option<PassMode>) -> bool {

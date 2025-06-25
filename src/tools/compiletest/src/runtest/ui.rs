@@ -146,23 +146,22 @@ impl TestCx<'_> {
                 ExitWithFailure,
                 TerminatedBySignal,
             }
-            let detailed_exit_status = if proc_res.status.success() {
+            let actual_detailed_exit_status = if proc_res.status.success() {
                 DetailedExitStatus::ExitWithSuccess
             } else if proc_res.status.code().is_some() {
                 DetailedExitStatus::ExitWithFailure
             } else {
                 DetailedExitStatus::TerminatedBySignal
             };
-            if self.should_run_successfully(pm) {
-                if detailed_exit_status != DetailedExitStatus::ExitWithSuccess {
-                    self.fatal_proc_rec("test run failed!", &proc_res);
-                }
+            let expected_detailed_exit_status = if self.should_run_successfully(pm) {
+                DetailedExitStatus::ExitWithSuccess
             } else if self.must_have_exit_code() {
-                if detailed_exit_status != DetailedExitStatus::ExitWithFailure {
-                    self.fatal_proc_rec("test run succeeded or was terminated by a signal!", &proc_res);
-                    self.fatal_proc_rec("test run did not fail as expected!", &proc_res);
-                }
-            } {
+                DetailedExitStatus::ExitWithFailure
+            } else {
+                DetailedExitStatus::TerminatedBySignal
+            };
+            if actual_detailed_exit_status != expected_detailed_exit_status {
+                self.fatal_proc_rec("expected {expected_detailed_exit_status} but got {actual_detailed_exit_status}!", &proc_res);
             }
 
             self.get_output(&proc_res)
