@@ -111,10 +111,21 @@ string_enum! {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+pub enum RunFailMode {
+    /// Running the program must exit with a non-zero exit code. If the program
+    /// is terminated by a signal the test will fail.
+    WithExitCode,
+    /// The running program must not exit with an exit code but be terminated by
+    /// something like a Unix signal (e.g. SIGABRT, SIGSEGV) or Windows
+    /// exception.
+    WithoutExitCode,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub enum FailMode {
     Check,
     Build,
-    Run,
+    Run(RunFailMode),
 }
 
 string_enum! {

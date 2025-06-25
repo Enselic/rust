@@ -2,9 +2,9 @@
 //
 //@ [unchk_pass] run-pass
 //@ [chk_pass] run-pass
-//@ [chk_fail_try] run-fail
-//@ [chk_fail_ret] run-fail
-//@ [chk_fail_yeet] run-fail
+//@ [chk_fail_try] run-fail-without-exit-code
+//@ [chk_fail_ret] run-fail-without-exit-code
+//@ [chk_fail_yeet] run-fail-without-exit-code
 //
 //@ [unchk_pass] compile-flags: -Zcontract-checks=no
 //@ [chk_pass] compile-flags: -Zcontract-checks=yes
