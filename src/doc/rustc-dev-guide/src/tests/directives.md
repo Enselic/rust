@@ -69,19 +69,20 @@ not be exhaustive. Directives can generally be found by browsing the
 See [Controlling pass/fail
 expectations](ui.md#controlling-passfail-expectations).
 
-| Directive                   | Explanation                                 | Supported test suites                     | Possible values |
-|-----------------------------|---------------------------------------------|-------------------------------------------|-----------------|
-| `check-pass`                | Building (no codegen) should pass           | `ui`, `crashes`, `incremental`            | N/A             |
-| `check-fail`                | Building (no codegen) should fail           | `ui`, `crashes`                           | N/A             |
-| `build-pass`                | Building should pass                        | `ui`, `crashes`, `codegen`, `incremental` | N/A             |
-| `build-fail`                | Building should fail                        | `ui`, `crashes`                           | N/A             |
-| `run-pass`                  | Running the test binary should pass         | `ui`, `crashes`, `incremental`            | N/A             |
-| `run-fail`                  | Running the test binary should fail         | `ui`, `crashes`                           | N/A             |
-| `ignore-pass`               | Ignore `--pass` flag                        | `ui`, `crashes`, `codegen`, `incremental` | N/A             |
-| `dont-check-failure-status` | Don't check exact failure status (i.e. `1`) | `ui`, `incremental`                       | N/A             |
-| `failure-status`            | Check                                       | `ui`, `crashes`                           | Any `u16`       |
-| `should-ice`                | Check failure status is `101`               | `coverage`, `incremental`                 | N/A             |
-| `should-fail`               | Compiletest self-test                       | All                                       | N/A             |
+| Directive                   | Explanation                                                   | Supported test suites                     | Possible values |
+|-----------------------------|---------------------------------------------------------------|-------------------------------------------|-----------------|
+| `check-pass`                | Building (no codegen) should pass                             | `ui`, `crashes`, `incremental`            | N/A             |
+| `check-fail`                | Building (no codegen) should fail                             | `ui`, `crashes`                           | N/A             |
+| `build-pass`                | Building should pass                                          | `ui`, `crashes`, `codegen`, `incremental` | N/A             |
+| `build-fail`                | Building should fail                                          | `ui`, `crashes`                           | N/A             |
+| `run-pass`                  | Running the test binary should make it exit with code 0       | `ui`, `crashes`, `incremental`            | N/A             |
+| `run-fail`                  | Running the test binary should make it exit with code 1 - 127 | `ui`, `crashes`                           | N/A             |
+| `run-crash`                 | Running the test binary should make it crash                  | `ui`,                                     | N/A             |
+| `ignore-pass`               | Ignore `--pass` flag                                          | `ui`, `crashes`, `codegen`, `incremental` | N/A             |
+| `dont-check-failure-status` | Don't check exact failure status (i.e. `1`)                   | `ui`, `incremental`                       | N/A             |
+| `failure-status`            | Check                                                         | `ui`, `crashes`                           | Any `u16`       |
+| `should-ice`                | Check failure status is `101`                                 | `coverage`, `incremental`                 | N/A             |
+| `should-fail`               | Compiletest self-test                                         | All                                       | N/A             |
 
 ### Controlling output snapshots and normalizations
 

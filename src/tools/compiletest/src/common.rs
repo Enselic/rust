@@ -111,10 +111,21 @@ string_enum! {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+pub enum RunFailMode {
+    /// Running the program must result in a regular failure exit code >= 1 &&
+    /// <= 127. If the program is terminated by e.g. a signal the test will
+    /// fail.
+    ExitWithFailure,
+    /// The running program must have crashed, e.g. by SIGABRT on Unix or on
+    /// Windows by setting an appropriate NTSTATUS high bit in the exit code.
+    Crash,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub enum FailMode {
     Check,
     Build,
-    Run,
+    Run(RunFailMode),
 }
 
 string_enum! {
