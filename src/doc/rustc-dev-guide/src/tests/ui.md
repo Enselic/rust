@@ -458,12 +458,16 @@ even run the resulting program. Just add one of the following
     fail.
   - `//@ run-fail` — compilation should succeed, but running the resulting
     binary should make it exit with a code in the range `1..=127` which
-    indicates regular failure.
+    indicates regular failure. On targets without unwind support, crashes
+    are also accepted.
   - `//@ run-crash` — compilation should succeed, but running the resulting
-    binary should fail with a crash (e.g. `SIGABRT` or `SIGSEGV`).
+    binary should fail with a crash. Crashing is defined as "not exiting with
+    a code in the range `0..=127`". Example on Linux: Termination by `SIGABRT`
+    or `SIGSEGV`. Example on Windows: Exiting with the code for
+    `STATUS_ILLEGAL_INSTRUCTION` (`0xC000001D`).
   - `//@ run-crash-or-crash` — compilation should succeed, but running the
-    resulting binary should either fail with a code in the range `1..=127` or
-    crash (e.g. `SIGABRT` or `SIGSEGV`).
+    resulting binary should either `run-fail` or `run-crash`. Useful if a test
+    crashes on some targets but just fails on others.
 
 For `run-pass`. `run-fail`, `run-crash` and `run-fail-or-crash` tests, by
 default the output of the program itself is not checked.
