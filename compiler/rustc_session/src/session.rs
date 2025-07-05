@@ -778,7 +778,7 @@ impl Session {
         // This is used to control the emission of the `uwtable` attribute on
         // LLVM functions.
         //
-        // Unwind tables are needed when compiling with `-C panic=unwind`, but
+        // Unwind tables are needed for backtraces to work, both with `-C panic=unwind` and `-C panic=abort` TODO, but
         // LLVM won't omit unwind tables unless the function is also marked as
         // `nounwind`, so users are allowed to disable `uwtable` emission.
         // Historically rustc always emits `uwtable` attributes by default, so
@@ -796,9 +796,7 @@ impl Session {
         // Otherwise, we can defer to the `-C force-unwind-tables=<yes/no>`
         // value, if it is provided, or disable them, if not.
         self.target.requires_uwtable
-            || self.opts.cg.force_unwind_tables.unwrap_or(
-                self.panic_strategy() == PanicStrategy::Unwind || self.target.default_uwtable,
-            )
+            || self.opts.cg.force_unwind_tables.unwrap_or(self.target.default_uwtable)
     }
 
     /// Returns the number of query threads that should be used for this

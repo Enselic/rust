@@ -2852,7 +2852,8 @@ impl Default for TargetOptions {
             default_visibility: None,
             emit_debug_gdb_scripts: true,
             requires_uwtable: false,
-            default_uwtable: false,
+            // So that backtraces work by default, which rely on unwind tables regardless of -Cpanic setting.
+            default_uwtable: true,
             simd_types_indirect: true,
             limit_rdylib_exports: true,
             override_export_symbols: None,
