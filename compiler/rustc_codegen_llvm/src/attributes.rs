@@ -379,9 +379,13 @@ pub(crate) fn llfn_attrs_from_instance<'ll, 'tcx>(
     //
     // Typically when we're compiling with `-C panic=abort` (which implies this
     // `no_landing_pads` check) we don't need `uwtable` because we can't
-    // generate any exceptions! TODO still needed for backtraces!! On Windows, however, exceptions include other
+    // generate any exceptions!
+    //
+    //
+    //
+    // still needed for backtraces!! On Windows, however, exceptions include other
     // events such as illegal instructions, segfaults, etc. This means that on
-    // Windows we end up still needing the `uwtable` attribute 
+    // Windows we end up still needing the `uwtable` attribute
     //
     // You can also find more info on why Windows always requires uwtables here:
     //      https://bugzilla.mozilla.org/show_bug.cgi?id=1302078

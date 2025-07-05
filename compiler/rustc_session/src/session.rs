@@ -778,7 +778,7 @@ impl Session {
         // This is used to control the emission of the `uwtable` attribute on
         // LLVM functions.
         //
-        // Unwind tables are needed for backtraces to work, both with `-C panic=unwind` and `-C panic=abort` TODO, but
+        // Unwind tables are needed for backtraces to work, both with `-C panic=unwind` and `-C panic=abort` to doooooooooooooooooo, but
         // LLVM won't omit unwind tables unless the function is also marked as
         // `nounwind`, so users are allowed to disable `uwtable` emission.
         // Historically rustc always emits `uwtable` attributes by default, so
