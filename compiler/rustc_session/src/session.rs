@@ -802,10 +802,10 @@ impl Session {
         // If a target requires unwind tables, then they must be emitted.
         // Otherwise, we can defer to the `-C force-unwind-tables=<yes/no>`
         // value, if it is provided, or disable them, if not.
+        //
+        // FIXME: Update the above comment
         self.target.requires_uwtable
-            || self.opts.cg.force_unwind_tables.unwrap_or(
-                self.panic_strategy() == PanicStrategy::Unwind || self.target.default_uwtable,
-            )
+            || self.opts.cg.force_unwind_tables.unwrap_or(self.target.default_uwtable)
     }
 
     /// Returns the number of query threads that should be used for this
