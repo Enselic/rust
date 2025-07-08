@@ -1,5 +1,6 @@
-//! Test that with `-C panic=abort` the backtrace is not cut off by default, by
-//! ensuring that our own function is in the backtrace. Regression test for
+//! Test that with `-C panic=abort` the backtrace is not cut off by default
+//! (i.e. without using `-C force-unwind-tables=yes`) by ensuring that our own
+//! function is in the backtrace. Regression test for
 //! <https://github.com/rust-lang/rust/issues/81902>.
 
 //@ run-pass
@@ -19,7 +20,12 @@ fn run_test() {
         .output()
         .unwrap();
     let stderr = std::str::from_utf8(&output.stderr).unwrap();
-    assert!(stderr.contains(NEEDLE), "ERROR: no `{}` in stderr! actual stderr: {}", NEEDLE, stderr);
+    assert!(
+        stderr.contains(NEEDLE),
+        "ERROR: no `{}` in stderr! actual stderr: {}",
+        NEEDLE,
+        stderr
+    );
 }
 
 fn main() {
