@@ -26,7 +26,7 @@ fn run_test() {
         .env("RUST_BACKTRACE", "full")
         .output()
         .unwrap();
-    let stderr = std::str::from_utf8(&output.stderr).unwrap();
+    let backtrace = std::str::from_utf8(&output.stderr).unwrap();
 
     fn assert(function_name: &str, backtrace: &str) {
         assert!(
@@ -36,8 +36,8 @@ fn run_test() {
             backtrace
         );
     }
-    assert(FN_1, stderr);
-    assert(FN_2, stderr);
+    assert(FN_1, backtrace);
+    assert(FN_2, backtrace);
 }
 
 fn main() {
