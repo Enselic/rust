@@ -1,6 +1,8 @@
 //! Test that with `-C panic=abort` the backtrace is not cut off by default
 //! (i.e. without using `-C force-unwind-tables=yes`) by ensuring that our own
-//! function is in the backtrace. Regression test for
+//! functions are in the backtrace. If we just check one function it might be
+//! the last function, so make sure the backtrace can continue by checking for
+//! two functions. Regression test for
 //! <https://github.com/rust-lang/rust/issues/81902>.
 
 //@ run-pass
@@ -8,9 +10,14 @@
 //@ compile-flags: -C panic=abort -C opt-level=0
 //@ no-prefer-dynamic
 
-static NEEDLE: &str = "this_function_must_be_in_the_backtrace";
+static FN_1: &str = "this_function_must_be_in_the_backtrace";
 fn this_function_must_be_in_the_backtrace() {
-    panic!("create panic backtrace haystack");
+    and_this_function_too();
+}
+
+static FN_2: &str = "and_this_function_too";
+fn and_this_function_too() {
+    panic!("generate panic backtrace");
 }
 
 fn run_test() {
@@ -20,12 +27,17 @@ fn run_test() {
         .output()
         .unwrap();
     let stderr = std::str::from_utf8(&output.stderr).unwrap();
-    assert!(
-        stderr.contains(NEEDLE),
-        "ERROR: no `{}` in stderr! actual stderr: {}",
-        NEEDLE,
-        stderr
-    );
+
+    fn assert(function_name: &str, backtrace: &str) {
+        assert!(
+            backtrace.contains(function_name),
+            "ERROR: no `{}` in stderr! actual stderr: {}",
+            function_name,
+            backtrace
+        );
+    }
+    assert(FN_1, stderr);
+    assert(FN_2, stderr);
 }
 
 fn main() {
