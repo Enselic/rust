@@ -784,7 +784,8 @@ impl Session {
         //     ELF x86-64 abi, but it can be disabled for some compilation units.
         //
         // Typically when we're compiling with `-C panic=abort` we don't need
-        // `uwtable` because we can't generate any exceptions!
+        // `uwtable` because we can't generate any exceptions! However, on some
+        // platforms, generating backtraces require the presence of `uwtable`s.
         // Unwind tables are needed when compiling with `-C panic=unwind`, but
         // LLVM won't omit unwind tables unless the function is also marked as
         // `nounwind`, so users are allowed to disable `uwtable` emission.
@@ -802,10 +803,10 @@ impl Session {
         // If a target requires unwind tables, then they must be emitted.
         // Otherwise, we can defer to the `-C force-unwind-tables=<yes/no>`
         // value, if it is provided, or disable them, if not.
-        //
-        // FIXME: Update the above comment
         self.target.requires_uwtable
-            || self.opts.cg.force_unwind_tables.unwrap_or(self.target.default_uwtable)
+            || self.opts.cg.force_unwind_tables.unwrap_or(
+                self.panic_strategy() == PanicStrategy::Unwind || self.target.default_uwtable,
+            )
     }
 
     /// Returns the number of query threads that should be used for this
