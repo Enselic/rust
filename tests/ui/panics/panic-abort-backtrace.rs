@@ -7,7 +7,7 @@
 //@ compile-flags: -C panic=abort -C opt-level=0
 //@ no-prefer-dynamic
 
-static NEEDLE: &str = "this_function_must_be_in_the_backtrace"; 
+static NEEDLE: &str = "this_function_must_be_in_the_backtrace";
 fn this_function_must_be_in_the_backtrace() {
     panic!("create panic backtrace haystack");
 }
