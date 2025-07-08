@@ -1,10 +1,11 @@
-//! Test that with `-C panic=abort` the backtrace is not cut off, by ensuring
-//! that our own function is in the backtrace. Regression test for
+//! Test that with `-C panic=abort` the backtrace is not cut off by default, by
+//! ensuring that our own function is in the backtrace. Regression test for
 //! <https://github.com/rust-lang/rust/issues/81902>.
 
 //@ run-pass
 //@ needs-subprocess
-//@ compile-flags: -C panic=abort
+//@ compile-flags: -C panic=abort -C opt-level=0
+//@ no-prefer-dynamic
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -18,10 +19,11 @@ fn main() {
 fn run_test() {
     let output = std::process::Command::new(std::env::current_exe().unwrap())
         .arg("whatever")
+        .env("RUST_BACKTRACE", "full")
         .output()
         .unwrap();
     let stderr = std::str::from_utf8(&output.stderr).unwrap();
-    assert!(stderr.contains("this_function_must_be_in_the_backtrace"));
+    assert!(stderr.contains("this_function_must_be_in_the_backtrace"), "actual stderr: {}", stderr);
 }
 
 fn this_function_must_be_in_the_backtrace() {
