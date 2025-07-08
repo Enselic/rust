@@ -7,13 +7,9 @@
 //@ compile-flags: -C panic=abort -C opt-level=0
 //@ no-prefer-dynamic
 
-fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() == 1 {
-        run_test();
-    } else {
-        this_function_must_be_in_the_backtrace();
-    }
+static NEEDLE: &str = "this_function_must_be_in_the_backtrace"; 
+fn this_function_must_be_in_the_backtrace() {
+    panic!("create panic backtrace haystack");
 }
 
 fn run_test() {
@@ -23,9 +19,14 @@ fn run_test() {
         .output()
         .unwrap();
     let stderr = std::str::from_utf8(&output.stderr).unwrap();
-    assert!(stderr.contains("this_function_must_be_in_the_backtrace"), "actual stderr: {}", stderr);
+    assert!(stderr.contains(NEEDLE), "ERROR: no `{}` in stderr! actual stderr: {}", NEEDLE, stderr);
 }
 
-fn this_function_must_be_in_the_backtrace() {
-    panic!();
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() == 1 {
+        run_test();
+    } else {
+        this_function_must_be_in_the_backtrace();
+    }
 }
