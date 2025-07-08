@@ -22,5 +22,5 @@ fn main() {
         .arg("-Zvalidate-mir")
         .arg("-Cforce-unwind-tables=no")
         .run();
-    llvm_objdump().arg("--dwarf=frames").input("foo.o").run().assert_stdout_contains("DW_CFA");
+    llvm_objdump().arg("--dwarf=frames").input("foo.o").run().assert_stdout_not_contains("DW_CFA");
 }
