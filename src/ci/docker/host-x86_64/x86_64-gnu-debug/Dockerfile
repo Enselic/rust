@@ -51,4 +51,5 @@ ENV RUST_CONFIGURE_ARGS \
 
 ENV SCRIPT \
   python3 ../x.py --stage 2 build && \
+  python3 ../x.py --stage 2 test tests/ui --set rust.debuginfo-level-tests=1 && \
   python3 ../x.py --stage 2 test tests/run-make
