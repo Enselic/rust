@@ -1,4 +1,4 @@
-//@ aux-crate: dependency=dependency-v2.rs
+//@ aux-crate: dependency=dependency_v2.rs
 
 pub extern crate dependency;
 

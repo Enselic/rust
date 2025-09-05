@@ -1,5 +1,5 @@
 //@ aux-crate: re_export_dependency=re_export_dependency.rs
-//@ aux-crate: dependency=dependency-v1.rs
+//@ aux-crate: dependency=dependency_v1.rs
 
 extern crate re_export_dependency;
 extern crate dependency;
