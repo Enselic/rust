@@ -1,5 +1,5 @@
+//@ edition: 2018
 //@ aux-crate: dependency=dependency_v2.rs
-//@ no-prefer-dynamic
 
 pub use dependency;
 
