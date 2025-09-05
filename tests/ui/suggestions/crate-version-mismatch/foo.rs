@@ -1,7 +1,7 @@
-//@ aux-crate: re_export_dependency_v2=re-export-dependency-v2.rs
+//@ aux-crate: re_export_dependency=re_export_dependency.rs
 //@ aux-crate: dependency=dependency-v1.rs
 
-extern crate re_export_dependency_v2;
+extern crate re_export_dependency;
 extern crate dependency;
 
 struct MainStruct;
@@ -13,5 +13,5 @@ impl From<MainStruct> for dependency::DependencyStruct {
 }
 
 fn main() {
-    re_export_dependency_v2::use_into(MainStruct);
+    re_export_dependency::use_into(MainStruct);
 }
