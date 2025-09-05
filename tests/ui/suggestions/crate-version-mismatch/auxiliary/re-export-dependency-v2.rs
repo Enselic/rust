@@ -1,3 +1,5 @@
-pub struct Struct;
+//@ aux-crate: dependency=dependency-v2.rs
 
-fn use_into(_: impl Into<Struct>) {}
+pub use dependency::DependencyStruct;
+
+fn use_into(_: impl Into<DependencyStruct>) {}
