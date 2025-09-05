@@ -8,3 +8,5 @@ impl dependency::Trait for OtherType {
     fn foo(&self) {}
     fn bar() {}
 }
+// This is `Type` from dependency-2.rs
+pub fn into_type(_: impl Into<Type>) {}
