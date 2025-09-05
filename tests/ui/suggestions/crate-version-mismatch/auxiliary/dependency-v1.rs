@@ -1,4 +1,4 @@
-//@ compile-flags: -Cextra-filename=_v1
+//@ compile-flags: -Cextra-filename=_v1 -Cmetadata=_v1
 #![crate_name = "dependency"]
 
 pub struct DependencyStruct;

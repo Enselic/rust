@@ -4,13 +4,11 @@
 extern crate re_export_dependency_v2;
 extern crate dependency;
 
-use dependency::DependencyStruct;
-
 struct MainStruct;
 
-impl From<MainStruct> for DependencyStruct {
+impl From<MainStruct> for dependency::DependencyStruct {
     fn from(value: MainStruct) -> Self {
-        DependencyStruct
+        dependency::DependencyStruct
     }
 }
 
