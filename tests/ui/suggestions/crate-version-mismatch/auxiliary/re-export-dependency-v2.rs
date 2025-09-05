@@ -4,4 +4,4 @@ extern crate dependency;
 
 pub use dependency::DependencyStruct;
 
-//fn use_into(_: impl Into<DependencyStruct>) {}
+pub fn use_into(_: impl Into<DependencyStruct>) {}
