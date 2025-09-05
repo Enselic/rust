@@ -3,4 +3,4 @@
 
 pub use dependency;
 
-pub fn use_into(_: impl Into<dependency::DependencyStruct>) {}
+pub fn into_dependency_struct(_: impl Into<dependency::DependencyStruct>) {}
