@@ -14,3 +14,6 @@ impl Trait for Type {
 pub fn do_something<X: Trait>(_: X) {}
 pub fn do_something_type(_: Type) {}
 pub fn do_something_trait(_: Box<dyn Trait2>) {}
+
+// Only re-exported indirectly, never directly.
+pub struct Type2;
