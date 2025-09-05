@@ -6,10 +6,10 @@
 use run_make_support::{diff, rust_lib_name, rustc};
 
 fn main() {
-    rustc().input("multiple-dep-versions-1.rs").run();
-    rustc().input("multiple-dep-versions-2.rs").extra_filename("2").metadata("2").run();
+    rustc().input("dependency-1.rs").run();
+    rustc().input("dependency-2.rs").extra_filename("2").metadata("2").run();
     rustc()
-        .input("multiple-dep-versions-3.rs")
+        .input("dep-2-reexport.rs")
         .extern_("dependency", rust_lib_name("dependency2"))
         .run();
 
