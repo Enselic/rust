@@ -185,7 +185,22 @@ note: function defined here
 LL | pub fn do_something_trait(_: Box<dyn Trait2>) {}
    |        ^^^^^^^^^^^^^^^^^^
 
-error: aborting due to 6 previous errors
+error[E0277]: the trait bound `dep_2_reexport::Type: From<MainType>` is not satisfied
+  --> replaced
+   |
+LL |     into_type(MainType(42));
+   |     --------- ^^^^^^^^^^^^ the trait `From<MainType>` is not implemented for `dep_2_reexport::Type`
+   |     |
+   |     required by a bound introduced by this call
+   |
+   = note: required for `MainType` to implement `Into<dep_2_reexport::Type>`
+note: required by a bound in `into_type`
+  --> replaced
+   |
+LL | pub fn into_type(_: impl Into<Type>) {}
+   |                          ^^^^^^^^^^ required by this bound in `into_type`
+
+error: aborting due to 7 previous errors
 
 Some errors have detailed explanations: E0277, E0308, E0599.
 For more information about an error, try `rustc --explain E0277`.
