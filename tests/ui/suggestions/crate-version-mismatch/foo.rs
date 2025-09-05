@@ -5,9 +5,9 @@ use re_export_dependency_v2::DependencyStruct;
 
 struct MainStruct;
 
-impl From<MainStruct> for Struct {
+impl From<MainStruct> for StructDependencyStruct {
     fn from(value: MainStruct) -> Self {
-        Struct
+        DependencyStruct
     }
 }
 
