@@ -18,7 +18,7 @@ struct MainType(pub i32);
 // Implements `From<MainType>` for `Type` from dependency-1.rs but it is for
 // dependency-2.rs that we actually need it. It's easy to mess up in real-world
 // projects with more complicated types and dependency graphs. So we want
-// the compiler to hint of that we have multiple versions of `Type`.
+// the compiler to hint that we have multiple versions of `Type`.
 impl From<MainType> for dependency::Type {
     fn from(value: MainType) -> Self {
         dependency::Type(value.0)
