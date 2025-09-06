@@ -17,7 +17,7 @@ fn main() {
 
 struct MainType(pub i32);
 
-// This uses `Type` from dependency-1.rs
+// This implements for `Type` from dependency-1.rs
 impl From<MainType> for dependency::Type {
     fn from(value: MainType) -> Self {
         dependency::Type(value.0)

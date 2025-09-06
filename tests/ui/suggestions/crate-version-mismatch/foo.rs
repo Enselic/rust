@@ -5,11 +5,17 @@
 
 struct MainStruct;
 
-impl From<MainStruct> for dependency::DependencyStruct {
-    fn from(value: MainStruct) -> Self {
-        dependency::DependencyStruct
-    }
-}
+// impl From<MainStruct> for dependency::DependencyStruct {
+//     fn from(value: MainStruct) -> Self {
+//         dependency::DependencyStruct
+//     }
+// }
+
+// impl Into<dependency::DependencyStruct> for MainStruct {
+//     fn into(self) -> dependency::DependencyStruct {
+//         dependency::DependencyStruct
+//     }
+// }
 
 fn main() {
     re_export_dependency::into_dependency_struct(MainStruct);

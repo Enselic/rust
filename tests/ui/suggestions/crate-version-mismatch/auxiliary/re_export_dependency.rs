@@ -3,4 +3,8 @@
 
 pub use dependency;
 
-pub fn into_dependency_struct(_: impl Into<dependency::DependencyStruct>) {}
+pub trait Measure<T> {
+    fn weight(T) -> usize;
+}
+
+pub fn measure(_: impl Measure<dependency::DependencyStruct>) {}
