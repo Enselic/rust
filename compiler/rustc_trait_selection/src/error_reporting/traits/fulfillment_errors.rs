@@ -2410,7 +2410,7 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         &self,
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
-    ) -> bool {
+    ) {
         if !self.note_trait_version_mismatch(err, trait_pred) {
             // If we didn't find trait-duplicates, check whether the `Self` type
             // itself appears in multiple crate versions. This covers the case where
@@ -2478,59 +2478,62 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
     )  {
-        if let ty::Adt(found_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() {
-            let found_type = found_def.did();
-            let found_name = self.tcx.opt_item_name(found_type);
-            let mut other_versions = Vec::new();
+        let ty::Adt(self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() else {
+          return
+        };
 
-            for impl_def_id in self.tcx.all_impls(trait_pred.def_id()) {
-                if let Some(header) = self.tcx.impl_trait_header(impl_def_id) {
-                    let imp = header.trait_ref.skip_binder();
-                    if let ty::Adt(cand_def, _) = imp.self_ty().peel_refs().kind() {
-                        let cand_def_id = cand_def.did();
-                        if cand_def_id != found_type
-                            && self.tcx.crate_name(cand_def_id.krate) == self.tcx.crate_name(found_type.krate)
-                        {
-                            // Optionally require same item name to avoid false positives
-                            if let (Some(found_name), Some(cand_name)) = (found_name, self.tcx.opt_item_name(cand_def_id)) {
-                                if found_name == cand_name {
-                                    other_versions.push(cand_def_id);
-                                }
-                            } else {
+        let adt_path = self.tcx.def_path_str(self_def.did());
+
+        let found_name = self.tcx.opt_item_name(self_did);
+        let mut other_versions = Vec::new();
+
+        for impl_def_id in self.tcx.all_impls(trait_pred.def_id()) {
+            if let Some(header) = self.tcx.impl_trait_header(impl_def_id) {
+                let imp = header.trait_ref.skip_binder();
+                if let ty::Adt(cand_def, _) = imp.self_ty().peel_refs().kind() {
+                    let cand_def_id = cand_def.did();
+                    if cand_def_id != self_did
+                        && self.tcx.crate_name(cand_def_id.krate) == self.tcx.crate_name(self_did.krate)
+                    {
+                        // Optionally require same item name to avoid false positives
+                        if let (Some(found_name), Some(cand_name)) = (found_name, self.tcx.opt_item_name(cand_def_id)) {
+                            if found_name == cand_name {
                                 other_versions.push(cand_def_id);
                             }
+                        } else {
+                            other_versions.push(cand_def_id);
                         }
                     }
                 }
             }
+        }
 
-            if !other_versions.is_empty() {
-                let type_name = match self.tcx.opt_item_name(found_type) {
-                    Some(n) => n.to_string(),
-                    None => self.tcx.def_path_str(found_type),
-                };
+        if !other_versions.is_empty() {
+            let type_name = match self.tcx.opt_item_name(self_did) {
+                Some(n) => n.to_string(),
+                None => self.tcx.def_path_str(self_did),
+            };
 
-                let mut span: MultiSpan = self.tcx.def_span(found_type).into();
-                span.push_span_label(self.tcx.def_span(found_type), "this is the required type");
-                for other in &other_versions {
-                    span.push_span_label(self.tcx.def_span(*other), "this type implements the required trait (other version)");
-                }
-
-                err.highlighted_span_note(
-                    span,
-                    vec![
-                        StringPart::normal("there are ".to_string()),
-                        StringPart::highlighted("multiple different versions".to_string()),
-                        StringPart::normal(format!(" of type `{type_name}` in the dependency graph")),
-                    ],
-                );
-                err.highlighted_help(vec![
-                    StringPart::normal("you can use `".to_string()),
-                    StringPart::highlighted("cargo tree".to_string()),
-                    StringPart::normal("` to explore your dependency tree".to_string()),
-                ]);
-                return true;
+            let mut span: MultiSpan = self.tcx.def_span(self_did).into();
+            span.push_span_label(self.tcx.def_span(self_did), "this is the required type");
+            for other in &other_versions {
+                span.push_span_label(self.tcx.def_span(*other), "this type implements the required trait (other version)");
             }
+
+            err.highlighted_span_note(
+                span,
+                vec![
+                    StringPart::normal("there are ".to_string()),
+                    StringPart::highlighted("multiple different versions".to_string()),
+                    StringPart::normal(format!(" of type `{type_name}` in the dependency graph")),
+                ],
+            );
+            // TODO: Deduplicate
+            err.highlighted_help(vec![
+                StringPart::normal("you can use `".to_string()),
+                StringPart::highlighted("cargo tree".to_string()),
+                StringPart::normal("` to explore your dependency tree".to_string()),
+            ]);
         }
     }
 
