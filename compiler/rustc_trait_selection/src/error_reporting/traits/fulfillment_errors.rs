@@ -2403,10 +2403,28 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         }
     }
 
-    /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
+        /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
     /// with the same path as `trait_ref`, a help message about
     /// a probable version mismatch is added to `err`
     fn note_version_mismatch(
+        &self,
+        err: &mut Diag<'_>,
+        trait_pred: ty::PolyTraitPredicate<'tcx>,
+    ) -> bool {
+        if !self.note_trait_version_mismatch(err, trait_pred) {
+            // If we didn't find trait-duplicates, check whether the `Self` type
+            // itself appears in multiple crate versions. This covers the case where
+            // e.g. `From<Foo>` is implemented for `Bar` from version X of a given
+            // crate, but the current code needs it for `Bar` from version Y of a
+            // the same crate.
+            self.note_adt_version_mismatch(err, trait_pred);
+        }
+    }
+
+    /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
+    /// with the same path as `trait_ref`, a help message about
+    /// a probable version mismatch is added to `err`
+    fn note_trait_version_mismatch(
         &self,
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
@@ -2452,15 +2470,14 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             err.note(crate_msg);
             suggested = true;
         }
-        if suggested {
-            return true;
-        }
+        suggested
+    }
 
-        // If we didn't find trait-duplicates, check whether the `Self` type
-        // itself appears in multiple crate versions. This covers the case where
-        // e.g. `From<Foo>` is implemented for `Bar` from version X of a given
-        // crate, but the current code needs it for `Bar` from version Y of a
-        // the same crate.
+     fn note_adt_version_mismatch(
+        &self,
+        err: &mut Diag<'_>,
+        trait_pred: ty::PolyTraitPredicate<'tcx>,
+    )  {
         if let ty::Adt(found_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() {
             let found_type = found_def.did();
             let found_name = self.tcx.opt_item_name(found_type);
@@ -2515,9 +2532,8 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                 return true;
             }
         }
-
-        suggested
     }
+
 
     /// Creates a `PredicateObligation` with `new_self_ty` replacing the existing type in the
     /// `trait_ref`.
