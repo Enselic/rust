@@ -2471,15 +2471,9 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
         dbg!(&impl_self_path);
 
-        let visible_crates = self
-            .tcx
-            .crates(())
-            .iter()
-            .copied()
-            .filter(move |cnum| self.tcx.is_user_visible_dep(*cnum));
-
+        // Since re-exports can be involved, also check creates that are not directly visible.
         let items_with_same_path: UnordSet<_> = std::iter::once(LOCAL_CRATE)
-            .chain(visible_crates)
+            .chain(self.tcx.crates(()).iter().copied())
             .flat_map(move |cnum| self.tcx.exportable_items(cnum).iter().copied())
             .filter(|trait_def_id| *trait_def_id != impl_self_did)
             .map(|trait_def_id| {
