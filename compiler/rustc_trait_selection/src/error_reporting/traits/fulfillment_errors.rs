@@ -2474,10 +2474,18 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         // Since re-exports can be involved, also check creates that are not directly visible.
         let items_with_same_path: UnordSet<_> = std::iter::once(LOCAL_CRATE)
             .chain(self.tcx.crates(()).iter().copied())
-            .flat_map(move |cnum| self.tcx.exportable_items(cnum).iter().copied())
-            .filter(|trait_def_id| *trait_def_id != impl_self_did)
-            .map(|trait_def_id| {
-                let a = (self.tcx.def_path_str(trait_def_id), trait_def_id);
+            .flat_map(move |cnum| {
+                eprintln!("NORDH cnum {cnum:?}");
+                let u = self.tcx.exportable_items(cnum).iter().copied();
+                eprintln!("NORDH cnumuuuu {u:?}");
+                u
+            })
+            .filter(|did| {
+                eprintln!("NORDH UEEE {did:?}");
+                *did != impl_self_did
+            })
+            .map(|did| {
+                let a = (self.tcx.def_path_str(did), did);
                 eprintln!("NORDH UEEE {a:?}");
                 a
             })
