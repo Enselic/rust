@@ -2466,9 +2466,10 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         else {
             return;
         };
-
+        
         let impl_self_did = impl_self_def.did();
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
+        dbg!(&impl_self_path);
 
         let visible_crates = self
             .tcx
@@ -2481,8 +2482,15 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             .chain(visible_crates)
             .flat_map(move |cnum| self.tcx.exportable_items(cnum).iter().copied())
             .filter(|trait_def_id| *trait_def_id != impl_self_did)
-            .map(|trait_def_id| (self.tcx.def_path_str(trait_def_id), trait_def_id))
-            .filter(|(p, _)| *p == impl_self_path)
+            .map(|trait_def_id| {
+                let a = (self.tcx.def_path_str(trait_def_id), trait_def_id);
+                eprintln!("NORDH UEEE {a:?}");
+                a
+            })
+            .filter(|(p, _)| {
+                eprintln!("NORDH comparing {p} with {impl_self_path}");
+                *p == impl_self_path
+            })
             .collect();
 
         let items_with_same_path =

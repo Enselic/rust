@@ -1,3 +1,4 @@
+[compiler/rustc_trait_selection/src/error_reporting/traits/fulfillment_errors.rs:2472:9] &impl_self_path = "foo::Struct"
 error[E0277]: the trait bound `foo::Struct: Trait` is not satisfied
   --> foo-current.rs:13:19
    |
