@@ -2483,8 +2483,22 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             .map(|trait_def_id| (self.tcx.def_path_str(trait_def_id), trait_def_id))
             .filter(|(p, _)| *p == impl_self_path)
             .collect();
-            
 
+                    let items_with_same_path =
+            items_with_same_path.into_items().into_sorted_stable_ord_by_key(|(p, _)| p);
+
+                    let mut suggested = false;
+        for (_, item_with_same_path) in items_with_same_path {
+            err.span_help(
+                self.tcx.def_span(item_with_same_path),
+                "item with same name found",
+            );
+            let krate = self.tcx.crate_name(item_with_same_path.krate);
+            let crate_msg =
+                format!("perhaps two different versions of crate `{krate}` are being used?");
+            err.note(crate_msg);
+            suggested = true;
+        }
     }
 
 
