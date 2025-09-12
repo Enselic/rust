@@ -2482,14 +2482,20 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
           return
         };
 
-        let impl_self_path = self.tcx.def_path_str(impl_self_def.did());
+        let impl_self_did = impl_self_def.did();
+        let impl_self_path = self.tcx.def_path_str(impl_self_did);
 
         let visible_crates =
-            self.crates(()).iter().copied().filter(move |cnum| self.is_user_visible_dep(*cnum));
+            self.tcx.crates(()).iter().copied().filter(move |cnum| self.tcx.is_user_visible_dep(*cnum));
 
-        iter::once(LOCAL_CRATE)
+        let items_with_same_path: UnordSet<_> = std::iter::once(LOCAL_CRATE)
             .chain(visible_crates)
-            .flat_map(move |cnum| self.traits(cnum).iter().copied())
+            .flat_map(move |cnum| self.tcx.exportable_items(cnum).iter().copied())
+            .filter(|trait_def_id| *trait_def_id != impl_self_did)
+            .map(|trait_def_id| (self.tcx.def_path_str(trait_def_id), trait_def_id))
+            .filter(|(p, _)| *p == impl_self_path)
+            .collect();
+            
 
     }
 
