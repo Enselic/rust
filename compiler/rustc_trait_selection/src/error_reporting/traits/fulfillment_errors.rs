@@ -798,7 +798,7 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                 break;
             }
         }
-        
+
         applied_do_not_recommend
     }
 
@@ -2403,14 +2403,10 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         }
     }
 
-        /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
+    /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
     /// with the same path as `trait_ref`, a help message about
     /// a probable version mismatch is added to `err`
-    fn note_version_mismatch(
-        &self,
-        err: &mut Diag<'_>,
-        trait_pred: ty::PolyTraitPredicate<'tcx>,
-    ) {
+    fn note_version_mismatch(&self, err: &mut Diag<'_>, trait_pred: ty::PolyTraitPredicate<'tcx>) {
         if !self.note_trait_version_mismatch(err, trait_pred) {
             // If we didn't find trait-duplicates, check whether the `Self` type
             // itself appears in multiple crate versions. This covers the case where
@@ -2473,20 +2469,25 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         suggested
     }
 
-     fn note_adt_version_mismatch(
+    fn note_adt_version_mismatch(
         &self,
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
-    )  {
-        let ty::Adt(impl_self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() else {
-          return
+    ) {
+        let ty::Adt(impl_self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind()
+        else {
+            return;
         };
 
         let impl_self_did = impl_self_def.did();
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
 
-        let visible_crates =
-            self.tcx.crates(()).iter().copied().filter(move |cnum| self.tcx.is_user_visible_dep(*cnum));
+        let visible_crates = self
+            .tcx
+            .crates(())
+            .iter()
+            .copied()
+            .filter(move |cnum| self.tcx.is_user_visible_dep(*cnum));
 
         let items_with_same_path: UnordSet<_> = std::iter::once(LOCAL_CRATE)
             .chain(visible_crates)
@@ -2496,15 +2497,12 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             .filter(|(p, _)| *p == impl_self_path)
             .collect();
 
-                    let items_with_same_path =
+        let items_with_same_path =
             items_with_same_path.into_items().into_sorted_stable_ord_by_key(|(p, _)| p);
 
-                    let mut suggested = false;
+        let mut suggested = false;
         for (_, item_with_same_path) in items_with_same_path {
-            err.span_help(
-                self.tcx.def_span(item_with_same_path),
-                "item with same name found",
-            );
+            err.span_help(self.tcx.def_span(item_with_same_path), "item with same name found");
             let krate = self.tcx.crate_name(item_with_same_path.krate);
             let crate_msg =
                 format!("perhaps two different versions of crate `{krate}` are being used?");
@@ -2512,7 +2510,6 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             suggested = true;
         }
     }
-
 
     /// Creates a `PredicateObligation` with `new_self_ty` replacing the existing type in the
     /// `trait_ref`.
