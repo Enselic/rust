@@ -2469,29 +2469,20 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         
         let impl_self_did = impl_self_def.did();
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
-        dbg!(&impl_self_path);
 
-        // Since re-exports can be involved, also check creates that are not directly visible.
-        let items_with_same_path: UnordSet<_> = std::iter::once(LOCAL_CRATE)
-            .chain(self.tcx.crates(()).iter().copied())
-            .flat_map(move |cnum| {
-                eprintln!("NORDH cnum {cnum:?}");
-                let u = self.tcx.exportable_items(cnum).iter().copied();
-                eprintln!("NORDH cnumuuuu {u:?}");
-                u
-            })
-            .filter(|did| {
-                eprintln!("NORDH UEEE {did:?}");
-                *did != impl_self_did
-            })
-            .map(|did| {
-                let a = (self.tcx.def_path_str(did), did);
-                eprintln!("NORDH UEEE {a:?}");
-                a
-            })
-            .filter(|(p, _)| {
-                eprintln!("NORDH comparing {p} with {impl_self_path}");
-                *p == impl_self_path
+        // Use `visible_parent_map` and `trimmed_def_paths` to find re-exports
+        // and items that appear under the same visible path. `exportable_items`
+        // is only populated for sdylib interface builds and can be empty
+        // in normal compilation, so iterate over the visible parent map instead.
+        let visible_parent_map = self.tcx.visible_parent_map(());
+        let trimmed = self.tcx.trimmed_def_paths(());
+
+        let items_with_same_path: UnordSet<_> = visible_parent_map
+            .iter()
+            .filter_map(|(&child, &parent)| {
+                // Prefer the trimmed path if available, otherwise fall back to `def_path_str`.
+                let path = trimmed.get(&child).map(|sym| sym.to_string()).unwrap_or_else(|| self.tcx.def_path_str(child));
+                (path == impl_self_path).then_some((path, child))
             })
             .collect();
 
