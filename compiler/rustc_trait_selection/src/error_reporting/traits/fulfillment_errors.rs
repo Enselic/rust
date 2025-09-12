@@ -2478,11 +2478,19 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
     )  {
-        let ty::Adt(self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() else {
+        let ty::Adt(impl_self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind() else {
           return
         };
 
-        let adt_path = self.tcx.def_path_str(self_def.did());
+        let impl_self_path = self.tcx.def_path_str(impl_self_def.did());
+
+        let visible_crates =
+            self.crates(()).iter().copied().filter(move |cnum| self.is_user_visible_dep(*cnum));
+
+        iter::once(LOCAL_CRATE)
+            .chain(visible_crates)
+            .flat_map(move |cnum| self.traits(cnum).iter().copied())
+
     }
 
 
