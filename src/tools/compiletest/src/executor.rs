@@ -22,6 +22,7 @@ mod json;
 pub(crate) fn run_tests(config: &Config, tests: Vec<CollectedTest>) -> bool {
     let tests_len = tests.len();
     let filtered = filter_tests(config, tests);
+    //eprintln!("NORDH running {:?} tests", filtered);
     // Iterator yielding tests that haven't been started yet.
     let mut fresh_tests = (0..).map(TestId).zip(&filtered);
 
@@ -292,8 +293,10 @@ impl TestOutcome {
 fn filter_tests(opts: &Config, tests: Vec<CollectedTest>) -> Vec<CollectedTest> {
     let mut filtered = tests;
 
+    
     let matches_filter = |test: &CollectedTest, filter_str: &str| {
         let test_name = &test.desc.name;
+        eprintln!("NORDH checking {test_name} against {filter_str} ");
         if opts.filter_exact { test_name == filter_str } else { test_name.contains(filter_str) }
     };
 
@@ -347,7 +350,7 @@ pub(crate) struct CollectedTestDesc {
 }
 
 /// Whether console output should be colored or not.
-#[derive(Debug, Clone, Default)]
+#[derive(Copy, Clone, Default, Debug)]
 pub enum ColorConfig {
     #[default]
     AutoColor,
