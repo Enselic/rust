@@ -317,19 +317,34 @@ pub fn parse_config(args: Vec<String>) -> Config {
             .free
             .iter()
             .map(|f| {
+                // Here `f` is relative to `./tests/run-make/`.  So if you run
+                //
+                //   ./x test tests/run-make/crate-loading
+                //
+                //  then `f` is `crate-loading`.
+                eprintln!("NORDH filter {f}");
                 let path = Utf8Path::new(f);
                 let mut iter = path.iter().skip(1);
 
-                // We skip the test folder and check if the user passed `rmake.rs`.
-                if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
+
+                let run_make_dir = if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
+                    // Strip the `rmake.rs` suffix. For example, if `f` is
+                    // `crate-loading/rmake.rs` then this gives us `crate-loading`.
                     path.parent().unwrap().to_string()
                 } else {
                     f.to_string()
-                }
+                };
+
+                // Filtering works on paths relative to repo root, so add back `./tests/run-make/` in 
+                // a platform-independent way.
+                format!("tests{}run-make{}{}", std::path::MAIN_SEPARATOR, std::path::MAIN_SEPARATOR, run_make_dir)
             })
             .collect::<Vec<_>>()
     } else {
-        matches.free.clone()
+        // For non-run-make tests, the filters are full paths.
+        let fooo = matches.free.clone();
+        eprintln!("NORDH fooo {fooo:?}");
+        fooo
     };
     let compare_mode = matches.opt_str("compare-mode").map(|s| {
         s.parse().unwrap_or_else(|_| {
@@ -405,7 +420,7 @@ pub fn parse_config(args: Vec<String>) -> Config {
         with_std_debug_assertions,
         filters,
         skip: matches.opt_strs("skip"),
-        filter_exact: matches.opt_present("exact"),
+        filter_exact: true,// matches.opt_present("exact"),
         force_pass_mode: matches.opt_str("pass").map(|mode| {
             mode.parse::<PassMode>()
                 .unwrap_or_else(|_| panic!("unknown `--pass` option `{}` given", mode))
@@ -777,6 +792,7 @@ fn collect_tests_from_dir(
     dir: &Utf8Path,
     relative_dir_path: &Utf8Path,
 ) -> io::Result<TestCollector> {
+    //eprintln!("NORDH dir{dir:?}" );
     // Ignore directories that contain a file named `compiletest-ignore-dir`.
     if dir.join("compiletest-ignore-dir").exists() {
         return Ok(TestCollector::new());
@@ -809,7 +825,7 @@ fn collect_tests_from_dir(
             };
             make_test(cx, &mut collector, &paths);
             // This directory is a test, so don't try to find other tests inside it.
-            eprintln!("NORDH collector returning early from {dir:?} ,,, {collector:?}" );
+            //eprintln!("NORDH collector returning early from {dir:?} ,,, {collector:?}" );
             return Ok(collector);
         }
     }
@@ -887,7 +903,7 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     // For run-make tests, each "test file" is actually a _directory_ containing an `rmake.rs`. But
     // for the purposes of directive parsing, we want to look at that recipe file, not the directory
     // itself.
-    eprintln!("NORDH Making test from {testpaths:?}" );
+    //eprintln!("NORDH Making test from {testpaths:?}" );
     let test_path = if cx.config.mode == TestMode::RunMake {
         testpaths.file.join("rmake.rs")
     } else {
@@ -912,10 +928,11 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     // For each revision (or the sole dummy revision), create and append a
     // `CollectedTest` that can be handed over to the test executor.
     collector.tests.extend(revisions.into_iter().map(|revision| {
-        eprintln!("NORDH Making revision {test_path:?}" );
+        //eprintln!("NORDH Making revision {test_path:?}" );
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
         let test_name = make_test_name(&cx.config, testpaths, revision);
+        eprintln!("NORDH test_name {test_name}" );
         // Create a description struct for the test/revision.
         // This is where `ignore-*`/`only-*`/`needs-*` directives are handled,
         // because they historically needed to set the libtest ignored flag.
@@ -1076,8 +1093,9 @@ impl Stamp {
 }
 
 /// Creates a name for this test/revision that can be handed over to the executor.
-fn make_test_name(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> String {
+fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> (String, Utf8PathBuf) {
     // Print the name of the file, relative to the sources root.
+    eprintln!("NORDH testpaths={testpaths:?}" );
     let path = testpaths.file.strip_prefix(&config.src_root).unwrap();
     let debugger = match config.debugger {
         Some(d) => format!("-{}", d),
@@ -1088,14 +1106,18 @@ fn make_test_name(config: &Config, testpaths: &TestPaths, revision: Option<&str>
         None => String::new(),
     };
 
-    format!(
+    let name = format!(
         "[{}{}{}] {}{}",
         config.mode,
         debugger,
         mode_suffix,
         path,
         revision.map_or("".to_string(), |rev| format!("#{}", rev))
-    )
+    );
+    let filterable_path = path.to_owned();
+    // Test filters do not have a `./tests/` 
+    // See https://github.com/rust-lang/rust/issues/134341
+    (name, filterable_path)
 }
 
 /// Checks that test discovery didn't find any tests whose name stem is a prefix
