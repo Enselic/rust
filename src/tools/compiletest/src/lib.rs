@@ -321,23 +321,19 @@ pub fn parse_config(args: Vec<String>) -> Config {
                 //
                 //   ./x test tests/run-make/crate-loading
                 //
-                //  then `f` is `crate-loading`.
+                //  then `f` is "crate-loading".
                 eprintln!("NORDH filter {f}");
                 let path = Utf8Path::new(f);
                 let mut iter = path.iter().skip(1);
 
 
-                let run_make_dir = if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
-                    // Strip the `rmake.rs` suffix. For example, if `f` is
-                    // `crate-loading/rmake.rs` then this gives us `crate-loading`.
+                if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
+                    // Strip the "rmake.rs" suffix. For example, if `f` is
+                    // "crate-loading/rmake.rs" then this gives us "crate-loading".
                     path.parent().unwrap().to_string()
                 } else {
                     f.to_string()
-                };
-
-                // Filtering works on paths relative to repo root, so add back `./tests/run-make/` in 
-                // a platform-independent way.
-                format!("tests{}run-make{}{}", std::path::MAIN_SEPARATOR, std::path::MAIN_SEPARATOR, run_make_dir)
+                }
             })
             .collect::<Vec<_>>()
     } else {
@@ -420,7 +416,7 @@ pub fn parse_config(args: Vec<String>) -> Config {
         with_std_debug_assertions,
         filters,
         skip: matches.opt_strs("skip"),
-        filter_exact: true,// matches.opt_present("exact"),
+        filter_exact: matches.opt_present("exact"),
         force_pass_mode: matches.opt_str("pass").map(|mode| {
             mode.parse::<PassMode>()
                 .unwrap_or_else(|_| panic!("unknown `--pass` option `{}` given", mode))
