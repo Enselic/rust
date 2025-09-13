@@ -329,6 +329,7 @@ fn get_concurrency() -> usize {
 }
 
 /// Information that was historically needed to create a libtest `TestDescAndFn`.
+#[derive(Debug, Clone)]
 pub(crate) struct CollectedTest {
     pub(crate) desc: CollectedTestDesc,
     pub(crate) config: Arc<Config>,
@@ -337,6 +338,7 @@ pub(crate) struct CollectedTest {
 }
 
 /// Information that was historically needed to create a libtest `TestDesc`.
+#[derive(Debug, Clone)]
 pub(crate) struct CollectedTestDesc {
     pub(crate) name: String,
     pub(crate) ignore: bool,
@@ -345,7 +347,7 @@ pub(crate) struct CollectedTestDesc {
 }
 
 /// Whether console output should be colored or not.
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Debug, Clone, Default)]
 pub enum ColorConfig {
     #[default]
     AutoColor,
