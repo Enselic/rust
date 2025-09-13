@@ -338,7 +338,6 @@ pub(crate) struct CollectedTest {
 }
 
 /// Information that was historically needed to create a libtest `TestDesc`.
-#[derive(Debug, Clone)]
 pub(crate) struct CollectedTestDesc {
     pub(crate) name: String,
     pub(crate) filterable_path: Utf8PathBuf,

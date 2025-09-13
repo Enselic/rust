@@ -1096,7 +1096,7 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
         Some(ref mode) => format!(" ({})", mode.to_str()),
         None => String::new(),
     };
-    
+
     let name = format!(
         "[{}{}{}] {}{}",
         config.mode,
@@ -1106,7 +1106,7 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
         revision.map_or("".to_string(), |rev| format!("#{}", rev))
     );
 
-    // `path` is the full path from the repo like, `tests/ui/foo/bar.rs`.
+    // `path` is the full path from the repo root like, `tests/ui/foo/bar.rs`.
     // Filtering is applied without the `tests/ui/` part, so strip that off.
     // First strip of "tests" to make sure we don't have some unexpected path.
     let mut filterable_path = filterable_path.strip_prefix("tests").unwrap().to_owned();
