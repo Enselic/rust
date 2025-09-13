@@ -2406,7 +2406,21 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
     /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
     /// with the same path as `trait_ref`, a help message about
     /// a probable version mismatch is added to `err`
-    fn note_version_mismatch(
+    fn note_version_mismatch(&self, err: &mut Diag<'_>, trait_pred: ty::PolyTraitPredicate<'tcx>) {
+        if !self.note_trait_version_mismatch(err, trait_pred) {
+            // If we didn't find trait-duplicates, check whether the `Self` type
+            // itself appears in multiple crate versions. This covers the case where
+            // e.g. `From<Foo>` is implemented for `Bar` from version X of a given
+            // crate, but the current code needs it for `Bar` from version Y of a
+            // the same crate.
+            self.note_adt_version_mismatch(err, trait_pred);
+        }
+    }
+
+    /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
+    /// with the same path as `trait_ref`, a help message about
+    /// a probable version mismatch is added to `err`
+    fn note_trait_version_mismatch(
         &self,
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
@@ -2453,6 +2467,47 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
             suggested = true;
         }
         suggested
+    }
+
+    fn note_adt_version_mismatch(
+        &self,
+        err: &mut Diag<'_>,
+        trait_pred: ty::PolyTraitPredicate<'tcx>,
+    ) {
+        let ty::Adt(impl_self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind()
+        else {
+            return;
+        };
+        
+        let impl_self_did = impl_self_def.did();
+        let impl_self_path = self.tcx.def_path_str(impl_self_did);
+
+        // Use `visible_parent_map` and `trimmed_def_paths` to find re-exports
+        // and items that appear under the same visible path. `exportable_items`
+        // is only populated for sdylib interface builds and can be empty
+        // in normal compilation, so iterate over the visible parent map instead.
+        let visible_parent_map = self.tcx.visible_parent_map(());
+        let trimmed = self.tcx.trimmed_def_paths(());
+
+        let items_with_same_path: UnordSet<_> = visible_parent_map
+            .items()
+            .filter_map(|(&child, _)| {
+                // Prefer the trimmed path if available, otherwise fall back to `def_path_str`.
+                let path = trimmed.get(&child).map(|sym| sym.to_string()).unwrap_or_else(|| self.tcx.def_path_str(child));
+                (path == impl_self_path).then_some((path, child))
+            })
+            .collect();
+
+        let items_with_same_path =
+            items_with_same_path.into_items().into_sorted_stable_ord_by_key(|(p, _)| p);
+
+        for (_, item_with_same_path) in items_with_same_path {
+            err.span_help(self.tcx.def_span(item_with_same_path), "item with same name found");
+            let krate = self.tcx.crate_name(item_with_same_path.krate);
+            let crate_msg =
+                format!("perhaps two different versions of crate `{krate}` are being used?");
+            err.note(crate_msg);
+        }
     }
 
     /// Creates a `PredicateObligation` with `new_self_ty` replacing the existing type in the
