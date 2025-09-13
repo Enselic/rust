@@ -317,7 +317,7 @@ pub fn parse_config(args: Vec<String>) -> Config {
             .free
             .iter()
             .map(|f| {
-                // Here `f` is relative to `./tests/run-make`.  So if you run
+                // Here `f` is relative to `./tests/run-make`. So if you run
                 //
                 //   ./x test tests/run-make/crate-loading
                 //
