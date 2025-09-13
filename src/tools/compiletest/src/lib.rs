@@ -923,7 +923,8 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     collector.tests.extend(revisions.into_iter().map(|revision| {
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
-        let (test_name, filterable_path) = make_test_name_and_filterable_path(&cx.config, testpaths, revision);
+        let (test_name, filterable_path) =
+            make_test_name_and_filterable_path(&cx.config, testpaths, revision);
         // Create a description struct for the test/revision.
         // This is where `ignore-*`/`only-*`/`needs-*` directives are handled,
         // because they historically needed to set the libtest ignored flag.
@@ -1085,7 +1086,11 @@ impl Stamp {
 }
 
 /// Creates a name for this test/revision that can be handed over to the executor.
-fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> (String, Utf8PathBuf) {
+fn make_test_name_and_filterable_path(
+    config: &Config,
+    testpaths: &TestPaths,
+    revision: Option<&str>,
+) -> (String, Utf8PathBuf) {
     // Print the name of the file, relative to the sources root.
     let path = testpaths.file.strip_prefix(&config.src_root).unwrap();
     let debugger = match config.debugger {
@@ -1112,7 +1117,7 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
     let mut filterable_path = filterable_path.strip_prefix("tests").unwrap().to_owned();
     // Now strip of e.g. "ui" or "run-make" component.
     filterable_path = filterable_path.components().skip(1).collect();
-    
+
     (name, filterable_path)
 }
 

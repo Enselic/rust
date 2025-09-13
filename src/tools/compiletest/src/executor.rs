@@ -11,6 +11,7 @@ use std::hash::{BuildHasherDefault, DefaultHasher};
 use std::num::NonZero;
 use std::sync::{Arc, Mutex, mpsc};
 use std::{env, hint, io, mem, panic, thread};
+
 use camino::Utf8PathBuf;
 
 use crate::common::{Config, TestPaths};
@@ -295,7 +296,11 @@ fn filter_tests(opts: &Config, tests: Vec<CollectedTest>) -> Vec<CollectedTest> 
 
     let matches_filter = |test: &CollectedTest, filter_str: &str| {
         let filterable_path = test.desc.filterable_path.as_str();
-        if opts.filter_exact { filterable_path == filter_str } else { filterable_path.contains(filter_str) }
+        if opts.filter_exact {
+            filterable_path == filter_str
+        } else {
+            filterable_path.contains(filter_str)
+        }
     };
 
     // Remove tests that don't match the test filter
