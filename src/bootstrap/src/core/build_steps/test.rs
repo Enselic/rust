@@ -1735,6 +1735,7 @@ NOTE: if you're sure you want to do this, please open an issue as to why. In the
         let mut test_compiler = self.test_compiler;
         let target = self.target;
         let mode = self.mode;
+        eprintln!("NORDH mode={mode:?}");
         let suite = self.suite;
 
         // Path for test suite
@@ -1994,14 +1995,14 @@ HELP: You can add it into `bootstrap.toml` in `rust.codegen-backends = [{name:?}
         let mut flags = if is_rustdoc { Vec::new() } else { vec!["-Crpath".to_string()] };
         flags.push(format!(
             "-Cdebuginfo={}",
-            if mode == "codegen" {
+            if mode == "codegen" || mode == "assembly" {
                 // codegen tests typically check LLVM IR and are sensitive to additional debuginfo.
                 // So do not apply `rust.debuginfo-level-tests` for codegen tests.
                 if builder.config.rust_debuginfo_level_tests
                     != crate::core::config::DebuginfoLevel::None
                 {
                     println!(
-                        "NOTE: ignoring `rust.debuginfo-level-tests={}` for codegen tests",
+                        "NOTE: ignoring `rust.debuginfo-level-tests={}` for {mode} tests",
                         builder.config.rust_debuginfo_level_tests
                     );
                 }
