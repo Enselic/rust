@@ -2490,8 +2490,8 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         let trimmed = self.tcx.trimmed_def_paths(());
 
         let items_with_same_path: UnordSet<_> = visible_parent_map
-            .iter()
-            .filter_map(|(&child, &parent)| {
+            .items()
+            .filter_map(|(&child, _)| {
                 // Prefer the trimmed path if available, otherwise fall back to `def_path_str`.
                 let path = trimmed.get(&child).map(|sym| sym.to_string()).unwrap_or_else(|| self.tcx.def_path_str(child));
                 (path == impl_self_path).then_some((path, child))

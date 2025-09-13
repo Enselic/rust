@@ -629,6 +629,7 @@ struct TestCollectorCx {
     modified_tests: Vec<Utf8PathBuf>,
 }
 
+#[derive(Debug, Clone)]
 /// Mutable state used during test collection.
 struct TestCollector {
     tests: Vec<CollectedTest>,
@@ -808,6 +809,7 @@ fn collect_tests_from_dir(
             };
             make_test(cx, &mut collector, &paths);
             // This directory is a test, so don't try to find other tests inside it.
+            eprintln!("NORDH collector returning early from {dir:?} ,,, {collector:?}" );
             return Ok(collector);
         }
     }
@@ -885,6 +887,7 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     // For run-make tests, each "test file" is actually a _directory_ containing an `rmake.rs`. But
     // for the purposes of directive parsing, we want to look at that recipe file, not the directory
     // itself.
+    eprintln!("NORDH Making test from {testpaths:?}" );
     let test_path = if cx.config.mode == TestMode::RunMake {
         testpaths.file.join("rmake.rs")
     } else {
@@ -909,6 +912,7 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     // For each revision (or the sole dummy revision), create and append a
     // `CollectedTest` that can be handed over to the test executor.
     collector.tests.extend(revisions.into_iter().map(|revision| {
+        eprintln!("NORDH Making revision {test_path:?}" );
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
         let test_name = make_test_name(&cx.config, testpaths, revision);
