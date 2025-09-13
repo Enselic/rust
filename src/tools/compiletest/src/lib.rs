@@ -322,10 +322,8 @@ pub fn parse_config(args: Vec<String>) -> Config {
                 //   ./x test tests/run-make/crate-loading
                 //
                 //  then `f` is "crate-loading".
-                eprintln!("NORDH filter {f}");
                 let path = Utf8Path::new(f);
                 let mut iter = path.iter().skip(1);
-
 
                 if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
                     // Strip the "rmake.rs" suffix. For example, if `f` is
@@ -926,7 +924,6 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
         let (test_name, filterable_path) = make_test_name_and_filterable_path(&cx.config, testpaths, revision);
-        eprintln!("NORDH filterable_path {filterable_path}" );
         // Create a description struct for the test/revision.
         // This is where `ignore-*`/`only-*`/`needs-*` directives are handled,
         // because they historically needed to set the libtest ignored flag.
@@ -1108,17 +1105,15 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
         path,
         revision.map_or("".to_string(), |rev| format!("#{}", rev))
     );
-    let mut filterable_path = path.to_owned();
-    // Test filters do not have a `./tests/` 
-    // See https://github.com/rust-lang/rust/issues/134341
-    // TODO: tests/ui/foo/bar ???
-    filterable_path = filterable_path.strip_prefix("tests").unwrap_or(&filterable_path).to_owned();
-    // Now strip the remaining dir suffix like `ui/` or `run-make/`
+
+    // `path` is the full path from the repo like, `tests/ui/foo/bar.rs`.
+    // Filtering is applied without the `tests/ui/` part, so strip that off.
+    // First strip of "tests" to make sure we don't have some unexpected path.
+    let mut filterable_path = filterable_path.strip_prefix("tests").unwrap().to_owned();
+    // Now strip of e.g. "ui" or "run-make" component.
     filterable_path = filterable_path.components().skip(1).collect();
     
-    let apa = (name, filterable_path);
-    //eprintln!("NORDH apa={apa:?}" );
-    apa
+    (name, filterable_path)
 }
 
 /// Checks that test discovery didn't find any tests whose name stem is a prefix
