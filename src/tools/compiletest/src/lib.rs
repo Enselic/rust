@@ -1114,7 +1114,7 @@ fn make_test_name_and_filterable_path(
     // `path` is the full path from the repo root like, `tests/ui/foo/bar.rs`.
     // Filtering is applied without the `tests/ui/` part, so strip that off.
     // First strip of "tests" to make sure we don't have some unexpected path.
-    let mut filterable_path = filterable_path.strip_prefix("tests").unwrap().to_owned();
+    let mut filterable_path = path.strip_prefix("tests").unwrap().to_owned();
     // Now strip of e.g. "ui" or "run-make" component.
     filterable_path = filterable_path.components().skip(1).collect();
 
