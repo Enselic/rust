@@ -11,6 +11,7 @@ use std::hash::{BuildHasherDefault, DefaultHasher};
 use std::num::NonZero;
 use std::sync::{Arc, Mutex, mpsc};
 use std::{env, hint, io, mem, panic, thread};
+use camino::Utf8PathBuf;
 
 use crate::common::{Config, TestPaths};
 use crate::output_capture::{self, ConsoleOut};
@@ -293,8 +294,8 @@ fn filter_tests(opts: &Config, tests: Vec<CollectedTest>) -> Vec<CollectedTest> 
     let mut filtered = tests;
 
     let matches_filter = |test: &CollectedTest, filter_str: &str| {
-        let test_name = &test.desc.name;
-        if opts.filter_exact { test_name == filter_str } else { test_name.contains(filter_str) }
+        let filterable_path = test.desc.filterable_path.as_str();
+        if opts.filter_exact { filterable_path == filter_str } else { filterable_path.contains(filter_str) }
     };
 
     // Remove tests that don't match the test filter
@@ -337,8 +338,10 @@ pub(crate) struct CollectedTest {
 }
 
 /// Information that was historically needed to create a libtest `TestDesc`.
+#[derive(Debug, Clone)]
 pub(crate) struct CollectedTestDesc {
     pub(crate) name: String,
+    pub(crate) filterable_path: Utf8PathBuf,
     pub(crate) ignore: bool,
     pub(crate) ignore_message: Option<Cow<'static, str>>,
     pub(crate) should_panic: ShouldPanic,

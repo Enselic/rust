@@ -317,11 +317,19 @@ pub fn parse_config(args: Vec<String>) -> Config {
             .free
             .iter()
             .map(|f| {
+                // Here `f` is relative to `./tests/run-make`.  So if you run
+                //
+                //   ./x test tests/run-make/crate-loading
+                //
+                //  then `f` is "crate-loading".
+                eprintln!("NORDH filter {f}");
                 let path = Utf8Path::new(f);
                 let mut iter = path.iter().skip(1);
 
-                // We skip the test folder and check if the user passed `rmake.rs`.
+
                 if iter.next().is_some_and(|s| s == "rmake.rs") && iter.next().is_none() {
+                    // Strip the "rmake.rs" suffix. For example, if `f` is
+                    // "crate-loading/rmake.rs" then this gives us "crate-loading".
                     path.parent().unwrap().to_string()
                 } else {
                     f.to_string()
@@ -329,6 +337,12 @@ pub fn parse_config(args: Vec<String>) -> Config {
             })
             .collect::<Vec<_>>()
     } else {
+        // Note that the filters are relative to the root dir of the different test
+        // suites. For example, with:
+        //
+        //   ./x test tests/ui/lint/unused
+        //
+        // the filter is "lint/unused".
         matches.free.clone()
     };
     let compare_mode = matches.opt_str("compare-mode").map(|s| {
@@ -911,7 +925,8 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
     collector.tests.extend(revisions.into_iter().map(|revision| {
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
-        let test_name = make_test_name(&cx.config, testpaths, revision);
+        let (test_name, filterable_path) = make_test_name_and_filterable_path(&cx.config, testpaths, revision);
+        eprintln!("NORDH filterable_path {filterable_path}" );
         // Create a description struct for the test/revision.
         // This is where `ignore-*`/`only-*`/`needs-*` directives are handled,
         // because they historically needed to set the libtest ignored flag.
@@ -920,6 +935,7 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
             &cx.cache,
             test_name,
             &test_path,
+            filterable_path,
             src_file,
             revision,
             &mut collector.poisoned,
@@ -1072,7 +1088,7 @@ impl Stamp {
 }
 
 /// Creates a name for this test/revision that can be handed over to the executor.
-fn make_test_name(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> String {
+fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> (String, Utf8PathBuf) {
     // Print the name of the file, relative to the sources root.
     let path = testpaths.file.strip_prefix(&config.src_root).unwrap();
     let debugger = match config.debugger {
@@ -1083,15 +1099,26 @@ fn make_test_name(config: &Config, testpaths: &TestPaths, revision: Option<&str>
         Some(ref mode) => format!(" ({})", mode.to_str()),
         None => String::new(),
     };
-
-    format!(
+    
+    let name = format!(
         "[{}{}{}] {}{}",
         config.mode,
         debugger,
         mode_suffix,
         path,
         revision.map_or("".to_string(), |rev| format!("#{}", rev))
-    )
+    );
+    let mut filterable_path = path.to_owned();
+    // Test filters do not have a `./tests/` 
+    // See https://github.com/rust-lang/rust/issues/134341
+    // TODO: tests/ui/foo/bar ???
+    filterable_path = filterable_path.strip_prefix("tests").unwrap_or(&filterable_path).to_owned();
+    // Now strip the remaining dir suffix like `ui/` or `run-make/`
+    filterable_path = filterable_path.components().skip(1).collect();
+    
+    let apa = (name, filterable_path);
+    //eprintln!("NORDH apa={apa:?}" );
+    apa
 }
 
 /// Checks that test discovery didn't find any tests whose name stem is a prefix
