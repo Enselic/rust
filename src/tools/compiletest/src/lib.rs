@@ -931,8 +931,8 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
         //eprintln!("NORDH Making revision {test_path:?}" );
         // Create a test name and description to hand over to the executor.
         let src_file = fs::File::open(&test_path).expect("open test file to parse ignores");
-        let test_name = make_test_name(&cx.config, testpaths, revision);
-        eprintln!("NORDH test_name {test_name}" );
+        let (test_name, filterable_path) = make_test_name_and_filterable_path(&cx.config, testpaths, revision);
+        eprintln!("NORDH filterable_path {filterable_path}" );
         // Create a description struct for the test/revision.
         // This is where `ignore-*`/`only-*`/`needs-*` directives are handled,
         // because they historically needed to set the libtest ignored flag.
@@ -941,6 +941,7 @@ fn make_test(cx: &TestCollectorCx, collector: &mut TestCollector, testpaths: &Te
             &cx.cache,
             test_name,
             &test_path,
+            filterable_path,
             src_file,
             revision,
             &mut collector.poisoned,
@@ -1095,7 +1096,6 @@ impl Stamp {
 /// Creates a name for this test/revision that can be handed over to the executor.
 fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, revision: Option<&str>) -> (String, Utf8PathBuf) {
     // Print the name of the file, relative to the sources root.
-    eprintln!("NORDH testpaths={testpaths:?}" );
     let path = testpaths.file.strip_prefix(&config.src_root).unwrap();
     let debugger = match config.debugger {
         Some(d) => format!("-{}", d),
@@ -1105,7 +1105,7 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
         Some(ref mode) => format!(" ({})", mode.to_str()),
         None => String::new(),
     };
-
+    
     let name = format!(
         "[{}{}{}] {}{}",
         config.mode,
@@ -1114,10 +1114,17 @@ fn make_test_name_and_filterable_path(config: &Config, testpaths: &TestPaths, re
         path,
         revision.map_or("".to_string(), |rev| format!("#{}", rev))
     );
-    let filterable_path = path.to_owned();
+    let mut filterable_path = path.to_owned();
     // Test filters do not have a `./tests/` 
     // See https://github.com/rust-lang/rust/issues/134341
-    (name, filterable_path)
+    // TODO: tests/ui/foo/bar ???
+    filterable_path = filterable_path.strip_prefix("tests").unwrap_or(&filterable_path).to_owned();
+    // Now strip the remaining dir suffix like `ui/` or `run-make/`
+    filterable_path = filterable_path.components().skip(1).collect();
+    
+    let apa = (name, filterable_path);
+    //eprintln!("NORDH apa={apa:?}" );
+    apa
 }
 
 /// Checks that test discovery didn't find any tests whose name stem is a prefix

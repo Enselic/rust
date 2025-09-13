@@ -11,6 +11,7 @@ use std::hash::{BuildHasherDefault, DefaultHasher};
 use std::num::NonZero;
 use std::sync::{Arc, Mutex, mpsc};
 use std::{env, hint, io, mem, panic, thread};
+use camino::Utf8PathBuf;
 
 use crate::common::{Config, TestPaths};
 use crate::output_capture::{self, ConsoleOut};
@@ -295,9 +296,9 @@ fn filter_tests(opts: &Config, tests: Vec<CollectedTest>) -> Vec<CollectedTest> 
 
     
     let matches_filter = |test: &CollectedTest, filter_str: &str| {
-        let test_name = &test.desc.name;
-        eprintln!("NORDH checking {test_name} against {filter_str} ");
-        if opts.filter_exact { test_name == filter_str } else { test_name.contains(filter_str) }
+        let filterable_name = test.desc.filterable_path.as_str();
+        eprintln!("NORDH checking {filterable_name} against {filter_str} ");
+        if opts.filter_exact { filterable_name == filter_str } else { filterable_name.contains(filter_str) }
     };
 
     // Remove tests that don't match the test filter
@@ -344,6 +345,7 @@ pub(crate) struct CollectedTest {
 #[derive(Debug, Clone)]
 pub(crate) struct CollectedTestDesc {
     pub(crate) name: String,
+    pub(crate) filterable_path: Utf8PathBuf,
     pub(crate) ignore: bool,
     pub(crate) ignore_message: Option<Cow<'static, str>>,
     pub(crate) should_panic: ShouldPanic,
