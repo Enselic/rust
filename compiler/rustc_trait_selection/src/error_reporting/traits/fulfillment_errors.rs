@@ -2460,7 +2460,7 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                 impl_spans,
                 format!("trait impl{} with same name found", pluralize!(trait_impls.len())),
             );
-            self.note_two_different_crate_versions(trait_with_same_path);
+            self.note_two_different_crate_versions(trait_with_same_path, err);
             suggested = true;
         }
         suggested
@@ -2499,13 +2499,13 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
 
         for (similar_item, _) in similar_items {            
             err.span_help(self.tcx.def_span(similar_item), "item with same name found");
-            self.note_two_different_crate_versions(similar_item);
+            self.note_two_different_crate_versions(similar_item, err);
         }
     }
 
     fn note_two_different_crate_versions(&self, did: DefId,         err: &mut Diag<'_>,
 ) {
-            let krate = self.tcx.crate_name(similar_item.krate);
+            let krate = self.tcx.crate_name(did.krate);
             let crate_msg =
                 format!("perhaps two different versions of crate `{krate}` are being used?");
             err.note(crate_msg);

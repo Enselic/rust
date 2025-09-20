@@ -12,8 +12,6 @@ warning: unused imports: `Trait`, `do_something_trait`, `do_something_type`, and
 LL | use dependency::{Trait, do_something, do_something_trait, do_something_type};
    |                  ^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^
 
-NORDH item=DefId(21:5 ~ dependency[7fa1]::Type2) path="dep_2_reexport::dependency::Type2"
-NORDH item=DefId(22:6 ~ dependency[b8e3]::Type2) path="dependency::Type2"
 error[E0277]: the trait bound `dep_2_reexport::dependency::Type2: From<MainType>` is not satisfied
   --> replaced
    |
@@ -27,7 +25,7 @@ help: item with same name found
    |
 LL | pub struct Type2; // Only re-exported indirectly, never directly
    | ^^^^^^^^^^^^^^^^
-   = note: NORDH 2 perhaps two different versions of crate `dependency` are being used?
+   = note: perhaps two different versions of crate `dependency` are being used?
    = note: required for `MainType` to implement `Into<dep_2_reexport::dependency::Type2>`
 note: required by a bound in `into_type2`
   --> replaced
