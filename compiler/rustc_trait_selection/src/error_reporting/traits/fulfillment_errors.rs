@@ -2460,10 +2460,7 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                 impl_spans,
                 format!("trait impl{} with same name found", pluralize!(trait_impls.len())),
             );
-            let trait_crate = self.tcx.crate_name(trait_with_same_path.krate);
-            let crate_msg =
-                format!("perhaps two different versions of crate `{trait_crate}` are being used?");
-            err.note(crate_msg);
+            self.note_two_different_crate_versions(trait_with_same_path);
             suggested = true;
         }
         suggested
@@ -2481,26 +2478,14 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         
         let impl_self_did = impl_self_def.did();
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
-
-
-
-        
-        // Use `visible_parent_map` and `trimmed_def_paths` to find re-exports
-        // and items that appear under the same visible path. `exportable_items`
-        // is only populated for sdylib interface builds and can be empty
-        // in normal compilation, so iterate over the visible parent map instead.
-        let visible_parent_map = self.tcx.visible_parent_map(());
-
-        let similar_items: UnordSet<_> = visible_parent_map
+        let similar_items: UnordSet<_> = self.tcx.visible_parent_map(())
             .items()
             .filter_map(|(&item, _)| {
                 if !self.tcx.def_kind(item).is_adt() {
+                    // Filter out e.g. constructors that often have the same path str as the relevant ADT
                     return None;
                 }
                 let path = self.tcx.def_path_str(item);
-                if path.contains("Type2") {
-                    eprintln!("NORDH item={:?} path={:?}", item, path);
-                }
                 let is_identical = path == impl_self_path;
                 let paths_similar = path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
                 let is_similar = !is_identical && paths_similar;
@@ -2514,11 +2499,17 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
 
         for (similar_item, _) in similar_items {            
             err.span_help(self.tcx.def_span(similar_item), "item with same name found");
+            self.note_two_different_crate_versions(similar_item);
+        }
+    }
+
+    fn note_two_different_crate_versions(&self, did: DefId,         err: &mut Diag<'_>,
+) {
             let krate = self.tcx.crate_name(similar_item.krate);
             let crate_msg =
-                format!("NORDH 2 perhaps two different versions of crate `{krate}` are being used?");
+                format!("perhaps two different versions of crate `{krate}` are being used?");
             err.note(crate_msg);
-        }
+
     }
 
     /// Creates a `PredicateObligation` with `new_self_ty` replacing the existing type in the
