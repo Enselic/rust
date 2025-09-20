@@ -1,0 +1,4 @@
+error: crate name `re-export-foo` passed to `--extern` is not a valid ASCII identifier
+  |
+  = help: consider replacing the dashes with underscores: `re_export_foo`
+
