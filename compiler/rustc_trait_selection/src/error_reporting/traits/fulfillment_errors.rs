@@ -2406,7 +2406,21 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
     /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
     /// with the same path as `trait_ref`, a help message about
     /// a probable version mismatch is added to `err`
-    fn note_version_mismatch(
+    fn note_version_mismatch(&self, err: &mut Diag<'_>, trait_pred: ty::PolyTraitPredicate<'tcx>) {
+        if !self.note_trait_version_mismatch(err, trait_pred) {
+            // If we didn't find trait-duplicates, check whether the `Self` type
+            // itself appears in multiple crate versions. This covers the case where
+            // e.g. `From<Foo>` is implemented for `Bar` from version X of a given
+            // crate, but the current code needs it for `Bar` from version Y of a
+            // the same crate.
+            self.note_adt_version_mismatch(err, trait_pred);
+        }
+    }
+
+    /// If the `Self` type of the unsatisfied trait `trait_ref` implements a trait
+    /// with the same path as `trait_ref`, a help message about
+    /// a probable version mismatch is added to `err`
+    fn note_trait_version_mismatch(
         &self,
         err: &mut Diag<'_>,
         trait_pred: ty::PolyTraitPredicate<'tcx>,
@@ -2446,13 +2460,57 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                 impl_spans,
                 format!("trait impl{} with same name found", pluralize!(trait_impls.len())),
             );
-            let trait_crate = self.tcx.crate_name(trait_with_same_path.krate);
-            let crate_msg =
-                format!("perhaps two different versions of crate `{trait_crate}` are being used?");
-            err.note(crate_msg);
+            self.note_two_different_crate_versions(trait_with_same_path, err);
             suggested = true;
         }
         suggested
+    }
+
+    fn note_adt_version_mismatch(
+        &self,
+        err: &mut Diag<'_>,
+        trait_pred: ty::PolyTraitPredicate<'tcx>,
+    ) {
+        let ty::Adt(impl_self_def, _) = trait_pred.self_ty().skip_binder().peel_refs().kind()
+        else {
+            return;
+        };
+
+        let impl_self_did = impl_self_def.did();
+        let impl_self_path = self.tcx.def_path_str(impl_self_did);
+        let similar_items: UnordSet<_> = self
+            .tcx
+            .visible_parent_map(())
+            .items()
+            .filter_map(|(&item, _)| {
+                if !self.tcx.def_kind(item).is_adt() {
+                    // Filter out e.g. constructors that often have the same path str as the relevant ADT
+                    return None;
+                }
+                let path = self.tcx.def_path_str(item);
+                let is_identical = path == impl_self_path;
+                let paths_similar =
+                    path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
+                let is_similar = !is_identical && paths_similar;
+                is_similar.then_some((item, path))
+            })
+            .collect();
+
+        let mut similar_items =
+            similar_items.into_items().into_sorted_stable_ord_by_key(|(_, path)| path);
+        similar_items.dedup();
+
+        for (similar_item, _) in similar_items {
+            err.span_help(self.tcx.def_span(similar_item), "item with same name found");
+            self.note_two_different_crate_versions(similar_item, err);
+        }
+    }
+
+    fn note_two_different_crate_versions(&self, did: DefId, err: &mut Diag<'_>) {
+        let krate = self.tcx.crate_name(did.krate);
+        let crate_msg =
+            format!("perhaps two different versions of crate `{krate}` are being used?");
+        err.note(crate_msg);
     }
 
     /// Creates a `PredicateObligation` with `new_self_ty` replacing the existing type in the
