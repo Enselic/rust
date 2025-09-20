@@ -6,6 +6,12 @@ LL |     into_foo(Bar);
    |     |
    |     required by a bound introduced by this call
    |
+help: item with same name found
+  --> /home/martin/src/rust2/build/x86_64-unknown-linux-gnu/test/run-make/duplicate-dependency/rmake_out/foo-v1.rs:1:1
+   |
+LL | pub struct Foo;
+   | ^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `foo` are being used?
    = note: required for `Bar` to implement `Into<re_export_foo::foo::Foo>`
 note: required by a bound in `into_foo`
   --> /home/martin/src/rust2/build/x86_64-unknown-linux-gnu/test/run-make/duplicate-dependency/rmake_out/re-export-foo.rs:3:25
