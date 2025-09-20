@@ -1,6 +1,7 @@
 #![crate_name = "dependency"]
 #![crate_type = "rlib"]
 pub struct Type(pub i32);
+pub struct Type2; // Only re-exported indirectly, never directly
 pub trait Trait {
     fn foo(&self);
     fn bar();

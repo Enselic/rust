@@ -2494,7 +2494,13 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         let similar_items: UnordSet<_> = visible_parent_map
             .items()
             .filter_map(|(&item, _)| {
+                if !self.tcx.def_kind(item).is_adt() {
+                    return None;
+                }
                 let path = self.tcx.def_path_str(item);
+                if path.contains("Type2") {
+                    eprintln!("NORDH item={:?} path={:?}", item, path);
+                }
                 let is_identical = path == impl_self_path;
                 let paths_similar = path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
                 let is_similar = !is_identical && paths_similar;
