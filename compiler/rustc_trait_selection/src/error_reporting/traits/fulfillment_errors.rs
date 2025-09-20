@@ -2494,14 +2494,17 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         let similar_items: UnordSet<_> = visible_parent_map
             .items()
             .filter_map(|(&item, _)| {
-                let item_path = self.tcx.def_path_str(item);
-                let is_similar = !item_path.ends_with(&impl_self_path) && !impl_self_path.ends_with(&item_path);
+                let path = self.tcx.def_path_str(item);
+                let is_identical = path == impl_self_path;
+                let paths_similar = path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
+                let is_similar = !is_identical && paths_similar;
                 is_similar.then_some((item, path))
             })
             .collect();
 
-        let similar_items =
+        let mut similar_items =
             similar_items.into_items().into_sorted_stable_ord_by_key(|(_, path)| path);
+        similar_items.dedup();
 
         for (similar_item, _) in similar_items {            
             err.span_help(self.tcx.def_span(similar_item), "item with same name found");

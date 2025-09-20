@@ -1,9 +1,8 @@
 #![crate_name = "foo"]
 #![crate_type = "rlib"]
 
-extern crate dependency;
+pub extern crate dependency; // Also re-export the whole crate for more variation
 pub use dependency::{Trait2, Type, do_something_trait, do_something_type};
-pub use dependency; // Also re-export the whole crate for more variation
 pub struct OtherType;
 impl dependency::Trait for OtherType {
     fn foo(&self) {}
