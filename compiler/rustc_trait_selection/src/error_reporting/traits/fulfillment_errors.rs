@@ -2471,7 +2471,7 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         &self,
         did: DefId,
     ) ->String {
-        format!("::{}", self.tcx.def_path_str(did))
+        format!("::{}::", self.tcx.def_path_str(did))
     }
 
     fn note_adt_version_mismatch(
