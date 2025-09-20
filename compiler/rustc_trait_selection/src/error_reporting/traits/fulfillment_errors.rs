@@ -2482,14 +2482,30 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         let impl_self_did = impl_self_def.did();
         let impl_self_path = self.tcx.def_path_str(impl_self_did);
 
-        for (&item, _) in self.tcx.visible_parent_map(()).items() {
-            let item_path = self.tcx.def_path_str(item);
-            if !item_path.ends_with(impl_self_path) && !item_self_path.ends_with(item_path) {
-                continue;
-            }
-            
-            err.span_help(self.tcx.def_span(item), "item with same name found");
-            let krate = self.tcx.crate_name(item_with_same_path.krate);
+
+
+        
+        // Use `visible_parent_map` and `trimmed_def_paths` to find re-exports
+        // and items that appear under the same visible path. `exportable_items`
+        // is only populated for sdylib interface builds and can be empty
+        // in normal compilation, so iterate over the visible parent map instead.
+        let visible_parent_map = self.tcx.visible_parent_map(());
+
+        let similar_items: UnordSet<_> = visible_parent_map
+            .items()
+            .filter_map(|(&item, _)| {
+                let item_path = self.tcx.def_path_str(item);
+                let is_similar = !item_path.ends_with(&impl_self_path) && !impl_self_path.ends_with(&item_path);
+                is_similar.then_some((item, path))
+            })
+            .collect();
+
+        let similar_items =
+            similar_items.into_items().into_sorted_stable_ord_by_key(|(_, path)| path);
+
+        for (similar_item, _) in similar_items {            
+            err.span_help(self.tcx.def_span(similar_item), "item with same name found");
+            let krate = self.tcx.crate_name(similar_item.krate);
             let crate_msg =
                 format!("NORDH 2 perhaps two different versions of crate `{krate}` are being used?");
             err.note(crate_msg);
