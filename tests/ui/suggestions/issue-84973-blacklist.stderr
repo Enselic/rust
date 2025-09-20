@@ -6,6 +6,15 @@ LL |     f_copy("".to_string());
    |     |
    |     required by a bound introduced by this call
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `f_copy`
   --> $DIR/issue-84973-blacklist.rs:7:14
    |
@@ -81,6 +90,9 @@ LL |     f_send(rc);
    |     required by a bound introduced by this call
    |
    = help: the trait `Send` is not implemented for `Rc<{integer}>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `f_send`
   --> $DIR/issue-84973-blacklist.rs:11:14
    |

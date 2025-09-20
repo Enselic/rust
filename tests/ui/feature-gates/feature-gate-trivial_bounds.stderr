@@ -82,6 +82,15 @@ error[E0277]: the trait bound `String: Neg` is not satisfied
 LL | fn use_op(s: String) -> String where String: ::std::ops::Neg<Output=String> {
    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Neg` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: see issue #48214
 help: add `#![feature(trivial_bounds)]` to the crate attributes to enable
    |

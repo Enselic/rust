@@ -115,6 +115,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -139,6 +145,12 @@ help: the trait `Impossible` is not implemented for `c::S`
    |
 LL |     pub struct S {}
    |     ^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:2:5
+   |
+LL |     pub struct S {}
+   |     ^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -163,6 +175,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -244,6 +262,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -287,6 +311,12 @@ help: the trait `Impossible` is not implemented for `c::TS`
    |
 LL |     pub struct TS();
    |     ^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:3:5
+   |
+LL |     pub struct TS();
+   |     ^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -311,6 +341,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -411,6 +447,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -435,6 +477,12 @@ help: the trait `Impossible` is not implemented for `c::US`
    |
 LL |     pub struct US;
    |     ^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:4:5
+   |
+LL |     pub struct US;
+   |     ^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -459,6 +507,12 @@ help: the trait `Impossible` is not implemented for `c::US`
    |
 LL |     pub struct US;
    |     ^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:4:5
+   |
+LL |     pub struct US;
+   |     ^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -483,6 +537,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -583,6 +643,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -607,6 +673,12 @@ help: the trait `Impossible` is not implemented for `c::E`
    |
 LL |     pub enum E {
    |     ^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:5:5
+   |
+LL |     pub enum E {
+   |     ^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -631,6 +703,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -712,6 +790,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -755,6 +839,12 @@ help: the trait `Impossible` is not implemented for `c::E`
    |
 LL |     pub enum E {
    |     ^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:5:5
+   |
+LL |     pub enum E {
+   |     ^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -779,6 +869,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -879,6 +975,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -903,6 +1005,12 @@ help: the trait `Impossible` is not implemented for `c::E`
    |
 LL |     pub enum E {
    |     ^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:5:5
+   |
+LL |     pub enum E {
+   |     ^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -927,6 +1035,12 @@ help: the trait `Impossible` is not implemented for `c::E`
    |
 LL |     pub enum E {
    |     ^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:5:5
+   |
+LL |     pub enum E {
+   |     ^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |
@@ -951,6 +1065,12 @@ help: the trait `Impossible` is not implemented for `c::Item`
    |
 LL |     pub struct Item;
    |     ^^^^^^^^^^^^^^^
+help: item with same name found
+  --> $DIR/auxiliary/namespace-mix.rs:11:5
+   |
+LL |     pub struct Item;
+   |     ^^^^^^^^^^^^^^^
+   = note: perhaps two different versions of crate `namespace_mix` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/namespace-mix.rs:20:1
    |

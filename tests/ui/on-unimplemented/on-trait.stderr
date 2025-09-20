@@ -23,6 +23,15 @@ LL |     let x: String = foobar();
    |                     ^^^^^^^^ test error `String` with `u8` `_` `u32` in `Foo`
    |
    = help: the trait `Foo<u8, _, u32>` is not implemented for `String`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/on-trait.rs:7:3
    |

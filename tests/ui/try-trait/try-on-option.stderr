@@ -6,6 +6,16 @@ LL | fn foo() -> Result<u32, ()> {
 LL |     let x: Option<u32> = None;
 LL |     x?;
    |      ^ use `.ok_or(...)?` to provide an error compatible with `Result<u32, ()>`
+   |
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/barrier.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/../../stdarch/crates/core_arch/src/x86/cpuid.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 
 error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
   --> $DIR/try-on-option.rs:11:6

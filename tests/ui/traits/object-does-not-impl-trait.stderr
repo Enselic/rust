@@ -6,6 +6,9 @@ LL | fn take_object(f: Box<dyn Foo>) { take_foo(f); }
    |                                   |
    |                                   required by a bound introduced by this call
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/object-does-not-impl-trait.rs:4:1
    |

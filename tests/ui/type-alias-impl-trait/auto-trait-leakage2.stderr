@@ -10,6 +10,9 @@ LL |     is_send(foo());
    |     required by a bound introduced by this call
    |
    = help: within `Foo`, the trait `Send` is not implemented for `Rc<u32>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it appears within the type `Foo`
   --> $DIR/auto-trait-leakage2.rs:6:12
    |

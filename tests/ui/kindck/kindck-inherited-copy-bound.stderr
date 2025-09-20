@@ -6,6 +6,9 @@ LL |     take_param(&x);
    |     |
    |     required by a bound introduced by this call
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required for `Box<{integer}>` to implement `Foo`
   --> $DIR/kindck-inherited-copy-bound.rs:10:14
    |

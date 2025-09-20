@@ -7,6 +7,15 @@ LL |
 LL |     Ok(())
    |     ------ return type was inferred to be `Result<(), _>` here
    |
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/barrier.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/../../stdarch/crates/core_arch/src/x86/cpuid.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/lifetime-elision-return-type-trait.rs:1:1
    |

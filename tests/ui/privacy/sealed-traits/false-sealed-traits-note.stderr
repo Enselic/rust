@@ -9,6 +9,9 @@ help: the trait `TraitA` is not implemented for `Struct`
    |
 LL | struct Struct;
    | ^^^^^^^^^^^^^
+help: item with same name found
+  --> $SRC_DIR/core/src/fmt/builders.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 help: this trait has no implementations, consider adding one
   --> $DIR/false-sealed-traits-note.rs:5:5
    |

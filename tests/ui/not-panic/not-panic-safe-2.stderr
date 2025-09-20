@@ -5,6 +5,12 @@ LL |     assert::<Rc<RefCell<i32>>>();
    |              ^^^^^^^^^^^^^^^^ `UnsafeCell<i32>` may contain interior mutability and a reference may not be safely transferrable across a catch_unwind boundary
    |
    = help: within `RefCell<i32>`, the trait `RefUnwindSafe` is not implemented for `UnsafeCell<i32>`
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required because it appears within the type `RefCell<i32>`
   --> $SRC_DIR/core/src/cell.rs:LL:COL
    = note: required for `Rc<RefCell<i32>>` to implement `UnwindSafe`
@@ -21,6 +27,12 @@ LL |     assert::<Rc<RefCell<i32>>>();
    |              ^^^^^^^^^^^^^^^^ `UnsafeCell<isize>` may contain interior mutability and a reference may not be safely transferrable across a catch_unwind boundary
    |
    = help: within `RefCell<i32>`, the trait `RefUnwindSafe` is not implemented for `UnsafeCell<isize>`
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required because it appears within the type `Cell<isize>`
   --> $SRC_DIR/core/src/cell.rs:LL:COL
 note: required because it appears within the type `RefCell<i32>`

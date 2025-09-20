@@ -13,6 +13,9 @@ error[E0277]: the trait bound `Rc<{integer}>: DerefMut` is not satisfied
 LL |         deref!(x) => {}
    |         ^^^^^^^^^ the trait `DerefMut` is not implemented for `Rc<{integer}>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: this error originates in the macro `deref` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error[E0277]: the trait bound `Rc<({integer},)>: DerefMut` is not satisfied
@@ -20,6 +23,10 @@ error[E0277]: the trait bound `Rc<({integer},)>: DerefMut` is not satisfied
    |
 LL |         (x,) => {}
    |         ^^^^ the trait `DerefMut` is not implemented for `Rc<({integer},)>`
+   |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 
 error: aborting due to 2 previous errors; 1 warning emitted
 

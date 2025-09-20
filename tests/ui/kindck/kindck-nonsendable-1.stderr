@@ -9,6 +9,9 @@ LL |     bar(move|| foo(x));
    |     required by a bound introduced by this call
    |
    = help: within `{closure@$DIR/kindck-nonsendable-1.rs:9:9: 9:15}`, the trait `Send` is not implemented for `Rc<usize>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it's used within this closure
   --> $DIR/kindck-nonsendable-1.rs:9:9
    |

@@ -6,6 +6,12 @@ LL |     format_args!("{:?}", FlatMap(&Chars));
    |                   |
    |                   required by this formatting parameter
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/string.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/str/iter.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
    = help: the trait `Trait` is implemented for `Chars`
 note: required for `FlatMap<&Chars>` to implement `Debug`
   --> $DIR/suggest-remove-deref-issue-140166.rs:7:16

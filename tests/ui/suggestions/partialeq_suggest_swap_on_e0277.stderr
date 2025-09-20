@@ -5,6 +5,15 @@ LL |     String::from("Girls Band Cry") == T(String::from("Girls Band Cry"));
    |                                    ^^ no implementation for `String == T`
    |
    = help: the trait `PartialEq<T>` is not implemented for `String`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: the following other types implement trait `PartialEq<Rhs>`:
              `String` implements `PartialEq<&str>`
              `String` implements `PartialEq<ByteStr>`

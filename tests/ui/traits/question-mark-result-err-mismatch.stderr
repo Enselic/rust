@@ -14,6 +14,15 @@ LL |           .map(|()| "")?;
    |                        ^ the trait `From<()>` is not implemented for `String`
    |
    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = note: required for `Result<String, String>` to implement `FromResidual<Result<Infallible, ()>>`
 
 error[E0277]: `?` couldn't convert the error to `String`
@@ -30,6 +39,15 @@ LL |         .map_err(|_| ())?;
    |          this can't be annotated with `?` because it has type `Result<_, ()>`
    |
    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: the following other types implement trait `From<T>`:
              `String` implements `From<&String>`
              `String` implements `From<&mut str>`
@@ -55,6 +73,15 @@ LL | |         })?;
    |            this can't be annotated with `?` because it has type `Result<_, ()>`
    |
    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = note: required for `Result<String, String>` to implement `FromResidual<Result<Infallible, ()>>`
 
 error: aborting due to 3 previous errors

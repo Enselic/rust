@@ -4,6 +4,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: lazy::Alias<String>;
    |                        ^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `lazy::Alias`
   --> $DIR/auxiliary/lazy.rs:3:19
    |

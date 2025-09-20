@@ -6,6 +6,21 @@ LL |     require_sync::<std::cell::Cell<()>>();
    |
    = help: the trait `Sync` is not implemented for `Cell<()>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock`
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/lazy.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/once.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required by a bound in `require_sync`
   --> $DIR/suggest-cell.rs:1:20
    |
@@ -20,6 +35,21 @@ LL |     require_sync::<std::cell::Cell<u8>>();
    |
    = help: the trait `Sync` is not implemented for `Cell<u8>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` or `std::sync::atomic::AtomicU8` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/lazy.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/once.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required by a bound in `require_sync`
   --> $DIR/suggest-cell.rs:1:20
    |
@@ -34,6 +64,21 @@ LL |     require_sync::<std::cell::Cell<i32>>();
    |
    = help: the trait `Sync` is not implemented for `Cell<i32>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` or `std::sync::atomic::AtomicI32` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/lazy.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/once.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required by a bound in `require_sync`
   --> $DIR/suggest-cell.rs:1:20
    |
@@ -48,6 +93,21 @@ LL |     require_sync::<std::cell::Cell<bool>>();
    |
    = help: the trait `Sync` is not implemented for `Cell<bool>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` or `std::sync::atomic::AtomicBool` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/lazy.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell/once.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required by a bound in `require_sync`
   --> $DIR/suggest-cell.rs:1:20
    |

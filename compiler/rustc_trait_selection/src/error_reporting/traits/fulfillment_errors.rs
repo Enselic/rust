@@ -2466,6 +2466,14 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         suggested
     }
 
+    // So that "Foo" is not the end of "BarFoo". TODO: Explain better
+    fn comparable_path(
+        &self,
+        did: DefId,
+    ) ->String {
+        format!("::{}", self.tcx.def_path_str(did))
+    }
+
     fn note_adt_version_mismatch(
         &self,
         err: &mut Diag<'_>,
@@ -2477,20 +2485,23 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
         };
 
         let impl_self_did = impl_self_def.did();
-        let impl_self_path = self.tcx.def_path_str(impl_self_did);
+        let impl_self_path = self.comparable_path(impl_self_did);
         let similar_items: UnordSet<_> = self
             .tcx
             .visible_parent_map(())
             .items()
-            .filter_map(|(&item, _)| {
+            .filter_map(|(&item, _parent)| {
+                // needed? if self.tcx.opt_parent(item) {
+                // needed?     // Too many false positives if the item has no parents
+                // needed? }
                 if !self.tcx.def_kind(item).is_adt() {
                     // Filter out e.g. constructors that often have the same path str as the relevant ADT
                     return None;
                 }
-                let path = self.tcx.def_path_str(item);
+                let path = self.comparable_path(item);
                 let is_identical = path == impl_self_path;
                 let paths_similar =
-                    path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
+                path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
                 let is_similar = !is_identical && paths_similar;
                 is_similar.then_some((item, path))
             })

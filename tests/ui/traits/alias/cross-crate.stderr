@@ -4,6 +4,9 @@ error[E0277]: the trait bound `Rc<u32>: SendSync` is not satisfied
 LL |     use_alias::<Rc<u32>>();
    |                 ^^^^^^^ the trait `Send` is not implemented for `Rc<u32>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required for `Rc<u32>` to implement `SendSync`
 note: required by a bound in `use_alias`
   --> $DIR/cross-crate.rs:10:17
@@ -17,6 +20,9 @@ error[E0277]: the trait bound `Rc<u32>: SendSync` is not satisfied
 LL |     use_alias::<Rc<u32>>();
    |                 ^^^^^^^ the trait `Sync` is not implemented for `Rc<u32>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required for `Rc<u32>` to implement `SendSync`
 note: required by a bound in `use_alias`
   --> $DIR/cross-crate.rs:10:17

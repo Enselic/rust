@@ -7,6 +7,150 @@ LL | #[derive(Ord,Eq,PartialOrd,PartialEq)]
 LL |      x: Error
    |      ^^^^^^^^ the trait `Ord` is not implemented for `Error`
    |
+help: item with same name found
+  --> $SRC_DIR/std/src/thread/local.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/net/parser.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/os/unix/net/ancillary.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/char/convert.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/char/decode.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/process.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/string.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/string.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/slice/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/io/buffered/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/env.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/alloc/layout.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/path.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/str/error.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/char/convert.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/num/dec2flt/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/num/error.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/poison.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpsc.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpsc.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpsc.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpmc/error.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/path.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/time.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/char/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/time.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/num/error.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/array/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpsc.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/collections/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mpsc.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/collections/btree/map.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/str/error.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/env.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/alloc/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/collections/btree/map/entry.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/collections/hash/map.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/fmt/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/fs.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/io/error.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/poison.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 help: consider annotating `Error` with `#[derive(Ord)]`
    |
 LL + #[derive(Ord)]

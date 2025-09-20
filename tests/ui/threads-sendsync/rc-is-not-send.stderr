@@ -14,6 +14,9 @@ LL | |     });
    | |_____^ `Rc<()>` cannot be sent between threads safely
    |
    = help: within `{closure@$DIR/rc-is-not-send.rs:25:19: 25:26}`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it appears within the type `Port<()>`
   --> $DIR/rc-is-not-send.rs:7:8
    |

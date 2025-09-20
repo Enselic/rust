@@ -82,6 +82,9 @@ LL |     _ = &Box::new(42) == 42;
    |                       ^^ no implementation for `&Box<{integer}> == {integer}`
    |
    = help: the trait `PartialEq<{integer}>` is not implemented for `&Box<{integer}>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 help: consider removing the borrow and dereferencing instead
    |
 LL -     _ = &Box::new(42) == 42;
@@ -95,6 +98,9 @@ LL |     _ = &Box::new(&Box::new(&42)) == 42;
    |                                   ^^ no implementation for `&Box<&Box<&{integer}>> == {integer}`
    |
    = help: the trait `PartialEq<{integer}>` is not implemented for `&Box<&Box<&{integer}>>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 help: consider removing the borrow and dereferencing instead
    |
 LL -     _ = &Box::new(&Box::new(&42)) == 42;
@@ -174,6 +180,9 @@ LL |     _ = &Box::new(Box::new(42)) == &foo;
    |                                 ^^ no implementation for `Box<Box<{integer}>> == &&{integer}`
    |
    = help: the trait `PartialEq<&&{integer}>` is not implemented for `Box<Box<{integer}>>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required for `&Box<Box<{integer}>>` to implement `PartialEq<&&&{integer}>`
 help: consider dereferencing both sides of the expression
    |
@@ -188,6 +197,9 @@ LL |     _ = &Box::new(42) == &foo;
    |                       ^^ no implementation for `Box<{integer}> == &&{integer}`
    |
    = help: the trait `PartialEq<&&{integer}>` is not implemented for `Box<{integer}>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required for `&Box<{integer}>` to implement `PartialEq<&&&{integer}>`
 help: consider dereferencing both sides of the expression
    |
@@ -202,6 +214,9 @@ LL |     _ = &Box::new(Box::new(Box::new(Box::new(42)))) == &foo;
    |                                                     ^^ no implementation for `Box<Box<Box<Box<{integer}>>>> == &&{integer}`
    |
    = help: the trait `PartialEq<&&{integer}>` is not implemented for `Box<Box<Box<Box<{integer}>>>>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required for `&Box<Box<Box<Box<{integer}>>>>` to implement `PartialEq<&&&{integer}>`
 help: consider dereferencing both sides of the expression
    |
@@ -278,6 +293,15 @@ LL |     _ = string_ref == partial[..3];
    |                    ^^ no implementation for `&String == str`
    |
    = help: the trait `PartialEq<str>` is not implemented for `&String`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 help: consider dereferencing here
    |
 LL |     _ = *string_ref == partial[..3];

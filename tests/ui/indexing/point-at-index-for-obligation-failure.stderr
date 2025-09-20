@@ -4,6 +4,15 @@ error[E0277]: the trait bound `String: Borrow<&str>` is not satisfied
 LL |         &s
    |         ^^ the trait `Borrow<&str>` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: the trait `Borrow<&_>` is not implemented for `String`
            but trait `Borrow<_>` is implemented for it
    = help: for that trait implementation, expected `str`, found `&str`

@@ -22,6 +22,12 @@ LL |     is_sync::<MyTypeWUnsafe>();
    |               ^^^^^^^^^^^^^ `UnsafeCell<u8>` cannot be shared between threads safely
    |
    = help: within `MyTypeWUnsafe`, the trait `Sync` is not implemented for `UnsafeCell<u8>`
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: required because it appears within the type `MyTypeWUnsafe`
   --> $DIR/typeck-default-trait-impl-negation-sync.rs:21:8
    |

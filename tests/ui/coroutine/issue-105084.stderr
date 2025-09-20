@@ -31,6 +31,9 @@ LL |     || {
 LL |     let mut h = copy(g);
    |                 ^^^^^^^ within `{coroutine@$DIR/issue-105084.rs:16:5: 16:7}`, the trait `Copy` is not implemented for `Box<(i32, ())>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: coroutine does not implement `Copy` as this value is used across a yield
   --> $DIR/issue-105084.rs:22:41
    |

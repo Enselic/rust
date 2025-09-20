@@ -4,6 +4,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: AliasConstUnused<String>;
    |            ^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `ct_unused_0::AliasConstUnused`
   --> $DIR/type-alias-bounds.rs:20:30
    |
@@ -22,6 +31,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: AliasConstUnused;
    |            ^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `ct_unused_1::AliasConstUnused`
   --> $DIR/type-alias-bounds.rs:29:41
    |
@@ -34,6 +52,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: AliasFnUnused<String>;
    |            ^^^^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `AliasFnUnused`
   --> $DIR/type-alias-bounds.rs:37:27
    |
@@ -46,6 +73,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: AliasAssocConstUsed<String>;
    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `AliasAssocConstUsed`
   --> $DIR/type-alias-bounds.rs:56:41
    |
@@ -58,6 +94,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     let _: AliasFnUsed<String>;
    |            ^^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `AliasFnUsed`
   --> $DIR/type-alias-bounds.rs:63:33
    |

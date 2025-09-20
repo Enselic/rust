@@ -4,6 +4,15 @@ error[E0277]: the trait bound `Result<u32, i32>: From<Result<u64, i32>>` is not 
 LL |     a().into()
    |         ^^^^ the trait `From<Result<u64, i32>>` is not implemented for `Result<u32, i32>`
    |
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/barrier.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
+help: item with same name found
+  --> $SRC_DIR/core/src/../../stdarch/crates/core_arch/src/x86/cpuid.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/sync/mod.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = note: required for `Result<u64, i32>` to implement `Into<Result<u32, i32>>`
 
 error: aborting due to 1 previous error

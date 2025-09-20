@@ -5,6 +5,9 @@ LL |     is_send(foo(Some(true)));
    |             ^^^^^^^^^^^^^^^ future returned by `foo` is not `Send`
    |
    = help: within `impl Future<Output = ()>`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: future is not `Send` as this value is used across an await
   --> $DIR/async-await-let-else.rs:8:15
    |
@@ -30,6 +33,9 @@ LL |     is_send(foo2(Some(true)));
    |     required by a bound introduced by this call
    |
    = help: within `impl Future<Output = ()>`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it's used within this `async` fn body
   --> $DIR/async-await-let-else.rs:24:29
    |
@@ -61,6 +67,9 @@ LL |     is_send(foo3(Some(true)));
    |             ^^^^^^^^^^^^^^^^ future returned by `foo3` is not `Send`
    |
    = help: within `impl Future<Output = ()>`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: future is not `Send` as this value is used across an await
   --> $DIR/async-await-let-else.rs:30:29
    |
@@ -81,6 +90,9 @@ LL |     is_send(foo4(Some(true)));
    |             ^^^^^^^^^^^^^^^^ future returned by `foo4` is not `Send`
    |
    = help: within `impl Future<Output = ()>`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: future is not `Send` as this value is used across an await
   --> $DIR/async-await-let-else.rs:38:15
    |

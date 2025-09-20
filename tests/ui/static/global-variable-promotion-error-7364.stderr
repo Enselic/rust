@@ -6,6 +6,9 @@ LL | static boxed: Box<RefCell<isize>> = Box::new(RefCell::new(0));
    |
    = help: the trait `Sync` is not implemented for `RefCell<isize>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
    = note: required for `Unique<RefCell<isize>>` to implement `Sync`
 note: required because it appears within the type `Box<RefCell<isize>>`
   --> $SRC_DIR/alloc/src/boxed.rs:LL:COL

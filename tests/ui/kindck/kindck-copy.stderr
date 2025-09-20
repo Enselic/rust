@@ -38,6 +38,9 @@ error[E0277]: the trait bound `Box<isize>: Copy` is not satisfied
 LL |     assert_copy::<Box<isize>>();
    |                   ^^^^^^^^^^ the trait `Copy` is not implemented for `Box<isize>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |
@@ -50,6 +53,15 @@ error[E0277]: the trait bound `String: Copy` is not satisfied
 LL |     assert_copy::<String>();
    |                   ^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |
@@ -74,6 +86,9 @@ error[E0277]: the trait bound `Box<&'a mut isize>: Copy` is not satisfied
 LL |     assert_copy::<Box<&'a mut isize>>();
    |                   ^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `Box<&'a mut isize>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |
@@ -86,6 +101,9 @@ error[E0277]: the trait bound `Box<dyn Dummy>: Copy` is not satisfied
 LL |     assert_copy::<Box<dyn Dummy>>();
    |                   ^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `Box<dyn Dummy>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |
@@ -98,6 +116,9 @@ error[E0277]: the trait bound `Box<dyn Dummy + Send>: Copy` is not satisfied
 LL |     assert_copy::<Box<dyn Dummy + Send>>();
    |                   ^^^^^^^^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `Box<dyn Dummy + Send>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/boxed/thin.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |
@@ -139,6 +160,9 @@ error[E0277]: the trait bound `Rc<isize>: Copy` is not satisfied
 LL |     assert_copy::<Rc<isize>>();
    |                   ^^^^^^^^^ the trait `Copy` is not implemented for `Rc<isize>`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `assert_copy`
   --> $DIR/kindck-copy.rs:5:18
    |

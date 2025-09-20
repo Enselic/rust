@@ -20,6 +20,15 @@ LL |         .collect::<String>();
    |          required by a bound introduced by this call
    |
    = help: the trait `FromIterator<()>` is not implemented for `String`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: the following other types implement trait `FromIterator<A>`:
              `String` implements `FromIterator<&char>`
              `String` implements `FromIterator<&str>`

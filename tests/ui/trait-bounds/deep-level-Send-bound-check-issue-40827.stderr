@@ -7,6 +7,9 @@ LL |     f(Foo(Arc::new(Bar::B(None))));
    |     required by a bound introduced by this call
    |
    = help: within `Bar`, the trait `Sync` is not implemented for `Rc<Foo>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it appears within the type `Bar`
   --> $DIR/deep-level-Send-bound-check-issue-40827.rs:6:6
    |
@@ -33,6 +36,9 @@ LL |     f(Foo(Arc::new(Bar::B(None))));
    |     required by a bound introduced by this call
    |
    = help: within `Bar`, the trait `Send` is not implemented for `Rc<Foo>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it appears within the type `Bar`
   --> $DIR/deep-level-Send-bound-check-issue-40827.rs:6:6
    |

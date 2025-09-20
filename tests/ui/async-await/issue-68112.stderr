@@ -6,6 +6,9 @@ LL |     require_send(send_fut);
    |
    = help: the trait `Sync` is not implemented for `RefCell<i32>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: future is not `Send` as it awaits another future which is not `Send`
   --> $DIR/issue-68112.rs:31:17
    |
@@ -25,6 +28,9 @@ LL |     require_send(send_fut);
    |
    = help: the trait `Sync` is not implemented for `RefCell<i32>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
 note: future is not `Send` as it awaits another future which is not `Send`
   --> $DIR/issue-68112.rs:40:17
    |
@@ -44,6 +50,9 @@ LL |     require_send(send_fut);
    |
    = help: the trait `Sync` is not implemented for `RefCell<i32>`
    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+help: item with same name found
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
    = note: required for `Arc<RefCell<i32>>` to implement `Send`
 note: required because it's used within this `async` fn body
   --> $DIR/issue-68112.rs:47:31

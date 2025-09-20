@@ -4,6 +4,15 @@ error[E0277]: the trait bound `String: Trait<u32>` is not satisfied
 LL |     impls_trait(x);
    |     ^^^^^^^^^^^^^^ the trait `Copy` is not implemented for `String`
    |
+help: item with same name found
+  --> $SRC_DIR/alloc/src/bstr.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/alloc/src/ffi/c_str.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
+help: item with same name found
+  --> $SRC_DIR/std/src/ffi/os_str.rs:LL:COL
+   = note: perhaps two different versions of crate `std` are being used?
    = help: the trait `Trait<u32>` is not implemented for `String`
            but trait `Trait<u64>` is implemented for it
    = help: for that trait implementation, expected `u64`, found `u32`

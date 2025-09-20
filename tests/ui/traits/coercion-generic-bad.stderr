@@ -4,6 +4,9 @@ error[E0277]: the trait bound `Struct: Trait<isize>` is not satisfied
 LL |     let s: Box<dyn Trait<isize>> = Box::new(Struct { person: "Fred" });
    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
    |
+help: item with same name found
+  --> $SRC_DIR/core/src/fmt/builders.rs:LL:COL
+   = note: perhaps two different versions of crate `core` are being used?
    = help: the trait `Trait<isize>` is not implemented for `Struct`
            but trait `Trait<&'static str>` is implemented for it
    = help: for that trait implementation, expected `&'static str`, found `isize`

@@ -10,6 +10,9 @@ LL |     send(before());
    |     required by a bound introduced by this call
    |
    = help: within `impl Fn(i32)`, the trait `Send` is not implemented for `Rc<Cell<i32>>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it's used within this closure
   --> $DIR/auto-trait-leak2.rs:11:5
    |
@@ -38,6 +41,9 @@ LL | fn after() -> impl Fn(i32) {
    |               ------------ within this `impl Fn(i32)`
    |
    = help: within `impl Fn(i32)`, the trait `Send` is not implemented for `Rc<Cell<i32>>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required because it's used within this closure
   --> $DIR/auto-trait-leak2.rs:39:5
    |

@@ -7,6 +7,9 @@ LL |     requires_send(rc_value);
    |     required by a bound introduced by this call
    |
    = help: the trait `Send` is not implemented for `Rc<{integer}>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
 note: required by a bound in `requires_send`
   --> $DIR/rc-not-send.rs:5:21
    |

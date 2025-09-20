@@ -5,6 +5,9 @@ LL |     foo::<HashMap<Rc<()>, Rc<()>>>();
    |           ^^^^^^^^^^^^^^^^^^^^^^^ `Rc<()>` cannot be sent between threads safely
    |
    = help: within `(Rc<()>, Rc<()>)`, the trait `Send` is not implemented for `Rc<()>`
+help: item with same name found
+  --> $SRC_DIR/alloc/src/rc.rs:LL:COL
+   = note: perhaps two different versions of crate `alloc` are being used?
    = note: required because it appears within the type `(Rc<()>, Rc<()>)`
    = note: required for `hashbrown::raw::RawTable<(Rc<()>, Rc<()>)>` to implement `Send`
 note: required because it appears within the type `hashbrown::map::HashMap<Rc<()>, Rc<()>, RandomState>`
