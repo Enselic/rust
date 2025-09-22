@@ -1,7 +1,3 @@
-//@ only-linux
-//@ ignore-wasm32
-//@ ignore-wasm64
-
 use run_make_support::{Rustc, cwd, diff, rust_lib_name, rustc};
 
 fn rustc_with_common_args() -> Rustc {
