@@ -2505,11 +2505,6 @@ impl<'a, 'tcx> TypeErrCtxt<'a, 'tcx> {
                     return None;
                 }
                 let path = self.comparable_path(item);
-                // NEEDED? // If the paths are identical, we found the item we already
-                // NEEDED? // know about. Ignore.
-                // NEEDED? if path == impl_self_path {
-                // NEEDED?     return None;
-                // NEEDED? }
                 // We don't know if our item or the one we found is the re-exported one.
                 // Check both cases.
                 let is_similar = path.ends_with(&impl_self_path) || impl_self_path.ends_with(&path);
