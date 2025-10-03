@@ -5,7 +5,9 @@
 //@ ignore-aarch64: Doesn't work yet.
 //@ ignore-loongarch64: Doesn't work yet.
 //@ ignore-riscv64: Doesn't work yet.
-//@ compile-flags: -g
+// With optimizations, stepping can't be expected to be sequential and
+// predictable, so we make sure tp disable optimizations for this test.
+//@ compile-flags: -g -Copt-level=0
 
 // gdb-command: run
 // FIXME(#97083): Should we be able to break on initialization of zero-sized types?
