@@ -408,6 +408,7 @@ impl fmt::Display for Backtrace {
         for frame in frames {
             if frame.symbols.is_empty() {
                 //f.frame().print_raw(frame.frame.ip(), None, None, None)?;
+                if true { panic!("NORDH was here") }
             } else {
                 for symbol in frame.symbols.iter() {
                     f.frame().print_raw_with_column(

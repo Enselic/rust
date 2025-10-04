@@ -26,8 +26,10 @@
 //@ only-linux
 //@ check-run-results
 //@ run-fail
-//@ exec-env:RUST_BACKTRACE=short
+//@ exec-env:RUST_LIB_BACKTRACE=1
+//@ exec-env:RUST_BACKTRACE=1
 
 fn main() {
-    panic!("the panic payload");
+    //panic!("the panic payload");
+    println!("{}", std::backtrace::Backtrace::force_capture());
 }
