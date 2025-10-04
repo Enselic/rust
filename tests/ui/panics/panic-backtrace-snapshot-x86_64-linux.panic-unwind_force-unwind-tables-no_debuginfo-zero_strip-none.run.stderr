@@ -1,5 +1,5 @@
 
-thread 'main' ($TID) panicked at $DIR/panic-backtrace-snapshot-x86_64-linux.rs:20:5:
+thread 'main' ($TID) panicked at $DIR/panic-backtrace-snapshot-x86_64-linux.rs:32:5:
 the panic payload
 stack backtrace:
    0: std::panicking::begin_panic

@@ -407,7 +407,7 @@ impl fmt::Display for Backtrace {
         f.add_context()?;
         for frame in frames {
             if frame.symbols.is_empty() {
-                f.frame().print_raw(frame.frame.ip(), None, None, None)?;
+                //f.frame().print_raw(frame.frame.ip(), None, None, None)?;
             } else {
                 for symbol in frame.symbols.iter() {
                     f.frame().print_raw_with_column(
