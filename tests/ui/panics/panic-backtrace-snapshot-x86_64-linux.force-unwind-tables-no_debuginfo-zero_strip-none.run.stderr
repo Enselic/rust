@@ -1,0 +1,9 @@
+
+thread 'main' ($TID) panicked at $DIR/panic-backtrace-snapshot-x86_64-linux.rs:14:5:
+the panic payload
+stack backtrace:
+   0: std::panicking::begin_panic
+             at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
+   1: panic_backtrace_snapshot_x86_64_linux::main
+   2: core::ops::function::FnOnce::call_once
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
