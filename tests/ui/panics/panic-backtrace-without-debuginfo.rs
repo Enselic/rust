@@ -1,17 +1,20 @@
-//! Test that with `-C panic=abort` the backtrace is not cut off by default
+//! Test that backtraces are not cut off by default
 //! (i.e. without using `-C force-unwind-tables=yes`) by ensuring that our own
 //! functions are in the backtrace. If we just check one function it might be
 //! the last function, so make sure the backtrace can continue by checking for
 //! two functions. Regression test for
-//! <https://github.com/rust-lang/rust/issues/81902>.
+//! <https://github.com/rust-lang/rust/issues/81902> with panic=unwind as bonus.
 
+//@ revisions: abort unwind
+//@[abort] compile-flags: -C panic=abort
+//@[unwind] compile-flags: -C panic=unwind
 //@ run-pass
 //@ needs-subprocess
 // We want to test if unwind tables are emitted by default. We must make sure
 // to disable debuginfo to test that, because enabling debuginfo also means that
 // unwind tables are emitted, which prevents us from testing what we want.
 // We also need to set opt-level=0 to avoid optimizing away our functions.
-//@ compile-flags: -C panic=abort -C opt-level=0 -C debuginfo=0
+//@ compile-flags: -C opt-level=0 -C debuginfo=0
 //@ no-prefer-dynamic
 //@ ignore-apple
 //@ ignore-arm-unknown-linux-gnueabihf FIXME(#146996) Try removing this once #146996 has been fixed.
