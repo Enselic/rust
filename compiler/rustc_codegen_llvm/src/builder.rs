@@ -767,6 +767,19 @@ impl<'a, 'll, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'll, 'tcx> {
         count: u64,
         dest: PlaceRef<'tcx, &'ll Value>,
     ) {
+        if self.cx.sess().opts.optimize == OptLevel::No {
+            write_operand_repeatedly_unoptimized(self, cg_elem, count, dest);
+        } else {
+            write_operand_repeatedly_optimized(self, cg_elem, count, dest);
+        }
+    }
+
+    fn write_operand_repeatedly_optimized(
+        &mut self,
+        cg_elem: OperandRef<'tcx, &'ll Value>,
+        count: u64,
+        dest: PlaceRef<'tcx, &'ll Value>,
+    ) {
         let zero = self.const_usize(0);
         let count = self.const_usize(count);
 
@@ -789,6 +802,46 @@ impl<'a, 'll, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'll, 'tcx> {
         let next = body_bx.unchecked_uadd(i, self.const_usize(1));
         body_bx.br(header_bb);
         header_bx.add_incoming_to_phi(i, next, body_bb);
+
+        *self = Self::build(self.cx, next_bb);
+    }
+
+    fn write_operand_repeatedly_unoptimized(
+        &mut self,
+        cg_elem: OperandRef<'tcx, &'ll Value>,
+        count: u64,
+        dest: PlaceRef<'tcx, &'ll Value>,
+    ) {
+        let zero = self.const_usize(0);
+        let count = self.const_usize(count);
+        let start = dest.project_index(self, zero).val.llval;
+        let end = dest.project_index(self, count).val.llval;
+
+        let header_bb = self.append_sibling_block("repeat_loop_header");
+        let body_bb = self.append_sibling_block("repeat_loop_body");
+        let next_bb = self.append_sibling_block("repeat_loop_next");
+
+        self.br(header_bb);
+
+        let mut header_bx = Self::build(self.cx, header_bb);
+        let current = header_bx.phi(self.val_ty(start), &[start], &[self.llbb()]);
+
+        let keep_going = header_bx.icmp(IntPredicate::IntNE, current, end);
+        header_bx.cond_br(keep_going, body_bb, next_bb);
+
+        let mut body_bx = Self::build(self.cx, body_bb);
+        let align = dest.val.align.restrict_for_offset(dest.layout.field(self.cx(), 0).size);
+        cg_elem
+            .val
+            .store(&mut body_bx, PlaceRef::new_sized_aligned(current, cg_elem.layout, align));
+
+        let next = body_bx.inbounds_gep(
+            self.backend_type(cg_elem.layout),
+            current,
+            &[self.const_usize(1)],
+        );
+        body_bx.br(header_bb);
+        header_bx.add_incoming_to_phi(current, next, body_bb);
 
         *self = Self::build(self.cx, next_bb);
     }
