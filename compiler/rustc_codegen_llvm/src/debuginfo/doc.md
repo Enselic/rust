@@ -91,6 +91,17 @@ allow to map machine code locations back to source code locations in order
 to be useful. This functionality is also handled in this module. The
 following functions allow to control source mappings:
 
+git show 737499593db6d7702de3bf9d0070ec3f8e65d71e
+
+-    fn set_source_location(&mut self, scope: &'ll DIScope, span: Span) {
+-        debug!("set_source_location: {}", self.sess().source_map().span_to_string(span));
+-
+-        let dbg_loc = self.cx().create_debug_loc(scope, span);
+-
++    fn set_dbg_loc(&mut self, dbg_loc: &'ll DILocation) {
+
+
+
 + `set_source_location()`
 + `clear_source_location()`
 + `start_emitting_source_locations()`
