@@ -103,8 +103,45 @@ git show 737499593db6d7702de3bf9d0070ec3f8e65d71e
 
 
 + `set_source_location()`
+
+
+commit ce8d4a21348c6185e7df2817a80910f86e9db205
+Author: Eduard-Mihai Burtescu <edy.burt@gmail.com>
+Date:   Thu Apr 7 22:35:11 2016 +0300
+
+    trans: initial implementation of MIR debuginfo.
+
+diff --git a/src/librustc_trans/base.rs b/src/librustc_trans/base.rs
+index 956e1a5ce96..464e5c0cf1c 100644
+--- a/src/librustc_trans/base.rs
++++ b/src/librustc_trans/base.rs
+@@ -1276,7 +1276,7 @@ pub fn alloca(cx: Block, ty: Type, name: &str) -> ValueRef {
+             return llvm::LLVMGetUndef(ty.ptr_to().to_ref());
+         }
+     }
+-    debuginfo::clear_source_location(cx.fcx);
++    DebugLoc::None.apply(cx.fcx);
+
+
 + `clear_source_location()`
+
+commit c2e7743da8ba6062c89b700957fda01f54732c30
+Author: Eduard-Mihai Burtescu <edy.burt@gmail.com>
+Date:   Wed Sep 11 17:52:39 2019 +0300
+
+    rustc_codegen_ssa: move debuginfo scopes into FunctionDebugContext.
+
+
 + `start_emitting_source_locations()`
+
+-/// Enables emitting source locations for the given functions.
+-///
+-/// Since we don't want source locations to be emitted for the function prelude,
+-/// they are disabled when beginning to codegen a new function. This functions
+-/// switches source location emitting on and must therefore be called before the
+-/// first real statement/expression of the function is codegened.
+-pub fn start_emitting_source_locations<D>(dbg_context: &mut FunctionDebugContext<D>) {
+  
 
 `set_source_location()` allows to set the current source location. All IR
 instructions created after a call to this function will be linked to the
