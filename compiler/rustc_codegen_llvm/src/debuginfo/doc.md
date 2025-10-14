@@ -131,6 +131,12 @@ Date:   Wed Sep 11 17:52:39 2019 +0300
 
     rustc_codegen_ssa: move debuginfo scopes into FunctionDebugContext.
 
+    fn clear_dbg_loc(&mut self) {
+        unsafe {
+            llvm::LLVMSetCurrentDebugLocation2(self.llbuilder, ptr::null());
+        }
+    }
+
 
 + `start_emitting_source_locations()`
 
@@ -141,7 +147,7 @@ Date:   Wed Sep 11 17:52:39 2019 +0300
 -/// switches source location emitting on and must therefore be called before the
 -/// first real statement/expression of the function is codegened.
 -pub fn start_emitting_source_locations<D>(dbg_context: &mut FunctionDebugContext<D>) {
-  
+
 
 `set_source_location()` allows to set the current source location. All IR
 instructions created after a call to this function will be linked to the
