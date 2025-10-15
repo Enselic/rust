@@ -34,6 +34,8 @@ pub(crate) const KNOWN_DIRECTIVE_NAMES: &[&str] = &[
     "filecheck-flags",
     "forbid-output",
     "force-host",
+    "gdb-check",
+    "gdb-command",
     "ignore-16bit",
     "ignore-32bit",
     "ignore-64bit",
