@@ -30,6 +30,6 @@
 //@ exec-env:RUST_BACKTRACE=1
 
 fn main() {
-    //panic!("the panic payload");
-    println!("{}", std::backtrace::Backtrace::force_capture());
+    panic!("the panic payload");
+    //println!("{}", std::backtrace::Backtrace::force_capture());
 }

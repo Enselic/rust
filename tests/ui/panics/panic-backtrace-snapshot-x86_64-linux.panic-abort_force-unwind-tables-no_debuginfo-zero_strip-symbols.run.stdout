@@ -1,0 +1,27 @@
+   0: panic_backtrace_snapshot_x86_64_linux::main
+   1: core::ops::function::FnOnce::call_once
+   2: std::sys::backtrace::__rust_begin_short_backtrace
+   3: std::rt::lang_start::{{closure}}
+   4: do_call<&(dyn core::ops::function::Fn<(), Output=i32> + core::marker::Sync + core::panic::unwind_safe::RefUnwindSafe), i32>
+             at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
+   5: catch_unwind<i32, &(dyn core::ops::function::Fn<(), Output=i32> + core::marker::Sync + core::panic::unwind_safe::RefUnwindSafe)>
+             at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
+   6: catch_unwind<&(dyn core::ops::function::Fn<(), Output=i32> + core::marker::Sync + core::panic::unwind_safe::RefUnwindSafe), i32>
+             at $SRC_DIR_REAL/std/src/panic.rs:LL:COL
+   7: {closure#0}
+             at $SRC_DIR_REAL/std/src/rt.rs:LL:COL
+   8: do_call<std::rt::lang_start_internal::{closure_env#0}, isize>
+             at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
+   9: catch_unwind<isize, std::rt::lang_start_internal::{closure_env#0}>
+             at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
+  10: catch_unwind<std::rt::lang_start_internal::{closure_env#0}, isize>
+             at $SRC_DIR_REAL/std/src/panic.rs:LL:COL
+  11: lang_start_internal
+             at $SRC_DIR_REAL/std/src/rt.rs:LL:COL
+  12: std::rt::lang_start
+  13: main
+  14: __libc_start_call_main
+             at ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+  15: __libc_start_main_impl
+             at ./csu/../csu/libc-start.c:360:3
+  16: _start

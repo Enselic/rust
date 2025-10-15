@@ -1,9 +1,29 @@
 
-thread 'main' ($TID) panicked at $DIR/panic-backtrace-snapshot-x86_64-linux.rs:33:5:
-the panic payload
+thread 'main' ($TID) panicked at library/std/src/backtrace.rs:411:27:
+NORDH was here
 stack backtrace:
-   0: std::panicking::begin_panic
+   0: panic_handler
              at $SRC_DIR_REAL/std/src/panicking.rs:LL:COL
-   1: panic_backtrace_snapshot_x86_64_linux::main
-   2: core::ops::function::FnOnce::call_once
+   1: panic_fmt
+             at $SRC_DIR_REAL/core/src/panicking.rs:LL:COL
+   2: fmt
+             at $SRC_DIR_REAL/std/src/backtrace.rs:LL:COL
+   3: fmt
+             at $SRC_DIR_REAL/core/src/fmt/rt.rs:LL:COL
+   4: write
+             at $SRC_DIR_REAL/core/src/fmt/mod.rs:LL:COL
+   5: default_write_fmt<std::io::stdio::StdoutLock>
+             at $SRC_DIR_REAL/std/src/io/mod.rs:LL:COL
+   6: write_fmt<std::io::stdio::StdoutLock>
+             at $SRC_DIR_REAL/std/src/io/mod.rs:LL:COL
+   7: write_fmt
+             at $SRC_DIR_REAL/std/src/io/stdio.rs:LL:COL
+   8: write_fmt
+             at $SRC_DIR_REAL/std/src/io/stdio.rs:LL:COL
+   9: print_to<std::io::stdio::Stdout>
+             at $SRC_DIR_REAL/std/src/io/stdio.rs:LL:COL
+  10: _print
+             at $SRC_DIR_REAL/std/src/io/stdio.rs:LL:COL
+  11: panic_backtrace_snapshot_x86_64_linux::main
+  12: core::ops::function::FnOnce::call_once
 note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
