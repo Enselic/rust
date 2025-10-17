@@ -51,7 +51,6 @@
 //@ gdb-check:     *mut isize,
 //@ gdb-check: }
 
-//
 //@ gdb-command:continue
 
 #![allow(unused_variables)]
