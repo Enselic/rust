@@ -1083,6 +1083,8 @@ impl<'a, 'gcc, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'gcc, 'tcx> {
         let start = dest.project_index(self, zero).val.llval;
         let end = dest.project_index(self, count).val.llval;
 
+        // Sibling blocks have the same debug location as the original block.
+        let dbg_loc = self.get_dbg_loc();
         let header_bb = self.append_sibling_block("repeat_loop_header");
         let body_bb = self.append_sibling_block("repeat_loop_body");
         let next_bb = self.append_sibling_block("repeat_loop_next");
@@ -1095,10 +1097,16 @@ impl<'a, 'gcc, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'gcc, 'tcx> {
         self.br(header_bb);
 
         self.switch_to_block(header_bb);
+        if let Some(dbg_loc) = dbg_loc {
+            self.set_dbg_loc(dbg_loc);
+        }
         let keep_going = self.icmp(IntPredicate::IntNE, current_val, end);
         self.cond_br(keep_going, body_bb, next_bb);
 
         self.switch_to_block(body_bb);
+        if let Some(dbg_loc) = dbg_loc {
+            self.set_dbg_loc(dbg_loc);
+        }
         let align = dest.val.align.restrict_for_offset(dest.layout.field(self.cx(), 0).size);
         cg_elem.val.store(self, PlaceRef::new_sized_aligned(current_val, cg_elem.layout, align));
 
@@ -1111,6 +1119,9 @@ impl<'a, 'gcc, 'tcx> BuilderMethods<'a, 'tcx> for Builder<'a, 'gcc, 'tcx> {
         self.br(header_bb);
 
         self.switch_to_block(next_bb);
+        if let Some(dbg_loc) = dbg_loc {
+            self.set_dbg_loc(dbg_loc);
+        }
     }
 
     fn range_metadata(&mut self, _load: RValue<'gcc>, _range: WrappingRange) {
