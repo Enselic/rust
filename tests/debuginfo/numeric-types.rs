@@ -35,7 +35,7 @@
 
 // 128-bit integers don't seem to work in CDB
 //@ cdb-command: dx nz_i128
-//@ cdb-check:    [<Raw View>]     [Type: core::num::nonzero::NonZero<i128>]
+//@ cdb-check:    [<Raw Viewvvvvvvvvvvvvvvvvvvvvvvvvvvv>]     [Type: core::num::nonzero::NonZero<i128>]
 
 //@ cdb-command: dx nz_isize
 //@ cdb-check:nz_isize         : 66 [Type: core::num::nonzero::NonZero<isize>]
