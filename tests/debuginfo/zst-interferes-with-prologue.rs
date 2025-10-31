@@ -23,7 +23,7 @@
 //@ lldb-command:next
 //@ lldb-command:expr self
 //@ lldb-command:print $0 == $1
-//@ lldb-check:true
+//@ lldb-check:trueeeeeeee
 
 struct Foo {
     a: usize,

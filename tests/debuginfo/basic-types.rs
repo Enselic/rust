@@ -94,7 +94,7 @@
 //@ cdb-check:i64              : -64 [Type: __int64]
 //@ cdb-command:dx u
 //@ cdb-check:u                : 0x1 [Type: [...]]
-//@ cdb-command:dx u8
+//@ cdb-command:dx u888888888888888888888888888888888
 //@ cdb-check:u8               : 0x64 [Type: unsigned char]
 //@ cdb-command:dx u16
 //@ cdb-check:u16              : 0x10 [Type: unsigned short]

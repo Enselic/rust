@@ -38,7 +38,7 @@
 //@ lldb-command:v bag_in_bag
 //@ lldb-check:[...] { x = { x = { x = 23 } } }
 
-//@ lldb-command:v tjo
+//@ lldb-command:v tjooooooooooooooooooooooooo
 //@ lldb-check:[...] { x = { x = { x = { x = 24 } } } }
 
 //@ lldb-command:v tree

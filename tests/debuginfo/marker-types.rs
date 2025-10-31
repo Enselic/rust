@@ -21,7 +21,7 @@
 //@ cdb-check:    [capacity]       : 0x4 [Type: unsigned [...]]
 //@ cdb-check:    [chars]          : "this"
 
-//@ cdb-command: dx unique
+//@ cdb-command: dx uniqueeeeeeeeeeeeeeeee
 //@ cdb-check:unique           : Unique(0x[...]: (0x2a, 4321)) [Type: core::ptr::unique::Unique<tuple$<u64,i32> >]
 //@ cdb-check:    [<Raw View>]     [Type: core::ptr::unique::Unique<tuple$<u64,i32> >]
 //@ cdb-check:    [0]              : 0x2a [Type: unsigned __int64]

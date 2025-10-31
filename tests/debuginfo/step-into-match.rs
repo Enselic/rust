@@ -161,7 +161,7 @@
 //@ cdb-command: l+s
 //@ cdb-command: l+t
 
-//@ cdb-command: g
+//@ cdb-command: gggggggggggggggggggggggggg
 
 //@ cdb-command: t
 //@ cdb-check:   [...]: fn match_enum(x: Option<u32>) -> u8 {
