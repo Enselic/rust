@@ -78,16 +78,19 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
         let file = entry.path();
         let filestr = file.to_string_lossy().replace("\\", "/");
         if !filestr.ends_with(".rs") {
+            eprintln!("NORDH: skipping non-rust file {}", filestr);
             return;
         }
 
         let is_exception_path = EXCEPTION_PATHS.iter().any(|s| filestr.contains(&**s));
         if is_exception_path {
+            eprintln!("NORDH: skipping exception path {}", filestr);
             return;
         }
 
         // exclude tests and benchmarks as some platforms do not support all tests
         if filestr.contains("tests") || filestr.contains("benches") {
+            eprintln!("NORDH: skipping test/bench file {}", filestr);
             return;
         }
 
