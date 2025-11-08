@@ -1499,9 +1499,7 @@ impl<'tcx> Visitor<'tcx> for BindingFinder {
     }
 
     fn visit_param(&mut self, param: &'tcx hir::Param<'tcx>) -> Self::Result {
-        if let hir::Pat { kind: hir::PatKind::Ref(_, _), span, .. } = param.pat
-            && *span == self.span
-        {
+        if param.pat.span == self.span {
             ControlFlow::Break(param.hir_id)
         } else {
             ControlFlow::Continue(())
