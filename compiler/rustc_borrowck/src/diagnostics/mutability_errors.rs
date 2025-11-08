@@ -1364,10 +1364,15 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let node = hir_id.map(|hir_id| self.infcx.tcx.hir_node(hir_id));
 
         let Some(hir::Node::LetStmt(local)) = node else {
-            err.span_label(
-                sugg_span,
-                format!("consider changing this binding's type to be: `{sugg_str}`"),
-            );
+            // Don't suggest changing the binding's type for closure parameters,
+            // as the type is often constrained by the closure's context (e.g., when passed
+            // to methods like `Option::inspect`).
+            if !matches!(node, Some(hir::Node::Param(_))) {
+                err.span_label(
+                    sugg_span,
+                    format!("consider changing this binding's type to be: `{sugg_str}`"),
+                );
+            }
             return;
         };
 
