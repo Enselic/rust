@@ -1198,6 +1198,52 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             );
             return;
         }
+        // Also do not suggest changing the binding when this is an argument
+        // inside a closure whose signature is determined by a function/method
+        // in another crate. In that case the closure's expected signature is
+        // decided by the callee and we can't suggest changing it here.
+        let tcx = self.infcx.tcx;
+        if self.body.local_kind(local) == LocalKind::Arg {
+            let closure_id = self.mir_hir_id();
+            let fn_call_id = tcx.parent_hir_id(closure_id);
+            let node = tcx.hir_node(fn_call_id);
+            if let hir::Node::Expr(hir::Expr { hir_id, kind, .. }) = node {
+                let def_id_opt = match kind {
+                    hir::ExprKind::Call(expr, args) => {
+                        let typeck_results = tcx.typeck(tcx.hir_enclosing_body_owner(fn_call_id));
+                        if args.iter().any(|arg| arg.hir_id == closure_id) {
+                            typeck_results
+                                .node_type_opt(expr.hir_id)
+                                .as_ref()
+                                .and_then(|ty| matches!(ty.kind(), ty::FnDef(def_id, _) ).then_some(def_id))
+                                .copied()
+                        } else {
+                            None
+                        }
+                    }
+                    hir::ExprKind::MethodCall(_, _, args, _) => {
+                        if args.iter().any(|arg| arg.hir_id == closure_id) {
+                            let typeck_results = tcx.typeck(tcx.hir_enclosing_body_owner(fn_call_id));
+                            typeck_results.type_dependent_def_id(hir_id)
+                        } else {
+                            None
+                        }
+                    }
+                    _ => None,
+                };
+
+                if let Some(def_id) = def_id_opt {
+                    if !def_id.is_local() {
+                        // The callee is external; avoid suggesting a change here.
+                        err.span_label(
+                            local_decl.source_info.span,
+                            format!("this is an immutable {pointer_desc}"),
+                        );
+                        return;
+                    }
+                }
+            }
+        }
         let decl_span = local_decl.source_info.span;
 
         let (amp_mut_sugg, local_var_ty_info) = match *local_decl.local_info() {
