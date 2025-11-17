@@ -6,7 +6,6 @@ struct A {
 fn main() {
     let mut opt = Some(A { a: 123 });
     let ref_mut_opt = opt.as_mut().inspect(|a| {
-        a.a += 123;
+        a.a += 123; //~ ERROR cannot assign to `a.a`, which is behind a `&` reference
     });
-    dbg!(ref_mut_opt);
 }
