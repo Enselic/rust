@@ -1211,7 +1211,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 .tcx
                 .typeck(path_segment.hir_id.owner.def_id)
                 .type_dependent_def_id(expr.hir_id)
-                .is_some_and(|def_id| def_id.is_local())
+                .is_some_and(|def_id| !def_id.is_local())
         {
             return;
         }
