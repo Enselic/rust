@@ -1205,13 +1205,13 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 self.infcx.tcx.hir_get_if_local(def_id)
             && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
             && let Node::Expr(expr) = self.infcx.tcx.parent_hir_node(*hir_id)
-            && let ExprKind::MethodCall(path_segment, recv, _, _) = expr.kind
+            && let ExprKind::MethodCall(path_segment, _, _, _) = expr.kind
             && self
                 .infcx
                 .tcx
                 .typeck(path_segment.hir_id.owner.def_id)
-                .type_dependent_def_id(cur_expr.hir_id)
-                .and_then(|def_id| def_id.is_local())
+                .type_dependent_def_id(expr.hir_id)
+                .is_some_and(|def_id| def_id.is_local())
         {
             return;
         }
