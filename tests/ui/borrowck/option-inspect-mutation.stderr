@@ -1,8 +1,8 @@
-error[E0594]: cannot assign to `a.a`, which is behind a `&` reference
-  --> $DIR/option-inspect-mutation.rs:9:9
+error[E0594]: cannot assign to `some_struct.field`, which is behind a `&` reference
+  --> $DIR/option-inspect-mutation.rs:8:9
    |
-LL |         a.a += 123;
-   |         ^^^^^^^^^^ `a` is a `&` reference, so it cannot be written to
+LL |         some_struct.field *= 10;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ `some_struct` is a `&` reference, so it cannot be written to
 
 error: aborting due to 1 previous error
 
