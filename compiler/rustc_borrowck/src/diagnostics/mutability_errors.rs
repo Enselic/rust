@@ -1201,7 +1201,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         // If `local` is a closure arg, and the type of the arg is not under
         // local control, do not suggest to change its type.
-        if self.body.local_kind(local) == LocalKind::Arg && let InstanceKind::Item(def_id) = self.body.source.instance
+        if self.body.local_kind(local) == LocalKind::Arg
+            && let InstanceKind::Item(def_id) = self.body.source.instance
             && let Some(Node::Expr(hir::Expr { hir_id, kind, .. })) =
                 self.infcx.tcx.hir_get_if_local(def_id)
             && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
