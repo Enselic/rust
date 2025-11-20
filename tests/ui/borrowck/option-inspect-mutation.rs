@@ -11,8 +11,8 @@ fn main() {
         // Users can't change type of `some_struct` param, so above error must not suggest it.
     });
 
+    // Same check as above but using `hir::ExprKind::Call` instead of `hir::ExprKind::MethodCall`.
     Option::inspect(some_struct.as_mut(), |some_struct| {
-        some_struct.field *= 2; //~ ERROR cannot assign to `some_struct.field`, which is behind a `&` reference
-        // Exercising UFCS call form (ExprKind::Call).
+        some_struct.field *= 20; //~ ERROR cannot assign to `some_struct.field`, which is behind a `&` reference
     });
 }
