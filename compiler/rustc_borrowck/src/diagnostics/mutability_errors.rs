@@ -1207,15 +1207,30 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 self.infcx.tcx.hir_get_if_local(def_id)
             && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
             && let Node::Expr(expr) = self.infcx.tcx.parent_hir_node(*hir_id)
-            && let ExprKind::MethodCall(path_segment, _, _, _) = expr.kind
-            && self
-                .infcx
-                .tcx
-                .typeck(path_segment.hir_id.owner.def_id)
-                .type_dependent_def_id(expr.hir_id)
-                .is_some_and(|def_id| !def_id.is_local())
         {
-            return;
+            let non_local_callee = match expr.kind {
+                ExprKind::MethodCall(path_segment, _, _, _) => self
+                    .infcx
+                    .tcx
+                    .typeck(path_segment.hir_id.owner.def_id)
+                    .type_dependent_def_id(expr.hir_id)
+                    .is_some_and(|def_id| !def_id.is_local()),
+                ExprKind::Call(callee, _) => self
+                    .infcx
+                    .tcx
+                    .typeck(callee.hir_id.owner.def_id)
+                    .node_type_opt(callee.hir_id)
+                    .and_then(|ty| match ty.kind() {
+                        ty::FnDef(def_id, _) => Some(def_id),
+                        _ => None,
+                    })
+                    .is_some_and(|def_id| !def_id.is_local()),
+                _ => false,
+            };
+
+            if non_local_callee {
+                return;
+            }
         }
 
         let decl_span = local_decl.source_info.span;
