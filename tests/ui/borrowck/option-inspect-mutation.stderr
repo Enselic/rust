@@ -4,6 +4,12 @@ error[E0594]: cannot assign to `some_struct.field`, which is behind a `&` refere
 LL |         some_struct.field *= 10;
    |         ^^^^^^^^^^^^^^^^^^^^^^^ `some_struct` is a `&` reference, so it cannot be written to
 
-error: aborting due to 1 previous error
+error[E0594]: cannot assign to `some_struct.field`, which is behind a `&` reference
+  --> $DIR/option-inspect-mutation.rs:15:9
+   |
+LL |         some_struct.field *= 2;
+   |         ^^^^^^^^^^^^^^^^^^^^^^ `some_struct` is a `&` reference, so it cannot be written to
+
+error: aborting due to 2 previous errors
 
 For more information about this error, try `rustc --explain E0594`.

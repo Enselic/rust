@@ -11,8 +11,7 @@ fn main() {
         // Users can't change type of `some_struct` param, so above error must not suggest it.
     });
 
-    let mut another_struct = Some(Struct { field: 5 });
-    Option::inspect(another_struct.as_mut(), |some_struct| {
+    Option::inspect(some_struct.as_mut(), |some_struct| {
         some_struct.field *= 2; //~ ERROR cannot assign to `some_struct.field`, which is behind a `&` reference
         // Exercising UFCS call form (ExprKind::Call).
     });
