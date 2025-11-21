@@ -308,11 +308,11 @@ struct CollectRegionConstraintsResult<'tcx> {
 /// and then type checks the MIR body.
 fn borrowck_collect_region_constraints<'tcx>(
     root_cx: &mut BorrowCheckRootCtxt<'tcx>,
-    def: LocalDefId,
+    body_def_id: LocalDefId,
 ) -> CollectRegionConstraintsResult<'tcx> {
     let tcx = root_cx.tcx;
-    let infcx = BorrowckInferCtxt::new(tcx, def, root_cx.root_def_id());
-    let (input_body, promoted) = tcx.mir_promoted(def);
+    let infcx = BorrowckInferCtxt::new(tcx, body_def_id, root_cx.root_def_id());
+    let (input_body, promoted) = tcx.mir_promoted(body_def_id);
     let input_body: &Body<'_> = &input_body.borrow();
     let input_promoted: &IndexSlice<_, _> = &promoted.borrow();
     if let Some(e) = input_body.tainted_by_errors {
@@ -333,7 +333,7 @@ fn borrowck_collect_region_constraints<'tcx>(
 
     let move_data = MoveData::gather_moves(body, tcx, |_| true);
 
-    let locals_are_invalidated_at_exit = tcx.hir_body_owner_kind(def).is_fn_or_closure();
+    let locals_are_invalidated_at_exit = tcx.hir_body_owner_kind(body_def_id).is_fn_or_closure();
     let borrow_set = BorrowSet::build(tcx, body, locals_are_invalidated_at_exit, &move_data);
 
     let location_map = Rc::new(DenseLocationMap::new(body));
@@ -643,14 +643,14 @@ pub(crate) struct BorrowckInferCtxt<'tcx> {
 }
 
 impl<'tcx> BorrowckInferCtxt<'tcx> {
-    pub(crate) fn new(tcx: TyCtxt<'tcx>, def_id: LocalDefId, root_def_id: LocalDefId) -> Self {
+    pub(crate) fn new(tcx: TyCtxt<'tcx>, body_def_id: LocalDefId, root_def_id: LocalDefId) -> Self {
         let typing_mode = if tcx.use_typing_mode_borrowck() {
-            TypingMode::borrowck(tcx, def_id)
+            TypingMode::borrowck(tcx, body_def_id)
         } else {
-            TypingMode::analysis_in_body(tcx, def_id)
+            TypingMode::analysis_in_body(tcx, body_def_id)
         };
         let infcx = tcx.infer_ctxt().build(typing_mode);
-        let param_env = tcx.param_env(def_id);
+        let param_env = tcx.param_env(body_def_id);
         BorrowckInferCtxt {
             infcx,
             root_def_id,

@@ -1517,10 +1517,10 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             && let Node::Expr(expr) = self.infcx.tcx.parent_hir_node(*hir_id)
         {
             match expr.kind {
-                ExprKind::MethodCall(path_segment, _, _, _) => self
+                ExprKind::MethodCall(method, _, _, _) => self
                     .infcx
                     .tcx
-                    .typeck(path_segment.hir_id.owner.def_id)
+                    .typeck(method.hir_id.owner.def_id)
                     .type_dependent_def_id(expr.hir_id)
                     .is_some_and(|def_id| !def_id.is_local()),
                 ExprKind::Call(callee, _) => self
