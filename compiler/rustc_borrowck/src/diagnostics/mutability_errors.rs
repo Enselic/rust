@@ -1515,26 +1515,22 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 self.infcx.tcx.hir_get_if_local(body_def_id)
             && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
             && let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id)
-        {
-            match closure_parent.kind {
-                ExprKind::MethodCall(method, _, _, _) => self
+            && let Some(closure_parent_hir_id) = match closure_parent.kind {
+                ExprKind::MethodCall(method, _, _, _) => Some(method.hir_id),
+                ExprKind::Call(func, _) => Some(func.hir_id),
+                _ => None,
+            } && self
                     .infcx
                     .tcx
-                    .typeck(method.hir_id.owner.def_id)
-                    .type_dependent_def_id(closure_parent.hir_id)
-                    .is_some_and(|def_id| !def_id.is_local()),
-                ExprKind::Call(func, _) => self
-                    .infcx
-                    .tcx
-                    .typeck(func.hir_id.owner.def_id)
-                    .node_type_opt(func.hir_id)
-                    .and_then(|ty| match ty.kind() {
+                    .typeck(closure_parent_hir_id.owner.def_id)
+                    .node_type_opt(closure_parent_hir_id)
+                                .and_then(|ty| match ty.kind() {
                         ty::FnDef(def_id, _) => Some(def_id),
                         _ => None,
                     })
-                    .is_some_and(|def_id| !def_id.is_local()),
-                _ => false,
-            }
+                    .is_some_and(|def_id| !def_id.is_local())
+        {
+            true
         } else {
             false
         }
