@@ -1519,16 +1519,17 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 ExprKind::MethodCall(method, _, _, _) => Some(method.hir_id),
                 ExprKind::Call(func, _) => Some(func.hir_id),
                 _ => None,
-            } && self
-                    .infcx
-                    .tcx
-                    .typeck(closure_parent_hir_id.owner.def_id)
-                    .node_type_opt(closure_parent_hir_id)
-                                .and_then(|ty| match ty.kind() {
-                        ty::FnDef(def_id, _) => Some(def_id),
-                        _ => None,
-                    })
-                    .is_some_and(|def_id| !def_id.is_local())
+            }
+            && self
+                .infcx
+                .tcx
+                .typeck(closure_parent_hir_id.owner.def_id)
+                .node_type_opt(closure_parent_hir_id)
+                .and_then(|ty| match ty.kind() {
+                    ty::FnDef(def_id, _) => Some(def_id),
+                    _ => None,
+                })
+                .is_some_and(|def_id| !def_id.is_local())
         {
             true
         } else {
