@@ -1509,31 +1509,47 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     }
 
     fn closure_arg_bound_to_non_local_callee(&self, local: Local) -> bool {
-        self.body.local_kind(local) == LocalKind::Arg
-            && let InstanceKind::Item(body_def_id) = self.body.source.instance
-            && let Some(Node::Expr(hir::Expr { hir_id: body_hir_id, kind, .. })) =
-                self.infcx.tcx.hir_get_if_local(body_def_id)
-            && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
-            && let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id)
-            && match closure_parent.kind {
-                ExprKind::MethodCall(path_segment, _, _, _) => self
-                    .infcx
-                    .tcx
-                    .typeck(path_segment.hir_id.owner.def_id)
-                    .type_dependent_def_id(closure_parent.hir_id)
-                    .is_some_and(|def_id| !def_id.is_local()),
-                ExprKind::Call(callee, _) => self
-                    .infcx
-                    .tcx
-                    .typeck(callee.hir_id.owner.def_id)
-                    .node_type_opt(callee.hir_id)
-                    .and_then(|ty| match ty.kind() {
-                        ty::FnDef(def_id, _) => Some(def_id),
-                        _ => None,
-                    })
-                    .is_some_and(|def_id| !def_id.is_local()),
-                _ => false,
-            }
+        if self.body.local_kind(local) != LocalKind::Arg {
+            return false;
+        }
+
+        let InstanceKind::Item(body_def_id) = self.body.source.instance else {
+            return false;
+        };
+
+        let Some(Node::Expr(hir::Expr { hir_id: body_hir_id, kind, .. })) =
+            self.infcx.tcx.hir_get_if_local(body_def_id)
+        else {
+            return false;
+        };
+
+        let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind else {
+            return false;
+        };
+
+        let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id) else {
+            return false;
+        };
+
+        match closure_parent.kind {
+            ExprKind::MethodCall(path_segment, _, _, _) => self
+                .infcx
+                .tcx
+                .typeck(path_segment.hir_id.owner.def_id)
+                .type_dependent_def_id(closure_parent.hir_id)
+                .is_some_and(|def_id| !def_id.is_local()),
+            ExprKind::Call(callee, _) => self
+                .infcx
+                .tcx
+                .typeck(callee.hir_id.owner.def_id)
+                .node_type_opt(callee.hir_id)
+                .and_then(|ty| match ty.kind() {
+                    ty::FnDef(def_id, _) => Some(def_id),
+                    _ => None,
+                })
+                .is_some_and(|def_id| !def_id.is_local()),
+            _ => false,
+        }
     }
 }
 
