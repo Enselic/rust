@@ -1509,32 +1509,31 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     }
 
     fn closure_arg_bound_to_non_local_callee(&self, local: Local) -> bool {
-        if self.body.local_kind(local) == LocalKind::Arg
+        self.body.local_kind(local) == LocalKind::Arg
             && let InstanceKind::Item(body_def_id) = self.body.source.instance
             && let Some(Node::Expr(hir::Expr { hir_id: body_hir_id, kind, .. })) =
                 self.infcx.tcx.hir_get_if_local(body_def_id)
             && let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind
             && let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id)
-            && let Some(closure_parent_hir_id) = match closure_parent.kind {
-                ExprKind::MethodCall(method, _, _, _) => Some(method.hir_id),
-                ExprKind::Call(func, _) => Some(func.hir_id),
-                _ => None,
+            && match closure_parent.kind {
+                ExprKind::MethodCall(path_segment, _, _, _) => self
+                    .infcx
+                    .tcx
+                    .typeck(path_segment.hir_id.owner.def_id)
+                    .type_dependent_def_id(closure_parent.hir_id)
+                    .is_some_and(|def_id| !def_id.is_local()),
+                ExprKind::Call(callee, _) => self
+                    .infcx
+                    .tcx
+                    .typeck(callee.hir_id.owner.def_id)
+                    .node_type_opt(callee.hir_id)
+                    .and_then(|ty| match ty.kind() {
+                        ty::FnDef(def_id, _) => Some(def_id),
+                        _ => None,
+                    })
+                    .is_some_and(|def_id| !def_id.is_local()),
+                _ => false,
             }
-            && self
-                .infcx
-                .tcx
-                .typeck(closure_parent_hir_id.owner.def_id)
-                .node_type_opt(closure_parent_hir_id)
-                .and_then(|ty| match ty.kind() {
-                    ty::FnDef(def_id, _) => Some(def_id),
-                    _ => None,
-                })
-                .is_some_and(|def_id| !def_id.is_local())
-        {
-            true
-        } else {
-            false
-        }
     }
 }
 
