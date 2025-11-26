@@ -1507,7 +1507,6 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         );
     }
 
-
     /// Returns `true` if `local` is an argument in a closure passed to a
     /// function defined in the current crate.
     ///
