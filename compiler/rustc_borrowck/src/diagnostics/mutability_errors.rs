@@ -1199,9 +1199,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             return;
         }
 
-        // If `local` is a closure arg, and the type of the arg is not under
-        // local control, do not suggest to change its type.
-        if self.closure_arg_bound_to_non_local_callee(local) {
+        // Do not suggest to change the type if that is not under user control.
+        if !self.is_closure_arg_with_locally_decided_type(local) {
             return;
         }
 
@@ -1508,46 +1507,58 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         );
     }
 
-    fn closure_arg_bound_to_non_local_callee(&self, local: Local) -> bool {
+
+    /// Returns `true` if `local` is an argument in a closure passed to a
+    /// function defined in the current crate.
+    ///
+    /// For example, in the following code this function returns `false` for `x`
+    /// since `Option::inspect()` is not defined in the current crate:
+    /// ```ignore (only-for-syntax-highlight)
+    /// some_option.as_mut().inspect(|x| {
+    ///     // ...
+    /// }
+    /// ```
+    fn is_closure_arg_with_locally_decided_type(&self, local: Local) -> bool {
+        // We don't care about regular local variables, only args.
         if self.body.local_kind(local) != LocalKind::Arg {
             return false;
         }
 
+        // Make sure we are inside a closure.
         let InstanceKind::Item(body_def_id) = self.body.source.instance else {
             return false;
         };
-
         let Some(Node::Expr(hir::Expr { hir_id: body_hir_id, kind, .. })) =
             self.infcx.tcx.hir_get_if_local(body_def_id)
         else {
             return false;
         };
-
         let ExprKind::Closure(hir::Closure { kind: hir::ClosureKind::Closure, .. }) = kind else {
             return false;
         };
 
+        // Check if the method/function that our closure is passed to is defined
+        // in this crate.
         let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id) else {
             return false;
         };
-
         match closure_parent.kind {
-            ExprKind::MethodCall(path_segment, _, _, _) => self
+            ExprKind::MethodCall(method, _, _, _) => self
                 .infcx
                 .tcx
-                .typeck(path_segment.hir_id.owner.def_id)
+                .typeck(method.hir_id.owner.def_id)
                 .type_dependent_def_id(closure_parent.hir_id)
-                .is_some_and(|def_id| !def_id.is_local()),
-            ExprKind::Call(callee, _) => self
+                .is_some_and(|def_id| def_id.is_local()),
+            ExprKind::Call(func, _) => self
                 .infcx
                 .tcx
-                .typeck(callee.hir_id.owner.def_id)
-                .node_type_opt(callee.hir_id)
+                .typeck(func.hir_id.owner.def_id)
+                .node_type_opt(func.hir_id)
                 .and_then(|ty| match ty.kind() {
                     ty::FnDef(def_id, _) => Some(def_id),
                     _ => None,
                 })
-                .is_some_and(|def_id| !def_id.is_local()),
+                .is_some_and(|def_id| def_id.is_local()),
             _ => false,
         }
     }
