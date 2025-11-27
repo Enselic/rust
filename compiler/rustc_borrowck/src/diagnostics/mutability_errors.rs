@@ -1200,7 +1200,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         }
 
         // Do not suggest to change the type if that is not under user control.
-        if !self.is_closure_arg_with_locally_decided_type(local) {
+        if self.is_closure_arg_with_non_locally_decided_type(local) {
             return;
         }
 
@@ -1508,16 +1508,17 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     }
 
     /// Returns `true` if `local` is an argument in a closure passed to a
-    /// function defined in the current crate.
+    /// function defined in another crate.
     ///
-    /// For example, in the following code this function returns `false` for `x`
+    /// For example, in the following code this function returns `true` for `x`
     /// since `Option::inspect()` is not defined in the current crate:
+    ///
     /// ```ignore (only-for-syntax-highlight)
     /// some_option.as_mut().inspect(|x| {
     ///     // ...
     /// }
     /// ```
-    fn is_closure_arg_with_locally_decided_type(&self, local: Local) -> bool {
+    fn is_closure_arg_with_non_locally_decided_type(&self, local: Local) -> bool {
         // We don't care about regular local variables, only args.
         if self.body.local_kind(local) != LocalKind::Arg {
             return false;
@@ -1537,7 +1538,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         };
 
         // Check if the method/function that our closure is passed to is defined
-        // in this crate.
+        // in another crate.
         let Node::Expr(closure_parent) = self.infcx.tcx.parent_hir_node(*body_hir_id) else {
             return false;
         };
@@ -1547,7 +1548,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 .tcx
                 .typeck(method.hir_id.owner.def_id)
                 .type_dependent_def_id(closure_parent.hir_id)
-                .is_some_and(|def_id| def_id.is_local()),
+                .is_some_and(|def_id| !def_id.is_local()),
             ExprKind::Call(func, _) => self
                 .infcx
                 .tcx
@@ -1557,7 +1558,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ty::FnDef(def_id, _) => Some(def_id),
                     _ => None,
                 })
-                .is_some_and(|def_id| def_id.is_local()),
+                .is_some_and(|def_id| !def_id.is_local()),
             _ => false,
         }
     }
