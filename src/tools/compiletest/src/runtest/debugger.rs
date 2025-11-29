@@ -16,6 +16,8 @@ pub(super) struct DebuggerCommands {
     check_lines: Vec<(usize, String)>,
     /// Source file name
     file: Utf8PathBuf,
+    /// The revision being tested, if any
+    revision: Option<String>,
 }
 
 impl DebuggerCommands {
@@ -88,7 +90,13 @@ impl DebuggerCommands {
             }
         }
 
-        Ok(Self { commands, breakpoint_lines, check_lines, file: file.to_path_buf() })
+        Ok(Self {
+            commands,
+            breakpoint_lines,
+            check_lines,
+            file: file.to_path_buf(),
+            revision: test_revision.map(str::to_owned),
+        })
     }
 
     /// Given debugger output and lines to check, ensure that every line is
@@ -120,9 +128,11 @@ impl DebuggerCommands {
             Ok(())
         } else {
             let fname = self.file.file_name().unwrap();
+            let revision_suffix =
+                self.revision.as_ref().map_or(String::new(), |r| format!("#{}", r));
             let mut msg = format!(
-                "check directive(s) from `{}` not found in debugger output. errors:",
-                self.file
+                "check directive(s) from `{}{}` not found in debugger output. errors:",
+                self.file, revision_suffix
             );
 
             for (src_lineno, err_line) in missing {
