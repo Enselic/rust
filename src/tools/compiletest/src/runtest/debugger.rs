@@ -8,7 +8,7 @@ use crate::runtest::ProcRes;
 
 /// Representation of information to invoke a debugger and check its output
 pub(super) struct DebuggerCommands {
-    /// Commands for the debuuger
+    /// Commands for the debugger
     pub commands: Vec<String>,
     /// Lines to insert breakpoints at
     pub breakpoint_lines: Vec<usize>,
@@ -66,9 +66,8 @@ impl DebuggerCommands {
             // Only process directives that apply to the current revision:
             // - Directives without a revision prefix apply to all revisions
             // - Directives with a revision prefix only apply when it matches the test revision
-            let dominated_by_test_revision = match (test_revision, line_revision) {
-                // Only error messages that contain our revision between the square brackets
-                // apply to us.
+            let applies_to_revision = match (test_revision, line_revision) {
+                // Directives with a revision prefix only apply to that specific revision
                 (Some(test_rev), Some(line_rev)) => test_rev == line_rev,
                 // No test revision means we're not running a revisioned test,
                 // so directives with revision prefixes shouldn't be processed
@@ -77,7 +76,7 @@ impl DebuggerCommands {
                 (_, None) => true,
             };
 
-            if !dominated_by_test_revision {
+            if !applies_to_revision {
                 continue;
             }
 
