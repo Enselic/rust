@@ -19,7 +19,11 @@ pub(super) struct DebuggerCommands {
 }
 
 impl DebuggerCommands {
-    pub fn parse_from(file: &Utf8Path, debugger_prefix: &str) -> Result<Self, String> {
+    pub fn parse_from(
+        file: &Utf8Path,
+        debugger_prefix: &str,
+        test_revision: Option<&str>,
+    ) -> Result<Self, String> {
         let command_directive = format!("{debugger_prefix}-command");
         let check_directive = format!("{debugger_prefix}-check");
 
@@ -38,14 +42,49 @@ impl DebuggerCommands {
                 continue;
             }
 
-            let Some(line) = line.trim_start().strip_prefix("//@").map(str::trim_start) else {
+            let Some(after_prefix) = line.trim_start().strip_prefix("//@").map(str::trim_start)
+            else {
                 continue;
             };
 
-            if let Some(command) = parse_name_value(&line, &command_directive) {
+            // Handle revision-specific directives like `//@ [revision] directive`
+            // by stripping the revision prefix if present
+            let (line_revision, directive_line) =
+                if let Some(after_open_bracket) = after_prefix.strip_prefix('[') {
+                    if let Some((revision, after_close_bracket)) =
+                        after_open_bracket.split_once(']')
+                    {
+                        (Some(revision), after_close_bracket.trim_start())
+                    } else {
+                        // Malformed revision prefix, skip this line
+                        continue;
+                    }
+                } else {
+                    (None, after_prefix)
+                };
+
+            // Only process directives that apply to the current revision:
+            // - Directives without a revision prefix apply to all revisions
+            // - Directives with a revision prefix only apply when it matches the test revision
+            let dominated_by_test_revision = match (test_revision, line_revision) {
+                // Only error messages that contain our revision between the square brackets
+                // apply to us.
+                (Some(test_rev), Some(line_rev)) => test_rev == line_rev,
+                // No test revision means we're not running a revisioned test,
+                // so directives with revision prefixes shouldn't be processed
+                (None, Some(_)) => false,
+                // If a directive has no revision prefix, it applies to all revisions
+                (_, None) => true,
+            };
+
+            if !dominated_by_test_revision {
+                continue;
+            }
+
+            if let Some(command) = parse_name_value(directive_line, &command_directive) {
                 commands.push(command);
             }
-            if let Some(pattern) = parse_name_value(&line, &check_directive) {
+            if let Some(pattern) = parse_name_value(directive_line, &check_directive) {
                 check_lines.push((line_no, pattern));
             }
         }
@@ -149,4 +188,31 @@ fn check_single_line(line: &str, check_line: &str) -> bool {
     }
 
     can_end_anywhere || rest.is_empty()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_check_single_line_exact_match() {
+        assert!(check_single_line("$1 = 42", "$1 = 42"));
+        assert!(!check_single_line("$1 = 42", "$1 = 43"));
+    }
+
+    #[test]
+    fn test_check_single_line_with_wildcard() {
+        assert!(check_single_line("$1 = 42 (some extra stuff)", "$1 = 42[...]"));
+        assert!(check_single_line("prefix $1 = 42 suffix", "[...]$1 = 42[...]"));
+        assert!(!check_single_line("$1 = 43", "$1 = 42[...]"));
+    }
+
+    #[test]
+    fn test_parse_name_value() {
+        assert_eq!(parse_name_value("gdb-command:run", "gdb-command"), Some("run".to_string()));
+        assert_eq!(parse_name_value("gdb-command:", "gdb-command"), Some("".to_string()));
+        assert_eq!(parse_name_value("gdb-check:$1 = 42", "gdb-check"), Some("$1 = 42".to_string()));
+        assert_eq!(parse_name_value("lldb-command:run", "gdb-command"), None);
+        assert_eq!(parse_name_value("gdb-command run", "gdb-command"), None);
+    }
 }
