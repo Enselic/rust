@@ -17,7 +17,6 @@ use std::sync::atomic::Ordering::Relaxed;
 
 pub static X: AtomicUsize = AtomicUsize::new(1);
 
-
 /// This function function shall look like this:
 /// ```
 /// some_non_zero_from_atomic_get:
@@ -35,6 +34,8 @@ pub unsafe fn some_non_zero_from_atomic_get() -> Option<NonZeroUsize> {
     Some(NonZeroUsize::new_unchecked(x))
 }
 
+/// This function shall be identical to the above, which means:
+// CHECK-DAG: some_non_zero_from_atomic_get2 = some_non_zero_from_atomic_get
 #[no_mangle]
 pub unsafe fn some_non_zero_from_atomic_get2() -> usize {
     match some_non_zero_from_atomic_get() {
