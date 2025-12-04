@@ -17,6 +17,18 @@ use std::sync::atomic::Ordering::Relaxed;
 
 pub static X: AtomicUsize = AtomicUsize::new(1);
 
+
+/// This function function shall look like this:
+/// ```
+/// some_non_zero_from_atomic_get:
+///         movq    _RNvCs7C4TuIcXqwO_25some_non_zero_from_atomic1X@GOTPCREL(%rip), %rax
+///         movq    (%rax), %rax
+///         retq
+/// ```
+// CHECK-LABEL: some_non_zero_from_atomic_get:
+// CHECK-NEXT: movq    {.*}@GOTPCREL(%rip), %rax
+// CHECK-NEXT: movq    (%rax), %rax
+// CHECK-NEXT: retq
 #[no_mangle]
 pub unsafe fn some_non_zero_from_atomic_get() -> Option<NonZeroUsize> {
     let x = X.load(Relaxed);
@@ -27,8 +39,6 @@ pub unsafe fn some_non_zero_from_atomic_get() -> Option<NonZeroUsize> {
 pub unsafe fn some_non_zero_from_atomic_get2() -> usize {
     match some_non_zero_from_atomic_get() {
         Some(x) => x.get(),
-        None => unreachable!(), // not optimized out
+        None => unreachable!(), // shall be optimized out
     }
 }
-
-// CHECK: nordh
