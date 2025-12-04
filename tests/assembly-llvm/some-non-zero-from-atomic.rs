@@ -7,7 +7,7 @@
 //@ compile-flags: -O
 
 // Simplify the generated assembly
-//@ -Cforce-unwind-tables=no
+//@ compile-flags: -Cforce-unwind-tables=no
 
 #![crate_type = "lib"]
 
@@ -26,7 +26,7 @@ pub static X: AtomicUsize = AtomicUsize::new(1);
 ///         retq
 /// ```
 // CHECK-LABEL: some_non_zero_from_atomic_get:
-// CHECK-NEXT: movq    {.*}@GOTPCREL(%rip), %rax
+// CHECK-NEXT: movq    {{[_a-zA-Z0-9]+}}@GOTPCREL(%rip), %rax
 // CHECK-NEXT: movq    (%rax), %rax
 // CHECK-NEXT: retq
 #[no_mangle]
