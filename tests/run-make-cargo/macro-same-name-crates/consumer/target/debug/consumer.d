@@ -1,0 +1,1 @@
+/home/runner/work/rust/rust/tests/run-make-cargo/macro-same-name-crates/consumer/target/debug/consumer: /home/runner/work/rust/rust/tests/run-make-cargo/macro-same-name-crates/consumer/src/main.rs /home/runner/work/rust/rust/tests/run-make-cargo/macro-same-name-crates/mylib_v1/src/lib.rs /home/runner/work/rust/rust/tests/run-make-cargo/macro-same-name-crates/mylib_v2/src/lib.rs
