@@ -23,7 +23,7 @@
 //@[no-SingleUseConsts-mir-pass] gdb-command: next
 //@[no-SingleUseConsts-mir-pass] gdb-check:   let f = b"hi bob";
 //@[no-SingleUseConsts-mir-pass] gdb-command: next
-//@[no-SingleUseConsts-mir-pass] gdb-check:   let g = b'9';
+//@[no-SingleUseConsts-mir-pass] gdb-check:   let g = b'90';
 //@[no-SingleUseConsts-mir-pass] gdb-command: next
 //@ gdb-check:   let h = ["whatever"; 8];
 //@ gdb-command: next
