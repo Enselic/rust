@@ -8,7 +8,7 @@ use crate::runtest::ProcRes;
 
 /// Representation of information to invoke a debugger and check its output
 pub(super) struct DebuggerCommands {
-    /// Commands for the debuuger
+    /// Commands for the debugger
     pub commands: Vec<String>,
     /// Lines to insert breakpoints at
     pub breakpoint_lines: Vec<usize>,
@@ -16,10 +16,16 @@ pub(super) struct DebuggerCommands {
     check_lines: Vec<(usize, String)>,
     /// Source file name
     file: Utf8PathBuf,
+    /// The revision being tested, if any
+    revision: Option<String>,
 }
 
 impl DebuggerCommands {
-    pub fn parse_from(file: &Utf8Path, debugger_prefix: &str) -> Result<Self, String> {
+    pub fn parse_from(
+        file: &Utf8Path,
+        debugger_prefix: &str,
+        test_revision: Option<&str>,
+    ) -> Result<Self, String> {
         let command_directive = format!("{debugger_prefix}-command");
         let check_directive = format!("{debugger_prefix}-check");
 
@@ -42,15 +48,53 @@ impl DebuggerCommands {
                 continue;
             };
 
-            if let Some(command) = parse_name_value(&line, &command_directive) {
+            // Handle revision-specific directives like `//@ [revision] directive`
+            // by stripping the revision prefix if present
+            let (line_revision, directive_line) = if let Some(after_open_bracket) =
+                line.strip_prefix('[')
+            {
+                if let Some((revision, after_close_bracket)) = after_open_bracket.split_once(']') {
+                    (Some(revision), after_close_bracket.trim_start())
+                } else {
+                    // Malformed revision prefix, skip this line
+                    continue;
+                }
+            } else {
+                (None, line)
+            };
+
+            // Only process directives that apply to the current revision:
+            // - Directives without a revision prefix apply to all revisions
+            // - Directives with a revision prefix only apply when it matches the test revision
+            let applies_to_revision = match (test_revision, line_revision) {
+                // Directives with a revision prefix only apply to that specific revision
+                (Some(test_rev), Some(line_rev)) => test_rev == line_rev,
+                // No test revision means we're not running a revisioned test,
+                // so directives with revision prefixes shouldn't be processed
+                (None, Some(_)) => false,
+                // If a directive has no revision prefix, it applies to all revisions
+                (_, None) => true,
+            };
+
+            if !applies_to_revision {
+                continue;
+            }
+
+            if let Some(command) = parse_name_value(directive_line, &command_directive) {
                 commands.push(command);
             }
-            if let Some(pattern) = parse_name_value(&line, &check_directive) {
+            if let Some(pattern) = parse_name_value(directive_line, &check_directive) {
                 check_lines.push((line_no, pattern));
             }
         }
 
-        Ok(Self { commands, breakpoint_lines, check_lines, file: file.to_path_buf() })
+        Ok(Self {
+            commands,
+            breakpoint_lines,
+            check_lines,
+            file: file.to_path_buf(),
+            revision: test_revision.map(str::to_owned),
+        })
     }
 
     /// Given debugger output and lines to check, ensure that every line is
@@ -82,9 +126,11 @@ impl DebuggerCommands {
             Ok(())
         } else {
             let fname = self.file.file_name().unwrap();
+            let revision_suffix =
+                self.revision.as_ref().map_or(String::new(), |r| format!("#{}", r));
             let mut msg = format!(
-                "check directive(s) from `{}` not found in debugger output. errors:",
-                self.file
+                "check directive(s) from `{}{}` not found in debugger output. errors:",
+                self.file, revision_suffix
             );
 
             for (src_lineno, err_line) in missing {
