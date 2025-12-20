@@ -1,5 +1,6 @@
 use camino::Utf8Path;
 
+use crate::directives::LineNumber;
 use crate::directives::line::{DirectiveLine, line_directive};
 
 pub(crate) struct FileDirectives<'a> {
@@ -12,6 +13,8 @@ impl<'a> FileDirectives<'a> {
         let mut lines = vec![];
 
         for (line_number, ln) in (1..).zip(file_contents.lines()) {
+            let line_number = LineNumber::from_one_based(line_number);
+
             let ln = ln.trim();
 
             if let Some(directive_line) = line_directive(path, line_number, ln) {
