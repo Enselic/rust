@@ -9,7 +9,7 @@
 //@ ignore-backends: gcc
 
 // FIXME: It should not be necessary to disable SingleUseConsts. Revisions should not be needed in this test.
-//@ revisions default-mir-passes no-SingleUseConsts-mir-pass
+//@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
 //@[no-SingleUseConsts-mir-pass] compile-flags: -Zmir-enable-passes=-SingleUseConsts
 
 //@ gdb-command: run
