@@ -14,8 +14,9 @@
 #[macro_use]
 extern crate macro_stepping; // exports new_scope!()
 
-//@ compile-flags:-g -Zmir-enable-passes=-SingleUseConsts
-// SingleUseConsts shouldn't need to be disabled, see #128945
+// FIXME(#128945): It should not be necessary to disable SingleUseConsts. Revisions should not be needed in this test.
+//@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
+//@[no-SingleUseConsts-mir-pass] compile-flags: -Zmir-enable-passes=-SingleUseConsts
 
 // === GDB TESTS ===================================================================================
 
