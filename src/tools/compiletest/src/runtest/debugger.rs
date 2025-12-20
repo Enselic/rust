@@ -8,7 +8,7 @@ use crate::runtest::ProcRes;
 
 /// Representation of information to invoke a debugger and check its output
 pub(super) struct DebuggerCommands {
-    /// Commands for the debuuger
+    /// Commands for the debugger
     pub commands: Vec<String>,
     /// Lines to insert breakpoints at
     pub breakpoint_lines: Vec<usize>,
@@ -16,10 +16,16 @@ pub(super) struct DebuggerCommands {
     check_lines: Vec<(usize, String)>,
     /// Source file name
     file: Utf8PathBuf,
+    /// The revision being tested, if any
+    revision: Option<String>,
 }
 
 impl DebuggerCommands {
-    pub fn parse_from(file: &Utf8Path, debugger_prefix: &str) -> Result<Self, String> {
+    pub fn parse_from(
+        file: &Utf8Path,
+        debugger_prefix: &str,
+        test_revision: Option<&str>,
+    ) -> Result<Self, String> {
         let command_directive = format!("{debugger_prefix}-command");
         let check_directive = format!("{debugger_prefix}-check");
 
@@ -44,6 +50,23 @@ impl DebuggerCommands {
                 continue;
             };
 
+            // Only process directives that apply to the current revision:
+            // - Directives without a revision prefix apply to all revisions
+            // - Directives with a revision prefix only apply when it matches the test revision
+            let applies_to_revision = match (test_revision, line_revision) {
+                // Directives with a revision prefix only apply to that specific revision
+                (Some(test_rev), Some(line_rev)) => test_rev == line_rev,
+                // No test revision means we're not running a revisioned test,
+                // so directives with revision prefixes shouldn't be processed
+                (None, Some(_)) => false,
+                // If a directive has no revision prefix, it applies to all revisions
+                (_, None) => true,
+            };
+
+            if !applies_to_revision {
+                continue;
+            }
+
             if directive.name == command_directive
                 && let Some(command) = directive.value_after_colon()
             {
@@ -56,7 +79,13 @@ impl DebuggerCommands {
             }
         }
 
-        Ok(Self { commands, breakpoint_lines, check_lines, file: file.to_path_buf() })
+        Ok(Self {
+            commands,
+            breakpoint_lines,
+            check_lines,
+            file: file.to_path_buf(),
+            revision: test_revision.map(str::to_owned),
+        })
     }
 
     /// Given debugger output and lines to check, ensure that every line is
@@ -88,9 +117,11 @@ impl DebuggerCommands {
             Ok(())
         } else {
             let fname = self.file.file_name().unwrap();
+            let revision_suffix =
+                self.revision.as_ref().map_or(String::new(), |r| format!("#{}", r));
             let mut msg = format!(
-                "check directive(s) from `{}` not found in debugger output. errors:",
-                self.file
+                "check directive(s) from `{}{}` not found in debugger output. errors:",
+                self.file, revision_suffix
             );
 
             for (src_lineno, err_line) in missing {
