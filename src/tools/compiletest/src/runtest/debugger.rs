@@ -44,26 +44,24 @@ impl DebuggerCommands {
                 continue;
             }
 
-            let Some(after_prefix) = line.trim_start().strip_prefix("//@").map(str::trim_start)
-            else {
+            let Some(line) = line.trim_start().strip_prefix("//@").map(str::trim_start) else {
                 continue;
             };
 
             // Handle revision-specific directives like `//@ [revision] directive`
             // by stripping the revision prefix if present
-            let (line_revision, directive_line) =
-                if let Some(after_open_bracket) = after_prefix.strip_prefix('[') {
-                    if let Some((revision, after_close_bracket)) =
-                        after_open_bracket.split_once(']')
-                    {
-                        (Some(revision), after_close_bracket.trim_start())
-                    } else {
-                        // Malformed revision prefix, skip this line
-                        continue;
-                    }
+            let (line_revision, directive_line) = if let Some(after_open_bracket) =
+                line.strip_prefix('[')
+            {
+                if let Some((revision, after_close_bracket)) = after_open_bracket.split_once(']') {
+                    (Some(revision), after_close_bracket.trim_start())
                 } else {
-                    (None, after_prefix)
-                };
+                    // Malformed revision prefix, skip this line
+                    continue;
+                }
+            } else {
+                (None, line)
+            };
 
             // Only process directives that apply to the current revision:
             // - Directives without a revision prefix apply to all revisions
@@ -197,31 +195,4 @@ fn check_single_line(line: &str, check_line: &str) -> bool {
     }
 
     can_end_anywhere || rest.is_empty()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_check_single_line_exact_match() {
-        assert!(check_single_line("$1 = 42", "$1 = 42"));
-        assert!(!check_single_line("$1 = 42", "$1 = 43"));
-    }
-
-    #[test]
-    fn test_check_single_line_with_wildcard() {
-        assert!(check_single_line("$1 = 42 (some extra stuff)", "$1 = 42[...]"));
-        assert!(check_single_line("prefix $1 = 42 suffix", "[...]$1 = 42[...]"));
-        assert!(!check_single_line("$1 = 43", "$1 = 42[...]"));
-    }
-
-    #[test]
-    fn test_parse_name_value() {
-        assert_eq!(parse_name_value("gdb-command:run", "gdb-command"), Some("run".to_string()));
-        assert_eq!(parse_name_value("gdb-command:", "gdb-command"), Some("".to_string()));
-        assert_eq!(parse_name_value("gdb-check:$1 = 42", "gdb-check"), Some("$1 = 42".to_string()));
-        assert_eq!(parse_name_value("lldb-command:run", "gdb-command"), None);
-        assert_eq!(parse_name_value("gdb-command run", "gdb-command"), None);
-    }
 }

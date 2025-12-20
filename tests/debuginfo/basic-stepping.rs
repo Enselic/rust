@@ -19,12 +19,12 @@
 //@ gdb-command: next
 //@ gdb-check:   let d = c = 99;
 //@ gdb-command: next
-//@[no-SingleUseConsts-mir-pass] gdb-check:   let e = "hi bob";
-//@[no-SingleUseConsts-mir-pass] gdb-command: next
-//@[no-SingleUseConsts-mir-pass] gdb-check:   let f = b"hi bob";
-//@[no-SingleUseConsts-mir-pass] gdb-command: next
-//@[no-SingleUseConsts-mir-pass] gdb-check:   let g = b'9';
-//@[no-SingleUseConsts-mir-pass] gdb-command: next
+//@ [no-SingleUseConsts-mir-pass] gdb-check:   let e = "hi bob";
+//@ [no-SingleUseConsts-mir-pass] gdb-command: next
+//@ [no-SingleUseConsts-mir-pass] gdb-check:   let f = b"hi bob";
+//@ [no-SingleUseConsts-mir-pass] gdb-command: next
+//@ [no-SingleUseConsts-mir-pass] gdb-check:   let g = b'9';
+//@ [no-SingleUseConsts-mir-pass] gdb-command: next
 //@ gdb-check:   let h = ["whatever"; 8];
 //@ gdb-command: next
 //@ gdb-check:   let i = [1,2,3,4];
