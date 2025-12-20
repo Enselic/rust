@@ -28,7 +28,7 @@ mod cfg;
 mod directive_names;
 mod file;
 mod handlers;
-mod line;
+pub(crate) mod line;
 mod needs;
 #[cfg(test)]
 mod tests;

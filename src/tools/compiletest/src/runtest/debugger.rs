@@ -38,15 +38,20 @@ impl DebuggerCommands {
                 continue;
             }
 
-            let Some(line) = line.trim_start().strip_prefix("//@").map(str::trim_start) else {
+            let Some(directive) = crate::directives::line::line_directive(file, line_number, &line)
+            else {
                 continue;
             };
 
-            if let Some(command) = parse_name_value(&line, &command_directive) {
-                commands.push(command);
+            if directive.name == command_directive
+                && let Some(command) = directive.value_after_colon()
+            {
+                commands.push(command.to_string());
             }
-            if let Some(pattern) = parse_name_value(&line, &check_directive) {
-                check_lines.push((line_number, pattern));
+            if directive.name == check_directive
+                && let Some(pattern) = directive.value_after_colon()
+            {
+                check_lines.push((line_number, pattern.to_string()));
             }
         }
 
@@ -101,18 +106,6 @@ impl DebuggerCommands {
 
             Err(msg)
         }
-    }
-}
-
-/// Split off from the main `parse_name_value_directive`, so that improvements
-/// to directive handling aren't held back by debuginfo test commands.
-fn parse_name_value(line: &str, name: &str) -> Option<String> {
-    if let Some(after_name) = line.strip_prefix(name)
-        && let Some(value) = after_name.strip_prefix(':')
-    {
-        Some(value.to_owned())
-    } else {
-        None
     }
 }
 
