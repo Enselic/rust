@@ -4,7 +4,7 @@
 //@ compile-flags: -O
 
 // Simplify the emitted code
-//@ compile-flags: -Cforce-unwind-tables=no
+//@ compile-flags: -Cforce-unwind-tables=no -Zmerge-functions=disabled
 
 #![crate_type = "lib"]
 
@@ -28,26 +28,25 @@ pub static X: AtomicUsize = AtomicUsize::new(1);
 /// ```
 // CHECK-LABEL: define noundef range(i64 1, 0) i64 @some_non_zero_from_atomic_get() unnamed_addr
 // CHECK-SAME: #[[#ATTRIBUTE_GROUP:]] {
-// CHECK-NEXT: start:
-// CHECK-NEXT:   %0 = load atomic i64, ptr @{{[_a-zA-Z0-9]+}} monotonic, align 8
-// CHECK-NEXT:   %1 = icmp ne i64 %0, 0
-// CHECK-NEXT:   tail call void @llvm.assume(i1 %1)
-// CHECK-NEXT:   ret i64 %0
+// CHECK: %0 = load atomic i64, ptr @{{[_a-zA-Z0-9]+}} monotonic, align 8
+// CHECK-NEXT: %1 = icmp ne i64 %0, 0
+// CHECK-NEXT: tail call void @llvm.assume(i1 %1)
+// CHECK-NEXT: ret i64 %0
 // CHECK-NEXT: }
-// CHECK-LABEL: attributes #[[#ATTRIBUTE_GROUP]] =
-// CHECK-SAME: mustprogress
-// CHECK-SAME: nofree
-// CHECK-SAME: norecurse
-// CHECK-SAME: nounwind
-// CHECK-SAME: willreturn
 #[no_mangle]
 pub unsafe fn some_non_zero_from_atomic_get() -> Option<NonZeroUsize> {
     let x = X.load(Relaxed);
     Some(NonZeroUsize::new_unchecked(x))
 }
 
-/// This function shall be identical to the above, which means:
-// CHECK-LABEL: @some_non_zero_from_atomic_get2 = unnamed_addr alias i64 (), ptr @some_non_zero_from_atomic_get
+/// This function shall be identical to the above:
+// CHECK-LABEL: define noundef range(i64 1, 0) i64 @some_non_zero_from_atomic_get2() unnamed_addr
+// CHECK-SAME: #[[#ATTRIBUTE_GROUP]] {
+// CHECK: %0 = load atomic i64, ptr @{{[_a-zA-Z0-9]+}} monotonic, align 8
+// CHECK-NEXT: %1 = icmp ne i64 %0, 0
+// CHECK-NEXT: tail call void @llvm.assume(i1 %1)
+// CHECK-NEXT: ret i64 %0
+// CHECK-NEXT: }
 #[no_mangle]
 pub unsafe fn some_non_zero_from_atomic_get2() -> usize {
     match some_non_zero_from_atomic_get() {
@@ -55,3 +54,12 @@ pub unsafe fn some_non_zero_from_atomic_get2() -> usize {
         None => unreachable!(), // shall be optimized out
     }
 }
+
+// Finally make sure the attribute group looks reasonable:
+// CHECK-LABEL: attributes 
+// CHECK: #[[#ATTRIBUTE_GROUP]] =
+// CHECK-SAME: mustprogress
+// CHECK-SAME: nofree
+// CHECK-SAME: norecurse
+// CHECK-SAME: nounwind
+// CHECK-SAME: willreturn
