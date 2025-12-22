@@ -34,7 +34,7 @@ pub static X: AtomicUsize = AtomicUsize::new(1);
 // CHECK-NEXT:   tail call void @llvm.assume(i1 %1)
 // CHECK-NEXT:   ret i64 %0
 // CHECK-NEXT: }
-// CHECK: attributes #[[#ATTRIBUTE_GROUP]] =
+// CHECK-LABEL: attributes #[[#ATTRIBUTE_GROUP]] =
 // CHECK-SAME: mustprogress
 // CHECK-SAME: nofree
 // CHECK-SAME: norecurse
