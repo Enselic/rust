@@ -18,16 +18,23 @@ use std::sync::atomic::Ordering::Relaxed;
 pub static X: AtomicUsize = AtomicUsize::new(1);
 
 /// This function function shall look like this:
+/// ```llvm
+/// ; Function Attrs: mustprogress nofree norecurse nounwind nonlazybind willreturn memory(readwrite, argmem: none, inaccessiblemem: write)
+/// define noundef range(i64 1, 0) i64 @some_non_zero_from_atomic_get() unnamed_addr #0 {
+/// start:
+///   %0 = load atomic i64, ptr @_ZN38some_non_zero_from_atomic_optimization1X17h41fcdb7c72ef9763E monotonic, align 8
+///   %1 = icmp ne i64 %0, 0
+///   tail call void @llvm.assume(i1 %1)
+///   ret i64 %0
+/// }
 /// ```
-/// some_non_zero_from_atomic_get:
-///         movq    _RNvCs7C4TuIcXqwO_25some_non_zero_from_atomic1X@GOTPCREL(%rip), %rax
-///         movq    (%rax), %rax
-///         retq
-/// ```
-// CHECK-LABEL: some_non_zero_from_atomic_get:
-// CHECK-NEXT: movq    {{[_a-zA-Z0-9]+}}@GOTPCREL(%rip), %rax
-// CHECK-NEXT: movq    (%rax), %rax
-// CHECK-NEXT: retq
+// CHECK-LABEL: define noundef range(i64 1, 0) i64 @some_non_zero_from_atomic_get() unnamed_addr #[[#ATTRIBUTE_GROUP:]] {
+// CHECK-NEXT:  start:
+// CHECK-NEXT:    %0 = load atomic i64, ptr @{{[_a-zA-Z0-9]+}} monotonic, align 8
+// CHECK-NEXT:    %1 = icmp ne i64 %0, 0
+// CHECK-NEXT:    tail call void @llvm.assume(i1 %1)
+// CHECK-NEXT:    ret i64 %0
+// CHECK-NEXT:  }
 #[no_mangle]
 pub unsafe fn some_non_zero_from_atomic_get() -> Option<NonZeroUsize> {
     let x = X.load(Relaxed);
