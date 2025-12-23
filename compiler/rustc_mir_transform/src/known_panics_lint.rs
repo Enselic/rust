@@ -369,12 +369,12 @@ impl<'mir, 'tcx> ConstPropagator<'mir, 'tcx> {
         }
 
         // Div/Rem are handled via the assertions they trigger.
-        // But for Add/Sub/Mul, those assertions only exist in debug builds, and we want to
-        // lint in release builds as well, so we check on the operation instead.
-        // So normalize to the "overflowing" operator, and then ensure that it
-        // actually is an overflowing operator.
-        let op = op.wrapping_to_overflowing().unwrap_or(op);
-        // The remaining operators are handled through `wrapping_to_overflowing`.
+        // For Add/Sub/Mul with overflow checking (i.e., AddWithOverflow, SubWithOverflow,
+        // MulWithOverflow), check if they would overflow.
+        // Note: We do NOT check plain Add/Sub/Mul operations because:
+        // 1. In release mode, they wrap by design (not an error)
+        // 2. Wrapping intrinsics (wrapping_add, wrapping_sub, wrapping_mul) are lowered
+        //    to plain Add/Sub/Mul and should never trigger overflow lints
         if let (Some(l), Some(r)) = (l, r)
             && l.layout.ty.is_integral()
             && op.is_overflowing()
