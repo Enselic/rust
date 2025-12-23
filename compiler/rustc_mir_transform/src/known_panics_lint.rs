@@ -372,9 +372,14 @@ impl<'mir, 'tcx> ConstPropagator<'mir, 'tcx> {
         // For Add/Sub/Mul with overflow checking (i.e., AddWithOverflow, SubWithOverflow,
         // MulWithOverflow), check if they would overflow.
         // Note: We do NOT check plain Add/Sub/Mul operations because:
-        // 1. In release mode, they wrap by design (not an error)
-        // 2. Wrapping intrinsics (wrapping_add, wrapping_sub, wrapping_mul) are lowered
+        // 1. In debug mode (with overflow checks), the MIR builder generates *WithOverflow
+        //    variants for regular arithmetic, which we do check. Plain Add/Sub/Mul in debug
+        //    mode only comes from wrapping intrinsics.
+        // 2. In release mode, plain Add/Sub/Mul wraps by design (not an error)
+        // 3. Wrapping intrinsics (wrapping_add, wrapping_sub, wrapping_mul) are lowered
         //    to plain Add/Sub/Mul and should never trigger overflow lints
+        // 4. Const/static contexts always use *WithOverflow variants, so we still catch
+        //    const overflow
         if let (Some(l), Some(r)) = (l, r)
             && l.layout.ty.is_integral()
             && op.is_overflowing()

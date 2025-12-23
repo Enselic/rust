@@ -13,7 +13,7 @@ fn main() {
     assert_eq!(u32::MAX.wrapping_add(1), 0);
     assert_eq!(u32::MAX.wrapping_mul(2), u32::MAX - 1);
     
-    // Test with i32 as well
+    // Test with i8 as well
     assert_eq!((-128_i8).wrapping_sub(1), 127);
     assert_eq!(127_i8.wrapping_add(1), -128);
     
