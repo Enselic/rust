@@ -28,9 +28,8 @@ impl DebuggerCommands {
         let mut commands = vec![];
         let mut check_lines = vec![];
         let reader = BufReader::new(File::open(file.as_std_path()).unwrap());
-        for (line_no, line) in reader.lines().enumerate() {
+        for (line_number, line) in LineNumber::enumerate().zip(reader.lines()) {
             let line = line.map_err(|e| format!("Error while parsing debugger commands: {}", e))?;
-            let line_number = LineNumber::from_zero_based(line_no);
 
             // Breakpoints appear on lines with actual code, typically at the end of the line.
             if line.contains("#break") {

@@ -12,8 +12,7 @@ impl<'a> FileDirectives<'a> {
     pub(crate) fn from_file_contents(path: &'a Utf8Path, file_contents: &'a str) -> Self {
         let mut lines = vec![];
 
-        for (line_number, ln) in (1..).zip(file_contents.lines()) {
-            let line_number = LineNumber::from_one_based(line_number);
+        for (line_number, ln) in LineNumber::enumerate().zip(file_contents.lines()) {
 
             let ln = ln.trim();
 
