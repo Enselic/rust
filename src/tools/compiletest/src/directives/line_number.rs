@@ -20,10 +20,6 @@ impl LineNumber {
         assert!(one_based > 0);
         LineNumber(one_based)
     }
-
-    pub(crate) fn none() -> LineNumber {
-        LineNumber(0)
-    }
 }
 
 impl std::fmt::Display for LineNumber {
