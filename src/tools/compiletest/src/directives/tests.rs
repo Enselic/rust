@@ -1001,7 +1001,7 @@ fn parse_edition_range(line: &str) -> Option<EditionRange> {
 
     let line_with_comment = format!("//@ {line}");
     let line =
-        line_directive(Utf8Path::new("tmp.rs"), LineNumber::none(), &line_with_comment).unwrap();
+        line_directive(Utf8Path::new("tmp.rs"), LineNumber::ZERO, &line_with_comment).unwrap();
 
     super::parse_edition_range(&config, &line)
 }

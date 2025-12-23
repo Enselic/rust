@@ -593,7 +593,7 @@ fn iter_directives(
         ];
         // Process the extra implied directives, with a dummy line number of 0.
         for directive_str in extra_directives {
-            let directive_line = line_directive(testfile, LineNumber::none(), directive_str)
+            let directive_line = line_directive(testfile, LineNumber::ZERO, directive_str)
                 .unwrap_or_else(|| panic!("bad extra-directive line: {directive_str:?}"));
             it(&directive_line);
         }

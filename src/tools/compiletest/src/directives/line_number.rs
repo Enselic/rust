@@ -4,7 +4,10 @@
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct LineNumber(usize);
 
+
 impl LineNumber {
+    pub(crate) const ZERO: Self = Self(0);
+
     /// Create a LineNumber from a zero-based line index. I.e. if `zero_based`
     /// is `0` it means "the first line".
     pub(crate) fn from_zero_based(zero_based: usize) -> Self {
