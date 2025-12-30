@@ -156,10 +156,14 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             target_vendor = "unikraft",
         )))]
         {
-            let handler = unix_sigpipe_disposition();
-            let default = (handler == DEFAULT_UNIX_SIGPIPE_DISPOSITION);
-            if !default {
-                // TODO: Rename
+            use std::io::OnBrokenPipe;
+            let (on_broken_pipe_changed, handler) = match std::io::on_broken_pipe() {
+                OnBrokenPipe::Default => (false, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Inherit => (true, None),
+                OnBrokenPipe::Error => (true, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Kill => (true, Some(libc::SIG_DFL)),
+            };
+            if on_broken_pipe_changed {
                 ON_BROKEN_PIPE_FLAG_USED.store(true, crate::sync::atomic::Ordering::Relaxed);
             }
             if let Some(handler) = handler {
@@ -171,18 +175,6 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             }
         }
     }
-}
-
-const DEFAULT_UNIX_SIGPIPE_DISPOSITION: Option<libc::sighandler_t> = Some(libc::SIG_IGN);
-
-/// How to change SIGPIPE disposition before `fn main()`. `None` means
-/// "inherit from parent process".
-#[eii(unix_sigpipe_disposition)]
-fn unix_sigpipe_disposition() -> Option<libc::sighandler_t> {
-    // TODO: Differentiate between "not changed by user" and `Some(libc::SIG_IGN)`
-    // TODO: Only allow to "not change" or "use default"?
-    // TODO: Add custom enum for this?
-    DEFAULT_UNIX_SIGPIPE_DISPOSITION
 }
 
 // This is set (up to once) in reset_sigpipe.
