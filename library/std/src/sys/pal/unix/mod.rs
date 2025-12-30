@@ -34,7 +34,7 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
     // want!
     //
     // Hence, we set SIGPIPE to ignore when the program starts up in order
-    // to prevent this problem. Use `-Zon-broken-pipe=...` to alter this
+    // to prevent this problem. Override `eii TODO` to alter this
     // behavior.
     reset_sigpipe(sigpipe);
 
@@ -156,27 +156,10 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             target_vendor = "unikraft",
         )))]
         {
-            // We don't want to add this as a public type to std, nor do we
-            // want to `include!` a file from the compiler (which would break
-            // Miri and xargo for example), so we choose to duplicate these
-            // constants from `compiler/rustc_session/src/config/sigpipe.rs`.
-            // See the other file for docs. NOTE: Make sure to keep them in
-            // sync!
-            mod sigpipe {
-                pub const DEFAULT: u8 = 0;
-                pub const INHERIT: u8 = 1;
-                pub const SIG_IGN: u8 = 2;
-                pub const SIG_DFL: u8 = 3;
-            }
-
-            let (sigpipe_attr_specified, handler) = match sigpipe {
-                sigpipe::DEFAULT => (false, Some(libc::SIG_IGN)),
-                sigpipe::INHERIT => (true, None),
-                sigpipe::SIG_IGN => (true, Some(libc::SIG_IGN)),
-                sigpipe::SIG_DFL => (true, Some(libc::SIG_DFL)),
-                _ => unreachable!(),
-            };
-            if sigpipe_attr_specified {
+            let handler = unix_sigpipe_disposition();
+            let default = (handler == DEFAULT_UNIX_SIGPIPE_DISPOSITION);
+            if !default {
+                // TODO: Rename
                 ON_BROKEN_PIPE_FLAG_USED.store(true, crate::sync::atomic::Ordering::Relaxed);
             }
             if let Some(handler) = handler {
@@ -188,6 +171,18 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             }
         }
     }
+}
+
+const DEFAULT_UNIX_SIGPIPE_DISPOSITION: Option<libc::sighandler_t> = Some(libc::SIG_IGN);
+
+/// How to change SIGPIPE disposition before `fn main()`. `None` means
+/// "inherit from parent process".
+#[eii(unix_sigpipe_disposition)]
+fn unix_sigpipe_disposition() -> Option<libc::sighandler_t> {
+    // TODO: Differentiate between "not changed by user" and `Some(libc::SIG_IGN)`
+    // TODO: Only allow to "not change" or "use default"?
+    // TODO: Add custom enum for this?
+    DEFAULT_UNIX_SIGPIPE_DISPOSITION
 }
 
 // This is set (up to once) in reset_sigpipe.
