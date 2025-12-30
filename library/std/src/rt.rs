@@ -194,6 +194,7 @@ fn lang_start_internal(
     .unwrap_or_else(handle_rt_panic)
 }
 
+// TODO: Remove `sigpipe: u8`
 #[cfg(not(any(test, doctest)))]
 #[lang = "start"]
 fn lang_start<T: crate::process::Termination + 'static>(
