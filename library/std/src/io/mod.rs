@@ -2221,6 +2221,7 @@ pub(crate) fn stream_len_default<T: Seek + ?Sized>(self_: &mut T) -> Result<u64>
 /// operating systems.
 #[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
 #[non_exhaustive] // We want to be able to add more variants later.
+#[derive(Debug)]
 pub enum OnBrokenPipe {
     /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as
     /// [`ErrorKind::BrokenPipe`] errors. Reset `SIGPIPE` to `SIG_DFL` before
@@ -2248,7 +2249,7 @@ pub enum OnBrokenPipe {
 
 /// How to change SIGPIPE disposition before `fn main()`. `None` means
 /// "inherit from parent process".
-#[eii]
+//#[eii]
 #[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
 pub fn on_broken_pipe() -> OnBrokenPipe {
     OnBrokenPipe::Default
