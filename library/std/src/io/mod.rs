@@ -2216,25 +2216,31 @@ pub(crate) fn stream_len_default<T: Seek + ?Sized>(self_: &mut T) -> Result<u64>
     Ok(len)
 }
 
-#[unstable(feature = "on_broken_pipe", issue = "97889")]
+/// Specifies how a program should behave with regards to
+/// [`ErrorKind::BrokenPipe`]. Mainly relevant to the `unix` family of operating
+/// systems.
+#[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
 #[derive(Debug, PartialEq, Eq, Default)]
-#[non_exhaustive] // User code is not expected to ever match on this enum, but we still want to be able to add more variants later.
+#[non_exhaustive] // We want to be able to add more variants later.
 pub enum OnBrokenPipe {
-    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
-    /// Reset `SIGPIPE` to `SIG_DFL` before child `exec()`.
-    /// This has been the default behavior since Rust 1.0.
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Reset `SIGPIPE` to `SIG_DFL` before
+    /// child `exec()`. This has been the default behavior since Rust 1.0.
     #[default]
     Default,
     /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems kills the process.
     /// Don't touch `SIGPIPE` before child `exec()`.
+    ///
+    /// This is mainly useful when you want programs to terminate when their
+    /// output is piped to short-lived programs like `head`.
     Kill,
-    /// Set `SIGPIPE` to `SIG_DFL` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
-    /// Don't touch `SIGPIPE` before child `exec()`.
+    /// Set `SIGPIPE` to `SIG_DFL` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Don't touch `SIGPIPE` before child
+    /// `exec()`.
     Error,
     /// Never touch `SIGPIPE`, including before child `exec()`.
     /// `SIGPIPE` disposition is always inherited from the parent process.
-    /// That typically behaves like [`Kill`].  to `SIG_DFL` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
-    /// Don't touch `SIGPIPE` 
+    /// This typically means that programs behave as with [`Self::Kill`].
     Inherit,
 }
 
