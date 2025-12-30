@@ -156,8 +156,8 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             target_vendor = "unikraft",
         )))]
         {
-            use std::io::OnBrokenPipe;
-            let (on_broken_pipe_changed, handler) = match std::io::on_broken_pipe() {
+            use crate::io::OnBrokenPipe;
+            let (on_broken_pipe_changed, handler) = match crate::io::on_broken_pipe() {
                 OnBrokenPipe::Default => (false, Some(libc::SIG_IGN)),
                 OnBrokenPipe::Inherit => (true, None),
                 OnBrokenPipe::Error => (true, Some(libc::SIG_IGN)),
