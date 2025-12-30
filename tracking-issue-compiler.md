@@ -1,4 +1,6 @@
-# Tracking Issue for XXX
+# Tracking Issue for externally implementable item `on_broken_pipe() -> std::io::OnBrokenPipe`
+
+TODO: Don't depend on eii feature also.
 
 <!--
 NOTE: For library features, please use the "Library Tracking Issue" template instead.
