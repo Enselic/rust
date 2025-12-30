@@ -136,7 +136,13 @@ fn eii_(
         decl_span,
     )));
 
-    return_items.into_iter().map(wrap_item).collect()
+    if false {
+        return_items.into_iter().map(wrap_item).collect()
+
+    } else {
+        // For now, just return the original item to avoid breaking too much.
+        vec![wrap_item(item)]
+    }
 }
 
 /// Decide on the name of the macro that can be used to implement the EII.

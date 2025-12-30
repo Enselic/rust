@@ -762,8 +762,9 @@ mod sealed {
 #[allow(dead_code)] // Not used in all configurations.
 pub(crate) mod test_helpers;
 
-#[unstable(feature = "extern_item_impls", issue = "125418")]
+/// Demonstration.
 #[eii]
+#[unstable(feature = "extern_item_impls", issue = "125418")]
 pub fn changed_with_eii() -> bool {
     false
 }
