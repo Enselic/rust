@@ -2217,8 +2217,8 @@ pub(crate) fn stream_len_default<T: Seek + ?Sized>(self_: &mut T) -> Result<u64>
 }
 
 /// Specifies how a program should behave with regards to
-/// [`ErrorKind::BrokenPipe`]. Mainly relevant to the `unix` family of operating
-/// systems.
+/// [`ErrorKind::BrokenPipe`]. Currently only relevant to the `unix` family of
+/// operating systems.
 #[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
 #[derive(Debug, PartialEq, Eq, Default)]
 #[non_exhaustive] // We want to be able to add more variants later.
@@ -2242,6 +2242,14 @@ pub enum OnBrokenPipe {
     /// `SIGPIPE` disposition is always inherited from the parent process.
     /// This typically means that programs behave as with [`Self::Kill`].
     Inherit,
+}
+
+/// How to change SIGPIPE disposition before `fn main()`. `None` means
+/// "inherit from parent process".
+#[eii]
+#[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
+fn on_broken_pipe() -> OnBrokenPipe {
+    Default::default()
 }
 
 /// Enumeration of possible methods to seek within an I/O object.
