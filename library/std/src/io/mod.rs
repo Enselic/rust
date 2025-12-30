@@ -2216,6 +2216,39 @@ pub(crate) fn stream_len_default<T: Seek + ?Sized>(self_: &mut T) -> Result<u64>
     Ok(len)
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Hash, Encodable, BlobDecodable, HashStable_Generic)]
+#[non_exhaustive] // User code is not expected to ever match on this enum, but we still want to be able to add more variants later.
+pub enum OnBrokenPipe {
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
+    /// Reset `SIGPIPE` to `SIG_DFL` before child `exec()`.
+    /// This has been the default behavior since Rust 1.0.
+    Default,
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems kills the process.
+    /// Don't touch `SIGPIPE` before child `exec()`.
+    Kill,
+    /// Set `SIGPIPE` to `SIG_DFL` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
+    /// Don't touch `SIGPIPE` before child `exec()`.
+    Error,
+    /// Never touch `SIGPIPE`, including before child `exec()`.
+    /// `SIGPIPE` disposition is always inherited from the parent process.
+    /// That typically behaves like [`Kill`].  to `SIG_DFL` so that pipe I/O problems are reported as [`ErrorKind::BrokenPipe`] errors.
+    /// Don't touch `SIGPIPE` 
+    Inherit,
+}
+
+enum OnBrokenPipe {
+    /// Ignore SIGPIPE (default)
+    Default,
+
+    /// Inherit the SIGPIPE dispositions  from the parent process
+
+}
+
+-                pub const DEFAULT: u8 = 0;
+-                pub const INHERIT: u8 = 1;
+-                pub const SIG_IGN: u8 = 2;
+-                pub const SIG_DFL: u8 = 3;
+
 /// Enumeration of possible methods to seek within an I/O object.
 ///
 /// It is used by the [`Seek`] trait.
