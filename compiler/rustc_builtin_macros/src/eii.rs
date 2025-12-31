@@ -363,6 +363,12 @@ fn generate_attribute_macro_to_implement(
     // exported item must carry an explicit stability attribute.
     macro_attrs.extend_from_slice(attrs_from_decl);
 
+    // Prevent the privacy pass from conservatively treating this exported macro
+    // as potentially referencing *any* item in its defining module, which would
+    // otherwise make large parts of `std` appear reachable and require staged_api
+    // stability annotations everywhere.
+    macro_attrs.push(ecx.attr_name_value_str(sym::rustc_macro_transparency, sym::transparent, span));
+
     // This macro may be intentionally unused within the defining crate (it exists
     // primarily as a linkage/metadata hook), but `std` builds with `-Dwarnings`.
     macro_attrs.push(ecx.attr_nested_word(sym::allow, sym::unused_macros, span));
@@ -374,12 +380,8 @@ fn generate_attribute_macro_to_implement(
         attrs: macro_attrs,
         id: ast::DUMMY_NODE_ID,
         span,
-        // Keep this crate-local for now.
-        // Exporting a macro from `std` causes a large set of internal `pub` items to
-        // become "reachable" for staged_api purposes, which (with
-        // `-Zforce-unstable-if-unmarked`) requires stability annotations on many
-        // internal `std` implementation details.
-        vis: ast::Visibility { span, kind: ast::VisibilityKind::Inherited, tokens: None },
+        // Export the stub so downstream crates can use it as an attribute.
+        vis: ast::Visibility { span, kind: ast::VisibilityKind::Public, tokens: None },
         kind: ast::ItemKind::MacroDef(
             // macro macro_name
             macro_name,
