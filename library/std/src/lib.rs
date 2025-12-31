@@ -764,6 +764,7 @@ pub(crate) mod test_helpers;
 
 #[unstable(feature = "extern_item_impls", issue = "125418")]
 #[eii]
+/// Internal test hook for the EII prototype.
 pub fn changed_with_eii() -> bool {
     false
 }

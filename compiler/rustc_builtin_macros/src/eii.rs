@@ -134,6 +134,7 @@ fn eii_(
         foreign_item_name,
         impl_unsafe,
         decl_span,
+        &attrs_from_decl,
     )));
 
     return_items.into_iter().map(wrap_item).collect()
@@ -353,8 +354,18 @@ fn generate_attribute_macro_to_implement(
     foreign_item_name: Ident,
     impl_unsafe: bool,
     decl_span: Span,
+    attrs_from_decl: &[Attribute],
 ) -> ast::Item {
     let mut macro_attrs = ThinVec::new();
+
+    // Preserve stability and other important attributes from the declaration.
+    // In particular, `std` is built with `-Zforce-unstable-if-unmarked`, so any
+    // exported item must carry an explicit stability attribute.
+    macro_attrs.extend_from_slice(attrs_from_decl);
+
+    // This macro may be intentionally unused within the defining crate (it exists
+    // primarily as a linkage/metadata hook), but `std` builds with `-Dwarnings`.
+    macro_attrs.push(ecx.attr_nested_word(sym::allow, sym::unused_macros, span));
 
     // #[builtin_macro(eii_shared_macro)]
     macro_attrs.push(ecx.attr_nested_word(sym::rustc_builtin_macro, sym::eii_shared_macro, span));
@@ -363,8 +374,12 @@ fn generate_attribute_macro_to_implement(
         attrs: macro_attrs,
         id: ast::DUMMY_NODE_ID,
         span,
-        // pub
-        vis: ast::Visibility { span, kind: ast::VisibilityKind::Public, tokens: None },
+        // Keep this crate-local for now.
+        // Exporting a macro from `std` causes a large set of internal `pub` items to
+        // become "reachable" for staged_api purposes, which (with
+        // `-Zforce-unstable-if-unmarked`) requires stability annotations on many
+        // internal `std` implementation details.
+        vis: ast::Visibility { span, kind: ast::VisibilityKind::Inherited, tokens: None },
         kind: ast::ItemKind::MacroDef(
             // macro macro_name
             macro_name,
