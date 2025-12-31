@@ -136,8 +136,8 @@ fn eii_(
         decl_span,
     )));
 
-    if false {
-        return_items.into_iter().map(wrap_item).collect()
+    if true {
+        return_items.into_iter().map(wrap_item).inspect(|x| eprintln!("NORDH {:?}", x)).collect()
 
     } else {
         // For now, just return the original item to avoid breaking too much.
