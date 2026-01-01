@@ -2250,7 +2250,7 @@ pub enum OnBrokenPipe {
 /// How to change SIGPIPE disposition before `fn main()`. `None` means
 /// "inherit from parent process".
 #[eii(on_broken_pipe)]
-// #[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
+#[unstable(feature = "on_broken_pipe", issue = "97889")] // TODO: create new issue
 pub fn on_broken_pipe() -> OnBrokenPipe {
     OnBrokenPipe::Default
 }
