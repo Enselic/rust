@@ -2413,6 +2413,7 @@ symbols! {
                           from crates.io via `Cargo.toml` instead?",
         untagged_unions,
         unused_imports,
+        unused_macros,
         unwind,
         unwind_attributes,
         unwind_safe_trait,
