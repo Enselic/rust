@@ -402,7 +402,7 @@ pub fn resolve_crate_root(db: &dyn ExpandDatabase, mut ctxt: SyntaxContext) -> O
         iter.next();
     }
     // Then find the last semi-transparent mark from the end if it exists.
-    while let Some((mark, Transparency::SemiTransparent)) = iter.next() {
+    while let Some((mark, Transparency::SemiOpaque)) = iter.next() {
         result_mark = Some(mark);
     }
 
