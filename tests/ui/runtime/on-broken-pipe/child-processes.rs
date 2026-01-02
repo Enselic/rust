@@ -13,6 +13,8 @@
 // Checks the signal disposition of `SIGPIPE` in child processes, and in our own
 // process for robustness.
 
+// TODO: Port
+
 extern crate sigpipe_utils;
 
 use sigpipe_utils::*;
