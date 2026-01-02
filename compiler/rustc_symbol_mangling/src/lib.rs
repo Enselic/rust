@@ -165,7 +165,7 @@ fn compute_symbol_name<'tcx>(
     let def_id = instance.def_id();
     let args = instance.args;
 
-    debug!("symbol_name(def_id={:?}, args={:?})", def_id, args);
+    debug!("symbol_name(def_id={:?}, args={:?})", def_id, args); // nordh
 
     if let Some(def_id) = def_id.as_local() {
         if tcx.proc_macro_decls_static(()) == Some(def_id) {

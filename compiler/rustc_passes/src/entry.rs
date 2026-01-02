@@ -6,7 +6,7 @@ use rustc_hir::def_id::{CRATE_DEF_ID, DefId, LOCAL_CRATE, LocalDefId};
 use rustc_hir::{CRATE_HIR_ID, ItemId, Node, find_attr};
 use rustc_middle::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_session::config::{CrateType, EntryFnType, sigpipe};
+use rustc_session::config::{CrateType, EntryFnType};
 use rustc_span::{RemapPathScopeComponents, Span, sym};
 
 use crate::errors::{ExternMain, MultipleRustcMain, NoMainErr};
@@ -97,13 +97,8 @@ fn configure_main(tcx: TyCtxt<'_>, visitor: &EntryContext<'_>) -> Option<(DefId,
     }
 }
 
-fn sigpipe(tcx: TyCtxt<'_>) -> u8 {
-    match tcx.sess.opts.unstable_opts.on_broken_pipe {
-        rustc_target::spec::OnBrokenPipe::Default => sigpipe::DEFAULT,
-        rustc_target::spec::OnBrokenPipe::Kill => sigpipe::SIG_DFL,
-        rustc_target::spec::OnBrokenPipe::Error => sigpipe::SIG_IGN,
-        rustc_target::spec::OnBrokenPipe::Inherit => sigpipe::INHERIT,
-    }
+fn sigpipe(_tcx: TyCtxt<'_>) -> u8 {
+    0 // TODO: sigpipe::DEFAULT
 }
 
 fn no_main_err(tcx: TyCtxt<'_>, visitor: &EntryContext<'_>) {
