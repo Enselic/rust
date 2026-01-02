@@ -352,6 +352,7 @@ impl Command {
             // Inherit the signal mask from the parent rather than resetting it (i.e. do not call
             // pthread_sigmask).
 
+            // FIXME: Update
             // If -Zon-broken-pipe is used, don't reset SIGPIPE to SIG_DFL.
             // If -Zon-broken-pipe is not used, reset SIGPIPE to SIG_DFL for backward compatibility.
             //
@@ -729,6 +730,7 @@ impl Command {
             // Inherit the signal mask from this process rather than resetting it (i.e. do not call
             // posix_spawnattr_setsigmask).
 
+            // FIXME: Update
             // If -Zon-broken-pipe is used, don't reset SIGPIPE to SIG_DFL.
             // If -Zon-broken-pipe is not used, reset SIGPIPE to SIG_DFL for backward compatibility.
             //

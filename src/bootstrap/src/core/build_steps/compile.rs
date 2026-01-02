@@ -1233,7 +1233,7 @@ pub fn rustc_cargo(
     // Also see the discussion for properly handling I/O errors related to broken pipes, i.e. safe
     // variants of `println!` in
     // <https://rust-lang.zulipchat.com/#narrow/stream/131828-t-compiler/topic/Internal.20lint.20for.20raw.20.60print!.60.20and.20.60println!.60.3F>.
-    cargo.rustflag("-Zon-broken-pipe=kill");
+    // FIXME: cargo.rustflag("-Zon-broken-pipe=kill");
 
     // Building with protected visibility reduces the number of dynamic relocations needed, giving
     // us a faster startup time. However GNU ld < 2.40 will error if we try to link a shared object
