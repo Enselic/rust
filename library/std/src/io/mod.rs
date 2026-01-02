@@ -2216,6 +2216,46 @@ pub(crate) fn stream_len_default<T: Seek + ?Sized>(self_: &mut T) -> Result<u64>
     Ok(len)
 }
 
+/// Specifies what [`ErrorKind::BrokenPipe`] behavior a program should have. In
+/// practice this affects the `SIGPIPE` setup code that runs before `fn main()`.
+/// Currently only relevant to the `unix` family of operating systems.
+#[unstable(feature = "on_broken_pipe", issue = "150588")]
+#[non_exhaustive] // We want to be able to add more variants later.
+#[derive(Debug)]
+pub enum OnBrokenPipe {
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Reset `SIGPIPE` to `SIG_DFL` before
+    /// child `exec()`.
+    ///
+    /// Both of these behaviors have been the default since Rust 1.0.
+    #[unstable(feature = "on_broken_pipe", issue = "150588")]
+    Default,
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems kills the process.
+    /// Don't touch `SIGPIPE` before child `exec()`.
+    ///
+    /// This is mainly useful when you want programs to terminate when their
+    /// output is piped to short-lived programs like `head`.
+    #[unstable(feature = "on_broken_pipe", issue = "150588")]
+    Kill,
+    /// Set `SIGPIPE` to `SIG_DFL` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Don't touch `SIGPIPE` before child
+    /// `exec()`.
+    #[unstable(feature = "on_broken_pipe", issue = "150588")]
+    Error,
+    /// Never touch `SIGPIPE`, including before child `exec()`.
+    /// `SIGPIPE` disposition is always inherited from the parent process.
+    /// This typically means that programs behave as with [`Self::Kill`].
+    #[unstable(feature = "on_broken_pipe", issue = "150588")]
+    Inherit,
+}
+
+/// How to change SIGPIPE disposition before `fn main()` is invoked.
+#[eii(on_broken_pipe)]
+#[unstable(feature = "on_broken_pipe", issue = "150588")]
+pub fn on_broken_pipe() -> OnBrokenPipe {
+    OnBrokenPipe::Default
+}
+
 /// Enumeration of possible methods to seek within an I/O object.
 ///
 /// It is used by the [`Seek`] trait.
