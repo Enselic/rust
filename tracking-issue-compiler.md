@@ -1,4 +1,116 @@
-# Tracking Issue for externally implementable item `on_broken_pipe() -> std::io::OnBrokenPipe`
+# Tracking Issue for externally implementable item `std::io::on_broken_pipe() -> std::io::OnBrokenPipe`
+
+Feature gate: `#![feature(on_broken_pipe)]`
+
+This is a tracking issue for the [externally implementable item](https://github.com/rust-lang/rust/issues/125418) `std::io::on_broken_pipe() -> std::io::OnBrokenPipe` that allows programs to select `SIGPIPE` disposition before `fn main()` is invoked.
+
+Supersedes: https://github.com/rust-lang/rust/issues/97889 (which I will close in the near future)
+
+### Usage
+
+
+
+### Public API and 
+
+```rs
+/// Specifies how a program should behave with regards to
+/// [`ErrorKind::BrokenPipe`]. Currently only relevant to the `unix` family of
+/// operating systems.
+#[non_exhaustive]
+#[derive(Debug)]
+pub enum OnBrokenPipe {
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Reset `SIGPIPE` to `SIG_DFL` before
+    /// child `exec()`. This has been the default behavior since Rust 1.0.
+    Default,
+    /// Set `SIGPIPE` to `SIG_IGN` so that pipe I/O problems kills the process.
+    /// Don't touch `SIGPIPE` before child `exec()`.
+    ///
+    /// This is mainly useful when you want programs to terminate when their
+    /// output is piped to short-lived programs like `head`.
+    Kill,
+    /// Set `SIGPIPE` to `SIG_DFL` so that pipe I/O problems are reported as
+    /// [`ErrorKind::BrokenPipe`] errors. Don't touch `SIGPIPE` before child
+    /// `exec()`.
+    Error,
+    /// Never touch `SIGPIPE`, including before child `exec()`.
+    /// `SIGPIPE` disposition is always inherited from the parent process.
+    /// This typically means that programs behave as with [`Self::Kill`].
+    Inherit,
+}
+```
+
+sha(rust-lang/rust#125418).
+
+<!--
+Include a short description of the feature.
+-->
+
+
+<!--
+For most library features, it'd be useful to include a summarized version of the public API.
+(E.g. just the public function signatures without their doc comments or implementation.)
+-->
+
+```rust
+// core::magic
+
+pub struct Magic;
+
+impl Magic {
+    pub fn magic(self);
+}
+```
+
+### Steps / History
+
+<!--
+For larger features, more steps might be involved.
+If the feature is changed later, please add those PRs here as well.
+-->
+
+(Remember to update the `S-tracking-*` label when checking boxes.)
+
+- [ ] Implementation: #...
+- [ ] Final comment period (FCP)[^1]
+- [ ] Stabilization PR
+
+<!--
+Once the feature has gone through a few release cycles and there are no
+unresolved questions left, the feature might be ready for stabilization.
+
+If this feature didn't go through the RFC process, a final comment period
+(FCP) is always needed before stabilization. This works as follows:
+
+A library API team member can kick off the stabilization process, at which point
+the rfcbot will ask all the team members to verify they agree with
+stabilization. Once enough members agree and there are no concerns, the final
+comment period begins: this issue will be marked as such and will be listed
+in the next This Week in Rust newsletter. If no blocking concerns are raised in
+that period of 10 days, a stabilization PR can be opened by anyone.
+-->
+
+### Unresolved Questions
+
+<!--
+Include any open questions that need to be answered before the feature can be
+stabilised. If multiple (unrelated) big questions come up, it can be a good idea
+to open a separate issue for each, to make it easier to keep track of the
+discussions.
+
+It's useful to link any relevant discussions and conclusions (whether on GitHub,
+Zulip, or the internals forum) here.
+-->
+
+- None yet.
+
+[^1]: https://std-dev-guide.rust-lang.org/feature-lifecycle/stabilization.html
+
+
+
+
+
+
 
 TODO: Don't depend on eii feature also.
 
@@ -74,98 +186,3 @@ Include a list of all the PRs that were involved in implementing the feature.
 
 
 
-
-
-
-
-
-
-
-
-
-
-# Library
-
-
-<!--
-Thank you for creating a tracking issue!
-
-Tracking issues are for tracking a feature from implementation to stabilization.
-
-Make sure to include the relevant RFC for the feature if it has one.
-
-If the new feature is small, it may be fine to skip the RFC process. In that
-case, you can use `issue = "none"` in your initial implementation PR. The
-reviewer will ask you to open a tracking issue if they agree your feature can be
-added without an RFC.
--->
-
-Feature gate: `#![feature(...)]`
-
-This is a tracking issue for ...
-
-<!--
-Include a short description of the feature.
--->
-
-### Public API
-
-<!--
-For most library features, it'd be useful to include a summarized version of the public API.
-(E.g. just the public function signatures without their doc comments or implementation.)
--->
-
-```rust
-// core::magic
-
-pub struct Magic;
-
-impl Magic {
-    pub fn magic(self);
-}
-```
-
-### Steps / History
-
-<!--
-For larger features, more steps might be involved.
-If the feature is changed later, please add those PRs here as well.
--->
-
-(Remember to update the `S-tracking-*` label when checking boxes.)
-
-- [ ] ACP: rust-lang/libs-team#...
-- [ ] Implementation: #...
-- [ ] Final comment period (FCP)[^1]
-- [ ] Stabilization PR
-
-<!--
-Once the feature has gone through a few release cycles and there are no
-unresolved questions left, the feature might be ready for stabilization.
-
-If this feature didn't go through the RFC process, a final comment period
-(FCP) is always needed before stabilization. This works as follows:
-
-A library API team member can kick off the stabilization process, at which point
-the rfcbot will ask all the team members to verify they agree with
-stabilization. Once enough members agree and there are no concerns, the final
-comment period begins: this issue will be marked as such and will be listed
-in the next This Week in Rust newsletter. If no blocking concerns are raised in
-that period of 10 days, a stabilization PR can be opened by anyone.
--->
-
-### Unresolved Questions
-
-<!--
-Include any open questions that need to be answered before the feature can be
-stabilised. If multiple (unrelated) big questions come up, it can be a good idea
-to open a separate issue for each, to make it easier to keep track of the
-discussions.
-
-It's useful to link any relevant discussions and conclusions (whether on GitHub,
-Zulip, or the internals forum) here.
--->
-
-- None yet.
-
-[^1]: https://std-dev-guide.rust-lang.org/feature-lifecycle/stabilization.html
