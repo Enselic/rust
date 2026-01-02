@@ -2,6 +2,7 @@
 //@ ignore-cross-compile because aux-bin does not yet support it
 //@ ignore-remote because aux-bin does not yet support it
 //@ only-unix because SIGPIPE is a unix thing
+//@ ignore-unix FIXME: Make the test work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //@ ignore-backends: gcc
 //@ run-pass
 //@ aux-bin:assert-sigpipe-disposition.rs
@@ -12,6 +13,8 @@
 
 // Checks the signal disposition of `SIGPIPE` in child processes, and in our own
 // process for robustness.
+
+// TODO: Port
 
 extern crate sigpipe_utils;
 

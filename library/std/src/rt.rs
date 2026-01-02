@@ -91,6 +91,8 @@ fn handle_rt_panic<T>(e: Box<dyn Any + Send>) -> T {
 //
 // # The `sigpipe` parameter
 //
+// FIXME: Update
+//
 // Since 2014, the Rust runtime on Unix has set the `SIGPIPE` handler to
 // `SIG_IGN`. Applications have good reasons to want a different behavior
 // though, so there is a `-Zon-broken-pipe` compiler flag that

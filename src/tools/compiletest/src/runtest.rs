@@ -1282,6 +1282,7 @@ impl<'test> TestCx<'test> {
                 let crate_name = path_to_crate_name(aux_path);
                 let mut lib_name = get_lib_name(&crate_name, aux_type);
 
+                // FIXME: Make this ugly hack more beatiful and easy to understand
                 // Some auxiliaries opt out of compiletest's default `--crate-type dylib`
                 // (e.g. via `//@ no-prefer-dynamic`). In that case, fall back to an rlib if the
                 // expected dylib doesn't exist.

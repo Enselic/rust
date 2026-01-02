@@ -39,7 +39,8 @@ fn check_broken_pipe_handled_gracefully(bin: Binary, mut cmd: Command) {
 
     #[cfg(not(windows))]
     {
-        // On non-Windows, rustc/rustdoc built with `-Zon-broken-pipe=kill` shouldn't have an exit
+        // FIXME: Update comment
+        // On non-Windows, rustc/rustdoc built with `OnBrokenPipe::Kill` shouldn't have an exit
         // code of 101 because it should have an wait status that corresponds to SIGPIPE signal
         // number.
         assert_ne!(status.code(), Some(PANIC_ICE_EXIT_CODE), "{bin:?}");

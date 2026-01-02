@@ -137,7 +137,7 @@ fn main() {
         cmd.args(lint_flags.split_whitespace());
     }
 
-    // TODO: Use `sigpipe-default` crate
+    // FIXME: Use `sigpipe-default` crate
 
     if target.is_some() {
         // The stage0 compiler has a special sysroot distinct from what we

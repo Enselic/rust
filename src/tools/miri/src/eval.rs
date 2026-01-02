@@ -416,10 +416,6 @@ fn call_main<'tcx>(
 
             let main_ptr = ecx.fn_ptr(FnVal::Instance(entry_instance));
 
-            // Always using DEFAULT is okay since we don't support signals in Miri anyway.
-            // (This means we are effectively ignoring `-Zon-broken-pipe`.)
-            let sigpipe = rustc_session::config::sigpipe::DEFAULT;
-
             ecx.call_function(
                 start_instance,
                 ExternAbi::Rust,
@@ -431,7 +427,7 @@ fn call_main<'tcx>(
                     ),
                     argc,
                     argv,
-                    ImmTy::from_uint(sigpipe, ecx.machine.layouts.u8),
+                    ImmTy::from_uint(0u8 /* unused */, ecx.machine.layouts.u8),
                 ],
                 Some(&ret_place),
                 ReturnContinuation::Stop { cleanup: true },

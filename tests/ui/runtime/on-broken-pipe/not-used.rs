@@ -5,6 +5,6 @@
 fn main() {
     extern crate sigpipe_utils;
 
-    // SIGPIPE shall be ignored since `-Zon-broken-pipe` is not used
+    // SIGPIPE shall be ignored since `OnBrokenPipe` is not used
     sigpipe_utils::assert_sigpipe_handler(sigpipe_utils::SignalHandler::Ignore);
 }

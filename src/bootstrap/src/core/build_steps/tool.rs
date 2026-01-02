@@ -305,6 +305,7 @@ pub fn prepare_tool_cargo(
     // <https://rust-lang.zulipchat.com/#narrow/stream/131828-t-compiler/topic/Internal.20lint.20for.20raw.20.60print!.60.20and.20.60println!.60.3F>
     // for proper solutions.
     if !path.ends_with("cargo") {
+        // FIXME: Update this code
         // Use an untracked env var `FORCE_ON_BROKEN_PIPE_KILL` here instead of `RUSTFLAGS`.
         // `RUSTFLAGS` is tracked by cargo. Conditionally omitting `-Zon-broken-pipe=kill` from
         // `RUSTFLAGS` causes unnecessary tool rebuilds due to cache invalidation from building e.g.
