@@ -4,9 +4,20 @@ Feature gate: `#![feature(on_broken_pipe)]`
 
 This is a tracking issue for the [externally implementable item](https://github.com/rust-lang/rust/issues/125418) `std::io::on_broken_pipe() -> std::io::OnBrokenPipe` that allows programs to select `SIGPIPE` disposition before `fn main()` is invoked.
 
-Zulip stream: TODO
-
 Supersedes: https://github.com/rust-lang/rust/issues/97889 (which I will close in the near future)
+
+### Zulip Stream
+
+TODO
+
+### About tracking issues
+
+Tracking issues are used to record the overall progress of implementation.
+They are also used as hubs connecting to other relevant issues, e.g., bugs or open design questions.
+A tracking issue is however *not* meant for large scale discussion, questions, or bug reports about a feature.
+Instead, open a dedicated issue for the specific matter and add the relevant feature gate label.
+Discussion comments will get marked as off-topic or deleted.
+Repeated discussions on the tracking issue may lead to the tracking issue getting locked.
 
 ### Usage
 
@@ -94,122 +105,33 @@ pub enum OnBrokenPipe {
   - [ ] Remove old `-Zon-broken-pipe=...` code.
   - [ ] Make `#![feature(extern_item_impls)]` implicit from `#![feature(on_broken_pipe)]`
   - [ ] Remove `sigpipe: u8` from `fn lang_start()` in `std`.
+- [ ] Adjust documentation in relevant places
 - [ ] Final comment period (FCP)[^1]
 - [ ] Stabilization PR
 
 (Remember to update the `S-tracking-*` label when checking boxes.)
 
+[^1]: https://std-dev-guide.rust-lang.org/feature-lifecycle/stabilization.html
+
 ### History
 
 This feature was originally implemented as an attribute `#[unix_sigpipe = "..."]`. It was later changed to a compiler flag `-Zon-broken-pipe=...`. It is now implemented as an externally implementable item `std::io::on_broken_pipe() -> std::io::OnBrokenPipe`.
 
-<!--
-Once the feature has gone through a few release cycles and there are no
-unresolved questions left, the feature might be ready for stabilization.
-
-If this feature didn't go through the RFC process, a final comment period
-(FCP) is always needed before stabilization. This works as follows:
-
-A library API team member can kick off the stabilization process, at which point
-the rfcbot will ask all the team members to verify they agree with
-stabilization. Once enough members agree and there are no concerns, the final
-comment period begins: this issue will be marked as such and will be listed
-in the next This Week in Rust newsletter. If no blocking concerns are raised in
-that period of 10 days, a stabilization PR can be opened by anyone.
--->
-
 ### Unresolved Questions
 
-For 
+- [ ] Can we stabilize `#[feature(on_broken_pipe)]` without stabilizing `#![feature(extern_item_impls)]`?
 
-- [ ]
+### Unresolved Questions That Does Not Block Stabilisation 
 
-<!--
-Include any open questions that need to be answered before the feature can be
-stabilised. If multiple (unrelated) big questions come up, it can be a good idea
-to open a separate issue for each, to make it easier to keep track of the
-discussions.
+Because these questions can be resolved after stabilization.
 
-It's useful to link any relevant discussions and conclusions (whether on GitHub,
-Zulip, or the internals forum) here.
--->
+* [ ] What is the long-term plan with regards to changing the default behaviour with regards to ignoring `SIGPIPE`, if we want to do it at all?
+    - https://github.com/rust-lang/rust/issues/62569
 
-- None yet.
+### Resolved Questions
 
-[^1]: https://std-dev-guide.rust-lang.org/feature-lifecycle/stabilization.html
+* [x] Should we stabilize `sig_dfl` or is `inherit` and `sig_ign` sufficient? </br> **Answer:** There are noteworthy examples of real projects that has opted to use `SIG_DFL` to solve the `BrokenPipe` problem. Notably [rustc itself](https://github.com/rust-lang/rust/blob/b11bf65e4aaa125952b6479a63f36e9e83efc32c/compiler/rustc_driver/src/lib.rs#L445). So if we don't stabilize `sig_dfl`, such projects can't make use of our new attribute. Therefore, we also need to stabilize `sig_dfl`.
+* [x] Can and should we alter the `BrokenPipe` error message and make it suggest to use the new attribute? **Answer:** No, because that would mean we would end up giving developer advice to users that can't act on the advice.
+* [x] Can we use `MSG_NOSIGNAL` with `send()` etc instead of setting `SIGPIPE` globally? **Answer:** [No](https://github.com/rust-lang/rust/issues/62569#issuecomment-1970019721), because there is no equivalent for `write()`, and it would incur an extra syscall for each write-operation, which is likely to have significant performance drawbacks.
 
-
-
-
-<!--
-NOTE: For library features, please use the "Library Tracking Issue" template instead.
-
-Thank you for creating a tracking issue! 📜 Tracking issues are for tracking a
-feature from implementation to stabilisation. Make sure to include the relevant
-RFC for the feature if it has one. Otherwise provide a short summary of the
-feature and link any relevant PRs or issues, and remove any sections that are
-not relevant to the feature.
-
-Remember to add team labels to the tracking issue.
-For a language team feature, this would e.g., be `T-lang`.
-Such a feature should also be labeled with e.g., `F-my_feature`.
-This label is used to associate issues (e.g., bugs and design questions) to the feature.
--->
-
-This is a tracking issue for the RFC "XXX" (rust-lang/rfcs#NNN).
-The feature gate for the issue is `#![feature(FFF)]`.
-
-### About tracking issues
-
-Tracking issues are used to record the overall progress of implementation.
-They are also used as hubs connecting to other relevant issues, e.g., bugs or open design questions.
-A tracking issue is however *not* meant for large scale discussion, questions, or bug reports about a feature.
-Instead, open a dedicated issue for the specific matter and add the relevant feature gate label.
-Discussion comments will get marked as off-topic or deleted.
-Repeated discussions on the tracking issue may lead to the tracking issue getting locked.
-
-### Steps
-<!--
-Include each step required to complete the feature. Typically this is a PR
-implementing a feature, followed by a PR that stabilises the feature. However
-for larger features an implementation could be broken up into multiple PRs.
--->
-
-- [ ] Implement the RFC (cc @rust-lang/XXX -- can anyone write up mentoring
-      instructions?)
-- [ ] Adjust documentation ([see instructions on rustc-dev-guide][doc-guide])
-- [ ] Style updates for any new syntax ([nightly-style-procedure])
-  - [ ] Style team decision on new formatting
-  - [ ] Formatting for new syntax has been added to the [Style Guide]
-  - [ ] (non-blocking) Formatting has been implemented in `rustfmt`
-- [ ] Stabilization PR ([see instructions on rustc-dev-guide][stabilization-guide])
-
-[stabilization-guide]: https://rustc-dev-guide.rust-lang.org/stabilization_guide.html#stabilization-pr
-[doc-guide]: https://rustc-dev-guide.rust-lang.org/stabilization_guide.html#documentation-prs
-[nightly-style-procedure]: https://github.com/rust-lang/style-team/blob/main/nightly-style-procedure.md 
-[Style Guide]: https://github.com/rust-lang/rust/tree/HEAD/src/doc/style-guide
-
-### Unresolved Questions
-<!--
-Include any open questions that need to be answered before the feature can be
-stabilised.
--->
-
-XXX --- list all the "unresolved questions" found in the RFC to ensure they are
-not forgotten
-
-### Implementation history
-
-<!--
-Include a list of all the PRs that were involved in implementing the feature.
--->
-
-
-
-
-
-
-
-
-
-
+Disclaimer: I have taken the liberty to mark some questions resolved that I find unlikely to be controversial. If you would like me to create a proper discussion ticket for any of the resolved or unresolved questions, please let me know!

@@ -113,6 +113,7 @@ The names `sig_ign` and `sig_dfl` comes from the signal handler names `SIG_IGN` 
 * `#[unix_sigpipe = "inherit"]`
     - [ ] Is the name clear enough? Maybe rename to `unchanged`?
 
+
 ### Unresolved Questions That Does Not Block Stabilisation 
 
 Because these questions can be resolved incrementally after stabilization.
@@ -122,15 +123,9 @@ Because these questions can be resolved incrementally after stabilization.
 
 ### Resolved Questions
 
-* [x] We don't want to change to a `-Z unix_sigpipe` flag instead, see https://rust-lang.zulipchat.com/#narrow/stream/219381-t-libs/topic/Proposal.3A.20First.20step.20towards.20solving.20the.20SIGPIPE.20problem/near/285499895, at least not initially.
-* [x] Should we only have the third `sigpipe: u8` argument to `fn lang_start()` on Unix platform via `cfg`? </br> **Answer:** No, this is not allowed, see top level comment in https://github.com/rust-lang/rust/blob/master/src/tools/tidy/src/pal.rs
 * [x] Should we stabilize `sig_dfl` or is `inherit` and `sig_ign` sufficient? </br> **Answer:** There are noteworthy examples of real projects that has opted to use `SIG_DFL` to solve the `BrokenPipe` problem. Notably [rustc itself](https://github.com/rust-lang/rust/blob/b11bf65e4aaa125952b6479a63f36e9e83efc32c/compiler/rustc_driver/src/lib.rs#L445). So if we don't stabilize `sig_dfl`, such projects can't make use of our new attribute. Therefore, we also need to stabilize `sig_dfl`.
-* [x] Should the attribute go on fn main() or on the top-level module (#![unix_sigpipe="..."])? <br/> **Answer:** It makes a lot of semantic sense to have the attribute on fn `main()`, because it is a way to configure what the Rust runtime should do before `fn main()` is invoked. For libraries, no entry point code that modifies `SIGPIPE` is generated, so allowing the attribute in these situations does not make much sense. See https://github.com/rust-lang/rust/pull/101077#issuecomment-1242972299 for small-scale discussion.
-* [x] Can we write the code in a way that allows `lto` to remove the _signal stub code completely? With a `bool` it works (see https://github.com/rust-lang/rust/pull/97802#discussion_r893965842), but with the current `u8` we might need to do some tweaks. **Answer:** There are currently 4 values and I see no feasible way to reduce it to 2.
-* [x] Can and should we alter the BrokenPipe error message and make it suggest to use the new attribute? **Answer:** No, because that would mean we would end up giving developer advice to users that can't act on the advice.
-* [x] Does this have any impact on defining a stable ABI? **Answer:** No, because ABI discussion are about enabling things such as calling Rust functions in binary artifacts produced by an older Rust compiler than the current one. That we changed the ABI of `fn lang_start()` is not relevant. And a stable Rust ABI is not even close (see https://github.com/rust-lang/rfcs/issues/600).
+* [x] Can and should we alter the `BrokenPipe` error message and make it suggest to use the new attribute? **Answer:** No, because that would mean we would end up giving developer advice to users that can't act on the advice.
 * [x] Can we use `MSG_NOSIGNAL` with `send()` etc instead of setting `SIGPIPE` globally? **Answer:** [No](https://github.com/rust-lang/rust/issues/62569#issuecomment-1970019721), because there is no equivalent for `write()`, and it would incur an extra syscall for each write-operation, which is likely to have significant performance drawbacks.
-
 
 Disclaimer: I have taken the liberty to mark some questions resolved that I find unlikely to be controversial. If you would like me to create a proper discussion ticket for any of the resolved or unresolved questions, please let me know!
 
