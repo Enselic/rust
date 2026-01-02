@@ -840,6 +840,7 @@ crate::target_spec_enum! {
     parse_error_type = "panic strategy";
 }
 
+// todo remove
 #[derive(Clone, Copy, Debug, PartialEq, Hash, Encodable, BlobDecodable, HashStable_Generic)]
 pub enum OnBrokenPipe {
     Default,

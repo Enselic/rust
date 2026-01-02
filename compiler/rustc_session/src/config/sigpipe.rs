@@ -1,3 +1,5 @@
+/*
+
 //! NOTE: Keep these constants in sync with `library/std/src/sys/pal/unix/mod.rs`!
 
 /// The default value if `-Zon-broken-pipe=...` is not specified. This resolves
@@ -23,3 +25,6 @@ pub const SIG_IGN: u8 = 2;
 /// such as `head -n 1`.
 #[allow(dead_code)]
 pub const SIG_DFL: u8 = 3;
+
+
+ */

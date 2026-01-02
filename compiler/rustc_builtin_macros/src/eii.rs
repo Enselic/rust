@@ -367,7 +367,11 @@ fn generate_attribute_macro_to_implement(
     // as potentially referencing *any* item in its defining module, which would
     // otherwise make large parts of `std` appear reachable and require staged_api
     // stability annotations everywhere.
-    macro_attrs.push(ecx.attr_name_value_str(sym::rustc_macro_transparency, sym::transparent, span));
+    macro_attrs.push(ecx.attr_name_value_str(
+        sym::rustc_macro_transparency,
+        sym::transparent,
+        span,
+    ));
 
     // This macro may be intentionally unused within the defining crate (it exists
     // primarily as a linkage/metadata hook), but `std` builds with `-Dwarnings`.
