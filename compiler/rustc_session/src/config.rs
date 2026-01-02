@@ -44,7 +44,6 @@ mod cfg;
 mod externs;
 mod native_libs;
 mod print_request;
-pub mod sigpipe;
 
 /// The different settings that the `-C strip` flag can have.
 #[derive(Clone, Copy, PartialEq, Hash, Debug)]
@@ -3069,9 +3068,8 @@ pub(crate) mod dep_tracking {
     use rustc_span::edition::Edition;
     use rustc_span::{RealFileName, RemapPathScopeComponents};
     use rustc_target::spec::{
-        CodeModel, FramePointer, MergeFunctions, OnBrokenPipe, PanicStrategy, RelocModel,
-        RelroLevel, SanitizerSet, SplitDebuginfo, StackProtector, SymbolVisibility, TargetTuple,
-        TlsModel,
+        CodeModel, FramePointer, MergeFunctions, PanicStrategy, RelocModel, RelroLevel,
+        SanitizerSet, SplitDebuginfo, StackProtector, SymbolVisibility, TargetTuple, TlsModel,
     };
 
     use super::{
@@ -3146,7 +3144,6 @@ pub(crate) mod dep_tracking {
         InstrumentXRay,
         CrateType,
         MergeFunctions,
-        OnBrokenPipe,
         PanicStrategy,
         RelroLevel,
         OptLevel,
