@@ -4,6 +4,8 @@ Feature gate: `#![feature(on_broken_pipe)]`
 
 This is a tracking issue for the [externally implementable item](https://github.com/rust-lang/rust/issues/125418) `std::io::on_broken_pipe() -> std::io::OnBrokenPipe` that allows programs to select `SIGPIPE` disposition before `fn main()` is invoked.
 
+Zulip stream: TODO
+
 Supersedes: https://github.com/rust-lang/rust/issues/97889 (which I will close in the near future)
 
 ### Usage
@@ -30,9 +32,9 @@ This is because `SIGPIPE` is changed to `SIG_IGN` before `fn main()` is invoked.
 #![feature(on_broken_pipe)]
 #![feature(extern_item_impls)]
 
-/// The standard library will ask this function what to do with `SIGPIPE` before `fn main()` is invoked.
+/// The standard library ask this how to setup `SIGPIPE` before `fn main()` is invoked.
 /// Here we tell it to inherit `SIGPIPE` from the parent process, which in practice means `SIG_DFL`.
-/// This can also come from an external crate that we link with.
+/// This implememtation can also come from an external crate that we link with.
 #[std::io::on_broken_pipe]
 fn inherit_on_broken_pipe() -> std::io::OnBrokenPipe {
     std::io::OnBrokenPipe::Inherit
@@ -85,18 +87,21 @@ pub enum OnBrokenPipe {
 }
 ```
 
-### Steps / History
+### Steps
 
-<!--
-For larger features, more steps might be involved.
-If the feature is changed later, please add those PRs here as well.
--->
+- [ ] Implementation
+  - [ ] Implement the externally implementable item `std::io::on_broken_pipe() -> std::io::OnBrokenPipe`.
+  - [ ] Remove old `-Zon-broken-pipe=...` code.
+  - [ ] Make `#![feature(extern_item_impls)]` implicit from `#![feature(on_broken_pipe)]`
+  - [ ] Remove `sigpipe: u8` from `fn lang_start()` in `std`.
+- [ ] Final comment period (FCP)[^1]
+- [ ] Stabilization PR
 
 (Remember to update the `S-tracking-*` label when checking boxes.)
 
-- [ ] Implementation: #...
-- [ ] Final comment period (FCP)[^1]
-- [ ] Stabilization PR
+### History
+
+This feature was originally implemented as an attribute `#[unix_sigpipe = "..."]`. It was later changed to a compiler flag `-Zon-broken-pipe=...`. It is now implemented as an externally implementable item `std::io::on_broken_pipe() -> std::io::OnBrokenPipe`.
 
 <!--
 Once the feature has gone through a few release cycles and there are no
@@ -115,6 +120,10 @@ that period of 10 days, a stabilization PR can be opened by anyone.
 
 ### Unresolved Questions
 
+For 
+
+- [ ]
+
 <!--
 Include any open questions that need to be answered before the feature can be
 stabilised. If multiple (unrelated) big questions come up, it can be a good idea
@@ -131,11 +140,6 @@ Zulip, or the internals forum) here.
 
 
 
-
-
-
-
-TODO: Don't depend on eii feature also.
 
 <!--
 NOTE: For library features, please use the "Library Tracking Issue" template instead.
