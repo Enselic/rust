@@ -27,7 +27,7 @@ use rustc_span::edition::{DEFAULT_EDITION, Edition};
 use rustc_span::source_map::{RealFileLoader, SourceMapInputs};
 use rustc_span::{FileName, SourceFileHashAlgorithm, sym};
 use rustc_target::spec::{
-    CodeModel, FramePointer, LinkerFlavorCli, MergeFunctions, OnBrokenPipe, PanicStrategy,
+    CodeModel, FramePointer, LinkerFlavorCli, MergeFunctions, PanicStrategy,
     RelocModel, RelroLevel, SanitizerSet, SplitDebuginfo, StackProtector, TlsModel,
 };
 
@@ -838,7 +838,6 @@ fn test_unstable_options_tracking_hash() {
     tracked!(no_trait_vptr, true);
     tracked!(no_unique_section_names, true);
     tracked!(offload, vec![Offload::Device]);
-    tracked!(on_broken_pipe, OnBrokenPipe::Kill);
     tracked!(osx_rpath_install_name, true);
     tracked!(packed_bundled_libs, true);
     tracked!(panic_abort_tests, true);
