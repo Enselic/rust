@@ -14,13 +14,8 @@ pub(crate) fn maybe_create_entry_wrapper(
     is_jit: bool,
     is_primary_cgu: bool,
 ) {
-    let (main_def_id, sigpipe) = match tcx.entry_fn(()) {
-        Some((def_id, entry_ty)) => (
-            def_id,
-            match entry_ty {
-                EntryFnType::Main { sigpipe } => sigpipe,
-            },
-        ),
+    let main_def_id = match tcx.entry_fn(()) {
+        Some(def_id) => def_id,
         None => return,
     };
 
@@ -33,14 +28,13 @@ pub(crate) fn maybe_create_entry_wrapper(
         return;
     }
 
-    create_entry_fn(tcx, module, main_def_id, is_jit, sigpipe);
+    create_entry_fn(tcx, module, main_def_id, is_jit);
 
     fn create_entry_fn(
         tcx: TyCtxt<'_>,
         m: &mut dyn Module,
         rust_main_def_id: DefId,
         ignore_lang_start_wrapper: bool,
-        sigpipe: u8,
     ) {
         let main_ret_ty = tcx.fn_sig(rust_main_def_id).no_bound_vars().unwrap().output();
         // Given that `main()` has no arguments,
