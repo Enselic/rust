@@ -8,9 +8,54 @@ Supersedes: https://github.com/rust-lang/rust/issues/97889 (which I will close i
 
 ### Usage
 
+A Rust program that writes a sizeable amount of data to stdout with `println!()` will panic if its output is piped to a short-lived program:
 
+```rust
+fn main() {
+    loop {
+        println!("hello world");
+    }
+}
+```
+```bash
+% ./main | head
+hello world
+thread 'main' panicked at 'failed printing to stdout: Broken pipe (os error 32)', library/std/src/io/stdio.rs:1016:9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrac
+```
 
-### Public API and 
+This is because `SIGPIPE` is changed to `SIG_IGN` before `fn main()` is invoked. To prevent panicking, a program can override the externally implementable item to request that `SIGPIPE` is _not_ changed before `fn main()` is invoked. Its disposition will remain `SIG_DFL` and the program will be killed without error when the pipe is closed:
+
+```rust
+#![feature(on_broken_pipe)]
+#![feature(extern_item_impls)]
+
+/// The standard library will ask this function what to do with `SIGPIPE` before `fn main()` is invoked.
+/// Here we tell it to inherit `SIGPIPE` from the parent process, which in practice means `SIG_DFL`.
+/// This can also come from an external crate that we link with.
+#[std::io::on_broken_pipe]
+fn inherit_on_broken_pipe() -> std::io::OnBrokenPipe {
+    std::io::OnBrokenPipe::Inherit
+}
+
+fn main() {
+    loop {
+        println!("hello world");
+    }
+}
+```
+```bash
+% ./main | head -n 1
+hello world
+```
+
+#### Public API
+
+```rs
+/// This lives in `std::io` and is externally implementable:
+fn on_broken_pipe() -> std::io::OnBrokenPipe {
+    std::io::OnBrokenPipe::Default
+}
 
 ```rs
 /// Specifies how a program should behave with regards to
@@ -37,28 +82,6 @@ pub enum OnBrokenPipe {
     /// `SIGPIPE` disposition is always inherited from the parent process.
     /// This typically means that programs behave as with [`Self::Kill`].
     Inherit,
-}
-```
-
-sha(rust-lang/rust#125418).
-
-<!--
-Include a short description of the feature.
--->
-
-
-<!--
-For most library features, it'd be useful to include a summarized version of the public API.
-(E.g. just the public function signatures without their doc comments or implementation.)
--->
-
-```rust
-// core::magic
-
-pub struct Magic;
-
-impl Magic {
-    pub fn magic(self);
 }
 ```
 

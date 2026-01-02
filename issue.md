@@ -22,12 +22,20 @@ thread 'main' panicked at 'failed printing to stdout: Broken pipe (os error 32)'
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrac
 ```
 
-To prevent panicking we can add a crate use the new attribute:
+This is because `SIGPIPE` is changed to `SIG_IGN` before `fn main()` is invoked. To prevent panicking, a program can override the externally implementable item to request that `SIGPIPE` is _not_ changed before `fn main()` is invoked. Its disposition will remain `SIG_DFL` and the program will be killed without error when the pipe is closed:
 
 ```rust
 #![feature(on_broken_pipe)]
+#![feature(extern_item_impls)]
 
-#[on_broken_pipe = "sig_dfl"]
+/// The standard library will ask this function what to do with `SIGPIPE` before `fn main()` is invoked.
+/// Here we tell it to inherit `SIGPIPE` from the parent process, which in practice means `SIG_DFL`.
+/// This can also come from an external crate that we link with.
+#[std::io::on_broken_pipe]
+fn inherit_on_broken_pipe() -> std::io::OnBrokenPipe {
+    std::io::OnBrokenPipe::Inherit
+}
+
 fn main() {
     loop {
         println!("hello world");
