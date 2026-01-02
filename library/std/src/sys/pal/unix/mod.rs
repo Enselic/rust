@@ -34,7 +34,7 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
     // want!
     //
     // Hence, we set SIGPIPE to ignore when the program starts up in order
-    // to prevent this problem. Use `-Zon-broken-pipe=...` to alter this
+    // to prevent this problem. Override `eii TODO` to alter this
     // behavior.
     reset_sigpipe(sigpipe);
 
@@ -156,25 +156,12 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
             target_vendor = "unikraft",
         )))]
         {
-            // We don't want to add this as a public type to std, nor do we
-            // want to `include!` a file from the compiler (which would break
-            // Miri and xargo for example), so we choose to duplicate these
-            // constants from `compiler/rustc_session/src/config/sigpipe.rs`.
-            // See the other file for docs. NOTE: Make sure to keep them in
-            // sync!
-            mod sigpipe {
-                pub const DEFAULT: u8 = 0;
-                pub const INHERIT: u8 = 1;
-                pub const SIG_IGN: u8 = 2;
-                pub const SIG_DFL: u8 = 3;
-            }
-
-            let (on_broken_pipe_used, handler) = match sigpipe {
-                sigpipe::DEFAULT => (false, Some(libc::SIG_IGN)),
-                sigpipe::INHERIT => (true, None),
-                sigpipe::SIG_IGN => (true, Some(libc::SIG_IGN)),
-                sigpipe::SIG_DFL => (true, Some(libc::SIG_DFL)),
-                _ => unreachable!(),
+            use crate::io::OnBrokenPipe;
+            let (on_broken_pipe_used, handler) = match crate::io::on_broken_pipe() {
+                OnBrokenPipe::BackwardsCompatible => (false, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Inherit => (true, None),
+                OnBrokenPipe::Error => (true, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Kill => (true, Some(libc::SIG_DFL)),
             };
             if on_broken_pipe_used {
                 ON_BROKEN_PIPE_USED.store(true, crate::sync::atomic::Ordering::Relaxed);
