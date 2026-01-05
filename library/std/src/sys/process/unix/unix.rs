@@ -357,6 +357,7 @@ impl Command {
             //
             // -Zon-broken-pipe is an opportunity to change the default here.
             if !crate::sys::pal::on_broken_pipe_flag_used() {
+                if true { panic!("NORDH PANIC FLAG NOT USED"); }
                 #[cfg(target_os = "android")] // see issue #88585
                 {
                     let mut action: libc::sigaction = mem::zeroed();
