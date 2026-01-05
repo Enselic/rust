@@ -158,10 +158,10 @@ pub unsafe fn init(argc: isize, argv: *const *const u8, sigpipe: u8) {
         {
             use crate::io::OnBrokenPipe;
             let (using_new_stuff, handler) = match crate::io::on_broken_pipe() {
-                OnBrokenPipe::BackwardsCompatible => (true, Some(libc::SIG_IGN)),
-                OnBrokenPipe::Inherit => (false, None),
-                OnBrokenPipe::Error => (false, Some(libc::SIG_IGN)),
-                OnBrokenPipe::Kill => (false, Some(libc::SIG_DFL)),
+                OnBrokenPipe::BackwardsCompatible => (false, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Inherit => (true, None),
+                OnBrokenPipe::Error => (true, Some(libc::SIG_IGN)),
+                OnBrokenPipe::Kill => (true, Some(libc::SIG_DFL)),
             };
             if using_new_stuff {
                 ON_BROKEN_PIPE_FLAG_USED.store(true, crate::sync::atomic::Ordering::Relaxed);
