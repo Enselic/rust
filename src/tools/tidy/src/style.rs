@@ -505,16 +505,22 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                 );
             }
 
-            let max_comment_length_under_rustfmt = 120;
+            let max_comment_length_under_rustfmt = 200;
             if under_rustfmt
                 && line.trim().starts_with("//")
                 && line.chars().count() > max_comment_length_under_rustfmt
-                && !long_line_is_ok(&extension, is_error_code, max_columns, line)
+                && !long_line_is_ok(
+                    &extension,
+                    is_error_code,
+                    max_comment_length_under_rustfmt,
+                    line,
+                )
+                && !line_is_url(is_error_code, max_comment_length_under_rustfmt, line)
             {
                 suppressible_tidy_err!(
                     err,
                     skip_line_length,
-                    "comment line longer than {max_columns} chars"
+                    "comment line longer than {max_comment_length_under_rustfmt} chars"
                 );
             }
 
