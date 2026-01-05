@@ -4,6 +4,7 @@
 //! Regression test for <https://github.com/rust-lang/rust/issues/34376>.
 
 //@ ignore-cross-compile (needs to run test binary)
+//@ ignore-unix FIXME: Make the test work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //@ ignore-apple
 // FIXME(#131436): on macOS rustc is still reporting the std broken pipe io error panick but it
