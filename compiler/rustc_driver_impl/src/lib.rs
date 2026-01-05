@@ -1412,6 +1412,7 @@ pub fn install_ice_hook(bug_report_url: &'static str, extra_info: fn(&DiagCtxt))
         }
     }
 
+    // HACK: this check is extremely dumb, but we don't really need it to be smarter since this should only happen in the test suite anyway.
     panic::update_hook(Box::new(
         move |default_hook: &(dyn Fn(&PanicHookInfo<'_>) + Send + Sync + 'static),
               info: &PanicHookInfo<'_>| {
