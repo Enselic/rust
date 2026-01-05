@@ -6,7 +6,7 @@
 //@ run-pass
 //@ only-unix because SIGPIPE is a unix thing
 
-// FIXME: Should not be needed TODO: Create specific issue
+// FIXME: Should not be needed  Create specific issue!!
 //@ no-prefer-dynamic
 
 #![feature(on_broken_pipe)]
@@ -38,4 +38,4 @@ fn assert_inherit_sigpipe_disposition(aux_bin: &str) {
     assert!(cmd.status().unwrap().success());
 }
 
-// TODO: Must use feature flag even if std enables eii
+// FIXME: We must use feature flag even if std enables eii
