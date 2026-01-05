@@ -4,6 +4,7 @@
 //@ aux-bin: assert-inherit-sig_dfl.rs
 //@ aux-bin: assert-inherit-sig_ign.rs
 //@ run-pass
+//@ no-prefer-dynamic
 
 #![feature(on_broken_pipe)]
 #![feature(rustc_private)]
