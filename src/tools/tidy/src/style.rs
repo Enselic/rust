@@ -226,7 +226,7 @@ fn should_ignore(line: &str) -> bool {
 
 /// Returns `true` if `line` is allowed to be longer than the normal limit.
 fn long_line_is_ok(extension: &str, is_error_code: bool, max_columns: usize, line: &str) -> bool {
-    match extension {
+    let x = match extension {
         // fluent files are allowed to be any length
         "ftl" => true,
         // non-error code markdown is allowed to be any length
@@ -234,7 +234,9 @@ fn long_line_is_ok(extension: &str, is_error_code: bool, max_columns: usize, lin
         // HACK(Ezrashaw): there is no way to split a markdown header over multiple lines
         "md" if line == INTERNAL_COMPILER_DOCS_LINE => true,
         _ => line_is_url(is_error_code, max_columns, line) || should_ignore(line),
-    }
+    };
+    eprintln!("NORDH {x:?}");
+    x
 }
 
 #[derive(Clone, Copy)]
@@ -381,17 +383,21 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
 
     walk(path, skip, &mut |entry, contents| {
         let file = entry.path();
+        if file != "/home/martin/src/rust-better-stepping/compiler/rustc_driver_impl/src/lib.rs" {
+            return;
+        }
+        eprintln!("NORDH: path={file:?} ");
         let path_str = file.to_string_lossy();
         let filename = file.file_name().unwrap().to_string_lossy();
 
         let is_css_file = filename.ends_with(".css");
         let under_rustfmt = filename.ends_with(".rs") &&
-            // This list should ideally be sourced from rustfmt.toml but we don't want to add a toml
-            // parser to tidy.
-            !file.ancestors().any(|a| {
-                (a.ends_with("tests") && a.join("COMPILER_TESTS.md").exists()) ||
-                    a.ends_with("src/doc/book")
-            });
+        // This list should ideally be sourced from rustfmt.toml but we don't want to add a toml
+        // parser to tidy.
+        !file.ancestors().any(|a| {
+            (a.ends_with("tests") && a.join("COMPILER_TESTS.md").exists()) ||
+            a.ends_with("src/doc/book")
+        });
 
         if contents.is_empty() {
             check.error(format!("{}: empty file", file.display()));
@@ -409,6 +415,7 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
             COLS
         };
 
+        eprintln!("NORDH: 2 path={file:?} max_columns={max_columns:?}");
         // When you change this, also change the `directive_line_starts` variable below
         let can_contain = contents.contains("// ignore-tidy-")
             || contents.contains("# ignore-tidy-")
@@ -454,6 +461,10 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
         let any_problematic_line =
             !is_this_file && !is_test_for_this_file && problematic_regex.is_match(contents);
         for (i, line) in contents.split('\n').enumerate() {
+            if !line.contains("extremely dumb") {
+                continue;
+            }
+            eprintln!("NORDH yep 1");
             if line.is_empty() {
                 if i == 0 {
                     leading_new_lines = true;
@@ -464,16 +475,19 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                 trailing_new_lines = 0;
             }
 
+            eprintln!("NORDH yep 2");
             let trimmed = line.trim();
 
             if !trimmed.starts_with("//") {
                 lines += 1;
             }
 
+            eprintln!("NORDH yep 3");
             let mut err = |msg: &str| {
                 check.error(format!("{}:{}: {msg}", file.display(), i + 1));
             };
 
+            eprintln!("NORDH yep 4");
             if trimmed.contains("dbg!")
                 && !trimmed.starts_with("//")
                 && !file.ancestors().any(|a| {
@@ -489,13 +503,15 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                 )
             }
 
+            eprintln!("NORDH yep 5");
             if is_codegen_test && trimmed.contains("CHECK") && trimmed.ends_with(": br") {
                 err("`CHECK: br` and `CHECK-NOT: br` in codegen tests are fragile to false \
                     positives in mangled symbols. Try using `br {{.*}}` instead.")
             }
 
+            let foo = line.chars().count();
             if !under_rustfmt
-                && line.chars().count() > max_columns
+                && foo > max_columns
                 && !long_line_is_ok(&extension, is_error_code, max_columns, line)
             {
                 suppressible_tidy_err!(
@@ -504,6 +520,7 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                     "line longer than {max_columns} chars"
                 );
             }
+            eprintln!("NORDH yep 6 {foo} {under_rustfmt}");
             if !is_css_file && line.contains('\t') {
                 suppressible_tidy_err!(err, skip_tab, "tab character");
             }
