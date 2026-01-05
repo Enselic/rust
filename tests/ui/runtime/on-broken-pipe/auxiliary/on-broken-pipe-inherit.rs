@@ -1,14 +1,11 @@
-//@ aux-crate: sigpipe_utils=sigpipe-utils.rs
+// -Cprefer-dynamic is not supported by eii yet
 //@ no-prefer-dynamic
+#![crate_type = "rlib"]
 
-#![feature(on_broken_pipe)]
 #![feature(extern_item_impls)]
+#![feature(on_broken_pipe)]
 
 #[std::io::on_broken_pipe]
 fn inherit_on_broken_pipe() -> std::io::OnBrokenPipe {
     std::io::OnBrokenPipe::Inherit
-}
-
-fn main() {
-    sigpipe_utils::assert_sigpipe_handler(sigpipe_utils::SignalHandler::Default);
 }
