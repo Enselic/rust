@@ -854,7 +854,8 @@ fn print_crate_info(
 
 /// Prints version information
 ///
-/// NOTE: this is a macro to support drivers built at a different time than the main `rustc_driver` crate.
+/// NOTE: this is a macro to support drivers built at a different time than the main `rustc_driver`
+/// crate.
 pub macro version($early_dcx: expr, $binary: literal, $matches: expr) {
     fn unw(x: Option<&str>) -> &str {
         x.unwrap_or("unknown")
@@ -1220,13 +1221,11 @@ pub fn handle_options(early_dcx: &EarlyDiagCtxt, args: &[String]) -> Option<geto
     //
     // * If the option is stable, we're all good
     // * If the option wasn't passed, we're all good
-    // * If `-Z unstable-options` wasn't passed (and we're not a -Z option
-    //   ourselves), then we require the `-Z unstable-options` flag to unlock
-    //   this option that was passed.
-    // * If we're a nightly compiler, then unstable options are now unlocked, so
-    //   we're good to go.
-    // * Otherwise, if we're an unstable option then we generate an error
-    //   (unstable option being used on stable)
+    // * If `-Z unstable-options` wasn't passed (and we're not a -Z option ourselves), then we
+    //   require the `-Z unstable-options` flag to unlock this option that was passed.
+    // * If we're a nightly compiler, then unstable options are now unlocked, so we're good to go.
+    // * Otherwise, if we're an unstable option then we generate an error (unstable option being
+    //   used on stable)
     nightly_options::check_nightly_options(early_dcx, &matches, &config::rustc_optgroups());
 
     if args.is_empty() || matches.opt_present("h") || matches.opt_present("help") {
@@ -1403,7 +1402,8 @@ pub fn install_ice_hook(bug_report_url: &'static str, extra_info: fn(&DiagCtxt))
     // opt in to less-verbose backtraces by manually setting "RUST_BACKTRACE"
     // (e.g. `RUST_BACKTRACE=1`)
     if env::var_os("RUST_BACKTRACE").is_none() {
-        // HACK: this check is extremely dumb, but we don't really need it to be smarter since this should only happen in the test suite anyway.
+        // HACK: this check is extremely dumb, but we don't really need it to be smarter since this
+        // should only happen in the test suite anyway.
         let ui_testing = std::env::args().any(|arg| arg == "-Zui-testing");
         if env!("CFG_RELEASE_CHANNEL") == "dev" && !ui_testing {
             panic::set_backtrace_style(panic::BacktraceStyle::Short);
@@ -1412,7 +1412,8 @@ pub fn install_ice_hook(bug_report_url: &'static str, extra_info: fn(&DiagCtxt))
         }
     }
 
-    // HACK: this check is extremely dumb, but we don't really need it to be smarter since this should only happen in the test suite anyway.
+    // HACK: this check is extremely dumb, but we don't really need it to be smarter since this
+    // should only happen in the test suite anyway.
     panic::update_hook(Box::new(
         move |default_hook: &(dyn Fn(&PanicHookInfo<'_>) + Send + Sync + 'static),
               info: &PanicHookInfo<'_>| {
@@ -1424,15 +1425,17 @@ pub fn install_ice_hook(bug_report_url: &'static str, extra_info: fn(&DiagCtxt))
             if let Some(msg) = info.payload().downcast_ref::<String>() {
                 if msg.starts_with("failed printing to stdout: ") && msg.ends_with("(os error 232)")
                 {
-                    // the error code is already going to be reported when the panic unwinds up the stack
+                    // the error code is already going to be reported when the panic unwinds up the
+                    // stack
                     let early_dcx = EarlyDiagCtxt::new(ErrorOutputType::default());
                     let _ = early_dcx.early_err(msg.clone());
                     return;
                 }
             };
 
-            // Invoke the default handler, which prints the actual panic message and optionally a backtrace
-            // Don't do this for delayed bugs, which already emit their own more useful backtrace.
+            // Invoke the default handler, which prints the actual panic message and optionally a
+            // backtrace Don't do this for delayed bugs, which already emit their own
+            // more useful backtrace.
             if !info.payload().is::<rustc_errors::DelayedBugPanic>() {
                 default_hook(info);
                 // Separate the output with an empty line

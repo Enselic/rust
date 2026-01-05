@@ -361,7 +361,8 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
 
         let extensions = ["rs", "py", "js", "sh", "c", "cpp", "h", "md", "css", "ftl", "goml"];
 
-        // NB: don't skip paths without extensions (or else we'll skip all directories and will only check top level files)
+        // NB: don't skip paths without extensions (or else we'll skip all directories and will only
+        // check top level files)
         if path.extension().is_none_or(|ext| !extensions.iter().any(|e| ext == OsStr::new(e))) {
             return true;
         }
@@ -370,8 +371,9 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
         path.extension().is_some_and(|e| e == "css") && !is_in(path, "src", "librustdoc")
     }
 
-    // This creates a RegexSet as regex contains performance optimizations to be able to deal with these over
-    // 2000 needles efficiently. This runs over the entire source code, so performance matters.
+    // This creates a RegexSet as regex contains performance optimizations to be able to deal with
+    // these over 2000 needles efficiently. This runs over the entire source code, so
+    // performance matters.
     let problematic_regex = RegexSetBuilder::new(PROBLEMATIC_CONSTS_STRINGS.as_slice())
         .case_insensitive(true)
         .build()
@@ -628,7 +630,8 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                     let (start_line, mut backtick_count) = comment_block.unwrap_or((i + 1, 0));
                     let line_backticks = trimmed.chars().filter(|ch| *ch == '`').count();
                     let comment_text = trimmed.split("//").nth(1).unwrap();
-                    // This check ensures that we don't lint for code that has `//` in a string literal
+                    // This check ensures that we don't lint for code that has `//` in a string
+                    // literal
                     if line_backticks % 2 == 1 {
                         backtick_count += comment_text.chars().filter(|ch| *ch == '`').count();
                     }
