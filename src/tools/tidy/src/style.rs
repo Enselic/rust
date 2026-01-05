@@ -504,6 +504,20 @@ pub fn check(path: &Path, tidy_ctx: TidyCtx) {
                     "line longer than {max_columns} chars"
                 );
             }
+
+            let max_comment_length_under_rustfmt = 120;
+            if under_rustfmt
+                && line.trim().starts_with("//")
+                && line.chars().count() > max_comment_length_under_rustfmt
+                && !long_line_is_ok(&extension, is_error_code, max_columns, line)
+            {
+                suppressible_tidy_err!(
+                    err,
+                    skip_line_length,
+                    "comment line longer than {max_columns} chars"
+                );
+            }
+
             if !is_css_file && line.contains('\t') {
                 suppressible_tidy_err!(err, skip_tab, "tab character");
             }
