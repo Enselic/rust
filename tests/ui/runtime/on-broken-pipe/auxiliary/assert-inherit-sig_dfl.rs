@@ -1,4 +1,5 @@
 //@ aux-crate: sigpipe_utils=sigpipe-utils.rs
+//@ no-prefer-dynamic
 
 #![feature(on_broken_pipe)]
 #![feature(extern_item_impls)]
