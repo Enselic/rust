@@ -1412,7 +1412,9 @@ impl<'test> TestCx<'test> {
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {
-            (AuxType::Dylib, None)
+            // When `no-prefer-dynamic` is set (it propagates to aux builds), keep auxiliaries
+            // fully static as well. This avoids producing/expecting a `lib*.so` for aux crates.
+            (AuxType::Lib, Some("lib"))
         } else if self.config.target.contains("emscripten")
             || (self.config.target.contains("musl")
                 && !aux_props.force_host
