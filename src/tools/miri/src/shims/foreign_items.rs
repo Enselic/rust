@@ -311,6 +311,38 @@ trait EvalContextExtPriv<'tcx>: crate::MiriInterpCxExt<'tcx> {
                 let [] = this.check_shim_sig_lenient(abi, CanonAbi::Rust, link_name, args)?;
             }
 
+            // `std::io::on_broken_pipe` is implemented via EII and becomes an `extern "Rust"`
+            // function without a body. Under v0 mangling this shows up with a mangled symbol name
+            // (e.g. `_RNv..._3std2io14on_broken_pipe`).
+            //
+            // Miri does not support the real behavior (changing host SIGPIPE disposition), so we
+            // treat this as a no-op and request inheriting SIGPIPE.
+            name if name == "on_broken_pipe" || name.contains("std2io14on_broken_pipe") => {
+                let [] = this.check_shim_sig_lenient(abi, CanonAbi::Rust, link_name, args)?;
+
+                let Some(adt_def) = dest.layout.ty.ty_adt_def() else {
+                    throw_machine_stop!(TerminationInfo::UnsupportedForeignItem(format!(
+                        "`{link_name}` returned unexpected type `{}`",
+                        dest.layout.ty
+                    )));
+                };
+
+                // Prefer "Inherit" so the std startup code won't attempt to call `signal`.
+                let inherit = Symbol::intern("Inherit");
+                let Some((variant_idx, _)) = adt_def
+                    .variants()
+                    .iter_enumerated()
+                    .find(|(_, v)| v.name == inherit)
+                else {
+                    throw_machine_stop!(TerminationInfo::UnsupportedForeignItem(format!(
+                        "`{link_name}` could not find `Inherit` variant in `{}`",
+                        dest.layout.ty
+                    )));
+                };
+
+                this.write_discriminant(variant_idx, dest)?;
+            }
+
             // Miri-specific extern functions
             "miri_alloc" => {
                 let [size, align] =
