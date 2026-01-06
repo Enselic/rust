@@ -5,6 +5,9 @@
 //@ aux-bin: assert-inherit-sig_ign.rs
 //@ run-pass
 //@ only-unix because SIGPIPE is a unix thing
+//@ ignore-backends: gcc
+// FIXME: linking on windows (speciifcally mingw) not yet supported, see tracking issue #125418
+//@ ignore-windows
 
 // FIXME: Should not be needed  Create specific issue!!
 //@ no-prefer-dynamic

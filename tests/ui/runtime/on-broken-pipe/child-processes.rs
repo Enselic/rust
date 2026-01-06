@@ -3,6 +3,9 @@
 //@ ignore-remote because aux-bin does not yet support it
 //@ only-unix because SIGPIPE is a unix thing
 //@ ignore-backends: gcc
+//@ ignore-backends: gcc
+// FIXME: linking on windows (speciifcally mingw) not yet supported, see tracking issue #125418
+//@ ignore-windows
 //@ run-pass
 //@ aux-bin:assert-sigpipe-disposition.rs
 //@ aux-crate:sigpipe_utils=sigpipe-utils.rs
