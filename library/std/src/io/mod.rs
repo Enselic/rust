@@ -2250,7 +2250,7 @@ pub enum OnBrokenPipe {
 }
 
 /// How to change SIGPIPE disposition before `fn main()` is invoked. This is an
-/// Externally Implementable Item (eii) that can be overriden by crates even
+/// Externally Implementable Item (eii) that can be overridden by crates even
 /// though it is called by std itself.
 #[eii(on_broken_pipe)]
 #[unstable(feature = "on_broken_pipe", issue = "150588")]
