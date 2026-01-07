@@ -1279,7 +1279,24 @@ impl<'test> TestCx<'test> {
 
         let add_extern =
             |rustc: &mut Command, aux_name: &str, aux_path: &str, aux_type: AuxType| {
-                let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
+                let crate_name = path_to_crate_name(aux_path);
+                let mut lib_name = get_lib_name(&crate_name, aux_type);
+
+                // FIXME: Make this ugly hack more beatiful and easy to understand
+                // Some auxiliaries opt out of compiletest's default `--crate-type dylib`
+                // (e.g. via `//@ no-prefer-dynamic`). In that case, fall back to an rlib if the
+                // expected dylib doesn't exist.
+                if aux_type == AuxType::Dylib {
+                    if let Some(name) = &lib_name {
+                        if !aux_dir.join(name).exists() {
+                            let rlib = format!("lib{crate_name}.rlib");
+                            if aux_dir.join(&rlib).exists() {
+                                lib_name = Some(rlib);
+                            }
+                        }
+                    }
+                }
+
                 if let Some(lib_name) = lib_name {
                     rustc.arg("--extern").arg(format!("{}={}/{}", aux_name, aux_dir, lib_name));
                 }
@@ -1412,6 +1429,10 @@ impl<'test> TestCx<'test> {
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {
+            // `no-prefer-dynamic` should not force a crate type for auxiliaries.
+            // Some tests rely on auxiliaries selecting their own crate type (e.g. `staticlib`).
+            // We still return `Dylib` here for historical reasons, but callers that need the
+            // actual filename should probe for the produced artifact.
             (AuxType::Dylib, None)
         } else if self.config.target.contains("emscripten")
             || (self.config.target.contains("musl")
@@ -2945,6 +2966,7 @@ enum LinkToAux {
 }
 
 #[derive(Debug, PartialEq)]
+#[derive(Copy, Clone)]
 enum AuxType {
     Bin,
     Lib,
