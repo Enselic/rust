@@ -11,9 +11,6 @@
 //@ needs-target-std
 //@ ignore-cross-compile
 
-//@ ignore-64bit FIXME: Make the test work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//@ ignore-32bit FIXME: Make the test work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 #![deny(warnings)]
 
 use run_make_support::{cargo, path, target};
