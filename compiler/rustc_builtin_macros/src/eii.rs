@@ -366,6 +366,14 @@ fn generate_attribute_macro_to_implement(
     // errors for eii's in std.
     macro_attrs.extend_from_slice(attrs_from_decl);
 
+    // Needed to avoid lots of unrelated "missing stability attribute" errors on
+    // unrelated items. See #146993.
+    macro_attrs.push(ecx.attr_name_value_str(
+        sym::rustc_macro_transparency,
+        sym::semiopaque,
+        span,
+    ));
+
     // #[builtin_macro(eii_shared_macro)]
     macro_attrs.push(ecx.attr_nested_word(sym::rustc_builtin_macro, sym::eii_shared_macro, span));
 
