@@ -1,6 +1,6 @@
+//@ proc-macro-priv: pm.rs
 //@ aux-crate:priv:priv_dep=priv_dep.rs
 //@ aux-build:pub_dep.rs
-//@ proc-macro-priv:pm.rs
 //@ compile-flags: -Zunstable-options
 
 // Basic behavior check of exported_private_dependencies from either a public

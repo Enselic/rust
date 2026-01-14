@@ -66,6 +66,8 @@ pub(super) fn parse_and_update_aux(
 
     let ln = directive_line;
 
+    eprintln!("NORDH DEBUG: parsing aux directive: {:?}", ln);
+
     config.push_name_value_directive(ln, AUX_BUILD, &mut aux.builds, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_BIN, &mut aux.bins, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_CRATE, &mut aux.crates, parse_aux_crate);
@@ -73,6 +75,8 @@ pub(super) fn parse_and_update_aux(
         .push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| ProcMacro { priv_: false, name: r.trim().to_string() });
     config
         .push_name_value_directive(ln, PROC_MACRO_PRIV, &mut aux.proc_macros, |r| ProcMacro { priv_: true, name: r.trim().to_string() });
+
+    eprintln!("NORDH DEBUG: aux after parsing so far: {:?}", aux.proc_macros);
     if let Some(r) = config.parse_name_value_directive(ln, AUX_CODEGEN_BACKEND) {
         aux.codegen_backend = Some(r.trim().to_owned());
     }
