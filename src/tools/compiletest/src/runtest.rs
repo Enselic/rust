@@ -1408,8 +1408,8 @@ impl<'test> TestCx<'test> {
 
         let (aux_type, crate_type) = if aux_type == Some(AuxType::Bin) {
             (AuxType::Bin, Some("bin"))
-        } else if matches!(aux_type, Some(AuxType::ProcMacro { priv_ })) {
-            (AuxType::ProcMacro { priv_: priv_}, Some("proc-macro"))
+        } else if let Some(AuxType::ProcMacro { priv_ }) = aux_type.as_ref() {
+            (AuxType::ProcMacro { priv_: *priv_ }, Some("proc-macro"))
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {

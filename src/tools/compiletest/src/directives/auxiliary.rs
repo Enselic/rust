@@ -7,15 +7,15 @@ use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC
 use crate::common::Config;
 use crate::directives::DirectiveLine;
 
-#[derive(Clone, Debug, Default)]
-enum Kind {
-    #[default]
-    Public,
-    Private,
-}
+// #[derive(Clone, Debug, Default)]
+// pub enum Kind {
+//     #[default]
+//     Public,
+//     Private,
+// }
 
 #[derive(Clone, Debug, Default)]
-struct ProcMacro {
+pub(crate) struct ProcMacro {
     pub priv_: bool,
     pub name: String,
 }

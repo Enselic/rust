@@ -236,7 +236,6 @@ mod directives {
     pub const AUX_BUILD: &'static str = "aux-build";
     pub const AUX_CRATE: &'static str = "aux-crate";
     pub const PROC_MACRO: &'static str = "proc-macro";
-    pub const PROC_MACRO_: &'static str = "proc-macro";
     pub const PROC_MACRO_PRIV: &'static str = "proc-macro-priv";
     pub const AUX_CODEGEN_BACKEND: &'static str = "aux-codegen-backend";
     pub const EXEC_ENV: &'static str = "exec-env";
