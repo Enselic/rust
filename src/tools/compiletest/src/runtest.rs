@@ -98,7 +98,7 @@ fn get_lib_name(name: &str, aux_type: AuxType) -> Option<String> {
         // In this case, the only path we can pass
         // with '--extern-meta' is the '.rlib' file
         AuxType::Lib => Some(format!("lib{name}.rlib")),
-        AuxType::Dylib | AuxType::ProcMacro => Some(dylib_name(name)),
+        AuxType::Dylib | AuxType::ProcMacro { .. }=> Some(dylib_name(name)),
     }
 }
 
@@ -1370,7 +1370,7 @@ impl<'test> TestCx<'test> {
     ) -> AuxType {
         let aux_path = self.resolve_aux_path(source_path);
         let mut aux_props = self.props.from_aux_file(&aux_path, self.revision, self.config);
-        if aux_type == Some(AuxType::ProcMacro) {
+        if matches!(aux_type, Some(AuxType::ProcMacro { .. })) {
             aux_props.force_host = true;
         }
         let mut aux_dir = aux_dir.to_path_buf();
@@ -1408,8 +1408,8 @@ impl<'test> TestCx<'test> {
 
         let (aux_type, crate_type) = if aux_type == Some(AuxType::Bin) {
             (AuxType::Bin, Some("bin"))
-        } else if aux_type == Some(AuxType::ProcMacro) {
-            (AuxType::ProcMacro, Some("proc-macro"))
+        } else if matches!(aux_type, Some(AuxType::ProcMacro { priv_ })) {
+            (AuxType::ProcMacro { priv_: priv_}, Some("proc-macro"))
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {
@@ -1447,7 +1447,7 @@ impl<'test> TestCx<'test> {
             aux_rustc.args(&["--crate-type", crate_type]);
         }
 
-        if aux_type == AuxType::ProcMacro {
+        if matches!(aux_type, AuxType::ProcMacro { .. }){
             // For convenience, but this only works on 2018.
             aux_rustc.args(&["--extern", "proc_macro"]);
         }

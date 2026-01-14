@@ -3,15 +3,18 @@
 
 use std::iter;
 
-use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
+use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO, PROC_MACRO_PRIV};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
 
+#[derive(Clone, Debug, Default)]
 enum Kind {
+    #[default]
     Public,
     Private,
 }
 
+#[derive(Clone, Debug, Default)]
 struct ProcMacro {
     pub priv_: bool,
     pub name: String,
@@ -45,7 +48,7 @@ impl AuxProps {
             .chain(builds.iter().map(String::as_str))
             .chain(bins.iter().map(String::as_str))
             .chain(crates.iter().map(|(_, path)| path.as_str()))
-            .chain(proc_macros.iter().map(String::as_str))
+            .chain(proc_macros.iter().map(|pm| pm.name.as_str()))
             .chain(codegen_backend.iter().map(String::as_str))
     }
 }
