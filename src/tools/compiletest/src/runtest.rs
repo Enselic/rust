@@ -1291,9 +1291,10 @@ impl<'test> TestCx<'test> {
         }
 
         for proc_macro in &self.props.aux.proc_macros {
-            self.build_auxiliary(proc_macro, &aux_dir, Some(AuxType::ProcMacro));
-            let crate_name = path_to_crate_name(proc_macro);
-            add_extern(rustc, &crate_name, proc_macro, AuxType::ProcMacro);
+
+            self.build_auxiliary(&proc_macro.name, &aux_dir, Some(AuxType::ProcMacro { priv_: proc_macro.priv_ }));
+            let crate_name = path_to_crate_name(&proc_macro.name);
+            add_extern(rustc, &crate_name, &proc_macro.name, AuxType::ProcMacro { priv_: proc_macro.priv_ });
         }
 
         // Build any `//@ aux-codegen-backend`, and pass the resulting library
@@ -1412,7 +1413,7 @@ impl<'test> TestCx<'test> {
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {
-            (AuxType::Dylib, None)
+            (AuxType::Lib, None)
         } else if self.config.target.contains("emscripten")
             || (self.config.target.contains("musl")
                 && !aux_props.force_host
@@ -2949,7 +2950,9 @@ enum AuxType {
     Bin,
     Lib,
     Dylib,
-    ProcMacro,
+    ProcMacro {
+        priv_: bool,
+    },
 }
 
 /// Outcome of comparing a stream to a blessed file,

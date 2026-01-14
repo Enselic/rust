@@ -7,6 +7,16 @@ use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC
 use crate::common::Config;
 use crate::directives::DirectiveLine;
 
+enum Kind {
+    Public,
+    Private,
+}
+
+struct ProcMacro {
+    pub priv_: bool,
+    pub name: String,
+}
+
 /// Properties parsed from `aux-*` test directives.
 #[derive(Clone, Debug, Default)]
 pub(crate) struct AuxProps {
@@ -19,7 +29,7 @@ pub(crate) struct AuxProps {
     /// to build and pass with the `--extern` flag.
     pub(crate) crates: Vec<(String, String)>,
     /// Same as `builds`, but for proc-macros.
-    pub(crate) proc_macros: Vec<String>,
+    pub(crate) proc_macros: Vec<ProcMacro>,
     /// Similar to `builds`, but also uses the resulting dylib as a
     /// `-Zcodegen-backend` when compiling the test file.
     pub(crate) codegen_backend: Option<String>,
@@ -47,7 +57,7 @@ pub(super) fn parse_and_update_aux(
     directive_line: &DirectiveLine<'_>,
     aux: &mut AuxProps,
 ) {
-    if !(directive_line.name.starts_with("aux-") || directive_line.name == "proc-macro") {
+    if !(directive_line.name.starts_with("aux-") || directive_line.name.starts_with("proc-macro")) {
         return;
     }
 
@@ -57,7 +67,9 @@ pub(super) fn parse_and_update_aux(
     config.push_name_value_directive(ln, AUX_BIN, &mut aux.bins, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_CRATE, &mut aux.crates, parse_aux_crate);
     config
-        .push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| r.trim().to_string());
+        .push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| ProcMacro { priv_: false, name: r.trim().to_string() });
+    config
+        .push_name_value_directive(ln, PROC_MACRO_PRIV, &mut aux.proc_macros, |r| ProcMacro { priv_: true, name: r.trim().to_string() });
     if let Some(r) = config.parse_name_value_directive(ln, AUX_CODEGEN_BACKEND) {
         aux.codegen_backend = Some(r.trim().to_owned());
     }

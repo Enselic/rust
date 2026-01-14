@@ -1,5 +1,4 @@
 //@ force-host
-//@ no-prefer-dynamic
 
 #![crate_type = "proc-macro"]
 
