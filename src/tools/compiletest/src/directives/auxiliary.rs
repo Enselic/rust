@@ -3,7 +3,9 @@
 
 use std::iter;
 
-use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO, PROC_MACRO_PRIV};
+use super::directives::{
+    AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO, PROC_MACRO_PRIV,
+};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
 
@@ -71,10 +73,14 @@ pub(super) fn parse_and_update_aux(
     config.push_name_value_directive(ln, AUX_BUILD, &mut aux.builds, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_BIN, &mut aux.bins, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_CRATE, &mut aux.crates, parse_aux_crate);
-    config
-        .push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| ProcMacro { priv_: false, name: r.trim().to_string() });
-    config
-        .push_name_value_directive(ln, PROC_MACRO_PRIV, &mut aux.proc_macros, |r| ProcMacro { priv_: true, name: r.trim().to_string() });
+    config.push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| ProcMacro {
+        priv_: false,
+        name: r.trim().to_string(),
+    });
+    config.push_name_value_directive(ln, PROC_MACRO_PRIV, &mut aux.proc_macros, |r| ProcMacro {
+        priv_: true,
+        name: r.trim().to_string(),
+    });
 
     eprintln!("NORDH DEBUG: aux after parsing so far: {:?}", aux.proc_macros);
     if let Some(r) = config.parse_name_value_directive(ln, AUX_CODEGEN_BACKEND) {
