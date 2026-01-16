@@ -6,6 +6,9 @@ use std::iter;
 use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
+use crate::runtest::LinkVisibility;
+use crate::runtest::ProcMacro;
+
 
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
@@ -29,7 +32,7 @@ pub(crate) struct AuxProps {
     /// to build and pass with the `--extern` flag.
     pub(crate) crates: Vec<AuxCrate>,
     /// Same as `builds`, but for proc-macros.
-    pub(crate) proc_macros: Vec<String>,
+    pub(crate) proc_macros: Vec<ProcMacro>,
     /// Similar to `builds`, but also uses the resulting dylib as a
     /// `-Zcodegen-backend` when compiling the test file.
     pub(crate) codegen_backend: Option<String>,
@@ -45,7 +48,7 @@ impl AuxProps {
             .chain(builds.iter().map(String::as_str))
             .chain(bins.iter().map(String::as_str))
             .chain(crates.iter().map(|c| c.path.as_str()))
-            .chain(proc_macros.iter().map(String::as_str))
+            .chain(proc_macros.iter().map(|pm| pm.name.as_str()))
             .chain(codegen_backend.iter().map(String::as_str))
     }
 }
@@ -66,8 +69,21 @@ pub(super) fn parse_and_update_aux(
     config.push_name_value_directive(ln, AUX_BUILD, &mut aux.builds, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_BIN, &mut aux.bins, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_CRATE, &mut aux.crates, parse_aux_crate);
-    config
-        .push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| r.trim().to_string());
+    config.push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| {
+        let r = r.trim();
+        let (link_visibility, name) = match r.strip_prefix("priv:") {
+            Some(rest) => {
+                let rest = rest.trim();
+                if rest.is_empty() {
+                    panic!("empty value for directive `proc-macro:priv:`");
+                }
+                (LinkVisibility::Private, rest)
+            }
+            None => (LinkVisibility::Public, r),
+        };
+        ProcMacro { link_visibility, name: name.to_string() }
+    });
+
     if let Some(r) = config.parse_name_value_directive(ln, AUX_CODEGEN_BACKEND) {
         aux.codegen_backend = Some(r.trim().to_owned());
     }
