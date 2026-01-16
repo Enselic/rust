@@ -6,9 +6,7 @@ use std::iter;
 use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
-use crate::runtest::LinkVisibility;
-use crate::runtest::ProcMacro;
-
+use crate::runtest::{LinkVisibility, ProcMacro};
 
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
@@ -69,20 +67,7 @@ pub(super) fn parse_and_update_aux(
     config.push_name_value_directive(ln, AUX_BUILD, &mut aux.builds, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_BIN, &mut aux.bins, |r| r.trim().to_string());
     config.push_name_value_directive(ln, AUX_CRATE, &mut aux.crates, parse_aux_crate);
-    config.push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, |r| {
-        let r = r.trim();
-        let (link_visibility, name) = match r.strip_prefix("priv:") {
-            Some(rest) => {
-                let rest = rest.trim();
-                if rest.is_empty() {
-                    panic!("empty value for directive `proc-macro:priv:`");
-                }
-                (LinkVisibility::Private, rest)
-            }
-            None => (LinkVisibility::Public, r),
-        };
-        ProcMacro { link_visibility, name: name.to_string() }
-    });
+    config.push_name_value_directive(ln, PROC_MACRO, &mut aux.proc_macros, parse_proc_macro);
 
     if let Some(r) = config.parse_name_value_directive(ln, AUX_CODEGEN_BACKEND) {
         aux.codegen_backend = Some(r.trim().to_owned());
@@ -95,4 +80,19 @@ fn parse_aux_crate(r: String) -> AuxCrate {
         name: parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string(),
         path: parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string(),
     }
+}
+
+fn parse_proc_macro(r: String) -> ProcMacro {
+    let r = r.trim();
+    let (link_visibility, name) = match r.strip_prefix("priv:") {
+        Some(rest) => {
+            let rest = rest.trim();
+            if rest.is_empty() {
+                panic!("empty value for directive `proc-macro:priv:`");
+            }
+            (LinkVisibility::Private, rest)
+        }
+        None => (LinkVisibility::Public, r),
+    };
+    ProcMacro { link_visibility, name: name.to_string() }
 }
