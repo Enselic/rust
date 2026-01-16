@@ -1277,19 +1277,23 @@ impl<'test> TestCx<'test> {
                 .replace('-', "_")
         };
 
-        let add_extern = |rustc: &mut Command,
-                          aux_name: &str,
-                          aux_path: &str,
-                          aux_type: AuxType| {
-            let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
-            let lib_type =
-                if matches!(aux_type, AuxType::ProcMacro { link_visibility: LinkVisibility::Private }) { "priv:" } else { "" };
-            if let Some(lib_name) = lib_name {
-                rustc
-                    .arg("--extern")
-                    .arg(format!("{}{}={}/{}", lib_type, aux_name, aux_dir, lib_name));
-            }
-        };
+        let add_extern =
+            |rustc: &mut Command, aux_name: &str, aux_path: &str, aux_type: AuxType| {
+                let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
+                if let Some(lib_name) = lib_name {
+                    let lib_type = if matches!(
+                        aux_type,
+                        AuxType::ProcMacro { link_visibility: LinkVisibility::Private }
+                    ) {
+                        "priv:"
+                    } else {
+                        ""
+                    };
+                    rustc
+                        .arg("--extern")
+                        .arg(format!("{}{}={}/{}", lib_type, aux_name, aux_dir, lib_name));
+                }
+            };
 
         for AuxCrate { name, path } in &self.props.aux.crates {
             let aux_type = self.build_auxiliary(&path, &aux_dir, None);
