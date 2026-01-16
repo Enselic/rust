@@ -2959,7 +2959,7 @@ enum LinkToAux {
     No,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Copy, PartialEq, Eq)]
 pub enum LinkVisibility {
     #[default]
     Public,
