@@ -6,7 +6,7 @@ use std::iter;
 use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
-use crate::runtest::{LinkVisibility, ProcMacro};
+use crate::runtest::{ExternOption, ProcMacro};
 
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
@@ -90,9 +90,9 @@ fn parse_proc_macro(r: String) -> ProcMacro {
             if rest.is_empty() {
                 panic!("empty value for directive `proc-macro:priv:`");
             }
-            (LinkVisibility::Private, rest)
+            (ExternOption::Private, rest)
         }
-        None => (LinkVisibility::Public, r),
+        None => (ExternOption::Public, r),
     };
     ProcMacro { link_visibility, name: name.to_string() }
 }

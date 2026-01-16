@@ -1281,14 +1281,6 @@ impl<'test> TestCx<'test> {
             |rustc: &mut Command, aux_name: &str, aux_path: &str, aux_type: AuxType| {
                 let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
                 if let Some(lib_name) = lib_name {
-                    let lib_type = if matches!(
-                        aux_type,
-                        AuxType::ProcMacro { link_visibility: LinkVisibility::Private }
-                    ) {
-                        "priv:"
-                    } else {
-                        ""
-                    };
                     rustc
                         .arg("--extern")
                         .arg(format!("{}{}={}/{}", lib_type, aux_name, aux_dir, lib_name));
@@ -2964,16 +2956,25 @@ enum LinkToAux {
 }
 
 #[derive(Clone, Debug, Default, Copy, PartialEq, Eq)]
-pub enum LinkVisibility {
+pub enum ExternOption {
     #[default]
-    Public,
-    Private,
+    None,
+    Priv,
 }
+
+/*
+
+force
+noprelude
+nounused
+priv
+
+*/
 
 #[derive(Clone, Debug, Default)]
 pub(crate) struct ProcMacro {
     pub name: String,
-    pub link_visibility: LinkVisibility,
+    pub link_visibility: ExternOption,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -2981,7 +2982,16 @@ enum AuxType {
     Bin,
     Lib,
     Dylib,
-    ProcMacro { link_visibility: LinkVisibility },
+    ProcMacro { link_visibility: ExternOption },
+}
+
+impl AuxType {
+    fn link_visibility(&self) -> ExternOption {
+        match self {
+            AuxType::ProcMacro { link_visibility } => *link_visibility,
+            _ => ExternOption::Public,
+        }
+    }
 }
 
 /// Outcome of comparing a stream to a blessed file,
