@@ -1278,12 +1278,12 @@ impl<'test> TestCx<'test> {
         };
 
         let add_extern =
-            |rustc: &mut Command, aux_name: &str, aux_path: &str, aux_type: AuxType| {
+            |rustc: &mut Command, options: Option<&str>,aux_name: &str, aux_path: &str, aux_type: AuxType| {
                 let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
                 if let Some(lib_name) = lib_name {
                     rustc
                         .arg("--extern")
-                        .arg(format!("{}{}={}/{}", lib_type, aux_name, aux_dir, lib_name));
+                        .arg(format!("{}{}={}/{}", options.unwrap_or(""), aux_name, aux_dir, lib_name));
                 }
             };
 
@@ -1296,7 +1296,7 @@ impl<'test> TestCx<'test> {
             self.build_auxiliary(
                 &proc_macro.name,
                 &aux_dir,
-                Some(AuxType::ProcMacro { link_visibility: proc_macro.link_visibility }),
+                Some(AuxType::ProcMacro { extern_options: proc_macro.extern_options.clone() }),
             );
             let crate_name = path_to_crate_name(&proc_macro.name);
             add_extern(
@@ -2987,6 +2987,16 @@ enum AuxType {
     Dylib,
     ProcMacro { extern_options: Option<String> },
 }
+
+impl AuxType {
+    fn extern_options(&self) -> Option<&str> {
+        match self {
+            AuxType::ProcMacro { extern_options } => extern_options.as_deref(),
+            _ => None,
+        }
+    }
+}
+
 // TODO docs
 
 /// Outcome of comparing a stream to a blessed file,

@@ -46,7 +46,7 @@ impl AuxProps {
             .chain(builds.iter().map(String::as_str))
             .chain(bins.iter().map(String::as_str))
             .chain(crates.iter().map(|c| c.path.as_str()))
-            .chain(proc_macros.iter().map(|pm| pm.name.as_str()))
+            .chain(proc_macros.iter().map(|p| p.name.as_str()))
             .chain(codegen_backend.iter().map(String::as_str))
     }
 }
