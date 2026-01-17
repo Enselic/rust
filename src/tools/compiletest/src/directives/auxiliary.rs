@@ -20,6 +20,15 @@ pub struct AuxCrate {
     pub path: String,
 }
 
+/// The value of a `proc-macro` directive.
+#[derive(Clone, Debug, Default)]
+pub(crate) struct ProcMacro {
+    /// With `proc-macro: bar.rs` this will be `bar.rs`.
+    pub name: String,
+    /// With `proc-macro: noprelude:bar.rs` this will be `noprelude`.
+    pub extern_opts: Option<String>,
+}
+
 /// Properties parsed from `aux-*` test directives.
 #[derive(Clone, Debug, Default)]
 pub(crate) struct AuxProps {
