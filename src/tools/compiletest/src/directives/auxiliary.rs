@@ -6,7 +6,6 @@ use std::iter;
 use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
-use crate::runtest::ProcMacro;
 
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
