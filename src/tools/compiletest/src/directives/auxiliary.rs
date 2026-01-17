@@ -92,11 +92,7 @@ fn parse_aux_crate(r: String) -> AuxCrate {
         None => (None, opts_and_name),
         Some((opts, name)) => (Some(opts.to_string()), name.to_string()),
     };
-    AuxCrate {
-        extern_opts: opts,
-        name,
-        path,
-    }
+    AuxCrate { extern_opts: opts, name, path }
 }
 
 fn parse_proc_macro(r: String) -> ProcMacro {
