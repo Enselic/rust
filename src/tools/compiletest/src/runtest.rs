@@ -2956,11 +2956,14 @@ enum LinkToAux {
 }
 
 #[derive(Clone, Debug, Default, Copy, PartialEq, Eq)]
-pub enum ExternOption {
+pub enum ExternOptions {
     #[default]
     None,
     Priv,
 }
+
+
+
 
 /*
 
@@ -2974,7 +2977,7 @@ priv
 #[derive(Clone, Debug, Default)]
 pub(crate) struct ProcMacro {
     pub name: String,
-    pub link_visibility: ExternOption,
+    pub extern_options: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -2982,17 +2985,9 @@ enum AuxType {
     Bin,
     Lib,
     Dylib,
-    ProcMacro { link_visibility: ExternOption },
+    ProcMacro { extern_options: Option<String> },
 }
-
-impl AuxType {
-    fn link_visibility(&self) -> ExternOption {
-        match self {
-            AuxType::ProcMacro { link_visibility } => *link_visibility,
-            _ => ExternOption::Public,
-        }
-    }
-}
+// TODO docs
 
 /// Outcome of comparing a stream to a blessed file,
 /// e.g. `.stderr` and `.fixed`.

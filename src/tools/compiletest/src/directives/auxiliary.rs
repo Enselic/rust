@@ -82,17 +82,15 @@ fn parse_aux_crate(r: String) -> AuxCrate {
     }
 }
 
-fn parse_proc_macro(r: String) -> ProcMacro {
-    let r = r.trim();
-    let (link_visibility, name) = match r.strip_prefix("priv:") {
-        Some(rest) => {
-            let rest = rest.trim();
-            if rest.is_empty() {
-                panic!("empty value for directive `proc-macro:priv:`");
-            }
-            (ExternOption::Private, rest)
+fn parse_proc_macro(directive_value: String) -> ProcMacro {
+    let directive_value = directive_value.trim();
+
+    let (options, path): (Option<String>, String) = match directive_value.split_once(':') {
+        None => (None, directive_value.to_string()),
+        Some((options, name)) => {
+            (Some(options.to_string()), name.to_string())
         }
-        None => (ExternOption::Public, r),
     };
-    ProcMacro { link_visibility, name: name.to_string() }
+
+    ProcMacro { name: path.to_string(), extern_options: options}
 }

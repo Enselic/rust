@@ -916,6 +916,11 @@ pub struct Externs(BTreeMap<String, ExternEntry>);
 #[derive(Clone, Debug)]
 pub struct ExternEntry {
     pub location: ExternLocation,
+    pub options: ExternOptions,
+}
+
+#[derive(Clone, Debug)]
+pub struct ExternOptions {
     /// Indicates this is a "private" dependency for the
     /// `exported_private_dependencies` lint.
     ///
@@ -974,10 +979,12 @@ impl ExternEntry {
     fn new(location: ExternLocation) -> ExternEntry {
         ExternEntry {
             location,
+            options: ExternOptions {
             is_private_dep: false,
             add_prelude: false,
             nounused_dep: false,
             force: false,
+            }
         }
     }
 
@@ -2341,47 +2348,51 @@ pub fn parse_externs(
             }
         };
 
-        let mut is_private_dep = false;
-        let mut add_prelude = true;
-        let mut nounused_dep = false;
-        let mut force = false;
-        if let Some(opts) = options {
-            if !is_unstable_enabled {
-                early_dcx.early_fatal(
-                    "the `-Z unstable-options` flag must also be passed to \
-                     enable `--extern` options",
-                );
-            }
-            for opt in opts.split(',') {
-                match opt {
-                    "priv" => is_private_dep = true,
-                    "noprelude" => {
-                        if let ExternLocation::ExactPaths(_) = &entry.location {
-                            add_prelude = false;
-                        } else {
-                            early_dcx.early_fatal(
-                                "the `noprelude` --extern option requires a file path",
-                            );
-                        }
-                    }
-                    "nounused" => nounused_dep = true,
-                    "force" => force = true,
-                    _ => early_dcx.early_fatal(format!("unknown --extern option `{opt}`")),
-                }
-            }
-        }
-
-        // Crates start out being not private, and go to being private `priv`
-        // is specified.
-        entry.is_private_dep |= is_private_dep;
-        // likewise `nounused`
-        entry.nounused_dep |= nounused_dep;
-        // and `force`
-        entry.force |= force;
-        // If any flag is missing `noprelude`, then add to the prelude.
-        entry.add_prelude |= add_prelude;
+        fun_name(early_dcx, is_unstable_enabled, options, entry);
     }
     Externs(externs)
+}
+
+fn fun_name(early_dcx: &EarlyDiagCtxt, is_unstable_enabled: bool, options: Option<String>, entry: &mut ExternEntry) -> ExternOptions {
+    let mut is_private_dep = false;
+    let mut add_prelude = true;
+    let mut nounused_dep = false;
+    let mut force = false;
+    if let Some(opts) = options {
+        if !is_unstable_enabled {
+            early_dcx.early_fatal(
+                "the `-Z unstable-options` flag must also be passed to \
+                     enable `--extern` options",
+            );
+        }
+        for opt in opts.split(',') {
+            match opt {
+                "priv" => is_private_dep = true,
+                "noprelude" => {
+                    if let ExternLocation::ExactPaths(_) = &entry.location {
+                        add_prelude = false;
+                    } else {
+                        early_dcx.early_fatal(
+                            "the `noprelude` --extern option requires a file path",
+                        );
+                    }
+                }
+                "nounused" => nounused_dep = true,
+                "force" => force = true,
+                _ => early_dcx.early_fatal(format!("unknown --extern option `{opt}`")),
+            }
+        }
+    }
+
+    // Crates start out being not private, and go to being private `priv`
+    // is specified.
+     entry.is_private_dep |= is_private_dep;
+    // likewise `nounused`
+    entry.nounused_dep |= nounused_dep;
+    // and `force`
+    entry.force |= force;
+    // If any flag is missing `noprelude`, then add to the prelude.
+    entry.add_prelude |= add_prelude;
 }
 
 fn parse_remap_path_prefix(
