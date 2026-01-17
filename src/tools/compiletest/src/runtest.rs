@@ -1295,7 +1295,7 @@ impl<'test> TestCx<'test> {
             }
         };
 
-        for AuxCrate { extern_options, name, path } in &self.props.aux.crates {
+        for AuxCrate { options: extern_options, name, path } in &self.props.aux.crates {
             let aux_type = self.build_auxiliary(&path, &aux_dir, None);
             add_extern(rustc, extern_options.as_deref(), name, path, aux_type);
         }
