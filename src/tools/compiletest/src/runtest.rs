@@ -98,7 +98,7 @@ fn get_lib_name(name: &str, aux_type: AuxType) -> Option<String> {
         // In this case, the only path we can pass
         // with '--extern-meta' is the '.rlib' file
         AuxType::Lib => Some(format!("lib{name}.rlib")),
-        AuxType::Dylib | AuxType::ProcMacro { .. } => Some(dylib_name(name)),
+        AuxType::Dylib | AuxType::ProcMacro => Some(dylib_name(name)),
     }
 }
 
