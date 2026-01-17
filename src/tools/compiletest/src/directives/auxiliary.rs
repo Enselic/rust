@@ -91,11 +91,9 @@ fn parse_aux_crate(r: String) -> AuxCrate {
     }
 }
 
-fn parse_proc_macro(directive_value: String) -> ProcMacro {
-    let directive_value = directive_value.trim();
-
-    let (options, path): (Option<String>, String) = match directive_value.split_once(':') {
-        None => (None, directive_value.to_string()),
+fn parse_proc_macro(r: String) -> ProcMacro {
+    let (options, path): (Option<String>, String) = match r.trim().split_once(':') {
+        None => (None, r.to_string()),
         Some((options, name)) => (Some(options.to_string()), name.to_string()),
     };
 

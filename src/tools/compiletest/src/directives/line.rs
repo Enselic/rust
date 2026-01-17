@@ -56,7 +56,6 @@ pub(crate) fn line_directive<'a>(
 ///           ^^^^^^^^^^^^^^^^^ raw_directive
 ///           ^^^^^^^^^^^^^     name
 /// ```
-#[derive(Debug)]
 pub(crate) struct DirectiveLine<'a> {
     /// Path of the file containing this line.
     ///
