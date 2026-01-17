@@ -1285,13 +1285,11 @@ impl<'test> TestCx<'test> {
                           aux_type: AuxType| {
             let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
             if let Some(lib_name) = lib_name {
-                rustc.arg("--extern").arg(format!(
-                    "{}{}={}/{}",
-                    options.unwrap_or(""),
-                    aux_name,
-                    aux_dir,
-                    lib_name
-                ));
+                let options_and_name = match options {
+                    Some(opts) => format!("{opts}:{aux_name}"),
+                    None => aux_name.to_string(),
+                };
+                rustc.arg("--extern").arg(format!("{options_and_name}={aux_dir}/{lib_name}",));
             }
         };
 
@@ -1385,7 +1383,7 @@ impl<'test> TestCx<'test> {
     ) -> AuxType {
         let aux_path = self.resolve_aux_path(source_path);
         let mut aux_props = self.props.from_aux_file(&aux_path, self.revision, self.config);
-        if  aux_type == Some(AuxType::ProcMacro) {
+        if aux_type == Some(AuxType::ProcMacro) {
             aux_props.force_host = true;
         }
         let mut aux_dir = aux_dir.to_path_buf();
