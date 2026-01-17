@@ -2957,12 +2957,6 @@ enum LinkToAux {
     No,
 }
 
-#[derive(Clone, Debug, Default)]
-pub(crate) struct ProcMacro {
-    pub name: String,
-    pub extern_opts: Option<String>,
-}
-
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum AuxType {
     Bin,
