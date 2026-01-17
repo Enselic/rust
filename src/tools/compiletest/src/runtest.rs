@@ -1302,7 +1302,7 @@ impl<'test> TestCx<'test> {
             let crate_name = path_to_crate_name(&proc_macro.name);
             add_extern(
                 rustc,
-                proc_macro.options.as_deref(),
+                proc_macro.extern_options.as_deref(),
                 &crate_name,
                 &proc_macro.name,
                 AuxType::ProcMacro,
@@ -2956,16 +2956,6 @@ enum LinkToAux {
     Yes,
     No,
 }
-
-#[derive(Clone, Debug, Default, Copy, PartialEq, Eq)]
-pub enum ExternOptions {
-    #[default]
-    None,
-    Priv,
-}
-
-
-
 
 /*
 
