@@ -672,6 +672,7 @@ directive. This directive behaves just like `aux-build`, i.e. that you should
 place the proc-macro test auxiliary file under a `auxiliary` folder under the
 same parent folder as the main test file. However, it also has four additional
 preset behavior compared to `aux-build` for the proc-macro test auxiliary:
+TODO
 
 1. The aux test file is built with `--crate-type=proc-macro`.
 2. The aux test file is built without `-C prefer-dynamic`, i.e. it will not try
