@@ -11,8 +11,10 @@ use crate::runtest::ProcMacro;
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
 pub struct AuxCrate {
+    /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude`.
+    pub extern_options: Option<String>,
     /// With `aux-crate: foo=bar.rs` this will be `foo`.
-    /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude:foo`.
+    /// With `aux-crate: noprelude:foo=bar.rs` this will be `foo`.
     pub name: String,
     /// With `aux-crate: foo=bar.rs` this will be `bar.rs`.
     pub path: String,
@@ -76,9 +78,16 @@ pub(super) fn parse_and_update_aux(
 
 fn parse_aux_crate(r: String) -> AuxCrate {
     let mut parts = r.trim().splitn(2, '=');
+    let extern_options_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
+    let (extern_options, name) = match extern_options_and_name.split_once(':') {
+        None => (None, extern_options_and_name),
+        Some((options, name)) => (Some(options.to_string()), name.to_string()),
+    };
+    let path = parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string();
     AuxCrate {
-        name: parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string(),
-        path: parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string(),
+        extern_options,
+        name,
+        path,
     }
 }
 
@@ -87,10 +96,8 @@ fn parse_proc_macro(directive_value: String) -> ProcMacro {
 
     let (options, path): (Option<String>, String) = match directive_value.split_once(':') {
         None => (None, directive_value.to_string()),
-        Some((options, name)) => {
-            (Some(options.to_string()), name.to_string())
-        }
+        Some((options, name)) => (Some(options.to_string()), name.to_string()),
     };
 
-    ProcMacro { name: path.to_string(), extern_options: options}
+    ProcMacro { name: path.to_string(), extern_options: options }
 }

@@ -1278,15 +1278,22 @@ impl<'test> TestCx<'test> {
         };
 
         // note: aux_name can have options
-        let add_extern =
-            |rustc: &mut Command, options: Option<&str>, aux_name: &str, aux_path: &str, aux_type: AuxType| {
-                let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
-                if let Some(lib_name) = lib_name {
-                    rustc
-                        .arg("--extern")
-                        .arg(format!("{}{}={}/{}", options.unwrap_or(""), aux_name, aux_dir, lib_name));
-                }
-            };
+        let add_extern = |rustc: &mut Command,
+                          options: Option<&str>,
+                          aux_name: &str,
+                          aux_path: &str,
+                          aux_type: AuxType| {
+            let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
+            if let Some(lib_name) = lib_name {
+                rustc.arg("--extern").arg(format!(
+                    "{}{}={}/{}",
+                    options.unwrap_or(""),
+                    aux_name,
+                    aux_dir,
+                    lib_name
+                ));
+            }
+        };
 
         for AuxCrate { name, path } in &self.props.aux.crates {
             let aux_type = self.build_auxiliary(&path, &aux_dir, None);
@@ -1294,11 +1301,7 @@ impl<'test> TestCx<'test> {
         }
 
         for proc_macro in &self.props.aux.proc_macros {
-            self.build_auxiliary(
-                &proc_macro.name,
-                &aux_dir,
-                Some(AuxType::ProcMacro),
-            );
+            self.build_auxiliary(&proc_macro.name, &aux_dir, Some(AuxType::ProcMacro));
             let crate_name = path_to_crate_name(&proc_macro.name);
             add_extern(
                 rustc,
