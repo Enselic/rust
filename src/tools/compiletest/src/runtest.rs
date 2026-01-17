@@ -2957,7 +2957,7 @@ enum LinkToAux {
     No,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Debug, PartialEq)]
 enum AuxType {
     Bin,
     Lib,
