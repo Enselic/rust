@@ -12,7 +12,7 @@ use crate::runtest::ProcMacro;
 #[derive(Clone, Debug, Default)]
 pub struct AuxCrate {
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude`.
-    pub options: Option<String>,
+    pub extern_opts: Option<String>,
     /// With `aux-crate: foo=bar.rs` this will be `foo`.
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `foo`.
     pub name: String,
@@ -78,24 +78,24 @@ pub(super) fn parse_and_update_aux(
 
 fn parse_aux_crate(r: String) -> AuxCrate {
     let mut parts = r.trim().splitn(2, '=');
-    let options_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
+    let opts_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
     let path = parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string();
-    let (options, name) = match options_and_name.split_once(':') {
-        None => (None, options_and_name),
-        Some((options, name)) => (Some(options.to_string()), name.to_string()),
+    let (opts, name) = match opts_and_name.split_once(':') {
+        None => (None, opts_and_name),
+        Some((opts, name)) => (Some(opts.to_string()), name.to_string()),
     };
     AuxCrate {
-        options,
+        extern_opts: opts,
         name,
         path,
     }
 }
 
 fn parse_proc_macro(r: String) -> ProcMacro {
-    let (options, path): (Option<String>, String) = match r.trim().split_once(':') {
+    let (opts, path): (Option<String>, String) = match r.trim().split_once(':') {
         None => (None, r.to_string()),
-        Some((options, name)) => (Some(options.to_string()), name.to_string()),
+        Some((opts, name)) => (Some(opts.to_string()), name.to_string()),
     };
 
-    ProcMacro { name: path.to_string(), extern_options: options }
+    ProcMacro { name: path.to_string(), extern_opts: opts }
 }
