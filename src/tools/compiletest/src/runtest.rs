@@ -1385,7 +1385,7 @@ impl<'test> TestCx<'test> {
     ) -> AuxType {
         let aux_path = self.resolve_aux_path(source_path);
         let mut aux_props = self.props.from_aux_file(&aux_path, self.revision, self.config);
-        if matches!(aux_type, Some(AuxType::ProcMacro { .. })) {
+        if  aux_type == Some(AuxType::ProcMacro) {
             aux_props.force_host = true;
         }
         let mut aux_dir = aux_dir.to_path_buf();
@@ -1423,7 +1423,7 @@ impl<'test> TestCx<'test> {
 
         let (aux_type, crate_type) = if aux_type == Some(AuxType::Bin) {
             (AuxType::Bin, Some("bin"))
-        } else if let Some(AuxType::ProcMacro) = aux_type.as_ref() {
+        } else if aux_type == Some(AuxType::ProcMacro) {
             (AuxType::ProcMacro, Some("proc-macro"))
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
@@ -1462,7 +1462,7 @@ impl<'test> TestCx<'test> {
             aux_rustc.args(&["--crate-type", crate_type]);
         }
 
-        if matches!(aux_type, AuxType::ProcMacro) {
+        if aux_type == AuxType::ProcMacro {
             // For convenience, but this only works on 2018.
             aux_rustc.args(&["--extern", "proc_macro"]);
         }
