@@ -1277,8 +1277,9 @@ impl<'test> TestCx<'test> {
                 .replace('-', "_")
         };
 
+        // note: aux_name can have options
         let add_extern =
-            |rustc: &mut Command, options: Option<&str>,aux_name: &str, aux_path: &str, aux_type: AuxType| {
+            |rustc: &mut Command, options: Option<&str>, aux_name: &str, aux_path: &str, aux_type: AuxType| {
                 let lib_name = get_lib_name(&path_to_crate_name(aux_path), aux_type);
                 if let Some(lib_name) = lib_name {
                     rustc
@@ -1289,21 +1290,22 @@ impl<'test> TestCx<'test> {
 
         for AuxCrate { name, path } in &self.props.aux.crates {
             let aux_type = self.build_auxiliary(&path, &aux_dir, None);
-            add_extern(rustc, name, path, aux_type);
+            add_extern(rustc, None /* options TODO constant */, name, path, aux_type);
         }
 
         for proc_macro in &self.props.aux.proc_macros {
             self.build_auxiliary(
                 &proc_macro.name,
                 &aux_dir,
-                Some(AuxType::ProcMacro { extern_options: proc_macro.extern_options.clone() }),
+                Some(AuxType::ProcMacro),
             );
             let crate_name = path_to_crate_name(&proc_macro.name);
             add_extern(
                 rustc,
+                proc_macro.options.as_deref(),
                 &crate_name,
                 &proc_macro.name,
-                AuxType::ProcMacro { link_visibility: proc_macro.link_visibility },
+                AuxType::ProcMacro,
             );
         }
 
@@ -1418,8 +1420,8 @@ impl<'test> TestCx<'test> {
 
         let (aux_type, crate_type) = if aux_type == Some(AuxType::Bin) {
             (AuxType::Bin, Some("bin"))
-        } else if let Some(AuxType::ProcMacro { link_visibility }) = aux_type.as_ref() {
-            (AuxType::ProcMacro { link_visibility: *link_visibility }, Some("proc-macro"))
+        } else if let Some(AuxType::ProcMacro) = aux_type.as_ref() {
+            (AuxType::ProcMacro, Some("proc-macro"))
         } else if aux_type.is_some() {
             panic!("aux_type {aux_type:?} not expected");
         } else if aux_props.no_prefer_dynamic {
@@ -1457,7 +1459,7 @@ impl<'test> TestCx<'test> {
             aux_rustc.args(&["--crate-type", crate_type]);
         }
 
-        if matches!(aux_type, AuxType::ProcMacro { .. }) {
+        if matches!(aux_type, AuxType::ProcMacro) {
             // For convenience, but this only works on 2018.
             aux_rustc.args(&["--extern", "proc_macro"]);
         }
@@ -2985,16 +2987,7 @@ enum AuxType {
     Bin,
     Lib,
     Dylib,
-    ProcMacro { extern_options: Option<String> },
-}
-
-impl AuxType {
-    fn extern_options(&self) -> Option<&str> {
-        match self {
-            AuxType::ProcMacro { extern_options } => extern_options.as_deref(),
-            _ => None,
-        }
-    }
+    ProcMacro,
 }
 
 // TODO docs
