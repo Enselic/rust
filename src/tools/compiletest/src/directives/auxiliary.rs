@@ -12,7 +12,7 @@ use crate::runtest::ProcMacro;
 #[derive(Clone, Debug, Default)]
 pub struct AuxCrate {
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude`.
-    pub extern_options: Option<String>,
+    pub options: Option<String>,
     /// With `aux-crate: foo=bar.rs` this will be `foo`.
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `foo`.
     pub name: String,
@@ -78,14 +78,14 @@ pub(super) fn parse_and_update_aux(
 
 fn parse_aux_crate(r: String) -> AuxCrate {
     let mut parts = r.trim().splitn(2, '=');
-    let extern_options_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
-    let (extern_options, name) = match extern_options_and_name.split_once(':') {
-        None => (None, extern_options_and_name),
+    let options_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
+    let path = parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string();
+    let (options, name) = match options_and_name.split_once(':') {
+        None => (None, options_and_name),
         Some((options, name)) => (Some(options.to_string()), name.to_string()),
     };
-    let path = parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string();
     AuxCrate {
-        extern_options,
+        options,
         name,
         path,
     }
