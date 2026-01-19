@@ -6,12 +6,17 @@ use std::iter;
 use super::directives::{AUX_BIN, AUX_BUILD, AUX_CODEGEN_BACKEND, AUX_CRATE, PROC_MACRO};
 use crate::common::Config;
 use crate::directives::DirectiveLine;
+use crate::util::static_regex;
 
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
 pub struct AuxCrate {
+    /// Contains `--extern` modifiers, if any. See the tracking issue for more
+    /// info: https://github.com/rust-lang/rust/issues/98405
+    /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude`.
+    pub extern_modifiers: Option<String>,
     /// With `aux-crate: foo=bar.rs` this will be `foo`.
-    /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude:foo`.
+    /// With `aux-crate: noprelude:foo=bar.rs` this will be `foo`.
     pub name: String,
     /// With `aux-crate: foo=bar.rs` this will be `bar.rs`.
     pub path: String,
@@ -74,9 +79,16 @@ pub(super) fn parse_and_update_aux(
 }
 
 fn parse_aux_crate(r: String) -> AuxCrate {
-    let mut parts = r.trim().splitn(2, '=');
-    AuxCrate {
-        name: parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string(),
-        path: parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string(),
-    }
+    // Matches:
+    //   name=path
+    //   modifiers:name=path
+    let caps = static_regex!(r"^(?:(?P<modifiers>[^=]*?):)?(?P<name>[^=]*)=(?P<path>.*)$")
+        .captures(r.trim())
+        .unwrap_or_else(|| panic!("missing aux-crate value (e.g. log=log.rs)"));
+
+    let modifiers = caps.name("modifiers").map(|m| m.as_str().to_string());
+    let name = caps.name("name").map(|m| m.as_str().to_string()).unwrap_or_default();
+    let path = caps.name("path").map(|m| m.as_str().to_string()).unwrap_or_default();
+
+    AuxCrate { extern_modifiers: modifiers, name, path }
 }
