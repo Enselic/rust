@@ -10,8 +10,10 @@ use crate::directives::DirectiveLine;
 /// The value of an `aux-crate` directive.
 #[derive(Clone, Debug, Default)]
 pub struct AuxCrate {
+    /// Contains `--extern` modifiers, if any. See the tracking issue for more
+    /// info: https://github.com/rust-lang/rust/issues/98405
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `noprelude`.
-    pub extern_opts: Option<String>,
+    pub extern_modifiers: Option<String>,
     /// With `aux-crate: foo=bar.rs` this will be `foo`.
     /// With `aux-crate: noprelude:foo=bar.rs` this will be `foo`.
     pub name: String,
@@ -79,9 +81,9 @@ fn parse_aux_crate(r: String) -> AuxCrate {
     let mut parts = r.trim().splitn(2, '=');
     let opts_and_name = parts.next().expect("missing aux-crate name (e.g. log=log.rs)").to_string();
     let path = parts.next().expect("missing aux-crate value (e.g. log=log.rs)").to_string();
-    let (opts, name) = match opts_and_name.split_once(':') {
+    let (modifiers, name) = match opts_and_name.split_once(':') {
         None => (None, opts_and_name),
         Some((opts, name)) => (Some(opts.to_string()), name.to_string()),
     };
-    AuxCrate { extern_opts: opts, name, path }
+    AuxCrate { extern_modifiers: modifiers, name, path }
 }

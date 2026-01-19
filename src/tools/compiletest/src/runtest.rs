@@ -1292,9 +1292,9 @@ impl<'test> TestCx<'test> {
             }
         };
 
-        for AuxCrate { extern_opts, name, path } in &self.props.aux.crates {
+        for AuxCrate { extern_modifiers, name, path } in &self.props.aux.crates {
             let aux_type = self.build_auxiliary(&path, &aux_dir, None);
-            add_extern(rustc, extern_opts.as_deref(), name, path, aux_type);
+            add_extern(rustc, extern_modifiers.as_deref(), name, path, aux_type);
         }
 
         for proc_macro in &self.props.aux.proc_macros {
@@ -1302,7 +1302,7 @@ impl<'test> TestCx<'test> {
             let crate_name = path_to_crate_name(proc_macro);
             add_extern(
                 rustc,
-                None, // `extern_opts`
+                None, // `extern_modifiers`
                 &crate_name,
                 proc_macro,
                 AuxType::ProcMacro,
