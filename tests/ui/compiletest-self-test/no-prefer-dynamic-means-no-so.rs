@@ -1,7 +1,7 @@
-//@ no-prefer-dynamic
-//@ aux-crate: no_prefer_dynamic_print_hello=no_prefer_dynamic_print_hello.rs
 //@ check-pass
+//@ no-prefer-dynamic
+//@ aux-crate: no_prefer_dynamic_lib=no_prefer_dynamic_lib.rs
 
 fn main() {
-    no_prefer_dynamic_print_hello::no_prefer_dynamic_print_hello();
+    no_prefer_dynamic_lib::return_42();
 }
