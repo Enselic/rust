@@ -192,6 +192,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
         match i {
             ItemKind::Fn(box Fn { eii_impls, .. }) if eii_impls.is_empty() => Vec::new(),
             ItemKind::Fn(box Fn { eii_impls, .. }) => {
+                eprintln!("NORDH eii_impmls {eii_impls:?}");
                 vec![hir::Attribute::Parsed(AttributeKind::EiiImpls(
                     eii_impls.iter().map(|i| self.lower_eii_impl(i)).collect(),
                 ))]

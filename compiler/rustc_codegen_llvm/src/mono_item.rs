@@ -59,6 +59,10 @@ impl<'tcx> PreDefineCodegenMethods<'tcx> for CodegenCx<'_, 'tcx> {
     ) {
         assert!(!instance.args.has_infer());
 
+        if symbol_name.contains("on_broken_pipe") || symbol_name.contains("hello") {
+            eprintln!("NORDH caught! {symbol_name}");
+        }
+
         let fn_abi = self.fn_abi_of_instance(instance, ty::List::empty());
         let lldecl = self.declare_fn(symbol_name, fn_abi, Some(instance));
         llvm::set_linkage(lldecl, base::linkage_to_llvm(linkage));
@@ -97,7 +101,7 @@ impl CodegenCx<'_, '_> {
         for (alias, linkage, visibility) in aliases {
             let symbol_name = self.tcx.symbol_name(Instance::mono(self.tcx, *alias));
 
-            tracing::debug!("ALIAS: {alias:?} {linkage:?} {visibility:?}");
+            eprintln!("NORDH ALIAS: {alias:?} {linkage:?} {visibility:?} {symbol_name:?}");
             let lldecl = llvm::add_alias(
                 self.llmod,
                 ty,

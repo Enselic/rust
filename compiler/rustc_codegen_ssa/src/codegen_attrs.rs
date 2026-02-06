@@ -228,6 +228,7 @@ fn process_builtin_attrs(
             }
             AttributeKind::EiiImpls(impls) => {
                 for i in impls {
+                    eprintln!("NORDH eiiImpls {i:?}");
                     let foreign_item = match i.resolution {
                         EiiImplResolution::Macro(def_id) => {
                             let Some(extern_item) = find_attr!(
@@ -245,6 +246,7 @@ fn process_builtin_attrs(
                         EiiImplResolution::Known(decl) => decl.foreign_item,
                         EiiImplResolution::Error(_eg) => continue,
                     };
+                    eprintln!("NORDH foreign_item {foreign_item:?}");
 
                     // this is to prevent a bug where a single crate defines both the default and explicit implementation
                     // for an EII. In that case, both of them may be part of the same final object file. I'm not 100% sure
@@ -262,11 +264,13 @@ fn process_builtin_attrs(
                         continue;
                     }
 
-                    codegen_fn_attrs.foreign_item_symbol_aliases.push((
+                    let foobar = (
                         foreign_item,
                         if i.is_default { Linkage::LinkOnceAny } else { Linkage::External },
                         Visibility::Default,
-                    ));
+                    );
+                    eprintln!("NORDH codegen alias {foobar:?}");
+                    codegen_fn_attrs.foreign_item_symbol_aliases.push(foobar);
                     codegen_fn_attrs.flags |= CodegenFnAttrFlags::EXTERNALLY_IMPLEMENTABLE_ITEM;
                 }
             }

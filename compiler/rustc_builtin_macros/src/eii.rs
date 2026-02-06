@@ -60,6 +60,8 @@ fn eii_(
 ) -> Vec<Annotatable> {
     let eii_attr_span = ecx.with_def_site_ctxt(eii_attr_span);
 
+    eprintln!("NORDH eii triggered");
+
     let item = if let Annotatable::Item(item) = orig_item {
         item
     } else if let Annotatable::Stmt(ref stmt) = orig_item
@@ -446,6 +448,9 @@ pub(crate) fn eii_shared_macro(
     meta_item: &ast::MetaItem,
     mut item: Annotatable,
 ) -> Vec<Annotatable> {
+
+    eprintln!("NORDH eii_shared_macro span={span:?}");
+
     let i = if let Annotatable::Item(ref mut item) = item {
         item
     } else if let Annotatable::Stmt(ref mut stmt) = item
@@ -483,7 +488,7 @@ pub(crate) fn eii_shared_macro(
         return vec![item];
     };
 
-    f.eii_impls.push(EiiImpl {
+    let z = EiiImpl {
         node_id: DUMMY_NODE_ID,
         inner_span: meta_item.path.span,
         eii_macro_path: meta_item.path.clone(),
@@ -491,7 +496,9 @@ pub(crate) fn eii_shared_macro(
         span,
         is_default,
         known_eii_macro_resolution: None,
-    });
+    };
+    eprintln!("NORDH pushing {z:?} to {f:?}");
+    f.eii_impls.push(z);
 
     vec![item]
 }

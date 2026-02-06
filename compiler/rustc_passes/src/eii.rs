@@ -80,12 +80,15 @@ pub(crate) fn check_externally_implementable_items<'tcx>(tcx: TyCtxt<'tcx>, (): 
         }
     }
 
+    eprintln!("NORDH final {eiis:?}");
+
     // now we have all eiis! For each of them, choose one we want to actually generate.
     for (foreign_item, FoundEii { decl, decl_crate, impls }) in eiis {
         let mut default_impls = Vec::new();
         let mut explicit_impls = Vec::new();
 
         for (impl_did, FoundImpl { imp, impl_crate }) in impls {
+            eprintln!("NORDH is_default {imp:?}");
             if imp.is_default {
                 default_impls.push((impl_did, impl_crate));
             } else {
@@ -120,6 +123,8 @@ pub(crate) fn check_externally_implementable_items<'tcx>(tcx: TyCtxt<'tcx>, (): 
             tcx.dcx().span_delayed_bug(decl_span, "multiple not supported right now");
         }
 
+        eprintln!("NORDH checking_mode={checking_mode:?} explicit_impls {explicit_impls:?}  default_impls {default_impls:?}");
+
         let (local_impl, is_default) =
             // note, for a single crate we never need to generate both a default and an explicit implementation.
             // In that case, generating the explicit implementation is enough!
@@ -152,9 +157,10 @@ pub(crate) fn check_externally_implementable_items<'tcx>(tcx: TyCtxt<'tcx>, (): 
         // if it's not local, who cares about generating it.
         // That's the local crates' responsibility
         let Some(chosen_impl) = local_impl.as_local() else {
+            eprintln!("NORDH chosen_impl not local!");
             continue;
         };
 
-        tracing::debug!("generating EII {chosen_impl:?} (default={is_default})");
+        eprintln!("NORDH generating EII {chosen_impl:?} (default={is_default})");
     }
 }

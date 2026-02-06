@@ -3,8 +3,6 @@
 //!
 //! Regression test for <https://github.com/rust-lang/rust/issues/34376>.
 
-//@ ignore-unix FIXME: Make the test work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 //@ ignore-cross-compile (needs to run test binary)
 
 //@ ignore-apple
