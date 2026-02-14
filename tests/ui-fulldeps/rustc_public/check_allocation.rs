@@ -27,7 +27,7 @@ use std::io::Write;
 use std::ops::ControlFlow;
 
 use rustc_public::crate_def::CrateDef;
-use rustc_public::mir::Body;
+use rustc_public::mir::{Body, Operand, Rvalue, StatementKind};
 use rustc_public::mir::alloc::GlobalAlloc;
 use rustc_public::mir::mono::{Instance, StaticDef};
 use rustc_public::ty::{Allocation, ConstantKind};
@@ -106,7 +106,7 @@ fn check_other_consts(item: CrateItem) {
     // Instance body will force constant evaluation.
     let body = Instance::try_from(item).unwrap().body().unwrap();
     let assigns = collect_consts(&body);
-    assert_eq!(assigns.len(), 10);
+    assert_eq!(assigns.len(), 11);
     let mut char_id = None;
     let mut bool_id = None;
     for (name, alloc) in assigns {
@@ -167,17 +167,51 @@ fn check_other_consts(item: CrateItem) {
     assert_ne!(bool_id, char_id);
 }
 
-/// Collects all the constant assignments.
+/// Collects all the constants assigned to local variables.
 pub fn collect_consts(body: &Body) -> HashMap<String, &Allocation> {
-    body.var_debug_info
+    //eprintln!("NORDH {:#?}", body);
+    //body.var_debug_info
+    //    .iter()
+    //    .filter_map(|info| {
+    //        info.constant().map(|const_op| {
+    //            let ConstantKind::Allocated(alloc) = const_op.const_.kind() else { unreachable!() };
+    //            (info.name.clone(), alloc)
+    //        })
+    //    })
+    //    .collect::<HashMap<_, _>>()
+
+    let mut assigns =   HashMap::new();
+
+    let locals = body
+        .var_debug_info
         .iter()
-        .filter_map(|info| {
-            info.constant().map(|const_op| {
-                let ConstantKind::Allocated(alloc) = const_op.const_.kind() else { unreachable!() };
-                (info.name.clone(), alloc)
-            })
-        })
-        .collect::<HashMap<_, _>>()
+        .filter_map(|info| info.local().map(|local| (local, info.name.clone())))
+        .collect::<HashMap<_, _>>();        
+
+    for block in &body.blocks {
+        for statement in &block.statements {
+            let StatementKind::Assign(place, Rvalue::Use(Operand::Constant(const_op))) =
+                &statement.kind
+            else {
+                continue;
+            };
+
+            if !place.projection.is_empty() {
+                continue;
+            }
+
+            let Some(name) = locals.get(&place.local) else {
+                continue;
+            };
+
+            let ConstantKind::Allocated(alloc) = const_op.const_.kind() else {
+                continue;
+            };
+            assigns.insert(name.clone(), alloc);
+        }
+    }    
+
+    assigns    
 }
 
 /// Check the allocation data for `LEN`.
@@ -208,6 +242,10 @@ fn main() {
     generate_input(&path).unwrap();
     let args = &[
         "rustc".to_string(),
+        // "-g".to_string(),
+        // "-Zmir-strip-debuginfo=none".to_string(), // Needed to keep debug info for constants.
+        // "-Zmir-opt-level=0".to_string(), // Needed to keep debug info for constants.
+        "-Zmir-enable-passes=-SingleUseConsts".to_string(), // Needed for `fn collect_consts()`
         "--edition=2021".to_string(),
         "--crate-name".to_string(),
         CRATE_NAME.to_string(),
@@ -233,7 +271,7 @@ fn generate_input(path: &str) -> std::io::Result<()> {
     const TUPLE: (u32, u32) = (10, u32::MAX);
 
     fn other_consts() {{
-        let _max_u128 = u128::MAX;
+        let _max_u128: u128 = u128::MAX;
         let _min_i128 = i128::MIN;
         let _max_i8 = i8::MAX;
         let _char = 'x';
