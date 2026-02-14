@@ -27,9 +27,9 @@ use std::io::Write;
 use std::ops::ControlFlow;
 
 use rustc_public::crate_def::CrateDef;
-use rustc_public::mir::{Body, Operand, Rvalue, StatementKind};
 use rustc_public::mir::alloc::GlobalAlloc;
 use rustc_public::mir::mono::{Instance, StaticDef};
+use rustc_public::mir::{Body, Operand, Rvalue, StatementKind};
 use rustc_public::ty::{Allocation, ConstantKind};
 use rustc_public::{CrateItem, CrateItems, ItemKind};
 
@@ -167,7 +167,7 @@ fn check_other_consts(item: CrateItem) {
     assert_ne!(bool_id, char_id);
 }
 
-/// This function collects constants assigned to locals in  `fn other_consts()`.
+/// This function collects constants assigned to locals in `fn other_consts()`.
 /// In the returned map, the key is the name of the variable, and the value is
 /// the allocation of the constant assigned to it.
 pub fn collect_consts(body: &Body) -> HashMap<String, &Allocation> {
