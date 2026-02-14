@@ -27,7 +27,7 @@ use std::io::Write;
 use std::ops::ControlFlow;
 
 use rustc_public::crate_def::CrateDef;
-use rustc_public::mir::Body;
+use rustc_public::mir::{Body, Operand, Rvalue, StatementKind};
 use rustc_public::mir::alloc::GlobalAlloc;
 use rustc_public::mir::mono::{Instance, StaticDef};
 use rustc_public::ty::{Allocation, ConstantKind};
@@ -106,7 +106,7 @@ fn check_other_consts(item: CrateItem) {
     // Instance body will force constant evaluation.
     let body = Instance::try_from(item).unwrap().body().unwrap();
     let assigns = collect_consts(&body);
-    assert_eq!(assigns.len(), 10);
+    assert_eq!(assigns.len(), 9);
     let mut char_id = None;
     let mut bool_id = None;
     for (name, alloc) in assigns {
@@ -168,16 +168,49 @@ fn check_other_consts(item: CrateItem) {
 }
 
 /// Collects all the constant assignments.
-pub fn collect_consts(body: &Body) -> HashMap<String, &Allocation> {
-    body.var_debug_info
+pub fn collect_consts(body: &Body) -> HashMap<String, Allocation> {
+    eprintln!("Collecting consts from body with {body:#?} blocks");
+    let mut assigns = body
+        .var_debug_info
         .iter()
         .filter_map(|info| {
             info.constant().map(|const_op| {
                 let ConstantKind::Allocated(alloc) = const_op.const_.kind() else { unreachable!() };
-                (info.name.clone(), alloc)
+                (info.name.clone(), alloc.clone())
             })
         })
-        .collect::<HashMap<_, _>>()
+        .collect::<HashMap<_, _>>();
+
+    let locals = body
+        .var_debug_info
+        .iter()
+        .filter_map(|info| info.local().map(|local| (local, info.name.clone())))
+        .collect::<HashMap<_, _>>();
+
+    for block in &body.blocks {
+        for statement in &block.statements {
+            let StatementKind::Assign(place, Rvalue::Use(Operand::Constant(const_op))) =
+                &statement.kind
+            else {
+                continue;
+            };
+
+            if !place.projection.is_empty() {
+                continue;
+            }
+
+            let Some(name) = locals.get(&place.local) else {
+                continue;
+            };
+
+            let ConstantKind::Allocated(alloc) = const_op.const_.kind() else {
+                continue;
+            };
+            assigns.insert(name.clone(), alloc.clone());
+        }
+    }
+
+    assigns
 }
 
 /// Check the allocation data for `LEN`.
@@ -208,6 +241,8 @@ fn main() {
     generate_input(&path).unwrap();
     let args = &[
         "rustc".to_string(),
+        "-g".to_string(),
+        "-Zmir-enable-passes=-SingleUseConsts".to_string(), // Needed for `fn collect_consts()`
         "--edition=2021".to_string(),
         "--crate-name".to_string(),
         CRATE_NAME.to_string(),
@@ -233,17 +268,19 @@ fn generate_input(path: &str) -> std::io::Result<()> {
     const TUPLE: (u32, u32) = (10, u32::MAX);
 
     fn other_consts() {{
-        const _max_u128: u128 = u128::MAX;
-        const _min_i128: i128 = i128::MIN;
-        const _max_i8: i8 = i8::MAX;
-        const _char: char = 'x';
-        const _false: bool = false;
-        const _true: bool = true;
-        const _ptr: *const &str = &BAR;
-        const _null_ptr: *const u8 = NULL;
-        const _tuple: (u32, u32) = TUPLE;
-        const _char_id: std::any::TypeId = const {{ type_id::<char>() }};
-        const _bool_id: std::any::TypeId = const {{ type_id::<bool>() }};
+        let _max_u128: u128 = u128::MAX;
+        let _min_i128: i128 = i128::MIN;
+        let _max_i8: i8 = i8::MAX;
+        let _char: char = 'x';
+        let _false: bool = false;
+        let _true: bool = true;
+        let _ptr: *const &str = &BAR;
+        let _null_ptr: *const u8 = NULL;
+        let _tuple: (u32, u32) = TUPLE;
+        let _char_id: std::any::TypeId = const {{ type_id::<char>() }};
+        let _bool_id: std::any::TypeId = const {{ type_id::<bool>() }};
+        std::hint::black_box((_max_u128, _min_i128, _max_i8, _char, _false, _true));
+        std::hint::black_box((_ptr, _null_ptr, _tuple, _char_id, _bool_id));
     }}
 
     pub fn main() {{
