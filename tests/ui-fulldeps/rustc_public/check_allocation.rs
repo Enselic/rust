@@ -171,6 +171,7 @@ fn check_other_consts(item: CrateItem) {
 /// In the returned map, the key is the name of the variable, and the value is
 /// the allocation of the constant assigned to it.
 pub fn collect_consts(body: &Body) -> HashMap<String, &Allocation> {
+    eprintln!("NORDH -- collect_consts: {body:#?}");
     let locals = body
         .var_debug_info
         .iter()
@@ -223,7 +224,7 @@ fn main() {
         // "-g".to_string(),
         // "-Zmir-strip-debuginfo=none".to_string(), // Needed to keep debug info for constants.
         // "-Zmir-opt-level=0".to_string(), // Needed to keep debug info for constants.
-        "-Zmir-enable-passes=-SingleUseConsts".to_string(), // Needed for `fn collect_consts()`
+        // "-Zmir-enable-passes=-SingleUseConsts".to_string(), // Needed for `fn collect_consts()`
         "--edition=2021".to_string(),
         "--crate-name".to_string(),
         CRATE_NAME.to_string(),
