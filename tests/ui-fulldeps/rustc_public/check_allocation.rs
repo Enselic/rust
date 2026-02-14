@@ -171,37 +171,25 @@ fn check_other_consts(item: CrateItem) {
 /// In the returned map, the key is the name of the variable, and the value is
 /// the allocation of the constant assigned to it.
 pub fn collect_consts(body: &Body) -> HashMap<String, &Allocation> {
-    eprintln!("NORDH {:#?}", body);
-    let mut assigns =   HashMap::new();
-
-    // First collect the names of the variables.
     let locals = body
         .var_debug_info
         .iter()
         .filter_map(|info| info.local().map(|local| (local, info.name.clone())))
-        .collect::<HashMap<_, _>>();        
+        .collect::<HashMap<_, _>>();
 
-    // Then figure out what constant belongs to what variable.
-    for block in &body.blocks {
-        for statement in &block.statements {
+    body.blocks
+        .iter()
+        .flat_map(|block| block.statements.iter())
+        .filter_map(|statement| {
             let StatementKind::Assign(place, Rvalue::Use(Operand::Constant(const_op))) =
                 &statement.kind
             else {
-                continue;
+                return None;
             };
-
-            let Some(name) = locals.get(&place.local) else {
-                continue;
-            };
-
-            let ConstantKind::Allocated(alloc) = const_op.const_.kind() else {
-                continue;
-            };
-            assigns.insert(name.clone(), alloc);
-        }
-    }    
-
-    assigns    
+            let ConstantKind::Allocated(alloc) = const_op.const_.kind() else { return None };
+            locals.get(&place.local).map(|name| (name.clone(), alloc))
+        })
+        .collect()
 }
 
 /// Check the allocation data for `LEN`.
