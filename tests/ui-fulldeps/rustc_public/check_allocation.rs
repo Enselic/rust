@@ -233,17 +233,17 @@ fn generate_input(path: &str) -> std::io::Result<()> {
     const TUPLE: (u32, u32) = (10, u32::MAX);
 
     fn other_consts() {{
-        let _max_u128 = u128::MAX;
-        let _min_i128 = i128::MIN;
-        let _max_i8 = i8::MAX;
-        let _char = 'x';
-        let _false = false;
-        let _true = true;
-        let _ptr = &BAR;
-        let _null_ptr: *const u8 = NULL;
-        let _tuple = TUPLE;
-        let _char_id = const {{ type_id::<char>() }};
-        let _bool_id = const {{ type_id::<bool>() }};
+        const _max_u128: u128 = u128::MAX;
+        const _min_i128: i128 = i128::MIN;
+        const _max_i8: i8 = i8::MAX;
+        const _char: char = 'x';
+        const _false: bool = false;
+        const _true: bool = true;
+        const _ptr: *const &str = &BAR;
+        const _null_ptr: *const u8 = NULL;
+        const _tuple: (u32, u32) = TUPLE;
+        const _char_id: std::any::TypeId = const {{ type_id::<char>() }};
+        const _bool_id: std::any::TypeId = const {{ type_id::<bool>() }};
     }}
 
     pub fn main() {{
