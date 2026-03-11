@@ -10,15 +10,11 @@
 // Debugger tests need debuginfo
 //@ compile-flags: -g
 
-// The `SingleUseConsts` MIR pass _improves_ compile times, so we want to run it even with -O0.
-// For variables that 
 // FIXME(#128945): SingleUseConsts shouldn't need to be disabled.
 //@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
 //@ [no-SingleUseConsts-mir-pass] compile-flags: -Zmir-enable-passes=-SingleUseConsts
 
 //@ gdb-command: run
-// FIXME(#97083): Should we be able to break on initialization of zero-sized types?
-// FIXME(#97083): Right now the first breakable line is:
 //@ gdb-check:   let mut c = 27;
 //@ gdb-command: next
 //@ gdb-check:   let d = c = 99;
@@ -43,13 +39,11 @@
 
 // === LLDB TESTS ==================================================================================
 
-//@ lldb-command:run
-// FIXME(#97083): Should we be able to break on initialization of zero-sized types?
-// FIXME(#97083): Right now the first breakable line is:
-//@ lldb-check:[...]let mut c = 27;[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let d = c = 99;[...]
+//@ lldb-command: run
+//@ lldb-check:   [...]let mut c = 27;[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let d = c = 99;[...]
 //@ lldb-command:next
 //@ [no-SingleUseConsts-mir-pass] lldb-command:frame select
 //@ [no-SingleUseConsts-mir-pass] lldb-check:[...]let e = "hi bob";[...]
@@ -81,6 +75,8 @@
 fn main () {
     let a = (); // #break
     let b : [i32; 0] = [];
+    // FIXME(#97083): Should we be able to break on initialization of zero-sized types?
+    // FIXME(#97083): Right now the first breakable line is:
     let mut c = 27;
     let d = c = 99;
     let e = "hi bob";
