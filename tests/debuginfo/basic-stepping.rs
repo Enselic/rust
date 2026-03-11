@@ -14,6 +14,8 @@
 //@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
 //@ [no-SingleUseConsts-mir-pass] compile-flags: -Zmir-enable-passes=-SingleUseConsts
 
+// === GDB TESTS ===================================================================================
+
 //@ gdb-command: run
 //@ gdb-check:   let mut c = 27;
 //@ gdb-command: next
@@ -44,33 +46,33 @@
 //@ lldb-command: next
 //@ lldb-command: frame select
 //@ lldb-check:   [...]let d = c = 99;[...]
-//@ lldb-command:next
-//@ [no-SingleUseConsts-mir-pass] lldb-command:frame select
-//@ [no-SingleUseConsts-mir-pass] lldb-check:[...]let e = "hi bob";[...]
-//@ [no-SingleUseConsts-mir-pass] lldb-command:next
-//@ [no-SingleUseConsts-mir-pass] lldb-command:frame select
-//@ [no-SingleUseConsts-mir-pass] lldb-check:[...]let f = b"hi bob";[...]
-//@ [no-SingleUseConsts-mir-pass] lldb-command:next
-//@ [no-SingleUseConsts-mir-pass] lldb-command:frame select
-//@ [no-SingleUseConsts-mir-pass] lldb-check:[...]let g = b'9';[...]
-//@ [no-SingleUseConsts-mir-pass] lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let h = ["whatever"; 8];[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let i = [1,2,3,4];[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let j = (23, "hi");[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let k = 2..3;[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let l = &i[k];[...]
-//@ lldb-command:next
-//@ lldb-command:frame select
-//@ lldb-check:[...]let m: *const() = &a;[...]
+//@ lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let e = "hi bob";[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let f = b"hi bob";[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let g = b'9';[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let h = ["whatever"; 8];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let i = [1,2,3,4];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let j = (23, "hi");[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let k = 2..3;[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let l = &i[k];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let m: *const() = &a;[...]
 
 fn main () {
     let a = (); // #break
