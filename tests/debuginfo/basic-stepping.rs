@@ -8,7 +8,7 @@
 //@ ignore-backends: gcc
 
 // Debugger tests need debuginfo
-//@ compile-flags: -g
+//@ compile-flags: -g -Copt-level=0
 
 // FIXME(#128945): SingleUseConsts shouldn't need to be disabled.
 //@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
@@ -42,10 +42,10 @@
 // === LLDB TESTS ==================================================================================
 
 //@ lldb-command: run
-//@ lldb-check:   [...]let mut c = 27;[...]
+//@ lldb-check:   ->[...]let mut c = 27;[...]
 //@ lldb-command: next
 //@ lldb-command: frame select
-//@ lldb-check:   [...]let d = c = 99;[...]
+//@ lldb-check:   ->[...]let d = c = 99;[...]
 //@ lldb-command: next
 //@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
 //@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let e = "hi bob";[...]
