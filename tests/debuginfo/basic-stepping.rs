@@ -46,15 +46,18 @@
 // line and one above. That is not ideal, but it will do for now.
 //@ lldb-command: settings set stop-line-count-before 1
 //@ lldb-command: settings set stop-line-count-after 0
- 
+
 //@ lldb-command: run
-// In `breakpoint_callback()` in ./src/etc/lldb_batchmode.py we do
-// `SetSelectedFrame` which causes LLDB to show the current line (and one line
-// before). Confirm.
+// In `breakpoint_callback()` in `./src/etc/lldb_batchmode.py` we do
+// `SetSelectedFrame()`, which causes LLDB to show the current line and one line
+// before because of change to `stop-line-count-before` above. Note that
+// `normalize_whitespace()` in `lldb_batchmode.py` removes the newlines of the
+// output. So the current line and the line before actually ends up on the same
+// output line. That's fine.
 //@ lldb-check:   [...]let mut c = 27;[...]
 //@ lldb-command: next
-// From now on we must manually run `frame select` to see the current line (and
-// one line before).
+// From now on we must manually `frame select` to see the current line (and one
+// line before).
 //@ lldb-command: frame select
 //@ lldb-check:   [...]let d = c = 99;[...]
 //@ lldb-command: next
