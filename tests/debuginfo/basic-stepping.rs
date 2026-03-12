@@ -11,7 +11,7 @@
 //@ compile-flags: -g
 
 // FIXME(#128945): SingleUseConsts shouldn't need to be disabled.
-// revisions: default-mir-passes no-SingleUseConsts-mir-pass
+//@ revisions: default-mir-passes no-SingleUseConsts-mir-pass
 //@ [no-SingleUseConsts-mir-pass] compile-flags: -Zmir-enable-passes=-SingleUseConsts
 
 // === GDB TESTS ===================================================================================
@@ -45,6 +45,9 @@
 // when we stop on a breakpoint. Unfortunately that does not seem possible (0
 // and 0 shows nothing), but with the below settings we get the current line and
 // one line above it, which is good enough in practice.
+
+// TODO
+
 //@ lldb-command: settings set stop-line-count-before 1
 //@ lldb-command: settings set stop-line-count-after 0
  
@@ -52,28 +55,35 @@
 //@ lldb-command: run   
 //@ lldb-check:   [...]let mut c = 27;[...]
 //@ lldb-command: next
+//@ lldb-command: frame select
 //@ lldb-check:   [...]let d = c = 99;[...]
 //@ lldb-command: next
-// [no-SingleUseConsts-mir-pass] lldb-command: frame select
-// [no-SingleUseConsts-mir-pass] lldb-check:   [...]let e = "hi bob";[...]
-// [no-SingleUseConsts-mir-pass] lldb-command: next
-// [no-SingleUseConsts-mir-pass] lldb-command: frame select
-// [no-SingleUseConsts-mir-pass] lldb-check:   [...]let f = b"hi bob";[...]
-// [no-SingleUseConsts-mir-pass] lldb-command: next
-// [no-SingleUseConsts-mir-pass] lldb-command: frame select
-// [no-SingleUseConsts-mir-pass] lldb-check:   [...]let g = b'9';[...]
-// [no-SingleUseConsts-mir-pass] lldb-command: next
-// lldb-check:   [...]let h = ["whatever"; 8];[...]
-// lldb-command: next
-// lldb-check:   [...]let i = [1,2,3,4];[...]
-// lldb-command: next
-// lldb-check:   [...]let j = (23, "hi");[...]
-// lldb-command: next
-// lldb-check:   [...]let k = 2..3;[...]
-// lldb-command: next
-// lldb-check:   [...]let l = &i[k];[...]
-// lldb-command: next
-// lldb-check:   [...]let m: *const() = &a;[...]
+//@ lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let e = "hi bob";[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let f = b"hi bob";[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
+//@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let g = b'9';[...]
+//@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ lldb-check:   [...]let h = ["whatever"; 8];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let i = [1,2,3,4];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let j = (23, "hi");[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let k = 2..3;[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let l = &i[k];[...]
+//@ lldb-command: next
+//@ lldb-command: frame select
+//@ lldb-check:   [...]let m: *const() = &a;[...]
 
 #![allow(unused_assignments, unused_variables)]
 
