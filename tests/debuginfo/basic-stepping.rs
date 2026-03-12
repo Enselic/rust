@@ -41,17 +41,12 @@
 
 // === LLDB TESTS ==================================================================================
 
-// To make the checks below more accurate, we only want to show the current line
-// when we stop on a breakpoint. Unfortunately that does not seem possible (0
-// and 0 shows nothing), but with the below settings we get the current line and
-// one line above it, which is good enough in practice.
-
-// TODO
-
+// Unlike gdb, lldb will display 7 lines of context by default. It seems
+// impossible to get it down to 1. The best we can do is to show the current
+// line and one above. That is not ideal, but it will do for now.
 //@ lldb-command: settings set stop-line-count-before 1
 //@ lldb-command: settings set stop-line-count-after 0
  
-
 //@ lldb-command: run
 // In `breakpoint_callback()` in ./src/etc/lldb_batchmode.py we do
 // `SetSelectedFrame` which causes LLDB to show the current line (and one line
