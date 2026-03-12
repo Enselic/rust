@@ -52,14 +52,18 @@
 //@ lldb-command: settings set stop-line-count-after 0
  
 
-//@ lldb-command: run   
+//@ lldb-command: run
+// In `breakpoint_callback()` in ./src/etc/lldb_batchmode.py we do
+// `SetSelectedFrame` which causes LLDB to show the current line (and one line
+// before). Confirm.
 //@ lldb-check:   [...]let mut c = 27;[...]
 //@ lldb-command: next
+// From now on we must manually run `frame select` to see the current line (and
+// one line before).
 //@ lldb-command: frame select
 //@ lldb-check:   [...]let d = c = 99;[...]
 //@ lldb-command: next
 //@ lldb-command: frame select
-//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
 //@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let e = "hi bob";[...]
 //@ [no-SingleUseConsts-mir-pass] lldb-command: next
 //@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
@@ -68,6 +72,7 @@
 //@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
 //@ [no-SingleUseConsts-mir-pass] lldb-check:   [...]let g = b'9';[...]
 //@ [no-SingleUseConsts-mir-pass] lldb-command: next
+//@ [no-SingleUseConsts-mir-pass] lldb-command: frame select
 //@ lldb-check:   [...]let h = ["whatever"; 8];[...]
 //@ lldb-command: next
 //@ lldb-command: frame select
