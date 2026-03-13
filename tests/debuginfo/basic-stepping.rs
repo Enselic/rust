@@ -94,6 +94,8 @@
 //@ cdb-command: .lines -e
 // Display source lines and source line numbers at the command prompt (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/l---l---set-source-options-)
 //@ cdb-command: l+s
+//@ cdb-command: l+t
+
 
 //@ cdb-command: g
 // `p` means "step" (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/p--step-)
