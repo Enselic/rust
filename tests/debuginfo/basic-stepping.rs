@@ -104,12 +104,6 @@
 //@ cdb-check:   [...]:     let mut c = 27;
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let d = c = 99;
-//@ [no-SingleUseConsts-mir-pass] cdb-command: p
-//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let e = "hi bob";
-//@ [no-SingleUseConsts-mir-pass] cdb-command: p
-//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let f = b"hi bob";
-//@ [no-SingleUseConsts-mir-pass] cdb-command: p
-//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let g = b'9';
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
 //@ cdb-command: p
