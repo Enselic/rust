@@ -96,41 +96,42 @@
 //@ cdb-command: l+s
 
 //@ cdb-command: g
-//@ cdb-command: t
+// `p` means "step" (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/p--step-)
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let mut c = 27;
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let d = c = 99;
-// [no-SingleUseConsts-mir-pass] cdb-command: t
+// [no-SingleUseConsts-mir-pass] cdb-command: p
 // [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let e = "hi bob";
-// [no-SingleUseConsts-mir-pass] cdb-command: t
+// [no-SingleUseConsts-mir-pass] cdb-command: p
 // [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let f = b"hi bob";
-// [no-SingleUseConsts-mir-pass] cdb-command: t
+// [no-SingleUseConsts-mir-pass] cdb-command: p
 // [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let g = b'9';
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let i = [1,2,3,4];
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let j = (23, "hi");
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let k = 2..3;
-//@ cdb-command: t
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let l = &i[k];
-//@ cdb-command: t
+//@ cdb-command: p
 //  FIXME: cdb can't stop on this line for some reason
 //  cdb-check:   [...]:     let m: *const() = &a;
 
