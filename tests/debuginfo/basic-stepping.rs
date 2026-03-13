@@ -95,7 +95,7 @@
 // and https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/l---l---set-source-options-.
 //@ cdb-command: .lines -e
 //@ cdb-command: l+s
-//@ cdb-command: l+t
+// cdb-command: l+t
 
 //@ cdb-command: g
 //@ cdb-command: t
