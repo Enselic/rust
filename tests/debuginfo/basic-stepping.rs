@@ -91,9 +91,9 @@
 // === CDB TESTS ==================================================================================
 
 // Enable line-based debugging and print lines after stepping.
-//@ cdb-command: .lines -e
-//@ cdb-command: l+s
-//@ cdb-command: l+t
+// cdb-command: .lines -e
+// cdb-command: l+s
+// cdb-command: l+t
 
 //@ cdb-command: g
 //@ cdb-command: t
