@@ -104,12 +104,12 @@
 //@ cdb-check:   [...]:     let mut c = 27;
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let d = c = 99;
-// [no-SingleUseConsts-mir-pass] cdb-command: p
-// [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let e = "hi bob";
-// [no-SingleUseConsts-mir-pass] cdb-command: p
-// [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let f = b"hi bob";
-// [no-SingleUseConsts-mir-pass] cdb-command: p
-// [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let g = b'9';
+//@ [no-SingleUseConsts-mir-pass] cdb-command: p
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let e = "hi bob";
+//@ [no-SingleUseConsts-mir-pass] cdb-command: p
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let f = b"hi bob";
+//@ [no-SingleUseConsts-mir-pass] cdb-command: p
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let g = b'9';
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
 //@ cdb-command: p
@@ -119,11 +119,7 @@
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let k = 2..3;
 //@ cdb-command: p
-// FIXME: an extra `p` should not be necessary
-//@ cdb-command: p
 //@ cdb-check:   [...]:     let l = &i[k];
-//@ cdb-command: p
-// FIXME: an extra `p` should not be necessary
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let m: *const() = &a;
 
