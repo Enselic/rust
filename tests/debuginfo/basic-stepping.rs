@@ -119,10 +119,12 @@
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let k = 2..3;
 //@ cdb-command: p
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let l = &i[k];
 //@ cdb-command: p
+//@ cdb-command: p
 //  FIXME: cdb don't stop on this line for some reason
-//@  cdb-check:   [...]:     let m: *const() = &a;
+//@ cdb-check:   [...]:     let m: *const() = &a;
 
 #![allow(unused_assignments, unused_variables)]
 
