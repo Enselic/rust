@@ -88,6 +88,37 @@
 //@ lldb-command: frame select
 //@ lldb-check:   [...]let m: *const() = &a;[...]
 
+// === CDB TESTS ==================================================================================
+
+// Enable line-based debugging and print lines after stepping.
+//@ cdb-command: .lines -e
+//@ cdb-command: l+s
+//@ cdb-command: l+t
+
+//@ cdb-command: g
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let mut c = 27;
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let d = c = 99;
+//@ [no-SingleUseConsts-mir-pass] cdb-command: t
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let e = "hi bob";
+//@ [no-SingleUseConsts-mir-pass] cdb-command: t
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let f = b"hi bob";
+//@ [no-SingleUseConsts-mir-pass] cdb-command: t
+//@ [no-SingleUseConsts-mir-pass] cdb-check:   [...]:     let g = b'9';
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let i = [1,2,3,4];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let j = (23, "hi");
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let k = 2..3;
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let l = &i[k];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let m: *const() = &a;
+
 #![allow(unused_assignments, unused_variables)]
 
 fn main () {
