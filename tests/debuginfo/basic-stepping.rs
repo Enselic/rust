@@ -109,6 +109,20 @@
 //@ cdb-command: t
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
 //@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
+//@ cdb-check:   [...]:     let h = ["whatever"; 8];
+//@ cdb-command: t
 //@ cdb-check:   [...]:     let i = [1,2,3,4];
 //@ cdb-command: t
 //@ cdb-check:   [...]:     let j = (23, "hi");
