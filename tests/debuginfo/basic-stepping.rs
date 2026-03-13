@@ -91,7 +91,9 @@
 // === CDB TESTS ==================================================================================
 
 // Enable line-based debugging and print lines after stepping.
-// cdb-command: .lines -e
+// See https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/-lines--toggle-source-line-support-
+// and https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/l---l---set-source-options-.
+//@ cdb-command: .lines -e
 // cdb-command: l+s
 // cdb-command: l+t
 
