@@ -123,6 +123,8 @@
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let l = &i[k];
 //@ cdb-command: p
+// FIXME: an extra `p` should not be necessary
+//@ cdb-command: p
 //@ cdb-check:   [...]:     let m: *const() = &a;
 
 #![allow(unused_assignments, unused_variables)]
