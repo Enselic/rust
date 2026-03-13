@@ -94,9 +94,10 @@
 //@ cdb-command: .lines -e
 // Display source lines and source line numbers at the command prompt (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/l---l---set-source-options-)
 //@ cdb-command: l+s
+// Enter "source mode" so we step source lines and not assembly instructions.
 //@ cdb-command: l+t
 
-
+// `g` means "go" (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/g--go-)
 //@ cdb-command: g
 // `p` means "step" (https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/p--step-)
 //@ cdb-command: p
@@ -112,20 +113,6 @@
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let h = ["whatever"; 8];
 //@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
-//@ cdb-check:   [...]:     let h = ["whatever"; 8];
-//@ cdb-command: p
 //@ cdb-check:   [...]:     let i = [1,2,3,4];
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let j = (23, "hi");
@@ -134,8 +121,8 @@
 //@ cdb-command: p
 //@ cdb-check:   [...]:     let l = &i[k];
 //@ cdb-command: p
-//  FIXME: cdb can't stop on this line for some reason
-//  cdb-check:   [...]:     let m: *const() = &a;
+//  FIXME: cdb don't stop on this line for some reason
+//@  cdb-check:   [...]:     let m: *const() = &a;
 
 #![allow(unused_assignments, unused_variables)]
 
