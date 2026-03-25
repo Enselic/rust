@@ -6,4 +6,7 @@ pub fn spawn<F: 'static>(_: F) {}
 
 fn foo(foo: &usize, bar: &'static bool) {
     spawn(async move { std::hint::black_box(foo) });
+    //~^ ERROR: borrowed data escapes outside of function
 }
+
+fn main() {}
