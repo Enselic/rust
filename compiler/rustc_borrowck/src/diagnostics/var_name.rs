@@ -125,4 +125,15 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
         (argument_name, argument_span)
     }
+
+    /// Returns the [`Local`] for the argument whose type contains `fr`, if any.
+    pub(crate) fn get_argument_local_for_region(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        fr: RegionVid,
+    ) -> Option<Local> {
+        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
+        self.get_argument_index_for_region(tcx, fr)
+            .map(|index| Local::from_usize(implicit_inputs + index + 1))
+    }
 }
