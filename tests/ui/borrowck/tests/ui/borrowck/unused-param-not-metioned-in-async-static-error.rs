@@ -4,8 +4,8 @@
 
 pub fn spawn<F: 'static>(_: F) {}
 
-fn foo(foo: &usize, bar: &'static bool) {
-    spawn(async move { std::hint::black_box(foo) });
+fn foo<'foo>(foo: &'foo u8, bar_static: &'static u16) {
+    spawn(async move { std::hint::black_box(foo); });
     //~^ ERROR: borrowed data escapes outside of function
 }
 
