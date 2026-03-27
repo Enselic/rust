@@ -10,4 +10,4 @@ fn foo<'foo>(foo: &'foo u8, bar_static: &'static u16) {
     takes_static(the_closure); //~ ERROR: borrowed data escapes outside of function
 }
 
-fn main() {}
+fn main() {} // TODO: remove async from name
