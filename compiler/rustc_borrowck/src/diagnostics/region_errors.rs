@@ -696,7 +696,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         if let Some((Some(outlived_fr_name), outlived_fr_span)) = outlived_fr_name_and_span {
             diag.span_label(
                 outlived_fr_span,
-                format!("`{outlived_fr_name}` declared here, outside of the {escapes_from} body",), // here
+                format!("`{outlived_fr_name}` declared here, outside of the {escapes_from} body"),
             );
         }
 
