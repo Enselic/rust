@@ -676,16 +676,6 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             &self.upvars,
             errci.outlived_fr,
         );
-        // If the region belongs to an argument that is never used in the body, don't
-        // mention it in the diagnostic — it would confuse the user.
-        let outlived_fr_name_and_span =
-            outlived_fr_name_and_span.filter(|(name, _)| name.is_some()).filter(|_| {
-                self.regioncx
-                    .get_argument_local_for_region(self.infcx.tcx, errci.outlived_fr)
-                    .map_or(true, |local| {
-                        !crate::diagnostics::find_all_local_uses::find(self.body, local).is_empty()
-                    })
-            });
 
         let escapes_from =
             self.infcx.tcx.def_descr(self.regioncx.universal_regions().defining_ty.def_id());
@@ -706,7 +696,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         if let Some((Some(outlived_fr_name), outlived_fr_span)) = outlived_fr_name_and_span {
             diag.span_label(
                 outlived_fr_span,
-                format!("`{outlived_fr_name}` declared here NORDH2, outside of the {escapes_from} body",),
+                format!("`{outlived_fr_name}` declared here, outside of the {escapes_from} body",), // here
             );
         }
 
