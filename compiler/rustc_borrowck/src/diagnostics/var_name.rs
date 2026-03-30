@@ -20,7 +20,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         assert!(self.universal_regions().is_universal_region(fr));
 
         debug!("get_var_name_and_span_for_region: attempting upvar");
-        let result = self.get_upvar_index_for_region(tcx, fr)
+        self.get_upvar_index_for_region(tcx, fr)
             .map(|index| {
                 // FIXME(project-rfc-2229#8): Use place span for diagnostics
                 let (name, span) = self.get_upvar_name_and_span_for_region(tcx, upvars, index);
@@ -38,9 +38,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                         None
                     }
                 })
-            });
-        result
-
+            })
     }
 
     /// Search the upvars (if any) to find one that references fr. Return its index.
