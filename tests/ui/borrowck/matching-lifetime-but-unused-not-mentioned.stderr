@@ -1,15 +1,15 @@
 error[E0521]: borrowed data escapes outside of function
-  --> $DIR/matching-lifetime-but-unused-not-mentioned.rs:13:5
+  --> $DIR/matching-lifetime-but-unused-not-mentioned.rs:16:5
    |
-LL | fn foo<'a>(foo: &'a u8, arg_static: &'static u16) {
-   |        --  --- `foo` is a reference that is only valid in the function body
-   |        |
-   |        lifetime `'a` defined here
+LL | fn foo<'a>(
+   |        -- lifetime `'a` defined here
+LL |     used_arg: &'a u8,
+   |     -------- `used_arg` is a reference that is only valid in the function body
 ...
-LL |     takes_static(the_closure);
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+LL |     consume(c);
+   |     ^^^^^^^^^^
    |     |
-   |     `foo` escapes the function body here
+   |     `used_arg` escapes the function body here
    |     argument requires that `'a` must outlive `'static`
 
 error: aborting due to 1 previous error
