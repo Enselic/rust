@@ -1,0 +1,17 @@
+error[E0521]: borrowed data escapes outside of function
+  --> $DIR/matching-lifetime-but-unused-upvar-not-mentioned.rs:18:5
+   |
+LL | async fn foo<'foo>(foo: &'foo u8, _bar_static: &'static u16) {
+   |              ----  ---            ----------- `_bar_static` declared here, outside of the function body
+   |              |     |
+   |              |     `foo` is a reference that is only valid in the function body
+   |              lifetime `'foo` defined here
+LL |     takes_static_async(foo).await;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     `foo` escapes the function body here
+   |     argument requires that `'foo` must outlive `'static`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0521`.
