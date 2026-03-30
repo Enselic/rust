@@ -29,7 +29,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             .or_else(|| {
                 debug!("get_var_name_and_span_for_region: attempting argument");
                 self.get_argument_index_for_region(tcx, fr).and_then(|index| {
-                    let argument_local = self.get_argument_local(index);
+                    let argument_local = self.get_argument_local(body, index);
                     if local_is_used_in_body(body, argument_local) {
                         Some(self.get_argument_name_and_span_for_region(body, local_names, index))
                     } else {
@@ -114,9 +114,9 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
     /// Given the index of an argument (after skipping implicit inputs), returns the
     /// corresponding MIR local.
-    fn get_argument_local(&self, argument_index: usize) -> Local {
+    fn get_argument_local(&self, body: &Body<'tcx>, argument_index: usize) -> Local {
         let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
-        Local::from_usize(implicit_inputs + argument_index + 1)
+        body.args_iter().nth(implicit_inputs + argument_index).unwrap()
     }
 
     /// Given the index of an argument, finds its name (if any) and the span from where it was
@@ -127,7 +127,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         local_names: &IndexSlice<Local, Option<Symbol>>,
         argument_index: usize,
     ) -> (Option<Symbol>, Span) {
-        let argument_local = self.get_argument_local(argument_index);
+        let argument_local = self.get_argument_local(body, argument_index);
         debug!("get_argument_name_and_span_for_region: argument_local={argument_local:?}");
 
         let argument_name = local_names[argument_local];
