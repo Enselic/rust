@@ -1,6 +1,6 @@
 use rustc_index::IndexSlice;
 use rustc_middle::mir::visit::{PlaceContext, VisitPlacesWith, Visitor};
-use rustc_middle::mir::{Body, Local};
+use rustc_middle::mir::{Body, Local, Place};
 use rustc_middle::ty::{self, RegionVid, TyCtxt};
 use rustc_span::{Span, Symbol};
 use tracing::debug;
@@ -137,7 +137,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
 fn local_is_used_in_body<'tcx>(body: &Body<'tcx>, target: Local) -> bool {
     let mut found = false;
-    VisitPlacesWith(|place, context: PlaceContext| {
+    VisitPlacesWith(|place: Place<'_>, context: PlaceContext| {
         if !matches!(context, PlaceContext::NonUse(_)) && place.local == target {
             found = true;
         }
