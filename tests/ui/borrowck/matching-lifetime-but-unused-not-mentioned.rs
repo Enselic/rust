@@ -7,13 +7,13 @@
 fn consume<T: 'static>(_: T) {}
 
 fn foo<'a>(
-    foo: &'a u8,
-    bar: &'static u16, // Unused in closure. Must not be in error.
+    used_arg: &'a u8,
+    unused_arg: &'static u16, // Unused in closure. Must not appear in error.
 ) {
-    let baz: &'static u32 = &42; // Unused in closure. Must not be in error.
+    let unused_var: &'static u32 = &42; // Unused in closure. Must not appear in error.
 
-    let the_closure = move || foo;
-    consume(the_closure); //~ ERROR: borrowed data escapes outside of function
+    let c = move || used_arg;
+    consume(c); //~ ERROR: borrowed data escapes outside of function
 }
 
 fn main() {}
