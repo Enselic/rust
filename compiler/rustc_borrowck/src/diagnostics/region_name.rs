@@ -498,11 +498,9 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
         &self,
         fr: RegionVid,
     ) -> Option<RegionName> {
-        let implicit_inputs = self.regioncx.universal_regions().defining_ty.implicit_inputs();
         let argument_index = self.regioncx.get_argument_index_for_region(self.infcx.tcx, fr)?;
 
-        let arg_ty = self.regioncx.universal_regions().unnormalized_input_tys
-            [implicit_inputs + argument_index];
+        let arg_ty = self.regioncx.universal_regions().unnormalized_input_tys[argument_index];
         let (_, span) = self.regioncx.get_argument_name_and_span_for_region(
             self.body,
             self.local_names(),

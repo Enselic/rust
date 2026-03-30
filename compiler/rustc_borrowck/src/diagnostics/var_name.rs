@@ -80,9 +80,6 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
     /// Search the argument types for one that references fr (which should be a free region).
     /// Returns Some(_) with the index of the input if one is found.
-    ///
-    /// N.B., in the case of a closure, the index is indexing into the signature as seen by the
-    /// user - in particular, index 0 is not the implicit self parameter.
     pub(crate) fn get_argument_index_for_region(
         &self,
         tcx: TyCtxt<'tcx>,
@@ -102,7 +99,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             self.universal_regions().unnormalized_input_tys[argument_index],
         );
 
-        Some(argument_index)
+        Some(implicit_inputs + argument_index)
     }
 
     /// Given the index of an argument, finds its name (if any) and the span from where it was
@@ -113,8 +110,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         local_names: &IndexSlice<Local, Option<Symbol>>,
         argument_index: usize,
     ) -> (Option<Symbol>, Span) {
-        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
-        let argument_local = Local::from_usize(implicit_inputs + argument_index + 1);
+        let argument_local = Local::from_usize(argument_index + 1 /* Local::RETURN_PLACE */);
         debug!("get_argument_name_and_span_for_region: argument_local={argument_local:?}");
 
         let argument_name = local_names[argument_local];
