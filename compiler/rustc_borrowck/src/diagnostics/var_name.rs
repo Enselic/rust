@@ -85,21 +85,25 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         tcx: TyCtxt<'tcx>,
         fr: RegionVid,
     ) -> Option<usize> {
-        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
-        let argument_index =
-            self.universal_regions().unnormalized_input_tys.iter().skip(implicit_inputs).position(
-                |arg_ty| {
-                    debug!("get_argument_index_for_region: arg_ty = {arg_ty:?}");
-                    tcx.any_free_region_meets(arg_ty, |r| r.as_var() == fr)
-                },
-            )?;
+        let first_index = self.universal_regions().defining_ty.implicit_inputs();
+        let unnormalized_input_tys = self.universal_regions().unnormalized_input_tys;
+        let last_index = unnormalized_input_tys.len();
+        for argument_index in first_index..last_index {
+            let arg_ty = &unnormalized_input_tys[argument_index];
+            debug!("get_argument_index_for_region: arg_ty = {arg_ty:?}");
+            if !tcx.any_free_region_meets(arg_ty, |r| r.as_var() == fr) {
+                continue
+            }
 
-        debug!(
-            "get_argument_index_for_region: found {fr:?} in argument {argument_index} which has type {:?}",
-            self.universal_regions().unnormalized_input_tys[argument_index],
-        );
+            debug!(
+                "get_argument_index_for_region: found {fr:?} in argument {argument_index} which has type {:?}",
+                self.universal_regions().unnormalized_input_tys[argument_index],
+            );
 
-        Some(implicit_inputs + argument_index)
+            return Some(argument_index);
+        }
+
+        None
     }
 
     /// Given the index of an argument, finds its name (if any) and the span from where it was
