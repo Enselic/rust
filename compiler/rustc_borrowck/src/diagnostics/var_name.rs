@@ -8,7 +8,8 @@ use tracing::debug;
 use crate::region_infer::RegionInferenceContext;
 
 impl<'tcx> RegionInferenceContext<'tcx> {
-    pub(crate) fn get_var_name_and_span_for_region(
+    /// Note: The returned var name will be used in `body`.
+    pub(crate) fn get_used_var_name_and_span_for_region(
         &self,
         tcx: TyCtxt<'tcx>,
         body: &Body<'tcx>,
@@ -16,10 +17,10 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         upvars: &[&ty::CapturedPlace<'tcx>],
         fr: RegionVid,
     ) -> Option<(Option<Symbol>, Span)> {
-        debug!("get_var_name_and_span_for_region(fr={fr:?})");
+        debug!("get_used_var_name_and_span_for_region(fr={fr:?})");
         assert!(self.universal_regions().is_universal_region(fr));
 
-        debug!("get_var_name_and_span_for_region: attempting upvar");
+        debug!("get_used_var_name_and_span_for_region: attempting upvar");
         self.get_upvar_index_for_region(tcx, fr)
             .map(|index| {
                 // FIXME(project-rfc-2229#8): Use place span for diagnostics
@@ -27,13 +28,13 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 (Some(name), span)
             })
             .or_else(|| {
-                debug!("get_var_name_and_span_for_region: attempting argument");
+                debug!("get_used_var_name_and_span_for_region: attempting argument");
                 self.get_argument_index_for_region(tcx, fr).and_then(|index| {
                     let argument_local = self.get_argument_local(body, index);
-                    if local_is_used_in_body(body, argument_local) {
+                    if body_uses_local(body, argument_local) {
                         Some(self.get_argument_name_and_span_for_region(body, local_names, index))
                     } else {
-                        debug!("get_var_name_and_span_for_region: argument local {argument_local:?} not used in body, skipping");
+                        debug!("get_used_var_name_and_span_for_region: argument local {argument_local:?} not used in body, skipping");
                         None
                     }
                 })
@@ -140,7 +141,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
     }
 }
 
-fn local_is_used_in_body<'tcx>(body: &Body<'tcx>, target: Local) -> bool {
+fn body_uses_local<'tcx>(body: &Body<'tcx>, target: Local) -> bool {
     let mut found = false;
     VisitPlacesWith(|place: Place<'_>, context: PlaceContext| {
         if !matches!(context, PlaceContext::NonUse(_)) && place.local == target {

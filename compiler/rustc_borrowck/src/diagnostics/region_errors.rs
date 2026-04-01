@@ -662,14 +662,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     fn report_escaping_data_error(&self, errci: &ErrorConstraintInfo<'tcx>) -> Diag<'infcx> {
         let ErrorConstraintInfo { span, category, .. } = errci;
 
-        let fr_name_and_span = self.regioncx.get_var_name_and_span_for_region(
+        let fr_name_and_span = self.regioncx.get_used_var_name_and_span_for_region(
             self.infcx.tcx,
             self.body,
             &self.local_names(),
             &self.upvars,
             errci.fr,
         );
-        let outlived_fr_name_and_span = self.regioncx.get_var_name_and_span_for_region(
+        let outlived_fr_name_and_span = self.regioncx.get_used_var_name_and_span_for_region(
             self.infcx.tcx,
             self.body,
             &self.local_names(),
