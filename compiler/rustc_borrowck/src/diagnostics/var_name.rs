@@ -105,16 +105,20 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         Some(argument_index)
     }
 
-    /// Given the index of an argument, finds its name (if any) and the span from where it was
-    /// declared.
+    /// Given the index of an argument as seen from the user (i.e. excluding
+    /// implicit inputs), returns the corresponding MIR local.
+    fn user_arg_index_to_local(&self, body: &Body<'tcx>, user_arg_index: usize) -> Local {
+        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
+        body.args_iter().nth(implicit_inputs + user_arg_index).unwrap()
+    }
+
     pub(crate) fn get_argument_name_and_span_for_region(
         &self,
         body: &Body<'tcx>,
         local_names: &IndexSlice<Local, Option<Symbol>>,
         argument_index: usize,
     ) -> (Option<Symbol>, Span) {
-        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
-        let argument_local = Local::from_usize(implicit_inputs + argument_index + 1);
+        let argument_local = self.user_arg_index_to_local(body, argument_index);
         debug!("get_argument_name_and_span_for_region: argument_local={argument_local:?}");
 
         let argument_name = local_names[argument_local];
