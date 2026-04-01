@@ -27,8 +27,8 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             })
             .or_else(|| {
                 debug!("get_var_name_and_span_for_region: attempting argument");
-                self.get_argument_index_for_region(tcx, fr).map(|index| {
-                    self.get_argument_name_and_span_for_region(body, local_names, index)
+                self.get_user_arg_index_for_region(tcx, fr).map(|index| {
+                    self.get_user_arg_name_and_span_for_region(body, local_names, index)
                 })
             })
     }
@@ -83,7 +83,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
     ///
     /// N.B., in the case of a closure, the index is indexing into the signature as seen by the
     /// user - in particular, index 0 is not the implicit self parameter.
-    pub(crate) fn get_argument_index_for_region(
+    pub(crate) fn get_user_arg_index_for_region(
         &self,
         tcx: TyCtxt<'tcx>,
         fr: RegionVid,
@@ -92,35 +92,41 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         let argument_index =
             self.universal_regions().unnormalized_input_tys.iter().skip(implicit_inputs).position(
                 |arg_ty| {
-                    debug!("get_argument_index_for_region: arg_ty = {arg_ty:?}");
+                    debug!("get_user_arg_index_for_region: arg_ty = {arg_ty:?}");
                     tcx.any_free_region_meets(arg_ty, |r| r.as_var() == fr)
                 },
             )?;
 
         debug!(
-            "get_argument_index_for_region: found {fr:?} in argument {argument_index} which has type {:?}",
+            "get_user_arg_index_for_region: found {fr:?} in argument {argument_index} which has type {:?}",
             self.universal_regions().unnormalized_input_tys[argument_index],
         );
 
         Some(argument_index)
     }
 
-    /// Given the index of an argument, finds its name (if any) and the span from where it was
+    /// Given the index of a an argument index as seen from the user (without
+    /// implicit inputs), returns the corresponding MIR local.
+    fn user_arg_to_local(&self, body: &Body<'tcx>, user_arg_index: usize) -> Local {
+        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
+        body.args_iter().nth(implicit_inputs + user_arg_index).unwrap()
+    }
+
+    /// Given the index of a user argument, finds its name (if any) and the span from where it was
     /// declared.
-    pub(crate) fn get_argument_name_and_span_for_region(
+    pub(crate) fn get_user_arg_name_and_span_for_region(
         &self,
         body: &Body<'tcx>,
         local_names: &IndexSlice<Local, Option<Symbol>>,
-        argument_index: usize,
+        user_arg_index: usize,
     ) -> (Option<Symbol>, Span) {
-        let implicit_inputs = self.universal_regions().defining_ty.implicit_inputs();
-        let argument_local = Local::from_usize(implicit_inputs + argument_index + 1);
-        debug!("get_argument_name_and_span_for_region: argument_local={argument_local:?}");
+        let argument_local = self.user_arg_to_local(body, user_arg_index);
+        debug!("get_user_arg_name_and_span_for_region: argument_local={argument_local:?}");
 
         let argument_name = local_names[argument_local];
         let argument_span = body.local_decls[argument_local].source_info.span;
         debug!(
-            "get_argument_name_and_span_for_region: argument_name={argument_name:?} argument_span={argument_span:?}",
+            "get_user_arg_name_and_span_for_region: argument_name={argument_name:?} argument_span={argument_span:?}",
         );
 
         (argument_name, argument_span)
