@@ -108,7 +108,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             )?;
 
         debug!(
-            "get_user_arg_index_for_region: {implicit_inputs} implicit inputs, found {fr:?} in argument {user_arg_index} which has type {:?}",
+            "get_user_arg_index_for_region: found {fr:?} in argument {user_arg_index} which has type {:?}",
             self.universal_regions().unnormalized_input_tys[user_arg_index],
         );
 

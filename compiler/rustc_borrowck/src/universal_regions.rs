@@ -80,7 +80,7 @@ pub(crate) struct UniversalRegions<'tcx> {
     /// N.B., associated types in these types have not been normalized,
     /// as the name suggests. =)
     ///
-    /// N.B., in the case of a closure, index 0 is the implicit self parameter.
+    /// N.B., in the case of a closure, index 0 is the implicit self parameter,
     /// and not the first input as seen by the user.
     pub unnormalized_input_tys: &'tcx [Ty<'tcx>],
 
