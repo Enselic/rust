@@ -531,6 +531,7 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
         user_arg_index: usize,
     ) -> Option<&hir::Ty<'tcx>> {
         let fn_decl = self.infcx.tcx.hir_fn_decl_by_hir_id(self.mir_hir_id())?;
+        // Closures don't have implicit self arguments in HIR, so use `user_arg_index` directly.
         let argument_hir_ty: &hir::Ty<'_> = fn_decl.inputs.get(user_arg_index)?;
         match argument_hir_ty.kind {
             // This indicates a variable with no type annotation, like
