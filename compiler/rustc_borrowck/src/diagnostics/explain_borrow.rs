@@ -383,16 +383,29 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
-                region_name.highlight_region_name(err);
+                region_name.highlight_region_name(err); // nordh
 
                 if let Some(desc) = opt_place_desc {
-                    err.span_label(
-                        span,
-                        format!(
-                            "{}requires that `{desc}` is borrowed for `{region_name}`",
-                            category.description(),
-                        ),
-                    );
+                    match category {
+                        ConstraintCategory::CallArgument(fn_) => {
+                            err.span_label(
+                                span,
+                                format!(
+                                    "{} from function `{fn_}` requires that `{desc}` is borrowed for `{region_name}`",
+                                    category.description(),
+                                ),
+                            );
+                        }
+                        _ => {
+                            err.span_label(
+                                span,
+                                format!(
+                                    "{}requires that `{desc}` is borrowed for `{region_name}`",
+                                    category.description(), // nordh print fun type here
+                                ),
+                            );
+                        }
+                    }
                 } else {
                     err.span_label(
                         span,
