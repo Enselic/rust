@@ -386,31 +386,20 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 region_name.highlight_region_name(err); // nordh
 
                 if let Some(desc) = opt_place_desc {
-                    match category {
-                        ConstraintCategory::CallArgument(Some(fn_)) => {
-                            err.span_label(
-                                span,
-                                format!(
-                                    "{} from function `{fn_}` requires that `{desc}` is borrowed for `{region_name}`",
-                                    category.description(),
-                                ),
-                            );
-                            if let ty::FnDef(fn_def_id, _) = fn_.kind() {
-                                err.span_note(
-                                    self.tcx.def_span(fn_def_id),
-                                    format!("{} defined here", self.tcx.def_descr(fn_def_id)),
-                                );
-                            }
-                        }
-                        _ => {
-                            err.span_label(
-                                span,
-                                format!(
-                                    "{}requires that `{desc}` is borrowed for `{region_name}`",
-                                    category.description(), // nordh print fun type here
-                                ),
-                            );
-                        }
+                    err.span_label(
+                        span,
+                        format!(
+                            "{}requires that `{desc}` is borrowed for `{region_name}`",
+                            category.description(), // nordh print fun type here
+                        ),
+                    );
+                    if let ConstraintCategory::CallArgument(Some(fn_)) = category
+                        && let ty::FnDef(fn_def_id, _) = fn_.kind()
+                    {
+                        err.span_note(
+                            tcx.def_span(*fn_def_id),
+                            format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                        );
                     }
                 } else {
                     err.span_label(
