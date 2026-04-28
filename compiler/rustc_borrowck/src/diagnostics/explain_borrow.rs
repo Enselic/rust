@@ -395,11 +395,12 @@ impl<'tcx> BorrowExplanation<'tcx> {
                                     category.description(),
                                 ),
                             );
-                            let fn_def_id = ...;
-                            err.span_note(
-                                self.tcx.def_span(fn_def_id),
-                                format!("{} defined here", self.tcx.def_descr(fn_def_id)),
-                            );
+                            if let ty::FnDef(fn_def_id, _) = fn_.kind() {
+                                err.span_note(
+                                    self.tcx.def_span(fn_def_id),
+                                    format!("{} defined here", self.tcx.def_descr(fn_def_id)),
+                                );
+                            }
                         }
                         _ => {
                             err.span_label(
