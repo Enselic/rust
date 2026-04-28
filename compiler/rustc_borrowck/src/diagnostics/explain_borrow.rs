@@ -391,7 +391,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             err.span_label(
                                 span,
                                 format!(
-                                    "{} from function `{fn_}` requires that `{desc}` is borrowed for `{region_name}`",
+                                    "{} from function `{fn_:?}` requires that `{desc}` is borrowed for `{region_name}`",
                                     category.description(),
                                 ),
                             );
