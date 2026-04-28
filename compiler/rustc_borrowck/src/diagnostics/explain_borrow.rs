@@ -387,11 +387,11 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
                 if let Some(desc) = opt_place_desc {
                     match category {
-                        ConstraintCategory::CallArgument(fn_) => {
+                        ConstraintCategory::CallArgument(Some(fn_)) => {
                             err.span_label(
                                 span,
                                 format!(
-                                    "{} from function `{fn_:?}` requires that `{desc}` is borrowed for `{region_name}`",
+                                    "{} from function `{fn_}` requires that `{desc}` is borrowed for `{region_name}`",
                                     category.description(),
                                 ),
                             );
