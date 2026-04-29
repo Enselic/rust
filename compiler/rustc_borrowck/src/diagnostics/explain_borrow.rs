@@ -383,24 +383,16 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
-                region_name.highlight_region_name(err); // nordh
+                region_name.highlight_region_name(err);
 
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
                         span,
                         format!(
                             "{}requires that `{desc}` is borrowed for `{region_name}`",
-                            category.description(), // nordh print fun type here
+                            category.description(),
                         ),
                     );
-                    if let ConstraintCategory::CallArgument(Some(fn_)) = category
-                        && let ty::FnDef(fn_def_id, _) = fn_.kind()
-                    {
-                        err.span_note(
-                            tcx.def_span(*fn_def_id),
-                            format!("{} defined here", tcx.def_descr(*fn_def_id)),
-                        );
-                    }
                 } else {
                     err.span_label(
                         span,
@@ -440,6 +432,15 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             "requirement{s} that the value outlives `{region_name}` introduced here nordh"
                         ),
                     );
+                } else {
+                    if let ConstraintCategory::CallArgument(Some(fn_)) = category
+                        && let ty::FnDef(fn_def_id, _) = fn_.kind()
+                    {
+                        err.span_note(
+                            tcx.def_span(*fn_def_id),
+                            format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                        );
+                    }
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
