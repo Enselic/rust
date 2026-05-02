@@ -62,7 +62,7 @@ impl<'tcx> crate::MirPass<'tcx> for PromoteTemps<'tcx> {
     }
 
     fn is_required(&self) -> bool {
-        true
+        false
     }
 }
 

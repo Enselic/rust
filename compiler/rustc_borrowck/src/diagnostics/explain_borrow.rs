@@ -432,6 +432,15 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             "requirement{s} that the value outlives `{region_name}` introduced here"
                         ),
                     );
+                } else {
+                    if let ConstraintCategory::CallArgument(Some(fn_)) = category
+                        && let ty::FnDef(fn_def_id, _) = fn_.kind()
+                    {
+                        err.span_note(
+                            tcx.def_span(*fn_def_id),
+                            format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                        );
+                    }
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
