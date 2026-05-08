@@ -438,6 +438,11 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     && let ty::FnDef(fn_def_id, _) = fn_.kind()
                 {
                     let fn_span = tcx.def_span(*fn_def_id);
+                    // If the the constraint comes from a call argument, show
+                    // the function definition as additional context. However,
+                    // if `preds` already overlaps with the function definition,
+                    // then it is very likely that the relevant context is
+                    // already shown, so we can skip showing it again.
                     if !preds.iter().any(|pred| pred.overlaps(fn_span)) {
                         err.span_note(
                             fn_span,
