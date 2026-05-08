@@ -19,14 +19,6 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     for<'a> I::Item<'a>: Debug,
    |                          ^^^^^
-note: function defined here
-  --> $DIR/hrtb-implied-1.rs:23:1
-   |
-LL | / fn print_items<I>(_iter: I)
-LL | | where
-LL | |     I: LendingIterator,
-LL | |     for<'a> I::Item<'a>: Debug,
-   | |_______________________________^
 
 error: aborting due to 1 previous error
 

@@ -14,11 +14,6 @@ note: requirements that the value outlives `'b` introduced here
    |
 LL | fn outlives_indir<'a: 'b, 'b, T: 'a>(_x: T) {}
    |                       ^^         ^^
-note: function defined here
-  --> $DIR/multiple-sources-for-outlives-requirement.rs:1:1
-   |
-LL | fn outlives_indir<'a: 'b, 'b, T: 'a>(_x: T) {}
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 1 previous error
 

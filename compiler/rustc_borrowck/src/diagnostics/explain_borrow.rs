@@ -434,15 +434,16 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 }
 
-                let fn_span = tcx.def_span(*fn_def_id);
-                if !preds.iter().any(|pred| pred.overlaps(fn_span))
-                    && let ConstraintCategory::CallArgument(Some(fn_)) = category
+                if let ConstraintCategory::CallArgument(Some(fn_)) = category
                     && let ty::FnDef(fn_def_id, _) = fn_.kind()
                 {
-                    err.span_note(
-                        fn_span,
-                        format!("{} defined here", tcx.def_descr(*fn_def_id)),
-                    );
+                    let fn_span = tcx.def_span(*fn_def_id);
+                    if !preds.iter().any(|pred| pred.overlaps(fn_span)) {
+                        err.span_note(
+                            fn_span,
+                            format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                        );
+                    }
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);

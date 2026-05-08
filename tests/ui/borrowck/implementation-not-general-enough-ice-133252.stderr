@@ -28,11 +28,6 @@ note: requirement that the value outlives `'1` introduced here
    |
 LL | fn force_send<T: Send>(_: T) {}
    |                  ^^^^
-note: function defined here
-  --> $DIR/implementation-not-general-enough-ice-133252.rs:16:1
-   |
-LL | fn force_send<T: Send>(_: T) {}
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 2 previous errors
 
