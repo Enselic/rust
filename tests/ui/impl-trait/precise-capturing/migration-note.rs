@@ -3,7 +3,8 @@
 use std::fmt::Display;
 
 fn display_len<T>(x: &Vec<T>) -> impl Display {
-    //~^ NOTE in this expansion of desugaring of `impl Trait`
+    //~^ NOTE function defined here
+    //~^^ NOTE in this expansion of desugaring of `impl Trait`
     //~| NOTE in this expansion of desugaring of `impl Trait`
     //~| NOTE in this expansion of desugaring of `impl Trait`
     //~| NOTE in this expansion of desugaring of `impl Trait`
