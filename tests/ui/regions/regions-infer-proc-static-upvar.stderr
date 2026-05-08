@@ -17,6 +17,11 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL | fn foo<F:FnOnce()+'static>(_p: F) { }
    |                   ^^^^^^^
+note: function defined here
+  --> $DIR/regions-infer-proc-static-upvar.rs:4:1
+   |
+LL | fn foo<F:FnOnce()+'static>(_p: F) { }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 1 previous error
 

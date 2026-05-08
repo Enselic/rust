@@ -12,6 +12,12 @@ LL |     display_len(&x)
 ...
 LL | }
    | - `x` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/migration-note.rs:5:1
+   |
+LL | fn display_len<T>(x: &Vec<T>) -> impl Display {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0502]: cannot borrow `x` as mutable because it is also borrowed as immutable
   --> $DIR/migration-note.rs:19:5
@@ -55,6 +61,11 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     fn needs_static(_: impl Sized + 'static) {}
    |                                     ^^^^^^^
+note: function defined here
+  --> $DIR/migration-note.rs:34:5
+   |
+LL |     fn needs_static(_: impl Sized + 'static) {}
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 note: this call may capture more lifetimes than intended, because Rust 2024 has adjusted the `impl Trait` lifetime capture rules
   --> $DIR/migration-note.rs:29:13
    |
@@ -136,6 +147,11 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     fn needs_static(_: impl Sized + 'static) {}
    |                                     ^^^^^^^
+note: function defined here
+  --> $DIR/migration-note.rs:82:5
+   |
+LL |     fn needs_static(_: impl Sized + 'static) {}
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 note: this call may capture more lifetimes than intended, because Rust 2024 has adjusted the `impl Trait` lifetime capture rules
   --> $DIR/migration-note.rs:77:13
    |

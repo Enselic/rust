@@ -10,6 +10,12 @@ LL |     some_fn::<&'static u32>(&c);
    |     argument requires that `c` is borrowed for `'static`
 LL | }
    | - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/fns.rs:4:1
+   |
+LL | fn some_fn<T>(arg: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/fns.rs:28:24
@@ -25,6 +31,12 @@ LL |     some_fn::<&'a u32>(&c);
    |     argument requires that `c` is borrowed for `'a`
 LL | }
    | - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/fns.rs:4:1
+   |
+LL | fn some_fn<T>(arg: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/fns.rs:38:28
@@ -41,6 +53,12 @@ LL |         some_fn::<&'a u32>(&c);
    |         argument requires that `c` is borrowed for `'a`
 LL |     };
    |     - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/fns.rs:4:1
+   |
+LL | fn some_fn<T>(arg: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 3 previous errors
 

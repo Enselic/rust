@@ -33,6 +33,11 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     fn want<I, O>(_: I, _: impl Fn(I) -> O) {}
    |                                 ^^^^^^^^^^
+note: function defined here
+  --> $DIR/fn-item-check-type-params.rs:47:5
+   |
+LL |     fn want<I, O>(_: I, _: impl Fn(I) -> O) {}
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0716]: temporary value dropped while borrowed
   --> $DIR/fn-item-check-type-params.rs:54:26
@@ -48,6 +53,13 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     (T, Option<U>): Displayable,
    |                     ^^^^^^^^^^^
+note: function defined here
+  --> $DIR/fn-item-check-type-params.rs:20:1
+   |
+LL | / fn extend_lt<T, U>(val: T) -> Box<dyn Display>
+LL | | where
+LL | |     (T, Option<U>): Displayable,
+   | |________________________________^
 
 error: aborting due to 4 previous errors
 

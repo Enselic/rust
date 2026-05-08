@@ -11,6 +11,12 @@ LL | |     );
    | |_____- argument requires that `c` is borrowed for `'static`
 LL |   }
    |   - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/adt-nullary-enums.rs:13:1
+   |
+LL | fn combine<T>(_: T, _: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/adt-nullary-enums.rs:41:41
@@ -27,6 +33,12 @@ LL | |     );
    | |_____- argument requires that `c` is borrowed for `'a`
 LL |   }
    |   - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/adt-nullary-enums.rs:13:1
+   |
+LL | fn combine<T>(_: T, _: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/adt-nullary-enums.rs:54:45
@@ -44,6 +56,12 @@ LL | |         );
    | |_________- argument requires that `c` is borrowed for `'a`
 LL |       };
    |       - `c` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/adt-nullary-enums.rs:13:1
+   |
+LL | fn combine<T>(_: T, _: T) { }
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 3 previous errors
 

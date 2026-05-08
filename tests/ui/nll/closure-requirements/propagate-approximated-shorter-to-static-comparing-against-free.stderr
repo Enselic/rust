@@ -75,6 +75,8 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     F: for<'x> FnOnce(Cell<&'a u32>, Cell<&'x u32>),
    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: method defined here
+  --> $SRC_DIR/core/src/cell.rs:LL:COL
 
 error: aborting due to 2 previous errors
 

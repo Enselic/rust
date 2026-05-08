@@ -11,6 +11,12 @@ LL |     read_thing(read);
 LL |
 LL | }
    |  - `foo` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/issue-90600-expected-return-static-indirect.rs:15:1
+   |
+LL | fn read_thing(refcell: &RefCell<dyn Read>) {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0521]: borrowed data escapes outside of function
   --> $DIR/issue-90600-expected-return-static-indirect.rs:11:5

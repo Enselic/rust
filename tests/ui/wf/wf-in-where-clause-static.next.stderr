@@ -12,6 +12,13 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     &'static S: Static,
    |                 ^^^^^^
+note: function defined here
+  --> $DIR/wf-in-where-clause-static.rs:10:1
+   |
+LL | / fn foo<S: Display>(x: S) -> Box<dyn Display>
+LL | | where
+LL | |     &'static S: Static,
+   | |_______________________^
 
 error: aborting due to 1 previous error
 

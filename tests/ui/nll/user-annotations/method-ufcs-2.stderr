@@ -27,6 +27,12 @@ LL |     <_ as Bazoom<&'a u32>>::method(a, &b, c);
    |     argument requires that `b` is borrowed for `'a`
 LL | }
    | - `b` dropped here while still borrowed
+   |
+note: method defined here
+  --> $DIR/method-ufcs-2.rs:5:5
+   |
+LL |     fn method<U>(self, arg: T, arg2: U) { }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `b` does not live long enough
   --> $DIR/method-ufcs-2.rs:51:44
@@ -47,6 +53,12 @@ LL |         <_ as Bazoom<&'a u32>>::method(a, &b, c);
 LL |     };
 LL | }
    | - `b` dropped here while still borrowed
+   |
+note: method defined here
+  --> $DIR/method-ufcs-2.rs:5:5
+   |
+LL |     fn method<U>(self, arg: T, arg2: U) { }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 3 previous errors
 
