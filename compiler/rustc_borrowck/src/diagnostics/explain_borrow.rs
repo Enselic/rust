@@ -427,7 +427,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 if !preds.is_empty() {
                     let s = if preds.len() == 1 { "" } else { "s" };
                     err.span_note(
-                        preds,
+                        preds.clone(),
                         format!(
                             "requirement{s} that the value outlives `{region_name}` introduced here"
                         ),
