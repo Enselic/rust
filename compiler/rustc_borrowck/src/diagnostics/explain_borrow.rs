@@ -434,7 +434,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 }
 
-                if !preds.contains(&span)
+                if !preds.iter().any(|pred| pred.overlaps(span))
                     && let ConstraintCategory::CallArgument(Some(fn_)) = category
                     && let ty::FnDef(fn_def_id, _) = fn_.kind()
                 {
