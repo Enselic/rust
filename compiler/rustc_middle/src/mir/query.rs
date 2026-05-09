@@ -128,8 +128,8 @@ pub enum ConstraintCategory<'tcx> {
     ClosureUpvar(FieldIdx),
 
     /// A constraint from a user-written predicate
-    /// with the provided span, written on the item
-    /// with the given `DefId`
+    /// with the provided span.
+    /// Removed in https://github.com/rust-lang/rust/commit/41ad383e111423ba3f3062ede1354da4e0673e3d
     Predicate(Span),
 
     /// A "boring" constraint (caused by the given location) is one that
