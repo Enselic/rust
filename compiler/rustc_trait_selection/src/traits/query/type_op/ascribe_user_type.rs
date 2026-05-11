@@ -119,7 +119,7 @@ fn relate_mir_and_user_args<'tcx>(
 
     let ty = tcx.type_of(def_id).instantiate(tcx, args);
     let ty = ocx.normalize(&cause, param_env, ty);
-    debug!("relate_type_and_user_type: ty of def-id is {:?}", ty);
+    debug!("relate_mir_and_user_args: ty of def-id is {:?}", ty);
 
     ocx.eq(&cause, param_env, mir_ty, ty)?;
 

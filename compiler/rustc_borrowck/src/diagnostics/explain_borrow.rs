@@ -385,6 +385,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
             } => {
                 region_name.highlight_region_name(err);
 
+                debug!("NORDH path={:#?}", path);
+
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
                         span,
