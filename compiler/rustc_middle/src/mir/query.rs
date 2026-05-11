@@ -128,8 +128,7 @@ pub enum ConstraintCategory<'tcx> {
     ClosureUpvar(FieldIdx),
 
     /// A constraint from a user-written predicate
-    /// with the provided span, written on the item
-    /// with the given `DefId`
+    /// with the provided span.
     Predicate(Span),
 
     /// A "boring" constraint (caused by the given location) is one that
