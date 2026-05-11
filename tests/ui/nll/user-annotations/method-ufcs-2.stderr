@@ -47,6 +47,12 @@ LL |         <_ as Bazoom<&'a u32>>::method(a, &b, c);
 LL |     };
 LL | }
    | - `b` dropped here while still borrowed
+   |
+note: method defined here
+  --> $DIR/method-ufcs-2.rs:5:5
+   |
+LL |     fn method<U>(self, arg: T, arg2: U) { }
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 3 previous errors
 

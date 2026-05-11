@@ -6,6 +6,12 @@ LL |     let (_, z) = foo(&"hello".to_string());
    |                  |    |
    |                  |    creates a temporary value which is freed while still in use
    |                  argument requires that borrow lasts for `'static`
+   |
+note: function defined here
+  --> $DIR/issue-57265-return-type-wf-check.rs:8:1
+   |
+LL | fn foo<'a, T>(x: &'a T) -> (S<&'a T>, Box<dyn Any + 'static>) {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 1 previous error
 
