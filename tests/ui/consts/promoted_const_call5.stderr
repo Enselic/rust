@@ -36,12 +36,6 @@ LL |     let _: &'static _ = &id(&new_string());
    |                          |   |
    |                          |   creates a temporary value which is freed while still in use
    |                          argument requires that borrow lasts for `'static`
-   |
-note: function defined here
-  --> $DIR/promoted_const_call5.rs:8:1
-   |
-LL | pub const fn id<T>(x: &'static T) -> &'static T { x }
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0716]: temporary value dropped while borrowed
   --> $DIR/promoted_const_call5.rs:40:26

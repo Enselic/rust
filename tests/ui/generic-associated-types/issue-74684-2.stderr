@@ -32,12 +32,6 @@ LL |     let x = T::identity(&a);
 LL |     todo!()
 LL | }
    | - `a` dropped here while still borrowed
-   |
-note: associated function defined here
-  --> $DIR/issue-74684-2.rs:4:5
-   |
-LL |     fn identity<'a>(t: &'a Self::F<'a>) -> &'a Self::F<'a> { t }
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 2 previous errors
 
