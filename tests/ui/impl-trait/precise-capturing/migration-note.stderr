@@ -12,12 +12,6 @@ LL |     display_len(&x)
 ...
 LL | }
    | - `x` dropped here while still borrowed
-   |
-note: function defined here
-  --> $DIR/migration-note.rs:5:1
-   |
-LL | fn display_len<T>(x: &Vec<T>) -> impl Display {
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0502]: cannot borrow `x` as mutable because it is also borrowed as immutable
   --> $DIR/migration-note.rs:19:5
