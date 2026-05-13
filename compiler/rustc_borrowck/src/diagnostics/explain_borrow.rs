@@ -429,38 +429,39 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 if !preds.is_empty() {
                     let s = if preds.len() == 1 { "" } else { "s" };
                     err.span_note(
-                        preds.clone(),
+                        preds,
                         format!(
                             "requirement{s} that the value outlives `{region_name}` introduced here"
                         ),
                     );
                 } else {
-                    // Check if ConstraintCategory::TypeAnnotation is part of the path:
-                    let has_type_annotation = path.iter().any(|constraint| {
-                        matches!(
-                            constraint.category,
-                            ConstraintCategory::TypeAnnotation(AnnotationSource::GenericArg)
-                        )
-                    });
                     // TODO: comment on ...
                     if let ConstraintCategory::CallArgument(Some(fn_)) = category
                         && let ty::FnDef(fn_def_id, _) = fn_.kind()
-                        && !has_type_annotation
-                        && tcx.generics_of(*fn_def_id).count() == 0
-                        && !fn_
-                            .fn_sig(tcx)
-                            .skip_binder()
-                            .inputs_and_output
-                            .iter()
-                            .any(|ty| ty.has_opaque_types())
                     {
-                        let fn_span = tcx.def_span(*fn_def_id);
+                        // Check if ConstraintCategory::TypeAnnotation is part of the path:
+                        let fn_is_tricky = tcx.generics_of(*fn_def_id).count() == 0
+                            && !fn_
+                                .fn_sig(tcx)
+                                .skip_binder()
+                                .inputs_and_output
+                                .iter()
+                                .any(|ty| ty.has_opaque_types());
+                        let a_bit_tricky = path.iter().any(|constraint| {
+                            matches!(
+                                constraint.category,
+                                ConstraintCategory::TypeAnnotation(_)
+                                    | ConstraintCategory::Predicate(_)
+                            )
+                        });
+
                         // If the the constraint comes from a call argument, show
                         // the function definition as additional context. However,
                         // if `preds` already overlaps with the function definition,
                         // then it is very likely that the relevant context is
                         // already shown, so we can skip showing it again.
-                        if !preds.iter().any(|pred| pred.overlaps(fn_span)) {
+                        if !a_bit_tricky && !fn_is_tricky {
+                            let fn_span = tcx.def_span(*fn_def_id);
                             err.span_note(
                                 fn_span,
                                 format!("{} defined here", tcx.def_descr(*fn_def_id)),
