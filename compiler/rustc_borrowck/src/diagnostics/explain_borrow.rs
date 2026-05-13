@@ -443,9 +443,13 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         // Check if ConstraintCategory::TypeAnnotation is part of the path:
                         let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
                             || fn_sig.inputs_and_output.iter().any(|ty| ty.has_opaque_types());
-                        let fn_mentions_region_name = tcx.any_free_region_meets(
+                        let fn_mentions_explicit_region_name = tcx.any_free_region_meets(
                             &fn_sig.inputs_and_output,
-                            |r| r.get_name(tcx).is_some_and(|name| name == region_name.name),
+                            |r| {
+                                r.opt_param_def_id(tcx, *fn_def_id)
+                                    .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
+                                    || (r.is_static() && region_name.name == kw::StaticLifetime)
+                            },
                         );
                         let a_bit_tricky = path.iter().any(|constraint| {
                             matches!(
@@ -460,7 +464,11 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         // if `preds` already overlaps with the function definition,
                         // then it is very likely that the relevant context is
                         // already shown, so we can skip showing it again.
-                        if !a_bit_tricky && !fn_is_tricky && fn_mentions_region_name {
+                        if !a_bit_tricky
+                            && !fn_is_tricky
+                            && region_name.was_named()
+                            && fn_mentions_explicit_region_name
+                        {
                             let fn_span = tcx.def_span(*fn_def_id);
                             err.span_note(
                                 fn_span,
