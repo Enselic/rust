@@ -440,8 +440,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         && let ty::FnDef(fn_def_id, _) = fn_.kind()
                     {
                         // Check if ConstraintCategory::TypeAnnotation is part of the path:
-                        let fn_is_tricky = tcx.generics_of(*fn_def_id).count() == 0
-                            && !fn_
+                        let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
+                            || fn_
                                 .fn_sig(tcx)
                                 .skip_binder()
                                 .inputs_and_output
