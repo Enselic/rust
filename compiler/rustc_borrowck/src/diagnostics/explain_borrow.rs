@@ -8,8 +8,8 @@ use rustc_hir::intravisit::Visitor;
 use rustc_infer::infer::NllRegionVariableOrigin;
 use rustc_middle::middle::resolve_bound_vars::ObjectLifetimeDefault;
 use rustc_middle::mir::{
-    AnnotationSource, Body, CallSource, CastKind, ConstraintCategory, FakeReadCause, Local,
-    LocalInfo, Location, Operand, Place, Rvalue, Statement, StatementKind, TerminatorKind,
+    Body, CallSource, CastKind, ConstraintCategory, FakeReadCause, Local, LocalInfo, Location,
+    Operand, Place, Rvalue, Statement, StatementKind, TerminatorKind,
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeVisitableExt};
@@ -439,14 +439,14 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     if let ConstraintCategory::CallArgument(Some(fn_)) = category
                         && let ty::FnDef(fn_def_id, _) = fn_.kind()
                     {
+                        let fn_sig = fn_.fn_sig(tcx).skip_binder();
                         // Check if ConstraintCategory::TypeAnnotation is part of the path:
                         let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
-                            || fn_
-                                .fn_sig(tcx)
-                                .skip_binder()
-                                .inputs_and_output
-                                .iter()
-                                .any(|ty| ty.has_opaque_types());
+                            || fn_sig.inputs_and_output.iter().any(|ty| ty.has_opaque_types());
+                        let fn_mentions_region_name = tcx.any_free_region_meets(
+                            &fn_sig.inputs_and_output,
+                            |r| r.get_name(tcx).is_some_and(|name| name == region_name.name),
+                        );
                         let a_bit_tricky = path.iter().any(|constraint| {
                             matches!(
                                 constraint.category,
@@ -460,7 +460,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         // if `preds` already overlaps with the function definition,
                         // then it is very likely that the relevant context is
                         // already shown, so we can skip showing it again.
-                        if !a_bit_tricky && !fn_is_tricky {
+                        if !a_bit_tricky && !fn_is_tricky && fn_mentions_region_name {
                             let fn_span = tcx.def_span(*fn_def_id);
                             err.span_note(
                                 fn_span,
