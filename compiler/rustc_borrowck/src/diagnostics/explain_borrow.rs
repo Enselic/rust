@@ -446,6 +446,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     if let ConstraintCategory::CallArgument(Some(fn_)) = category
                         && let ty::FnDef(fn_def_id, _) = fn_.kind()
                         && !has_type_annotation
+                        && tcx.generics_of(*fn_def_id).count() == 0
                         && !fn_
                             .fn_sig(tcx)
                             .skip_binder()
