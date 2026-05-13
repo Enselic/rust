@@ -12,7 +12,7 @@ use rustc_middle::mir::{
     LocalInfo, Location, Operand, Place, Rvalue, Statement, StatementKind, TerminatorKind,
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
-use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
+use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeVisitableExt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -385,6 +385,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
             } => {
                 region_name.highlight_region_name(err);
 
+                debug!("NORDH path={:#?}", path);
+
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
                         span,
@@ -441,9 +443,11 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         ConstraintCategory::TypeAnnotation(AnnotationSource::GenericArg)
                     )
                 });
+                // TODO: comment on ...
                 if let ConstraintCategory::CallArgument(Some(fn_)) = category
                     && let ty::FnDef(fn_def_id, _) = fn_.kind()
                     && !has_type_annotation
+                    && !fn_.fn_sig(tcx).skip_binder().inputs_and_output.iter().any(|ty| ty.has_opaque_types())
                 {
                     let fn_span = tcx.def_span(*fn_def_id);
                     // If the the constraint comes from a call argument, show
