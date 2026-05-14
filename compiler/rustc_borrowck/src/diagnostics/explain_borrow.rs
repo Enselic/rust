@@ -448,7 +448,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             |r| {
                                 r.opt_param_def_id(tcx, *fn_def_id)
                                     .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
-                                    || (r.is_static() && region_name.name == kw::StaticLifetime)
                             },
                         );
                         let a_bit_tricky = path.iter().any(|constraint| {
