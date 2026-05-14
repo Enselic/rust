@@ -427,18 +427,85 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 if !preds.is_empty() {
                     let s = if preds.len() == 1 { "" } else { "s" };
                     err.span_note(
-                        preds,
+                        preds.clone(),
                         format!(
                             "requirement{s} that the value outlives `{region_name}` introduced here"
                         ),
                     );
-                } else {
-                    maybe_add_fn_definition_note_for_call_arg(tcx, err, category, region_name, path);
                 }
 
+                self.maybe_add_fn_definition_note_for_call_arg(tcx, err, &category, path, region_name);
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
             }
             _ => {}
+        }
+    }
+
+    fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        err: &mut Diag<'_, G>,
+        category: &ConstraintCategory<'tcx>,
+        path: &[OutlivesConstraint<'tcx>],
+        region_name: &RegionName,
+    ) {
+        // TODO: comment on ...
+        if let ConstraintCategory::CallArgument(Some(fn_)) = *category
+            && let ty::FnDef(fn_def_id, _) = fn_.kind()
+        {
+            let fn_sig = fn_.fn_sig(tcx).skip_binder();
+            // Check if ConstraintCategory::TypeAnnotation is part of the path:
+            let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
+                || fn_sig.inputs_and_output.iter().any(|ty| {
+                    ty.has_opaque_types()
+                        // `dyn Trait` can carry an implicit `'static` bound via
+                        // object-lifetime defaults; such `'static` is not explicitly
+                        // written by the user, so skip the note in that case.
+                        || ty.walk().any(|arg| {
+                            arg.as_type()
+                                .is_some_and(|t| matches!(t.kind(), ty::Dynamic(..)))
+                        })
+                });
+            let fn_mentions_explicit_region_name = tcx.any_free_region_meets(
+                &fn_sig.inputs_and_output,
+                |r| {
+                    r.opt_param_def_id(tcx, *fn_def_id)
+                        .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
+                        || (r.is_static() && region_name.name == kw::StaticLifetime)
+                },
+            );
+            let a_bit_tricky = path.iter().any(|constraint| {
+                matches!(
+                    constraint.category,
+                    ConstraintCategory::TypeAnnotation(_) | ConstraintCategory::Predicate(_)
+                )
+            });
+
+            // If the the constraint comes from a call argument, show
+            // the function definition as additional context. However,
+            // if `preds` already overlaps with the function definition,
+            // then it is very likely that the relevant context is
+            // already shown, so we can skip showing it again.
+            if !a_bit_tricky
+                && !fn_is_tricky
+                && region_name.was_named()
+                && fn_mentions_explicit_region_name
+            {
+                let fn_span = tcx.def_span(*fn_def_id);
+                let has_overlapping_label = err
+                    .span
+                    .span_labels()
+                    .iter()
+                    .any(|span_label| {
+                        span_label.label.is_some() && span_label.span.overlaps(fn_span)
+                    });
+                if !has_overlapping_label {
+                    err.span_note(
+                        fn_span,
+                        format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                    );
+                }
+            }
         }
     }
 
@@ -524,74 +591,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 format!(" + {suggestable_name}"),
                 Applicability::Unspecified,
             );
-        }
-    }
-}
-
-fn maybe_add_fn_definition_note_for_call_arg<'tcx, G: EmissionGuarantee>(
-    tcx: TyCtxt<'tcx>,
-    err: &mut Diag<'_, G>,
-    category: ConstraintCategory<'tcx>,
-    region_name: &RegionName,
-    path: &[OutlivesConstraint<'tcx>],
-) {
-    // TODO: comment on ...
-    if let ConstraintCategory::CallArgument(Some(fn_)) = category
-        && let ty::FnDef(fn_def_id, _) = fn_.kind()
-    {
-        let fn_sig = fn_.fn_sig(tcx).skip_binder();
-        // Check if ConstraintCategory::TypeAnnotation is part of the path:
-        let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
-            || fn_sig.inputs_and_output.iter().any(|ty| {
-                ty.has_opaque_types()
-                    // `dyn Trait` can carry an implicit `'static` bound via
-                    // object-lifetime defaults; such `'static` is not explicitly
-                    // written by the user, so skip the note in that case.
-                    || ty.walk().any(|arg| {
-                        arg.as_type()
-                            .is_some_and(|t| matches!(t.kind(), ty::Dynamic(..)))
-                    })
-            });
-        let fn_mentions_explicit_region_name = tcx.any_free_region_meets(
-            &fn_sig.inputs_and_output,
-            |r| {
-                r.opt_param_def_id(tcx, *fn_def_id)
-                    .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
-                    || (r.is_static() && region_name.name == kw::StaticLifetime)
-            },
-        );
-        let a_bit_tricky = path.iter().any(|constraint| {
-            matches!(
-                constraint.category,
-                ConstraintCategory::TypeAnnotation(_)
-                    | ConstraintCategory::Predicate(_)
-            )
-        });
-
-        // If the the constraint comes from a call argument, show
-        // the function definition as additional context. However,
-        // if `preds` already overlaps with the function definition,
-        // then it is very likely that the relevant context is
-        // already shown, so we can skip showing it again.
-        if !a_bit_tricky
-            && !fn_is_tricky
-            && region_name.was_named()
-            && fn_mentions_explicit_region_name
-        {
-            let fn_span = tcx.def_span(*fn_def_id);
-            let has_overlapping_label = err
-                .span
-                .span_labels()
-                .iter()
-                .any(|span_label| {
-                    span_label.label.is_some() && span_label.span.overlaps(fn_span)
-                });
-            if !has_overlapping_label {
-                err.span_note(
-                    fn_span,
-                    format!("{} defined here", tcx.def_descr(*fn_def_id)),
-                );
-            }
         }
     }
 }
