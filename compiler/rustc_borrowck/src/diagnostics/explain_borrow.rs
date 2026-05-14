@@ -479,10 +479,19 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             && fn_mentions_explicit_region_name
                         {
                             let fn_span = tcx.def_span(*fn_def_id);
-                            err.span_note(
-                                fn_span,
-                                format!("{} defined here", tcx.def_descr(*fn_def_id)),
-                            );
+                            let has_overlapping_label = err
+                                .span
+                                .span_labels()
+                                .iter()
+                                .any(|span_label| {
+                                    span_label.label.is_some() && span_label.span.overlaps(fn_span)
+                                });
+                            if !has_overlapping_label {
+                                err.span_note(
+                                    fn_span,
+                                    format!("{} defined here", tcx.def_descr(*fn_def_id)),
+                                );
+                            }
                         }
                     }
                 }
