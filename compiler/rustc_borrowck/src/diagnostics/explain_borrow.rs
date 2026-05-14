@@ -442,12 +442,22 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         let fn_sig = fn_.fn_sig(tcx).skip_binder();
                         // Check if ConstraintCategory::TypeAnnotation is part of the path:
                         let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
-                            || fn_sig.inputs_and_output.iter().any(|ty| ty.has_opaque_types());
+                            || fn_sig.inputs_and_output.iter().any(|ty| {
+                                ty.has_opaque_types()
+                                    // `dyn Trait` can carry an implicit `'static` bound via
+                                    // object-lifetime defaults; such `'static` is not explicitly
+                                    // written by the user, so skip the note in that case.
+                                    || ty.walk().any(|arg| {
+                                        arg.as_type()
+                                            .is_some_and(|t| matches!(t.kind(), ty::Dynamic(..)))
+                                    })
+                            });
                         let fn_mentions_explicit_region_name = tcx.any_free_region_meets(
                             &fn_sig.inputs_and_output,
                             |r| {
                                 r.opt_param_def_id(tcx, *fn_def_id)
                                     .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
+                                    || (r.is_static() && region_name.name == kw::StaticLifetime)
                             },
                         );
                         let a_bit_tricky = path.iter().any(|constraint| {
