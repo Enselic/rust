@@ -22,12 +22,6 @@ LL |     || doit(data);
 ...
 LL | }
    |  - `data` dropped here while still borrowed
-   |
-note: function defined here
-  --> $DIR/issue-42574-diagnostic-in-nested-closure.rs:6:1
-   |
-LL | fn doit(data: &'static mut ()) {
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error: aborting due to 2 previous errors
 
