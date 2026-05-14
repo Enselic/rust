@@ -463,8 +463,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
         let ty::FnDef(fn_def_id, _) = fn_.kind() else {
             return;
         };
+
         // If the constraint is too "complicated", we give up. The risk is too
-        // big that showing the function definition is not useful enough.
+        // big that showing the function definition is not relevant.
         if path.iter().any(|constraint| {
             matches!(
                 constraint.category,
@@ -473,10 +474,15 @@ impl<'tcx> BorrowExplanation<'tcx> {
         }) {
             return;
         }
+        // Likewise, the function itself can be too complicated for us to analyze here. For now.
+        // TODO: Maybe use fn_sig instead?
+        if tcx.generics_of(*fn_def_id).count() > 0 {
+            return;
+        }
 
+        // TODO: Use this? let fn_sig2 = tcx.fn_sig(*fn_def_id).skip_binder();
         // let fn_sig = fn_.fn_sig(tcx).skip_binder();
-        // Check if ConstraintCategory::TypeAnnotation is part of the path:
-        // let fn_is_tricky = tcx.generics_of(*fn_def_id).count() > 0
+        // If the function has generics, Check if ConstraintCategory::TypeAnnotation is part of the path:
         //     || fn_sig.inputs_and_output.iter().any(|ty| {
         //         ty.has_opaque_types()
         //             // `dyn Trait` can carry an implicit `'static` bound via
