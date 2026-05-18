@@ -13,6 +13,7 @@ use rustc_middle::mir::{
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeVisitableExt};
+use rustc_span::sym::debug;
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -460,9 +461,11 @@ impl<'tcx> BorrowExplanation<'tcx> {
         let ConstraintCategory::CallArgument(Some(fn_)) = *category else {
             return;
         };
-        let ty::FnDef(fn_def_id, _) = fn_.kind() else {
+        debug!("NORDH 1: fn_={fn_:?}");
+        let ty::FnDef(fn_def_id, args) = fn_.kind() else {
             return;
         };
+        debug!("NORDH 2 : args={args:?}");
 
         // If the constraint is too "complicated", we give up. The risk is too
         // big that showing the function definition is not relevant.
@@ -476,7 +479,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
         }
         // Likewise, the function itself can be too complicated for us to analyze here. For now.
         // TODO: Maybe use fn_sig instead?
-        if tcx.generics_of(*fn_def_id).count() > 0 {
+        let generics_of = tcx.generics_of(*fn_def_id);
+        debug!("maybe_add_fn_definition_note_for_call_arg: generics_of={generics_of:?}");
+        if generics_of.count() > 0 {
             return;
         }
 
