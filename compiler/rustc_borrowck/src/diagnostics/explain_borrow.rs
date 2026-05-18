@@ -455,6 +455,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
         category: &ConstraintCategory<'tcx>,
         region_name: &RegionName,
     ) {
+        // We only have a fn to add if the constraint comes from a call argument
+        // of said fn.
         let ConstraintCategory::CallArgument(Some(fn_)) = *category else {
             return;
         };
@@ -493,24 +495,19 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     && param.name.ident().name == self.needle
                 {
                     self.found = true;
-                    return;
+                } else {
+                    hir::intravisit::walk_generic_param(self, param);
                 }
-                hir::intravisit::walk_generic_param(self, param);
             }
 
             fn visit_lifetime(&mut self, lifetime: &'tcx hir::Lifetime) {
-                let found = match lifetime.kind {
+                self.found |= match lifetime.kind {
                     hir::LifetimeKind::Static => self.needle == kw::StaticLifetime,
                     hir::LifetimeKind::Param(def_id) => {
                         self.tcx.item_name(def_id.to_def_id()) == self.needle
                     }
                     _ => false,
                 };
-                if found {
-                    self.found = true;
-                    return;
-                }
-                hir::intravisit::walk_lifetime(self, lifetime);
             }
         }
 
