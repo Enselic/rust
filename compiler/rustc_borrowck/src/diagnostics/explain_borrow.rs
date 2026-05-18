@@ -434,13 +434,13 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 }
 
+                self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
                 self.maybe_add_fn_definition_note_for_call_arg(
                     err,
                     tcx,
                     &category,
                     region_name,
                 );
-                self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
             }
             _ => {}
         }
@@ -462,9 +462,15 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        // If the function declaration includes `region_name`, and other
-        // diagnostics code didn't already add that context, add the function
-        // definition. The chance is high that it contributes useful context.
+        // If the fn span is already partially (or fully) included in the
+        // diagnostic, we don't need to add it again.
+        let fn_span = tcx.def_span(*fn_def_id);
+        if err.any_span_overlaps(fn_span) {
+            return;
+        }
+
+        // If the function declaration includes `region_name`, the chance is
+        // high that it contributes useful context.
         let Some(fn_node) = tcx.hir_get_if_local(*fn_def_id) else {
             return;
         };
@@ -522,11 +528,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         }
 
-        // TODO: move up
-        let fn_span = tcx.def_span(*fn_def_id);
-        if !err.any_span_overlaps(fn_span) {
-            err.span_note(fn_span, format!("{} defined here", tcx.def_descr(*fn_def_id)));
-        }
+        err.span_note(fn_span, format!("{} defined here", tcx.def_descr(*fn_def_id)));
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(
