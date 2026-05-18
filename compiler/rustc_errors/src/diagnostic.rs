@@ -323,10 +323,11 @@ impl DiagInner {
         self.children.push(sub);
     }
 
-    pub fn has_overlapping_label_or_subdiag_primary_span(&self, target: Span) -> bool {
-        let mut spans: Vec<&MultiSpan> = vec![&self.span];
-        spans.extend(self.children.iter().map(|child| &child.span));
-        spans.into_iter().any(|span| span.span_labels().iter().any(|span_label| span_label.span.overlaps(target)))
+    // TODO: docs and explain
+    pub fn any_span_overlaps(&self, other_span: Span) -> bool {
+        std::iter::once(&self.span)
+            .chain(self.children.iter().map(|child| &child.span))
+            .any(|span| span.span_labels().iter().any(|label| label.span.overlaps(other_span)))
     }
 
     pub(crate) fn arg(&mut self, name: impl Into<DiagArgName>, arg: impl IntoDiagArg) {

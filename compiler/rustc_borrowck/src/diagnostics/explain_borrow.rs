@@ -524,7 +524,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         // TODO: move up
         let fn_span = tcx.def_span(*fn_def_id);
-        if !err.has_overlapping_label_or_subdiag_primary_span(fn_span) {
+        if !err.any_span_overlaps(fn_span) {
             err.span_note(fn_span, format!("{} defined here", tcx.def_descr(*fn_def_id)));
         }
     }
