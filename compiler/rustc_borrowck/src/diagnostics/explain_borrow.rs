@@ -438,7 +438,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     err,
                     tcx,
                     &category,
-                    path,
                     region_name,
                 );
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
@@ -454,7 +453,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
         err: &mut Diag<'_, G>,
         tcx: TyCtxt<'tcx>,
         category: &ConstraintCategory<'tcx>,
-        path: &[OutlivesConstraint<'tcx>],
         region_name: &RegionName,
     ) {
         let ConstraintCategory::CallArgument(Some(fn_)) = *category else {
@@ -464,24 +462,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        // If the constraint is too "complicated", we give up. The risk is too
-        // big that showing the function definition is not relevant.
-        // if path.iter().any(|constraint| {
-        //     matches!(
-        //         constraint.category,
-        //         ConstraintCategory::TypeAnnotation(_) | ConstraintCategory::Predicate(_)
-        //     )
-        // }) {
-        //     return;
-        // }
-        // Likewise, the function itself can be too complicated for us to analyze here. For now.
-        // TODO: Maybe use fn_sig instead?
-        // let generics_of = tcx.generics_of(*fn_def_id);
-        // debug!("maybe_add_fn_definition_note_for_call_arg: generics_of={generics_of:?}");
-        // if generics_of.count() > 0 {
-        //     return;
-        // }
-
+        // If the function declaration includes `region_name`, and other
+        // diagnostics code didn't already add that context, add the function
+        // definition. The chance is high that it contributes useful context.
         let Some(fn_node) = tcx.hir_get_if_local(*fn_def_id) else {
             return;
         };
@@ -539,40 +522,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         }
 
-        // TODO: Use this? let fn_sig2 = tcx.fn_sig(*fn_def_id).skip_binder();
-        // let fn_sig = fn_.fn_sig(tcx).skip_binder();
-        // If the function has generics, Check if ConstraintCategory::TypeAnnotation is part of the path:
-        //     || fn_sig.inputs_and_output.iter().any(|ty| {
-        //         ty.has_opaque_types()
-        //             // `dyn Trait` can carry an implicit `'static` bound via
-        //             // object-lifetime defaults; such `'static` is not explicitly
-        //             // written by the user, so skip the note in that case.
-        //             || ty.walk().any(|arg| {
-        //                 arg.as_type()
-        //                     .is_some_and(|t| matches!(t.kind(), ty::Dynamic(..)))
-        //             })
-        //     });
-        // let fn_mentions_explicit_region_name = tcx.any_free_region_meets(
-        //     &fn_sig.inputs_and_output,
-        //     |r| {
-        //         r.opt_param_def_id(tcx, *fn_def_id)
-        //             .is_some_and(|def_id| tcx.item_name(def_id) == region_name.name)
-        //             || (r.is_static() && region_name.name == kw::StaticLifetime)
-        //     },
-        // );
-
-        // If the the constraint comes from a call argument, show
-        // the function definition as additional context. However,
-        // if `preds` already overlaps with the function definition,
-        // then it is very likely that the relevant context is
-        // already shown, so we can skip showing it again.
-        // if
-        //     // && !fn_is_tricky
-        //     region_name.was_named()
-        //     && fn_mentions_explicit_region_name
-        // {
-        // }
-
+        // TODO: move up
         let fn_span = tcx.def_span(*fn_def_id);
         let has_overlapping_label = err
             .span
