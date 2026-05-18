@@ -524,18 +524,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         // TODO: move up
         let fn_span = tcx.def_span(*fn_def_id);
-        let has_overlapping_label = err
-            .span
-            .span_labels()
-            .iter()
-            .any(|span_label| span_label.label.is_some() && span_label.span.overlaps(fn_span));
-
-        let has_overlapping_subdiag = err
-            .children
-            .iter()
-            .any(|child| child.span.primary_spans().iter().any(|s| s.overlaps(fn_span)));
-
-        if !has_overlapping_label && !has_overlapping_subdiag {
+        if !err.has_overlapping_label_or_subdiag_primary_span(fn_span) {
             err.span_note(fn_span, format!("{} defined here", tcx.def_descr(*fn_def_id)));
         }
     }
