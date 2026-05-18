@@ -11,6 +11,12 @@ LL |     outlives::<'a>(call_once(c));
 ...
 LL | }
    |  - `x` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/without-precise-captures-we-are-powerless.rs:7:1
+   |
+LL | fn outlives<'a>(_: impl Sized + 'a) {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/without-precise-captures-we-are-powerless.rs:19:20
@@ -48,6 +54,12 @@ LL |     outlives::<'a>(call_once(c));
 ...
 LL | }
    |  - `x` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/without-precise-captures-we-are-powerless.rs:7:1
+   |
+LL | fn outlives<'a>(_: impl Sized + 'a) {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0505]: cannot move out of `x` because it is borrowed
   --> $DIR/without-precise-captures-we-are-powerless.rs:30:13
@@ -62,6 +74,12 @@ LL |     outlives::<'a>(call_once(c));
 LL |
 LL |     let c = async move || { println!("{}", *x.0); };
    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ move out of `x` occurs here
+   |
+note: function defined here
+  --> $DIR/without-precise-captures-we-are-powerless.rs:7:1
+   |
+LL | fn outlives<'a>(_: impl Sized + 'a) {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/without-precise-captures-we-are-powerless.rs:31:20
@@ -120,6 +138,12 @@ LL |     outlives::<'a>(call_once(c));
    |     ---------------------------- argument requires that `x` is borrowed for `'a`
 LL | }
    |  - `x` dropped here while still borrowed
+   |
+note: function defined here
+  --> $DIR/without-precise-captures-we-are-powerless.rs:7:1
+   |
+LL | fn outlives<'a>(_: impl Sized + 'a) {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0621]: explicit lifetime required in the type of `x`
   --> $DIR/without-precise-captures-we-are-powerless.rs:38:5
@@ -178,6 +202,12 @@ LL |     T.outlives::<'a>(call_once(c));
 ...
 LL | }
    |  - `x` dropped here while still borrowed
+   |
+note: method defined here
+  --> $DIR/without-precise-captures-we-are-powerless.rs:49:5
+   |
+LL |     fn outlives<'a>(&'a self, _: impl Sized + 'a) {}
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/without-precise-captures-we-are-powerless.rs:57:22
