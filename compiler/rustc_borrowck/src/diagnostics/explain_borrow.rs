@@ -12,8 +12,7 @@ use rustc_middle::mir::{
     Operand, Place, Rvalue, Statement, StatementKind, TerminatorKind,
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
-use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeVisitableExt};
-use rustc_span::sym::debug;
+use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -461,27 +460,82 @@ impl<'tcx> BorrowExplanation<'tcx> {
         let ConstraintCategory::CallArgument(Some(fn_)) = *category else {
             return;
         };
-        debug!("NORDH 1: fn_={fn_:?}");
-        let ty::FnDef(fn_def_id, args) = fn_.kind() else {
+        let ty::FnDef(fn_def_id, _args) = fn_.kind() else {
             return;
         };
-        debug!("NORDH 2 : args={args:?}");
 
         // If the constraint is too "complicated", we give up. The risk is too
         // big that showing the function definition is not relevant.
-        if path.iter().any(|constraint| {
-            matches!(
-                constraint.category,
-                ConstraintCategory::TypeAnnotation(_) | ConstraintCategory::Predicate(_)
-            )
-        }) {
-            return;
-        }
+        // if path.iter().any(|constraint| {
+        //     matches!(
+        //         constraint.category,
+        //         ConstraintCategory::TypeAnnotation(_) | ConstraintCategory::Predicate(_)
+        //     )
+        // }) {
+        //     return;
+        // }
         // Likewise, the function itself can be too complicated for us to analyze here. For now.
         // TODO: Maybe use fn_sig instead?
-        let generics_of = tcx.generics_of(*fn_def_id);
-        debug!("maybe_add_fn_definition_note_for_call_arg: generics_of={generics_of:?}");
-        if generics_of.count() > 0 {
+        // let generics_of = tcx.generics_of(*fn_def_id);
+        // debug!("maybe_add_fn_definition_note_for_call_arg: generics_of={generics_of:?}");
+        // if generics_of.count() > 0 {
+        //     return;
+        // }
+
+        let Some(fn_node) = tcx.hir_get_if_local(*fn_def_id) else {
+            return;
+        };
+
+        struct RegionNameInHirVisitor<'tcx> {
+            tcx: TyCtxt<'tcx>,
+            needle: rustc_span::Symbol,
+            found: bool,
+        }
+
+        impl<'tcx> Visitor<'tcx> for RegionNameInHirVisitor<'tcx> {
+            type NestedFilter = rustc_middle::hir::nested_filter::OnlyBodies;
+
+            fn maybe_tcx(&mut self) -> Self::MaybeTyCtxt {
+                self.tcx
+            }
+
+            fn visit_generic_param(&mut self, param: &'tcx hir::GenericParam<'tcx>) {
+                if matches!(param.kind, hir::GenericParamKind::Lifetime { .. })
+                    && param.name.ident().name == self.needle
+                {
+                    self.found = true;
+                    return;
+                }
+                hir::intravisit::walk_generic_param(self, param);
+            }
+
+            fn visit_lifetime(&mut self, lifetime: &'tcx hir::Lifetime) {
+                let found = match lifetime.kind {
+                    hir::LifetimeKind::Static => self.needle == kw::StaticLifetime,
+                    hir::LifetimeKind::Param(def_id) => {
+                        self.tcx.item_name(def_id.to_def_id()) == self.needle
+                    }
+                    _ => false,
+                };
+                if found {
+                    self.found = true;
+                    return;
+                }
+                hir::intravisit::walk_lifetime(self, lifetime);
+            }
+        }
+
+        let mut region_name_visitor =
+            RegionNameInHirVisitor { tcx, needle: region_name.name, found: false };
+        match fn_node {
+            hir::Node::Item(item) => region_name_visitor.visit_item(item),
+            hir::Node::TraitItem(item) => region_name_visitor.visit_trait_item(item),
+            hir::Node::ImplItem(item) => region_name_visitor.visit_impl_item(item),
+            hir::Node::ForeignItem(item) => region_name_visitor.visit_foreign_item(item),
+            _ => return,
+        }
+
+        if !region_name_visitor.found {
             return;
         }
 
