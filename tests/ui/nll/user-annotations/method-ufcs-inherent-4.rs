@@ -10,9 +10,9 @@ impl<'a> A<'a> {
     }
 }
 
-fn foo<'a>() {
+fn foo<'x>() {
     let v = 22;
-    let x = <A<'a>>::new::<&'a u32>(&v, &v);
+    let x = <A<'x>>::new::<&'x u32>(&v, &v);
     //~^ ERROR
     //~| ERROR
 }

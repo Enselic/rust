@@ -94,6 +94,7 @@ pub struct ConstQualifs {
     pub needs_non_const_drop: bool,
     pub tainted_by_errors: Option<ErrorGuaranteed>,
 }
+
 /// Outlives-constraints can be categorized to determine whether and why they
 /// are interesting (for error reporting). Order of variants indicates sort
 /// order of the category, thereby influencing diagnostic output.
@@ -116,8 +117,8 @@ pub enum ConstraintCategory<'tcx> {
         unsize_to: Option<Ty<'tcx>>,
     },
 
-    /// Contains the function type if available.
-    CallArgument(Option<Ty<'tcx>>),
+    /// Contains the function and arg index if available.
+    CallArgument(CallArgumentConstraintCategory<'tcx>),
     CopyBound,
     SizedBound,
     Assignment,
@@ -170,6 +171,13 @@ pub enum AnnotationSource {
     Declaration,
     OpaqueCast,
     GenericArg,
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
+pub struct CallArgumentConstraintCategory<'tcx> {
+    fn_ty: Ty<'tcx>,
+    arg_index: usize,
 }
 
 /// The constituent parts of a mir constant of kind ADT or array.

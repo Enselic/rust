@@ -212,7 +212,7 @@ struct UniversalRegionIndices<'tcx> {
     ///
     /// This is similar to just using `GenericArgs`, except that it contains
     /// an entry for `'static`, and also late bound parameters in scope.
-    indices: FxIndexMap<ty::Region<'tcx>, RegionVid>,
+    indices: FxIndexMap<ty::Region<'tcx>, RegionVid>, // nordh
 
     /// The vid assigned to `'static`. Used only for diagnostics.
     pub fr_static: RegionVid,

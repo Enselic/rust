@@ -770,7 +770,7 @@ pub(crate) struct MirBorrowckCtxt<'a, 'infcx, 'tcx> {
 
     /// Record the region names generated for each region in the given
     /// MIR def so that we can reuse them later in help/error messages.
-    region_names: RefCell<FxIndexMap<RegionVid, RegionName>>,
+    region_names: RefCell<FxIndexMap<RegionVid, RegionName>>, // NORDH
 
     /// The counter for generating new region names.
     next_region_name: RefCell<usize>,

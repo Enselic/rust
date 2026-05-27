@@ -3017,7 +3017,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                         category @ (ConstraintCategory::Return(_)
                         | ConstraintCategory::CallArgument(_)
                         | ConstraintCategory::OpaqueType),
-                    from_closure: false,
+                    from_closure: false, //nordh
                     ref region_name,
                     span,
                     ..
@@ -3036,7 +3036,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 name,
                 BorrowExplanation::MustBeValidFor {
                     category: ConstraintCategory::Assignment,
-                    from_closure: false,
+                    from_closure: false, //nordh
                     region_name:
                         RegionName {
                             source: RegionNameSource::AnonRegionFromUpvar(upvar_span, upvar_name),
@@ -3083,7 +3083,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             category,
             span,
             ref opt_place_desc,
-            from_closure: false,
+            from_closure: false, //nordh
             ..
         } = explanation
             && let Err(diag) = self.try_report_cannot_return_reference_to_local(

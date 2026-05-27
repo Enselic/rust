@@ -716,7 +716,7 @@ impl<'tcx, T: TypeVisitable<TyCtxt<'tcx>>> TypeVisitable<TyCtxt<'tcx>> for &'tcx
 /// (e.g., `<T>::Item` or `<T as Trait>::Item`).
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, TyEncodable, TyDecodable)]
 #[derive(StableHash, TypeFoldable, TypeVisitable)]
-pub struct UserArgs<'tcx> {
+pub struct  UserArgs<'tcx> {
     /// The args for the item as given by the user.
     pub args: GenericArgsRef<'tcx>,
 

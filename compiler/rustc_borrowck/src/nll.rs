@@ -53,7 +53,7 @@ pub(crate) struct NllOutput<'tcx> {
 /// regions (e.g., region parameters) declared on the function. That set will need to be given to
 /// `compute_regions`.
 #[instrument(skip(infcx, body, promoted), level = "debug")]
-pub(crate) fn replace_regions_in_mir<'tcx>(
+pub(crate) fn  replace_regions_in_mir<'tcx>(
     infcx: &BorrowckInferCtxt<'tcx>,
     body: &mut Body<'tcx>,
     promoted: &mut IndexSlice<Promoted, Body<'tcx>>,

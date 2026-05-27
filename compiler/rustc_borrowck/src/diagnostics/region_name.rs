@@ -601,7 +601,7 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
     /// keep track of the **closest** type we've found. If we fail to
     /// find the exact `&` or `'_` to highlight, then we may fall back
     /// to highlighting that closest type instead.
-    fn highlight_if_we_can_match_hir_ty(
+    fn highlight_if_we_can_match_hir_ty( // nordh
         &self,
         needle_fr: RegionVid,
         ty: Ty<'tcx>,
