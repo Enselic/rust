@@ -118,7 +118,7 @@ pub enum ConstraintCategory<'tcx> {
     },
 
     /// Contains the function and arg index if available.
-    CallArgument(CallArgumentConstraintCategory<'tcx>),
+    CallArgument(Option<CallArgumentConstraintCategory<'tcx>>),
     CopyBound,
     SizedBound,
     Assignment,
@@ -178,6 +178,20 @@ pub enum AnnotationSource {
 pub struct CallArgumentConstraintCategory<'tcx> {
     fn_ty: Ty<'tcx>,
     arg_index: usize,
+}
+
+impl<'tcx> CallArgumentConstraintCategory<'tcx> {
+    pub fn new(fn_ty: Ty<'tcx>, arg_index: usize) -> Self {
+        Self { fn_ty, arg_index }
+    }
+
+    pub fn fn_ty(self) -> Ty<'tcx> {
+        self.fn_ty
+    }
+
+    pub fn arg_index(self) -> usize {
+        self.arg_index
+    }
 }
 
 /// The constituent parts of a mir constant of kind ADT or array.

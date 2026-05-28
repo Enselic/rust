@@ -457,9 +457,10 @@ impl<'tcx> BorrowExplanation<'tcx> {
     ) {
         // We only have a fn to add if the constraint comes from a call argument
         // of said fn.
-        let ConstraintCategory::CallArgument(Some((fn_, _arg_index))) = *category else {
+        let ConstraintCategory::CallArgument(Some(call_arg_category)) = *category else {
             return;
         };
+        let fn_ = call_arg_category.fn_ty();
         let ty::FnDef(fn_def_id, _args) = fn_.kind() else {
             return;
         };

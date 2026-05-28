@@ -247,7 +247,9 @@ impl<'tcx> TypeVisitor<TyCtxt<'tcx>> for FindOpaqueRegion<'_, 'tcx> {
                 {
                     for constraint in path {
                         // If we find a call in this path, then check if it defines the opaque.
-                        if let ConstraintCategory::CallArgument(Some(call_ty)) = constraint.category
+                        if let ConstraintCategory::CallArgument(Some(call_arg_category)) =
+                            constraint.category
+                            && let call_ty = call_arg_category.fn_ty()
                             && let ty::FnDef(call_def_id, _) = *call_ty.kind()
                             // This function defines the opaque :D
                             && call_def_id == parent
