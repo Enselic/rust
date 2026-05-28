@@ -177,20 +177,20 @@ pub enum AnnotationSource {
 #[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
 pub struct CallArgumentConstraintCategory<'tcx> {
     fn_ty: Ty<'tcx>,
-    arg_index: usize,
+    arg_span: Span,
 }
 
 impl<'tcx> CallArgumentConstraintCategory<'tcx> {
-    pub fn new(fn_ty: Ty<'tcx>, arg_index: usize) -> Self {
-        Self { fn_ty, arg_index }
+    pub fn new(fn_ty: Ty<'tcx>, arg_span: Span) -> Self {
+        Self { fn_ty, arg_span }
     }
 
     pub fn fn_ty(self) -> Ty<'tcx> {
         self.fn_ty
     }
 
-    pub fn arg_index(self) -> usize {
-        self.arg_index
+    pub fn arg_span(self) -> Span {
+        self.arg_span
     }
 }
 

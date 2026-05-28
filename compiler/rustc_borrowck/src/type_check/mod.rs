@@ -2043,7 +2043,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
             let category = if call_source.from_hir_call() {
                 ConstraintCategory::CallArgument(Some(CallArgumentConstraintCategory::new(
-                    func_ty, n,
+                    func_ty, op_arg.span,
                 )))
             } else {
                 ConstraintCategory::Boring

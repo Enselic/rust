@@ -460,14 +460,10 @@ impl<'tcx> BorrowExplanation<'tcx> {
         let ConstraintCategory::CallArgument(Some(call_arg_category)) = *category else {
             return;
         };
-        let fn_ = call_arg_category.fn_ty();
-        let ty::FnDef(fn_def_id, _args) = fn_.kind() else {
-            return;
-        };
 
         // If the fn span is already partially (or fully) included in the
         // diagnostic, we don't need to add it again.
-        let fn_span = tcx.def_span(*fn_def_id);
+        let fn_span = call_arg_category.arg_span();
         if err.any_span_overlaps(fn_span) {
             return;
         }
@@ -526,7 +522,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         }
 
-        err.span_note(fn_span, format!("{} defined here", tcx.def_descr(*fn_def_id)));
+        err.span_note(fn_span, format!("arg defined here"));
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(
