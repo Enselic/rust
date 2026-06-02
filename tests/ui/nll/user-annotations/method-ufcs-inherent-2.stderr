@@ -14,11 +14,11 @@ LL |     let x = A::<'a>::new::<&'a u32>(&v, &v);
 LL | }
    | - `v` dropped here while still borrowed
    |
-note: associated function defined here
-  --> $DIR/method-ufcs-inherent-2.rs:7:5
+note: arg defined here
+  --> $DIR/method-ufcs-inherent-2.rs:14:37
    |
-LL |     fn new<'b, T>(x: &'a u32, y: T) -> Self {
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+LL |     let x = A::<'a>::new::<&'a u32>(&v, &v);
+   |                                     ^^
 
 error[E0597]: `v` does not live long enough
   --> $DIR/method-ufcs-inherent-2.rs:14:41
@@ -36,11 +36,11 @@ LL |     let x = A::<'a>::new::<&'a u32>(&v, &v);
 LL | }
    | - `v` dropped here while still borrowed
    |
-note: associated function defined here
-  --> $DIR/method-ufcs-inherent-2.rs:7:5
+note: arg defined here
+  --> $DIR/method-ufcs-inherent-2.rs:14:41
    |
-LL |     fn new<'b, T>(x: &'a u32, y: T) -> Self {
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+LL |     let x = A::<'a>::new::<&'a u32>(&v, &v);
+   |                                         ^^
 
 error: aborting due to 2 previous errors
 

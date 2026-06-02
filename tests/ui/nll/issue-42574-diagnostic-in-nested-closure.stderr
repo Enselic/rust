@@ -22,6 +22,12 @@ LL |     || doit(data);
 ...
 LL | }
    |  - `data` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/issue-42574-diagnostic-in-nested-closure.rs:7:13
+   |
+LL |     || doit(data);
+   |             ^^^^
 
 error: aborting due to 2 previous errors
 

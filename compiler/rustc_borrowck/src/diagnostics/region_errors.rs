@@ -937,7 +937,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         let tcx = self.infcx.tcx;
 
-        let ConstraintCategory::CallArgument(Some(call_arg_category)) = category else { return };
+        let ConstraintCategory::CallArgument(Some(call_arg_category)) = category else { return }; // nordh
         let func_ty = call_arg_category.fn_ty();
         let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
         debug!(?fn_did, ?args);
@@ -946,7 +946,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
         debug!("ty: {:?}, ty.kind: {:?}", ty, ty.kind());
         if let ty::Closure(_, _) = ty.kind() {
-            return;
+            return; 
         }
         let Ok(Some(instance)) = ty::Instance::try_resolve(
             tcx,

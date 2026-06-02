@@ -11,6 +11,12 @@ LL |     FUN(&x);
 ...
 LL | }
    | - `x` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/constant-in-expr-inherent-2.rs:23:9
+   |
+LL |     FUN(&x);
+   |         ^^
 
 error[E0597]: `x` does not live long enough
   --> $DIR/constant-in-expr-inherent-2.rs:24:23
@@ -26,6 +32,12 @@ LL |     A::ASSOCIATED_FUN(&x);
 ...
 LL | }
    | - `x` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/constant-in-expr-inherent-2.rs:24:23
+   |
+LL |     A::ASSOCIATED_FUN(&x);
+   |                       ^^
 
 error[E0597]: `x` does not live long enough
   --> $DIR/constant-in-expr-inherent-2.rs:25:28
@@ -41,6 +53,12 @@ LL |     B::ALSO_ASSOCIATED_FUN(&x);
 LL |     <_>::TRAIT_ASSOCIATED_FUN(&x);
 LL | }
    | - `x` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/constant-in-expr-inherent-2.rs:25:28
+   |
+LL |     B::ALSO_ASSOCIATED_FUN(&x);
+   |                            ^^
 
 error[E0597]: `x` does not live long enough
   --> $DIR/constant-in-expr-inherent-2.rs:26:31
@@ -55,6 +73,12 @@ LL |     <_>::TRAIT_ASSOCIATED_FUN(&x);
    |     argument requires that `x` is borrowed for `'static`
 LL | }
    | - `x` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/constant-in-expr-inherent-2.rs:26:31
+   |
+LL |     <_>::TRAIT_ASSOCIATED_FUN(&x);
+   |                               ^^
 
 error: aborting due to 4 previous errors
 

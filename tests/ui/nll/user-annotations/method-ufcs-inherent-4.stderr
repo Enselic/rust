@@ -13,6 +13,12 @@ LL |     let x = <A<'x>>::new::<&'x u32>(&v, &v);
 ...
 LL | }
    | - `v` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/method-ufcs-inherent-4.rs:15:37
+   |
+LL |     let x = <A<'x>>::new::<&'x u32>(&v, &v);
+   |                                     ^^
 
 error[E0597]: `v` does not live long enough
   --> $DIR/method-ufcs-inherent-4.rs:15:41
@@ -29,6 +35,12 @@ LL |     let x = <A<'x>>::new::<&'x u32>(&v, &v);
 ...
 LL | }
    | - `v` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/method-ufcs-inherent-4.rs:15:41
+   |
+LL |     let x = <A<'x>>::new::<&'x u32>(&v, &v);
+   |                                         ^^
 
 error: aborting due to 2 previous errors
 

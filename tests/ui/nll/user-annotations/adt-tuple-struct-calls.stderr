@@ -54,6 +54,12 @@ LL |         f(&c);
    |         argument requires that `c` is borrowed for `'1`
 LL |     };
    |     - `c` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/adt-tuple-struct-calls.rs:53:11
+   |
+LL |         f(&c);
+   |           ^^
 
 error: aborting due to 4 previous errors
 

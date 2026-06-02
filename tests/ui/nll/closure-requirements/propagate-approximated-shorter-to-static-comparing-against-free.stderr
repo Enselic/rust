@@ -75,6 +75,11 @@ note: requirement that the value outlives `'static` introduced here
    |
 LL |     F: for<'x> FnOnce(Cell<&'a u32>, Cell<&'x u32>),
    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: arg defined here
+  --> $DIR/propagate-approximated-shorter-to-static-comparing-against-free.rs:36:9
+   |
+LL |         cell_x.set(cell_a.get()); // forces 'a: 'x, implies 'a = 'static -> borrow error
+   |         ^^^^^^
 
 error: aborting due to 2 previous errors
 

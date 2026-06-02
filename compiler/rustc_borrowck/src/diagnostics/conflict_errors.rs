@@ -3046,7 +3046,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ..
                 },
             ) => self.report_escaping_data(borrow_span, &name, upvar_span, upvar_name, span),
-            (Some(name), explanation) => self.report_local_value_does_not_live_long_enough(
+            (Some(name), explanation) => self.report_local_value_does_not_live_long_enough( // <-- nordh
                 location,
                 &name,
                 borrow,

@@ -11,6 +11,12 @@ LL |     FOO(&n);
 LL |
 LL | }
    | - `n` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/issue-69114-static-ty.rs:7:5
+   |
+LL |     FOO(&n);
+   |     ^^^
 
 error: aborting due to 1 previous error
 

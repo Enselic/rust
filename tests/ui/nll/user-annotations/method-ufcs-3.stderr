@@ -10,6 +10,12 @@ LL |     <_ as Bazoom<_>>::method::<&'static u32>(&a, b, &c);
    |     argument requires that `c` is borrowed for `'static`
 LL | }
    | - `c` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/method-ufcs-3.rs:36:53
+   |
+LL |     <_ as Bazoom<_>>::method::<&'static u32>(&a, b, &c);
+   |                                                     ^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/method-ufcs-3.rs:43:48
@@ -26,6 +32,12 @@ LL |     <_ as Bazoom<_>>::method::<&'a u32>(&a, b, &c);
    |     argument requires that `c` is borrowed for `'a`
 LL | }
    | - `c` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/method-ufcs-3.rs:43:48
+   |
+LL |     <_ as Bazoom<_>>::method::<&'a u32>(&a, b, &c);
+   |                                                ^^
 
 error[E0597]: `c` does not live long enough
   --> $DIR/method-ufcs-3.rs:57:52
@@ -42,6 +54,12 @@ LL |         <_ as Bazoom<_>>::method::<&'a u32>(&a, b, &c);
    |         argument requires that `c` is borrowed for `'a`
 LL |     };
    |     - `c` dropped here while still borrowed
+   |
+note: arg defined here
+  --> $DIR/method-ufcs-3.rs:57:52
+   |
+LL |         <_ as Bazoom<_>>::method::<&'a u32>(&a, b, &c);
+   |                                                    ^^
 
 error: aborting due to 3 previous errors
 

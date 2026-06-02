@@ -461,66 +461,12 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        // If the fn span is already partially (or fully) included in the
-        // diagnostic, we don't need to add it again.
+        // // If the fn span is already partially (or fully) included in the
+        // // diagnostic, we don't need to add it again.
         let fn_span = call_arg_category.arg_span();
-        if err.any_span_overlaps(fn_span) {
-            return;
-        }
-
-        // If the function declaration includes `region_name`, the chance is
-        // high that it contributes useful context.
-        let Some(fn_node) = tcx.hir_get_if_local(*fn_def_id) else {
-            return;
-        };
-
-        struct RegionNameInHirVisitor<'tcx> {
-            tcx: TyCtxt<'tcx>,
-            needle: rustc_span::Symbol,
-            found: bool,
-        }
-
-        impl<'tcx> Visitor<'tcx> for RegionNameInHirVisitor<'tcx> {
-            type NestedFilter = rustc_middle::hir::nested_filter::OnlyBodies;
-
-            fn maybe_tcx(&mut self) -> Self::MaybeTyCtxt {
-                self.tcx
-            }
-
-            fn visit_generic_param(&mut self, param: &'tcx hir::GenericParam<'tcx>) {
-                if matches!(param.kind, hir::GenericParamKind::Lifetime { .. })
-                    && param.name.ident().name == self.needle
-                {
-                    self.found = true;
-                } else {
-                    hir::intravisit::walk_generic_param(self, param);
-                }
-            }
-
-            fn visit_lifetime(&mut self, lifetime: &'tcx hir::Lifetime) {
-                self.found |= match lifetime.kind {
-                    hir::LifetimeKind::Static => self.needle == kw::StaticLifetime,
-                    hir::LifetimeKind::Param(def_id) => {
-                        self.tcx.item_name(def_id.to_def_id()) == self.needle
-                    }
-                    _ => false,
-                };
-            }
-        }
-
-        let mut region_name_visitor =
-            RegionNameInHirVisitor { tcx, needle: region_name.name, found: false };
-        match fn_node {
-            hir::Node::Item(item) => region_name_visitor.visit_item(item),
-            hir::Node::TraitItem(item) => region_name_visitor.visit_trait_item(item),
-            hir::Node::ImplItem(item) => region_name_visitor.visit_impl_item(item),
-            hir::Node::ForeignItem(item) => region_name_visitor.visit_foreign_item(item),
-            _ => return,
-        }
-
-        if !region_name_visitor.found {
-            return;
-        }
+        // if err.any_span_overlaps(fn_span) {
+        //     return;
+        // }
 
         err.span_note(fn_span, format!("arg defined here"));
     }
