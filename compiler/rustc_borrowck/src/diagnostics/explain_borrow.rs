@@ -451,10 +451,37 @@ impl<'tcx> BorrowExplanation<'tcx> {
     fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
         &self,
         err: &mut Diag<'_, G>,
+        cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         category: &ConstraintCategory<'tcx>,
         region_name: &RegionName,
     ) {
+
+        let ConstraintCategory::CallArgument(Some(call_arg_category)) = category else { return }; // nordh
+        let func_ty = call_arg_category.fn_ty();
+        let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
+        debug!(?fn_did, ?args);
+
+        // Only suggest this on function calls, not closures
+        let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
+        debug!("ty: {:?}, ty.kind: {:?}", ty, ty.kind());
+        if let ty::Closure(_, _) = ty.kind() {
+            return; 
+        }
+        let Ok(Some(instance)) = ty::Instance::try_resolve(
+            tcx,
+            cx.infcx.typing_env(cx.infcx.param_env),
+            fn_did,
+            cx.infcx.resolve_vars_if_possible(args),
+        ) else {
+            return;
+        };
+
+        let Some(param) = find_param_with_region(tcx, self.mir_def_id(), f, o) else {
+            return;
+        };
+        debug!(?param);
+
         // We only have a fn to add if the constraint comes from a call argument
         // of said fn.
         let ConstraintCategory::CallArgument(Some(call_arg_category)) = *category else {
