@@ -458,9 +458,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         category: &ConstraintCategory<'tcx>,
-        region_name: &RegionName,
-                borrow: &BorrowData<'tcx>,
-
+        _region_name: &RegionName,
+        borrow: &BorrowData<'tcx>,
     ) {
 
         let ConstraintCategory::CallArgument(Some(call_arg_category)) = category else { return }; // nordh
@@ -472,9 +471,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
         let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
         debug!("ty: {:?}, ty.kind: {:?}", ty, ty.kind());
         if let ty::Closure(_, _) = ty.kind() {
-            return; 
+            return;
         }
-        let Ok(Some(instance)) = ty::Instance::try_resolve(
+        let Ok(Some(_instance)) = ty::Instance::try_resolve(
             tcx,
             cx.infcx.typing_env(cx.infcx.param_env),
             fn_did,
@@ -483,7 +482,12 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        let Some(param) = find_param_with_region(tcx, cx.mir_def_id(), borrow.region, borrow.region) else { // nordh compile
+        let Some(borrow_region) = cx.to_error_region(borrow.region) else {
+            return;
+        };
+        let Some(param) =
+            find_param_with_region(tcx, cx.mir_def_id(), borrow_region, borrow_region)
+        else {
             return;
         };
         debug!(?param);
