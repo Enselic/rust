@@ -65,6 +65,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
         borrow_desc: &str,
         borrow_span: Option<Span>,
         multiple_borrow_span: Option<(Span, Span)>,
+        borrow: &BorrowData<'tcx>,
     ) {
         let tcx = cx.infcx.tcx;
         let body = cx.body;

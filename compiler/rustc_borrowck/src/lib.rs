@@ -1437,7 +1437,8 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, '_, 'tcx> {
                     session_diagnostics::TailExprDropOrder {
                         borrowed,
                         callback: |diag| {
-                            explain.add_explanation_to_diagnostic(&this, diag, "", None, None);
+                            explain
+                                .add_explanation_to_diagnostic(&this, diag, "", None, None, borrow);
                         },
                     },
                 );
