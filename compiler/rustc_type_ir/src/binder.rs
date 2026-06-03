@@ -430,7 +430,7 @@ impl<I: Interner, T> EarlyBinder<I, T> {
     /// before using this function.
     ///
     /// Only use this to extract data that does not depend on generic parameters, e.g.
-    /// to get the `DefId` of the inner value or the number of arguments ofan `FnSig`,
+    /// to get the `DefId` of the inner value or the number of arguments of an `FnSig`,
     /// or while making sure to only pass the value to functions which are explicitly
     /// set up to handle these uninstantiated generic parameters.
     ///
