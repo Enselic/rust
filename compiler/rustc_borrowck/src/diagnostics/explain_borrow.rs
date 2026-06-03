@@ -14,6 +14,7 @@ use rustc_middle::mir::{
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
+use rustc_trait_selection::error_reporting::infer::nice_region_error::find_param_with_region;
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
 use tracing::{debug, instrument};
@@ -428,7 +429,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 if !preds.is_empty() {
                     let s = if preds.len() == 1 { "" } else { "s" };
                     err.span_note(
-                        preds,
+                        preds.clone(),
                         format!(
                             "requirement{s} that the value outlives `{region_name}` introduced here"
                         ),
@@ -436,9 +437,80 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
+                self.maybe_add_fn_definition_note_for_call_arg(
+                    err,
+                    cx,
+                    tcx,
+                    &category,
+                    region_name,
+                    borrow,
+                    path,
+                );
             }
             _ => {}
         }
+    }
+
+    /// If the constraint comes from a call argument, check if we should add the
+    /// function definition as a note, for additional context.
+    fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
+        &self,
+        err: &mut Diag<'_, G>,
+        cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
+        tcx: TyCtxt<'tcx>,
+        category: &ConstraintCategory<'tcx>,
+        _region_name: &RegionName,
+        borrow: &BorrowData<'tcx>,
+        path: &Vec<OutlivesConstraint<'tcx>>,
+    ) {
+        for constraint in path {
+            // If we find a call in this path, then check if it defines the opaque.
+            if let ConstraintCategory::CallArgument(Some(func_ty)) = constraint.category
+                && let ty::FnDef(fn_did, args) = *func_ty.kind()
+            {
+                let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
+                debug!("ty: {:?}, ty.kind: {:?}", ty, ty.kind());
+                if let ty::Closure(_, _) = ty.kind() {
+                    return;
+                }
+                let Ok(Some(_instance)) = ty::Instance::try_resolve(
+                    tcx,
+                    cx.infcx.typing_env(cx.infcx.param_env),
+                    fn_did,
+                    cx.infcx.resolve_vars_if_possible(args),
+                ) else {
+                    return;
+                };
+
+                let Some(borrow_region) = cx.to_error_region(borrow.region) else {
+                    return;
+                };
+                let Some(param) =
+                    find_param_with_region(tcx, cx.mir_def_id(), borrow_region, borrow_region)
+                else {
+                    return;
+                };
+                debug!(?param);
+            }
+        }
+
+        // let ConstraintCategory::CallArgument(Some(func_ty)) = category else { return }; // nordh
+        // let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
+        // debug!(?fn_did, ?args);
+
+        // Only suggest this on function calls, not closures
+
+        // We only have a fn to add if the constraint comes from a call argument
+        // of said fn.
+
+        // // If the fn span is already partially (or fully) included in the
+        // // diagnostic, we don't need to add it again.
+        let fn_span = call_arg_category.arg_span();
+        if err.any_span_overlaps(fn_span) {
+            return;
+        }
+
+        err.span_note(param.param_ty_span, format!("arg defined here NORDH"));
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(
