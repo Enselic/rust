@@ -443,6 +443,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     tcx,
                     &category,
                     region_name,
+                    borrow,
                 );
             }
             _ => {}
@@ -458,6 +459,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
         tcx: TyCtxt<'tcx>,
         category: &ConstraintCategory<'tcx>,
         region_name: &RegionName,
+                borrow: &BorrowData<'tcx>,
+
     ) {
 
         let ConstraintCategory::CallArgument(Some(call_arg_category)) = category else { return }; // nordh
@@ -480,7 +483,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        let Some(param) = find_param_with_region(tcx, cx.mir_def_id(), f, o) else { // nordh compile
+        let Some(param) = find_param_with_region(tcx, cx.mir_def_id(), borrow.region, borrow.region) else { // nordh compile
             return;
         };
         debug!(?param);
