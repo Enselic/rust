@@ -14,6 +14,7 @@ use rustc_middle::mir::{
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
+use rustc_trait_selection::error_reporting::infer::nice_region_error::find_param_with_region;
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
 use tracing::{debug, instrument};
@@ -437,6 +438,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
                 self.maybe_add_fn_definition_note_for_call_arg(
                     err,
+                    cx,
                     tcx,
                     &category,
                     region_name,
@@ -477,7 +479,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             return;
         };
 
-        let Some(param) = find_param_with_region(tcx, self.mir_def_id(), f, o) else {
+        let Some(param) = find_param_with_region(tcx, cx.mir_def_id(), f, o) else { // nordh compile
             return;
         };
         debug!(?param);
