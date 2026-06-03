@@ -482,7 +482,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     return;
                 };
 
-                let Some(borrow_region) = cx.to_error_region(borrow.region) else {
+                let Some(borrow_region) = cx.to_error_region(constraint.sup) else {
                     return;
                 };
                 let Some(param) =
@@ -491,6 +491,14 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     return;
                 };
                 debug!(?param);
+
+                let fn_span = param.param_ty_span;
+                if err.any_span_overlaps(fn_span) {
+                    return;
+                }
+
+                // todo: arg_span
+                err.span_note(fn_span, format!("arg defined here NORDH"));
             }
         }
 
@@ -505,12 +513,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         // // If the fn span is already partially (or fully) included in the
         // // diagnostic, we don't need to add it again.
-        let fn_span = call_arg_category.arg_span();
-        if err.any_span_overlaps(fn_span) {
-            return;
-        }
-
-        err.span_note(param.param_ty_span, format!("arg defined here NORDH"));
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(
