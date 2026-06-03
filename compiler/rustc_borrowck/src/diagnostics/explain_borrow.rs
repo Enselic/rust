@@ -494,18 +494,15 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         // We only have a fn to add if the constraint comes from a call argument
         // of said fn.
-        let ConstraintCategory::CallArgument(Some(call_arg_category)) = *category else {
-            return;
-        };
 
         // // If the fn span is already partially (or fully) included in the
         // // diagnostic, we don't need to add it again.
         let fn_span = call_arg_category.arg_span();
-        // if err.any_span_overlaps(fn_span) {
-        //     return;
-        // }
+        if err.any_span_overlaps(fn_span) {
+            return;
+        }
 
-        err.span_note(fn_span, format!("arg defined here"));
+        err.span_note(param.param_ty_span, format!("arg defined here NORDH"));
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(
