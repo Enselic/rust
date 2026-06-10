@@ -451,7 +451,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
     }
 
     #[instrument(skip(self), level = "debug")]
-    fn relate_type_and_user_type(
+    fn relate_type_and_user_type( // nordh
         &mut self,
         a: Ty<'tcx>,
         v: ty::Variance,
@@ -831,6 +831,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                 );
 
                 let sig = self.deeply_normalize(unnormalized_sig, term_location);
+                debug!(?sig);
                 // HACK(#114936): `WF(sig)` does not imply `WF(normalized(sig))`
                 // with built-in `Fn` implementations, since the impl may not be
                 // well-formed itself.

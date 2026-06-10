@@ -520,7 +520,7 @@ pub enum RegionVariableOrigin<'tcx> {
 pub enum NllRegionVariableOrigin<'tcx> {
     /// During NLL region processing, we create variables for free
     /// regions that we encounter in the function signature and
-    /// elsewhere. This origin indices we've got one of those.
+    /// elsewhere. This origin indicates we've got one of those.
     FreeRegion,
 
     /// "Universal" instantiation of a higher-ranked region (e.g.,

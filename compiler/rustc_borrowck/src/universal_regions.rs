@@ -271,7 +271,7 @@ impl<'tcx> UniversalRegions<'tcx> {
     /// Creates a new and fully initialized `UniversalRegions` that
     /// contains indices for all the free regions found in the given
     /// MIR -- that is, all the regions that appear in the function's
-    /// signature.
+    /// signature. fixup? nordh
     pub(crate) fn new(infcx: &BorrowckInferCtxt<'tcx>, mir_def: LocalDefId) -> Self {
         UniversalRegionsBuilder { infcx, mir_def }.build()
     }
