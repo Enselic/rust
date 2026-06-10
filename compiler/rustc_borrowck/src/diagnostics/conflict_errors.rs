@@ -18,10 +18,10 @@ use rustc_hir::{
 use rustc_middle::bug;
 use rustc_middle::hir::nested_filter::OnlyBodies;
 use rustc_middle::mir::{
-    self, AggregateKind, BindingForm, BorrowKind, ClearCrossCrate, ConstraintCategory,
-    FakeBorrowKind, FakeReadCause, LocalDecl, LocalInfo, LocalKind, Location, MutBorrowKind,
-    Operand, Place, PlaceRef, PlaceTy, ProjectionElem, Rvalue, Statement, StatementKind,
-    Terminator, TerminatorKind, VarBindingForm, VarDebugInfoContents,
+    self, AggregateKind, ArgumentSource, BindingForm, BorrowKind, ClearCrossCrate,
+    ConstraintCategory, FakeBorrowKind, FakeReadCause, LocalDecl, LocalInfo, LocalKind, Location,
+    MutBorrowKind, Operand, Place, PlaceRef, PlaceTy, ProjectionElem, Rvalue, Statement,
+    StatementKind, Terminator, TerminatorKind, VarBindingForm, VarDebugInfoContents,
 };
 use rustc_middle::ty::print::PrintTraitRefExt as _;
 use rustc_middle::ty::{
@@ -3006,7 +3006,10 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                         name: self.synthesize_region_name(),
                         source: RegionNameSource::Static,
                     },
-                    ConstraintCategory::CallArgument(None),
+                    ConstraintCategory::CallArgument(ArgumentSource {
+                        ty: self.infcx.tcx.types.unit,
+                        arg_idx: 0,
+                    }),
                     var_or_use_span,
                     &format!("`{name}`"),
                     "block",

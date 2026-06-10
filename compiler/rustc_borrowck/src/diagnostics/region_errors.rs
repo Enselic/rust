@@ -937,7 +937,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         let tcx = self.infcx.tcx;
 
-        let ConstraintCategory::CallArgument(Some(func_ty)) = category else { return };
+        let ConstraintCategory::CallArgument(source) = category else { return };
+        let func_ty = source.ty;
         let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
         debug!(?fn_did, ?args);
 

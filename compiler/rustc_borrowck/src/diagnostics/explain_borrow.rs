@@ -66,8 +66,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
         borrow_desc: &str,
         borrow_span: Option<Span>,
         multiple_borrow_span: Option<(Span, Span)>,
-        borrow: &BorrowData<'tcx>,
+        _borrow: &BorrowData<'tcx>,
     ) {
+        let _ = _borrow;
         let tcx = cx.infcx.tcx;
         let body = cx.body;
 
@@ -441,9 +442,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     err,
                     cx,
                     tcx,
-                    &category,
                     region_name,
-                    borrow,
                     path,
                 );
             }
@@ -458,14 +457,13 @@ impl<'tcx> BorrowExplanation<'tcx> {
         err: &mut Diag<'_, G>,
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
-        category: &ConstraintCategory<'tcx>,
         _region_name: &RegionName,
-        borrow: &BorrowData<'tcx>,
         path: &Vec<OutlivesConstraint<'tcx>>,
     ) {
         for constraint in path {
             // If we find a call in this path, then check if it defines the opaque.
-            if let ConstraintCategory::CallArgument(Some(func_ty)) = constraint.category
+            if let ConstraintCategory::CallArgument(source) = constraint.category
+                && let func_ty = source.ty
                 && let ty::FnDef(fn_did, args) = *func_ty.kind()
             {
                 let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
@@ -502,7 +500,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
             }
         }
 
-        // let ConstraintCategory::CallArgument(Some(func_ty)) = category else { return }; // nordh
+        // let ConstraintCategory::CallArgument(source) = category else { return }; // nordh
+        // let func_ty = source.ty;
         // let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
         // debug!(?fn_did, ?args);
 

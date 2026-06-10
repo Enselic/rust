@@ -101,6 +101,13 @@ pub struct ConstQualifs {
 /// See also `rustc_const_eval::borrow_check::constraints`.
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 #[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
+pub struct ArgumentSource<'tcx> {
+    pub ty: Ty<'tcx>,
+    pub arg_idx: u64,
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
 pub enum ConstraintCategory<'tcx> {
     Return(ReturnConstraint),
     Yield,
@@ -116,8 +123,8 @@ pub enum ConstraintCategory<'tcx> {
         unsize_to: Option<Ty<'tcx>>,
     },
 
-    /// Contains the function type if available.
-    CallArgument(Option<Ty<'tcx>>),
+    /// Contains source call metadata for argument diagnostics.
+    CallArgument(ArgumentSource<'tcx>),
     CopyBound,
     SizedBound,
     Assignment,
