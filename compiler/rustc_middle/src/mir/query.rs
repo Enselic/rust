@@ -10,7 +10,7 @@ use rustc_macros::{StableHash, TyDecodable, TyEncodable, TypeFoldable, TypeVisit
 use rustc_span::{Span, Symbol};
 
 use super::{ConstValue, SourceInfo};
-use crate::ty::{self, CoroutineArgsExt, Ty};
+use crate::ty::{self, CoroutineArgsExt, Ty, TyCtxt};
 
 rustc_index::newtype_index! {
     #[stable_hash]
@@ -103,7 +103,18 @@ pub struct ConstQualifs {
 #[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
 pub struct ArgumentSource<'tcx> {
     pub ty: Ty<'tcx>,
-    pub arg_idx: u64,
+    pub arg_index: usize,
+}
+
+impl<'tcx> ArgumentSource<'tcx> {
+    #[allow(rustc::usage_of_qualified_ty)]
+    pub fn none(tcx: TyCtxt<'tcx>) -> Self {
+        Self { ty: tcx.types.never, arg_index: 0 }
+    }
+
+    pub fn ty(self) -> Option<Ty<'tcx>> {
+        if self.ty.is_never() { None } else { Some(self.ty) }
+    }
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]

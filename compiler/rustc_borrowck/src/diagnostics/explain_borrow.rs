@@ -463,7 +463,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
         for constraint in path {
             // If we find a call in this path, then check if it defines the opaque.
             if let ConstraintCategory::CallArgument(source) = constraint.category
-                && let func_ty = source.ty
+                && let Some(func_ty) = source.ty()
                 && let ty::FnDef(fn_did, args) = *func_ty.kind()
             {
                 let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
@@ -501,7 +501,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
         }
 
         // let ConstraintCategory::CallArgument(source) = category else { return }; // nordh
-        // let func_ty = source.ty;
+        // let Some(func_ty) = source.ty() else { return };
         // let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
         // debug!(?fn_did, ?args);
 

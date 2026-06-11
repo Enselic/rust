@@ -3006,10 +3006,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                         name: self.synthesize_region_name(),
                         source: RegionNameSource::Static,
                     },
-                    ConstraintCategory::CallArgument(ArgumentSource {
-                        ty: self.infcx.tcx.types.unit,
-                        arg_idx: 0,
-                    }),
+                    ConstraintCategory::CallArgument(ArgumentSource::none(self.infcx.tcx)),
                     var_or_use_span,
                     &format!("`{name}`"),
                     "block",
