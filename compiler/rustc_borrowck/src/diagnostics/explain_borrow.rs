@@ -14,7 +14,6 @@ use rustc_middle::mir::{
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
-use rustc_trait_selection::error_reporting::infer::nice_region_error::find_param_with_region;
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
 use tracing::{debug, instrument};
@@ -442,8 +441,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     err,
                     cx,
                     tcx,
-                    region_name,
-                    path,
+                    &category,
                 );
             }
             _ => {}
@@ -457,47 +455,34 @@ impl<'tcx> BorrowExplanation<'tcx> {
         err: &mut Diag<'_, G>,
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
-        _region_name: &RegionName,
-        path: &Vec<OutlivesConstraint<'tcx>>,
+        category: &ConstraintCategory<'tcx>,
     ) {
-        for constraint in path {
-            // If we find a call in this path, then check if it defines the opaque.
-            if let ConstraintCategory::CallArgument(source) = constraint.category
-                && let Some(func_ty) = source.ty()
-                && let ty::FnDef(fn_did, args) = *func_ty.kind()
-            {
-                let ty = tcx.type_of(fn_did).instantiate_identity().skip_norm_wip();
-                debug!("ty: {:?}, ty.kind: {:?}", ty, ty.kind());
-                if let ty::Closure(_, _) = ty.kind() {
-                    return;
-                }
-                let Ok(Some(_instance)) = ty::Instance::try_resolve(
-                    tcx,
-                    cx.infcx.typing_env(cx.infcx.param_env),
-                    fn_did,
-                    cx.infcx.resolve_vars_if_possible(args),
-                ) else {
-                    return;
-                };
+        // If we find a call in this path, then check if it defines the opaque.
+        if let ConstraintCategory::CallArgument(source) = category
+            && let Some(func_ty) = source.ty()
+            && let ty::FnDef(fn_did, args) = *func_ty.kind()
+        {
+            let arg_span = fn_did
+                .as_local()
+                .and_then(|local_def_id| {
+                    let node = tcx.hir_node_by_def_id(local_def_id);
+                    node.fn_decl()?.inputs.get(source.arg_index).map(|arg| arg.span)
+                });
+            let Some(arg_span) = arg_span else {
+                return;
+            };
 
-                let Some(borrow_region) = cx.to_error_region(constraint.sup) else {
-                    return;
-                };
-                let Some(param) =
-                    find_param_with_region(tcx, cx.mir_def_id(), borrow_region, borrow_region)
-                else {
-                    return;
-                };
-                debug!(?param);
-
-                let fn_span = param.param_ty_span;
-                if err.any_span_overlaps(fn_span) {
-                    return;
-                }
-
-                // todo: arg_span
-                err.span_note(fn_span, format!("arg defined here NORDH"));
+            if err.any_span_overlaps(arg_span) {
+                return;
             }
+
+            err.span_note(
+                arg_span,
+                format!(
+                    "argument {} type is defined here",
+                    source.arg_index.saturating_add(1)
+                ),
+            );
         }
 
         // let ConstraintCategory::CallArgument(source) = category else { return }; // nordh
