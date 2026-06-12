@@ -777,7 +777,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                 };
 
                 let func_ty = func.ty(self.body, tcx);
-                debug!("func_ty.kind: {:?}", func_ty.kind());
+                debug!("func_ty: {:?}, func_ty.kind: {:?}", func_ty, func_ty.kind());
 
                 let sig = match func_ty.kind() {
                     ty::FnDef(..) | ty::FnPtr(..) => func_ty.fn_sig(tcx),

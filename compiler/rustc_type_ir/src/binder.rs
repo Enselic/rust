@@ -717,7 +717,7 @@ impl<'a, I: Interner> TypeFolder<I> for ArgFolder<'a, I> {
         // type declarations and other outer declarations, not those
         // bound in *fn types*. Region instantiation of the bound
         // regions that appear in a function signature is done using
-        // the specialized routine `ty::replace_late_regions()`.
+        // the specialized routine `ty::replace_late_regions()`. //nordh
         match r.kind() {
             ty::ReEarlyParam(data) => {
                 let rk = self.args.get(data.index() as usize).map(|arg| arg.kind());

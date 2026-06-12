@@ -308,6 +308,7 @@ impl<I: Interner> TyKind<I> {
         match self {
             ty::FnPtr(sig_tys, hdr) => sig_tys.with(hdr),
             ty::FnDef(def_id, args) => {
+                tracing::debug!("NORDH getting fn_sig for {:?} with args {:?}", def_id, args);
                 interner.fn_sig(def_id).instantiate(interner, args).skip_norm_wip()
             }
             ty::Error(_) => {

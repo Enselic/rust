@@ -437,12 +437,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
-                self.maybe_add_fn_definition_note_for_call_arg(
-                    err,
-                    cx,
-                    tcx,
-                    &category,
-                );
+                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
             }
             _ => {}
         }
@@ -456,33 +451,37 @@ impl<'tcx> BorrowExplanation<'tcx> {
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         category: &ConstraintCategory<'tcx>,
+        path: &[OutlivesConstraint<'tcx>],
     ) {
-        // If we find a call in this path, then check if it defines the opaque.
-        if let ConstraintCategory::CallArgument(source) = category
-            && let Some(func_ty) = source.ty()
-            && let ty::FnDef(fn_did, args) = *func_ty.kind()
-        {
-            let arg_span = fn_did
-                .as_local()
-                .and_then(|local_def_id| {
+        for constraint in path {
+            // If we find a call in this path, then check if it defines the opaque.
+            if let ConstraintCategory::CallArgument(source) = constraint.category
+                && let Some(func_ty) = source.ty()
+                && let ty::FnDef(fn_did, args) = *func_ty.kind()
+            {
+                let arg_span = fn_did.as_local().and_then(|local_def_id| {
                     let node = tcx.hir_node_by_def_id(local_def_id);
-                    node.fn_decl()?.inputs.get(source.arg_index).map(|arg| arg.span)
+                    let arg_hir_ty = node.fn_decl()?.inputs.get(source.arg_index);
+                    // check if constraint.sup is mentioned in arg_hir_ty:
+                    arg_hir_ty.filter(|arg_hir_ty| {
+                        tcx.collect_referenced_late_bound_regions(arg_hir_ty).any(|r| {
+                            r == constraint.sup
+                        })
+                    }).map(|arg_hir_ty| arg_hir_ty.span)
                 });
-            let Some(arg_span) = arg_span else {
-                return;
-            };
+                let Some(arg_span) = arg_span else {
+                    return;
+                };
 
-            if err.any_span_overlaps(arg_span) {
-                return;
+                if err.any_span_overlaps(arg_span) {
+                    return;
+                }
+
+                err.span_note(
+                    arg_span,
+                    format!("argument {} type is defined here", source.arg_index.saturating_add(1)),
+                );
             }
-
-            err.span_note(
-                arg_span,
-                format!(
-                    "argument {} type is defined here",
-                    source.arg_index.saturating_add(1)
-                ),
-            );
         }
 
         // let ConstraintCategory::CallArgument(source) = category else { return }; // nordh
