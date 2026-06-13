@@ -466,7 +466,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 };
 
                 let region_span = if let ty::Ref(region, _, _) = arg_ty.kind()
-                    && region.as_var() == constraint.sup
+                    && let ty::ReVar(region_vid) = region.kind()
+                    && region_vid == constraint.sup
                 {
                     fn_did.as_local().and_then(|local_def_id| {
                         let node = tcx.hir_node_by_def_id(local_def_id);
