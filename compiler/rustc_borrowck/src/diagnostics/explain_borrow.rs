@@ -448,9 +448,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
     fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
         &self,
         err: &mut Diag<'_, G>,
-        cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
+        _cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
-        category: &ConstraintCategory<'tcx>,
+        _category: &ConstraintCategory<'tcx>,
         path: &[OutlivesConstraint<'tcx>],
     ) {
         for constraint in path {
@@ -459,22 +459,42 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 && let Some(func_ty) = source.ty()
                 && let ty::FnDef(fn_did, args) = *func_ty.kind()
             {
+                // HERE
+                let fn_sig = tcx.fn_sig(fn_did).instantiate(tcx, args).skip_norm_wip();
+                let Some(arg_ty) = fn_sig.inputs().skip_binder().get(source.arg_index).copied() else {
+                    continue;
+                };
+
+                let region_span = if let ty::Ref(region, _, _) = arg_ty.kind()
+                    && region.as_var() == constraint.sup
+                {
+                    fn_did.as_local().and_then(|local_def_id| {
+                        let node = tcx.hir_node_by_def_id(local_def_id);
+                        let arg_hir_ty = node.fn_decl()?.inputs.get(source.arg_index)?;
+                        if let hir::TyKind::Ref(lifetime, _) = arg_hir_ty.kind {
+                            Some(lifetime.ident.span)
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                };
+
+                if let Some(span) = region_span {
+                    debug!(?fn_did, arg_index = source.arg_index, ?arg_ty, ?constraint.sup, ?span);
+                }
+
                 let arg_span = fn_did.as_local().and_then(|local_def_id| {
                     let node = tcx.hir_node_by_def_id(local_def_id);
-                    let arg_hir_ty = node.fn_decl()?.inputs.get(source.arg_index);
-                    // check if constraint.sup is mentioned in arg_hir_ty:
-                    arg_hir_ty.filter(|arg_hir_ty| {
-                        tcx.collect_referenced_late_bound_regions(arg_hir_ty).any(|r| {
-                            r == constraint.sup
-                        })
-                    }).map(|arg_hir_ty| arg_hir_ty.span)
+                    node.fn_decl()?.inputs.get(source.arg_index).map(|arg_hir_ty| arg_hir_ty.span)
                 });
                 let Some(arg_span) = arg_span else {
-                    return;
+                    continue;
                 };
 
                 if err.any_span_overlaps(arg_span) {
-                    return;
+                    continue;
                 }
 
                 err.span_note(
