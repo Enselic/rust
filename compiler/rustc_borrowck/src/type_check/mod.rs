@@ -2044,7 +2044,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
             let category = if call_source.from_hir_call() {
                 ConstraintCategory::CallArgument(ArgumentSource {
-                    ty: self.infcx.tcx.erase_and_anonymize_regions(func_ty),
+                    ty: func_ty,
                     arg_index: n,
                 })
             } else {
