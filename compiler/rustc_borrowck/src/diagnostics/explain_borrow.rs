@@ -448,11 +448,32 @@ impl<'tcx> BorrowExplanation<'tcx> {
     fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
         &self,
         err: &mut Diag<'_, G>,
-        _cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
+        cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         _category: &ConstraintCategory<'tcx>,
         path: &[OutlivesConstraint<'tcx>],
     ) {
+        fn find_static_lifetime_span(hir_ty: &hir::Ty<'_>) -> Option<Span> {
+            struct FindStaticLifetime {
+                span: Option<Span>,
+            }
+
+            impl<'hir> Visitor<'hir> for FindStaticLifetime {
+                fn visit_lifetime(&mut self, lifetime: &'hir hir::Lifetime) {
+                    if self.span.is_none() && lifetime.ident.name == kw::StaticLifetime {
+                        self.span = Some(lifetime.ident.span);
+                    }
+                    hir::intravisit::walk_lifetime(self, lifetime);
+                }
+            }
+
+            let mut finder = FindStaticLifetime { span: None };
+            finder.visit_ty(hir_ty);
+            finder.span
+        }
+
+        let fr_static = cx.regioncx.universal_regions().fr_static;
+
         for constraint in path {
             // If we find a call in this path, then check if it defines the opaque.
             if let ConstraintCategory::CallArgument(source) = constraint.category
@@ -465,13 +486,16 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     continue;
                 };
 
+                let arg_hir_ty = fn_did.as_local().and_then(|local_def_id| {
+                    let node = tcx.hir_node_by_def_id(local_def_id);
+                    node.fn_decl()?.inputs.get(source.arg_index).copied()
+                });
+
                 let region_span = if let ty::Ref(region, _, _) = arg_ty.kind()
                     && let ty::ReVar(region_vid) = region.kind()
                     && region_vid == constraint.sup
                 {
-                    fn_did.as_local().and_then(|local_def_id| {
-                        let node = tcx.hir_node_by_def_id(local_def_id);
-                        let arg_hir_ty = node.fn_decl()?.inputs.get(source.arg_index)?;
+                    arg_hir_ty.and_then(|arg_hir_ty| {
                         if let hir::TyKind::Ref(lifetime, _) = arg_hir_ty.kind {
                             Some(lifetime.ident.span)
                         } else {
@@ -484,6 +508,20 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
                 if let Some(span) = region_span {
                     debug!(?fn_did, arg_index = source.arg_index, ?arg_ty, ?constraint.sup, ?span);
+                }
+
+                if constraint.sup == fr_static
+                    && let Some(arg_hir_ty) = arg_hir_ty
+                    && let Some(static_span) = find_static_lifetime_span(arg_hir_ty)
+                {
+                    debug!(
+                        ?fn_did,
+                        arg_index = source.arg_index,
+                        ?arg_ty,
+                        ?constraint.sup,
+                        ?static_span,
+                        "argument HIR type mentions `'static`"
+                    );
                 }
 
                 let arg_span = fn_did.as_local().and_then(|local_def_id| {
