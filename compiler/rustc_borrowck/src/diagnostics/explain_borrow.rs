@@ -437,7 +437,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
-                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
+                //self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
             }
             _ => {}
         }
