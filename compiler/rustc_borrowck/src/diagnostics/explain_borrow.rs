@@ -454,22 +454,66 @@ impl<'tcx> BorrowExplanation<'tcx> {
         path: &[OutlivesConstraint<'tcx>],
     ) {
         fn find_static_lifetime_span(hir_ty: &hir::Ty<'_>) -> Option<Span> {
-            struct FindStaticLifetime {
-                span: Option<Span>,
+            fn find_static_lifetime_in_lifetime(lifetime: &hir::Lifetime) -> Option<Span> {
+                (lifetime.ident.name == kw::StaticLifetime).then_some(lifetime.ident.span)
             }
 
-            impl<'hir> Visitor<'hir> for FindStaticLifetime {
-                fn visit_lifetime(&mut self, lifetime: &'hir hir::Lifetime) {
-                    if self.span.is_none() && lifetime.ident.name == kw::StaticLifetime {
-                        self.span = Some(lifetime.ident.span);
-                    }
-                    hir::intravisit::walk_lifetime(self, lifetime);
+            fn find_static_lifetime_in_generic_arg(arg: &hir::GenericArg<'_>) -> Option<Span> {
+                match arg {
+                    hir::GenericArg::Lifetime(lifetime) => find_static_lifetime_in_lifetime(lifetime),
+                    hir::GenericArg::Type(ty) => find_static_lifetime_span(ty.as_unambig_ty()),
+                    hir::GenericArg::Const(_) | hir::GenericArg::Infer(_) => None,
                 }
             }
 
-            let mut finder = FindStaticLifetime { span: None };
-            finder.visit_ty(hir_ty);
-            finder.span
+            fn find_static_lifetime_in_path(path: &hir::Path<'_>) -> Option<Span> {
+                path.segments.iter().find_map(|segment| {
+                    segment.args().args.iter().find_map(find_static_lifetime_in_generic_arg)
+                })
+            }
+
+            match &hir_ty.kind {
+                hir::TyKind::Slice(ty)
+                | hir::TyKind::Ptr(hir::MutTy { ty, .. })
+                | hir::TyKind::Array(ty, _)
+                | hir::TyKind::Pat(ty, _)
+                | hir::TyKind::FieldOf(ty, _) => find_static_lifetime_span(ty),
+                hir::TyKind::Ref(lifetime, hir::MutTy { ty, .. }) => {
+                    find_static_lifetime_in_lifetime(lifetime)
+                        .or_else(|| find_static_lifetime_span(ty))
+                }
+                hir::TyKind::FnPtr(fn_ptr_ty) => fn_ptr_ty
+                    .decl
+                    .inputs
+                    .iter()
+                    .find_map(|ty| find_static_lifetime_span(ty))
+                    .or_else(|| match fn_ptr_ty.decl.output {
+                        hir::FnRetTy::DefaultReturn(_) => None,
+                        hir::FnRetTy::Return(ty) => find_static_lifetime_span(ty),
+                    }),
+                hir::TyKind::UnsafeBinder(unsafe_binder_ty) => {
+                    find_static_lifetime_span(unsafe_binder_ty.inner_ty)
+                }
+                hir::TyKind::Tup(tys) => tys.iter().find_map(|ty| find_static_lifetime_span(ty)),
+                hir::TyKind::Path(qpath) => match qpath {
+                    hir::QPath::Resolved(ty, path) => ty
+                        .map(|ty| find_static_lifetime_span(ty))
+                        .flatten()
+                        .or_else(|| find_static_lifetime_in_path(path)),
+                    hir::QPath::TypeRelative(qself, segment) => {
+                        find_static_lifetime_span(qself).or_else(|| {
+                            segment.args().args.iter().find_map(find_static_lifetime_in_generic_arg)
+                        })
+                    }
+                },
+                hir::TyKind::InferDelegation(_)
+                | hir::TyKind::Never
+                | hir::TyKind::Err(_)
+                | hir::TyKind::Infer(_)
+                | hir::TyKind::OpaqueDef(_)
+                | hir::TyKind::TraitObject(_, _)
+                | hir::TyKind::TraitAscription(_) => None,
+            }
         }
 
         let fr_static = cx.regioncx.universal_regions().fr_static;
@@ -512,7 +556,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
                 if constraint.sup == fr_static
                     && let Some(arg_hir_ty) = arg_hir_ty
-                    && let Some(static_span) = find_static_lifetime_span(arg_hir_ty)
+                    && let Some(static_span) = find_static_lifetime_span(&arg_hir_ty)
                 {
                     debug!(
                         ?fn_did,
