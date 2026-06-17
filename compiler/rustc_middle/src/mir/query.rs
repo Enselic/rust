@@ -117,6 +117,11 @@ impl<'tcx> ArgumentSource<'tcx> {
     }
 }
 
+// Make sure this enum doesn't unintentionally grow. It is used a lot during
+// regular, successful compilation.
+#[cfg(target_pointer_width = "64")]
+rustc_data_structures::static_assert_size!(ConstraintCategory<'_>, 24);
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 #[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
 pub enum ConstraintCategory<'tcx> {
@@ -149,7 +154,7 @@ pub enum ConstraintCategory<'tcx> {
     /// with the provided span.
     Predicate(Span),
 
-    /// A "boring" constraint (caused by the given location) is one that
+    /// A "boring" constraint is one that
     /// the user probably doesn't want to see described in diagnostics,
     /// because it is kind of an artifact of the type system setup.
     Boring,
