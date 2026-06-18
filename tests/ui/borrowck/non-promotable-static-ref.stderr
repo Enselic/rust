@@ -6,6 +6,12 @@ LL |     foo(&unpromotable(5u32));
    |     |    |
    |     |    creates a temporary value which is freed while still in use
    |     argument requires that borrow lasts for `'static`
+   |
+note: argument is defined here
+  --> $DIR/non-promotable-static-ref.rs:3:11
+   |
+LL | fn foo(_: &'static u32) {}
+   |           ^^^^^^^^^^^^
 
 error: aborting due to 1 previous error
 

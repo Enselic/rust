@@ -15,6 +15,7 @@ use rustc_hir::intravisit::{Visitor, walk_block, walk_expr};
 use rustc_hir::{
     CoroutineDesugaring, CoroutineKind, CoroutineSource, LangItem, PatField, find_attr,
 };
+use rustc_middle::mir::ArgumentSource;
 use rustc_middle::bug;
 use rustc_middle::hir::nested_filter::OnlyBodies;
 use rustc_middle::mir::{
