@@ -464,7 +464,10 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         let ConstraintCategory::CallArgument(source) = _category else { return };
         let Some(func_ty) = source.ty() else { return };
-        let ty::FnDef(fn_did, _) = *func_ty.kind() else { return };
+        let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
+        if args.len() > 0 {
+            return;
+        }
 
         let Some(arg_span) = tcx.hir_get_if_local(fn_did).and_then(|node| match node {
             hir::Node::Item(item) => match &item.kind {
