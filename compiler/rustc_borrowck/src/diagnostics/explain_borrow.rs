@@ -437,7 +437,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
-                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
+                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category);
             }
             _ => {}
         }
@@ -451,90 +451,47 @@ impl<'tcx> BorrowExplanation<'tcx> {
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         _category: &ConstraintCategory<'tcx>,
-        path: &[OutlivesConstraint<'tcx>],
     ) {
-        if !path.iter().all(|constraint| {
-            matches!(
-                constraint.category,
-                ConstraintCategory::CallArgument(_) | ConstraintCategory::Boring
-            )
-        }) {
+        let ConstraintCategory::CallArgument(source) = _category else { return };
+        let Some(func_ty) = source.ty() else { return };
+        let ty::FnDef(fn_did, _) = *func_ty.kind() else { return };
+
+        let Some(arg_span) = tcx.hir_get_if_local(fn_did).and_then(|node| match node {
+            hir::Node::Item(item) => match &item.kind {
+                hir::ItemKind::Fn { sig, .. } => sig.decl.inputs.get(source.arg_index).map(|ty| ty.span),
+                _ => None,
+            },
+            hir::Node::ImplItem(item) => match &item.kind {
+                hir::ImplItemKind::Fn(sig, _) => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            hir::Node::TraitItem(item) => match &item.kind {
+                hir::TraitItemKind::Fn(sig, _) => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            hir::Node::ForeignItem(item) => match &item.kind {
+                hir::ForeignItemKind::Fn(decl, _, _) => {
+                    decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            _ => None,
+        }) else {
+            return;
+        };
+
+        if err.any_span_overlaps(arg_span) {
             return;
         }
 
-        for constraint in path {
-            // If we find a call in this path, then check if it defines the opaque.
-            if let ConstraintCategory::CallArgument(source) = constraint.category
-                && let Some(func_ty) = source.ty()
-                && let ty::FnDef(fn_did, args) = *func_ty.kind()
-            {
-                // HERE
-                let fn_sig = tcx.fn_sig(fn_did).instantiate(tcx, args).skip_norm_wip();
-                let Some(arg_ty) = fn_sig.inputs().skip_binder().get(source.arg_index).copied() else {
-                    continue;
-                };
-
-                let arg_hir_ty = fn_did.as_local().and_then(|local_def_id| {
-                    let node = tcx.hir_node_by_def_id(local_def_id);
-                    node.fn_decl()?.inputs.get(source.arg_index).copied()
-                });
-
-                let region_span = if let ty::Ref(region, _, _) = arg_ty.kind()
-                    && let ty::ReVar(region_vid) = region.kind()
-                    && region_vid == constraint.sup
-                {
-                    arg_hir_ty.and_then(|arg_hir_ty| {
-                        if let hir::TyKind::Ref(lifetime, _) = arg_hir_ty.kind {
-                            Some(lifetime.ident.span)
-                        } else {
-                            None
-                        }
-                    })
-                } else {
-                    None
-                };
-
-                if let Some(span) = region_span {
-                    debug!(?fn_did, arg_index = source.arg_index, ?arg_ty, ?constraint.sup, ?span);
-                }
-
-                if constraint.sup == fr_static
-                    && let Some(arg_hir_ty) = arg_hir_ty
-                    && let Some(static_span) = find_static_lifetime_span(&arg_hir_ty)
-                {
-                    debug!(
-                        ?fn_did,
-                        arg_index = source.arg_index,
-                        ?arg_ty,
-                        ?constraint.sup,
-                        ?static_span,
-                        "argument HIR type mentions `'static`"
-                    );
-                }
-
-                let arg_span = fn_did.as_local().and_then(|local_def_id| {
-                    let node = tcx.hir_node_by_def_id(local_def_id);
-                    node.fn_decl()?.inputs.get(source.arg_index).map(|arg_hir_ty| arg_hir_ty.span)
-                });
-                let Some(arg_span) = arg_span else {
-                    continue;
-                };
-
-                if err.any_span_overlaps(arg_span) {
-                    continue;
-                }
-
-                err.span_note(
-                    arg_span,
-                    format!("argument {} type is defined here", source.arg_index.saturating_add(1)),
-                );
-            }
-        }
-
-        // let ConstraintCategory::CallArgument(source) = category else { return }; // nordh
-        // let Some(func_ty) = source.ty() else { return };
-        // let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
-        // debug!(?fn_did, ?args);
+        err.span_note(
+            arg_span,
+            format!("argument {} type is defined here", source.arg_index.saturating_add(1)),
+        );
 
         // Only suggest this on function calls, not closures
 
