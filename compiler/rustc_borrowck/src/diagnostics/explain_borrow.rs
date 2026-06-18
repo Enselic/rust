@@ -502,7 +502,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         err.span_note(
             arg_span,
-            format!("argument {} type is defined here", source.arg_index.saturating_add(1)),
+            format!("argument is defined here"),
         );
 
         // Only suggest this on function calls, not closures

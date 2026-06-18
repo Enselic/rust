@@ -11,7 +11,7 @@ LL |     foo(&x);
 LL | }
    | - `x` dropped here while still borrowed
    |
-note: argument 1 type is defined here
+note: argument is defined here
   --> $DIR/static-ref.rs:1:11
    |
 LL | fn foo(_: &'static u32) {}
