@@ -179,12 +179,7 @@ impl RegionName {
                     format!("lifetime `{self}` appears in the `impl`'s {location}"),
                 );
             }
-            RegionNameSource::Static => {
-                diag.span_label(
-                    *span,
-                    format!("nordh static (`{self}`)"),
-                );
-            }
+            RegionNameSource::Static => {}
         }
     }
 }
