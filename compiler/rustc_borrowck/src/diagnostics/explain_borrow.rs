@@ -448,7 +448,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
     fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
         &self,
         err: &mut Diag<'_, G>,
-        cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
+                _cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         _category: &ConstraintCategory<'tcx>,
           path: &[OutlivesConstraint<'tcx>],
@@ -468,7 +468,9 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
         let Some(arg_span) = tcx.hir_get_if_local(fn_did).and_then(|node| match node {
             hir::Node::Item(item) => match &item.kind {
-                hir::ItemKind::Fn { sig, .. } => sig.decl.inputs.get(source.arg_index).map(|ty| ty.span),
+                hir::ItemKind::Fn { sig, .. } => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
                 _ => None,
             },
             hir::Node::ImplItem(item) => match &item.kind {
@@ -485,7 +487,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             },
             hir::Node::ForeignItem(item) => match &item.kind {
                 hir::ForeignItemKind::Fn(decl, _, _) => {
-                    decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                    decl.decl.inputs.get(source.arg_index).map(|ty| ty.span)
                 }
                 _ => None,
             },
