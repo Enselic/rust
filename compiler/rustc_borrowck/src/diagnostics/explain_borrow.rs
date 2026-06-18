@@ -435,9 +435,84 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
+                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
             }
             _ => {}
         }
+    }
+
+    /// If the constraint comes from a call argument, check if we should add the
+    /// function definition as a note, for additional context.
+    fn maybe_add_fn_definition_note_for_call_arg<G: EmissionGuarantee>(
+        &self,
+        err: &mut Diag<'_, G>,
+                _cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
+        tcx: TyCtxt<'tcx>,
+        _category: &ConstraintCategory<'tcx>,
+          path: &[OutlivesConstraint<'tcx>],
+    ) {
+        if !path.iter().all(|constraint| {
+            matches!(
+                constraint.category,
+                ConstraintCategory::CallArgument(_) | ConstraintCategory::Boring
+            )
+        }) {
+            return;
+        }        
+
+        let ConstraintCategory::CallArgument(source) = _category else { return };
+        let Some(func_ty) = source.ty() else { return };
+        let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
+        if args.len() > 0 {
+            return;
+        }
+
+        let Some(arg_span) = tcx.hir_get_if_local(fn_did).and_then(|node| match node {
+            hir::Node::Item(item) => match &item.kind {
+                hir::ItemKind::Fn { sig, .. } => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            hir::Node::ImplItem(item) => match &item.kind {
+                hir::ImplItemKind::Fn(sig, _) => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            hir::Node::TraitItem(item) => match &item.kind {
+                hir::TraitItemKind::Fn(sig, _) => {
+                    sig.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            hir::Node::ForeignItem(item) => match &item.kind {
+                hir::ForeignItemKind::Fn(decl, _, _) => {
+                    decl.decl.inputs.get(source.arg_index).map(|ty| ty.span)
+                }
+                _ => None,
+            },
+            _ => None,
+        }) else {
+            return;
+        };
+
+        if err.any_span_overlaps(arg_span) {
+            return;
+        }
+
+        err.span_note(
+            arg_span,
+            format!("argument is defined here"),
+        );
+
+        // Only suggest this on function calls, not closures
+
+        // We only have a fn to add if the constraint comes from a call argument
+        // of said fn.
+
+        // // If the fn span is already partially (or fully) included in the
+        // // diagnostic, we don't need to add it again.
     }
 
     fn add_object_lifetime_default_note<G: EmissionGuarantee>(

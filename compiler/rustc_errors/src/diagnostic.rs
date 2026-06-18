@@ -323,6 +323,13 @@ impl DiagInner {
         self.children.push(sub);
     }
 
+    // TODO: docs and explain
+    pub fn any_span_overlaps(&self, other_span: Span) -> bool {
+        std::iter::once(&self.span)
+            .chain(self.children.iter().map(|child| &child.span))
+            .any(|span| span.span_labels().iter().any(|label| label.span.overlaps(other_span)))
+    }
+
     pub(crate) fn arg(&mut self, name: impl Into<DiagArgName>, arg: impl IntoDiagArg) {
         let name = name.into();
         let value = arg.into_diag_arg(&mut self.long_ty_path);
