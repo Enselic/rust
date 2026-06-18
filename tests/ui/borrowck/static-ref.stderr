@@ -1,0 +1,22 @@
+error[E0597]: `x` does not live long enough
+  --> $DIR/static-ref.rs:5:9
+   |
+LL |     let x = 5u32;
+   |         - binding `x` declared here
+LL |     foo(&x);
+   |     ----^^-
+   |     |   |
+   |     |   borrowed value does not live long enough
+   |     argument requires that `x` is borrowed for `'static`
+LL | }
+   | - `x` dropped here while still borrowed
+   |
+note: argument 1 type is defined here
+  --> $DIR/static-ref.rs:1:11
+   |
+LL | fn foo(_: &'static u32) {}
+   |           ^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0597`.
