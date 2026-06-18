@@ -437,7 +437,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 }
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
-                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category);
+                self.maybe_add_fn_definition_note_for_call_arg(err, cx, tcx, &category, path);
             }
             _ => {}
         }
@@ -451,7 +451,17 @@ impl<'tcx> BorrowExplanation<'tcx> {
         cx: &MirBorrowckCtxt<'_, '_, 'tcx>,
         tcx: TyCtxt<'tcx>,
         _category: &ConstraintCategory<'tcx>,
+          path: &[OutlivesConstraint<'tcx>],
     ) {
+        if !path.iter().all(|constraint| {
+            matches!(
+                constraint.category,
+                ConstraintCategory::CallArgument(_) | ConstraintCategory::Boring
+            )
+        }) {
+            return;
+        }        
+
         let ConstraintCategory::CallArgument(source) = _category else { return };
         let Some(func_ty) = source.ty() else { return };
         let ty::FnDef(fn_did, _) = *func_ty.kind() else { return };
