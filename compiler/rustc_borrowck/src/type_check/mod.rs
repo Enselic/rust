@@ -432,11 +432,12 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
         sub: Ty<'tcx>,
         sup: Ty<'tcx>,
         locations: Locations,
+        span: Option<Span>,
         category: ConstraintCategory<'tcx>,
     ) -> Result<(), NoSolution> {
         // Use this order of parameters because the sup type is usually the
         // "expected" type in diagnostics.
-        self.relate_types(sup, ty::Contravariant, sub, locations, category)
+        self.relate_types(sup, ty::Contravariant, sub, locations, span, category)
     }
 
     #[instrument(skip(self, category), level = "debug")]
@@ -447,7 +448,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
         locations: Locations,
         category: ConstraintCategory<'tcx>,
     ) -> Result<(), NoSolution> {
-        self.relate_types(expected, ty::Invariant, found, locations, category)
+        self.relate_types(expected, ty::Invariant, found, locations, None, category)
     }
 
     #[instrument(skip(self), level = "debug")]
@@ -502,7 +503,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             a = self.normalize(ty::Unnormalized::new_wip(a), locations);
             ty = self.normalize(ty::Unnormalized::new_wip(ty), locations);
         }
-        self.relate_types(ty, v.xform(ty::Contravariant), a, locations, category)?;
+        self.relate_types(ty, v.xform(ty::Contravariant), a, locations, None, category)?; // pass user span
 
         Ok(())
     }
@@ -656,7 +657,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                 let rv_ty = self.normalize(ty::Unnormalized::new_wip(rv_ty), location);
                 debug!("normalized rv_ty: {:?}", rv_ty);
                 if let Err(terr) =
-                    self.sub_types(rv_ty, place_ty, location.to_locations(), category)
+                    self.sub_types(rv_ty, place_ty, location.to_locations(), Some(stmt.source_info.span), category)
                 {
                     span_mirbug!(
                         self,
@@ -886,6 +887,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             value_ty,
                             ty,
                             term_location.to_locations(),
+                            Some(term.source_info.span),
                             ConstraintCategory::Yield,
                         ) {
                             span_mirbug!(
@@ -908,6 +910,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty,
                             resume_ty.ty,
                             term_location.to_locations(),
+                            Some(term.source_info.span),
                             ConstraintCategory::Yield,
                         ) {
                             span_mirbug!(
@@ -1098,6 +1101,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                                 src_ty,
                                 *ty,
                                 location.to_locations(),
+                                None,
                                 ConstraintCategory::Cast {
                                     is_raw_ptr_dyn_type_cast: false,
                                     is_implicit_coercion,
@@ -1140,6 +1144,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             src_ty,
                             *ty,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::Cast {
                                 is_raw_ptr_dyn_type_cast: false,
                                 is_implicit_coercion,
@@ -1173,6 +1178,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_fn_ptr_from,
                             *ty,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::Cast {
                                 is_raw_ptr_dyn_type_cast: false,
                                 is_implicit_coercion,
@@ -1210,6 +1216,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_fn_ptr_from,
                             *ty,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::Cast {
                                 is_raw_ptr_dyn_type_cast: false,
                                 is_implicit_coercion,
@@ -1269,6 +1276,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             *ty_from,
                             *ty_to,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::Cast {
                                 is_raw_ptr_dyn_type_cast: false,
                                 is_implicit_coercion,
@@ -1336,6 +1344,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             *ty_elem,
                             *ty_to,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::Cast {
                                 is_raw_ptr_dyn_type_cast: false,
                                 is_implicit_coercion,
@@ -1547,6 +1556,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                                         src_obj,
                                         dst_obj,
                                         location.to_locations(),
+                                        None,
                                         ConstraintCategory::Cast {
                                             is_raw_ptr_dyn_type_cast: true,
                                             is_implicit_coercion: false,
@@ -1634,6 +1644,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_left,
                             common_ty,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::CallArgument(None),
                         )
                         .unwrap_or_else(|err| {
@@ -1643,6 +1654,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_right,
                             common_ty,
                             location.to_locations(),
+                            None,
                             ConstraintCategory::CallArgument(None),
                         ) {
                             span_mirbug!(
@@ -1685,6 +1697,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                     operand_ty,
                     expected_ty,
                     location.to_locations(),
+                    None,
                     ConstraintCategory::Boring,
                 )
                 .unwrap();
@@ -1896,6 +1909,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                     context.ambient_variance(),
                     fty,
                     location.to_locations(),
+                    None,
                     ConstraintCategory::Boring,
                 ) {
                     span_mirbug!(self, place, "bad field access ({:?}: {:?}): {:?}", ty, fty, terr);
@@ -1908,6 +1922,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                     context.ambient_variance(),
                     base_ty.ty,
                     location.to_locations(),
+                    None,
                     ConstraintCategory::TypeAnnotation(AnnotationSource::OpaqueCast),
                 )
                 .unwrap();
@@ -1926,6 +1941,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                     context.ambient_variance(),
                     found_ty,
                     location.to_locations(),
+                    None,
                     ConstraintCategory::Boring,
                 )
                 .unwrap();
@@ -1979,7 +1995,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
 
             let locations = term_location.to_locations();
 
-            if let Err(terr) = self.sub_types(sig.output(), dest_ty, locations, category) {
+            if let Err(terr) = self.sub_types(sig.output(), dest_ty, locations, None,category) {
                 span_mirbug!(
                     self,
                     term,
@@ -2049,7 +2065,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                 ConstraintCategory::Boring
             };
             if let Err(terr) =
-                self.sub_types(op_arg_ty, *fn_arg, term_location.to_locations(), category)
+                self.sub_types(op_arg_ty, *fn_arg, term_location.to_locations(), Some(op_arg.span), category)
             {
                 span_mirbug!(
                     self,
@@ -2318,6 +2334,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                 operand_ty,
                 field_ty,
                 location.to_locations(),
+                None,
                 ConstraintCategory::Boring,
             ) {
                 span_mirbug!(
@@ -2535,6 +2552,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                         ty::Variance::Covariant,
                         dest_ty.peel_refs(),
                         location.to_locations(),
+                        None,
                         category,
                     )
                     .unwrap();
@@ -2553,6 +2571,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                         ty::Variance::Covariant,
                         dest_ty,
                         location.to_locations(),
+                        None,
                         category,
                     )
                     .unwrap();
@@ -2565,6 +2584,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
                 ty::Variance::Covariant,
                 dest_ty,
                 location.to_locations(),
+                None,
                 category,
             )
             .unwrap();
