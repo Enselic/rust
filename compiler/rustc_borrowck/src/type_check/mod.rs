@@ -439,6 +439,19 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
         self.relate_types(sup, ty::Contravariant, sub, locations, category)
     }
 
+    fn sub_types_spanned(
+        &mut self,
+        sub: Ty<'tcx>,
+        sup: Ty<'tcx>,
+        locations: Locations,
+        span: Option<Span>,
+        category: ConstraintCategory<'tcx>,
+    ) -> Result<(), NoSolution> {
+        // Use this order of parameters because the sup type is usually the
+        // "expected" type in diagnostics.
+        self.relate_types_spanned(sup, ty::Contravariant, sub, locations, span, category)
+    }
+
     #[instrument(skip(self, category), level = "debug")]
     fn eq_types(
         &mut self,
@@ -2041,15 +2054,15 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             let op_arg_ty = op_arg.node.ty(self.body, self.tcx());
 
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
-            let category = if call_source.from_hir_call() {
-                ConstraintCategory::CallArgument(Some(
+            let (category, span) = if call_source.from_hir_call() {
+                (ConstraintCategory::CallArgument(Some(
                     self.infcx.tcx.erase_and_anonymize_regions(func_ty),
-                ))
+                )), Some(op_arg.span))
             } else {
-                ConstraintCategory::Boring
+                (ConstraintCategory::Boring, None)
             };
             if let Err(terr) =
-                self.sub_types(op_arg_ty, *fn_arg, term_location.to_locations(), category)
+                self.sub_types_spanned(op_arg_ty, *fn_arg, term_location.to_locations(), span, category)
             {
                 span_mirbug!(
                     self,
