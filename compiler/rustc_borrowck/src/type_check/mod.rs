@@ -1647,7 +1647,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_left,
                             common_ty,
                             location.to_locations(),
-                            ConstraintCategory::CallArgument(None),
+                            ConstraintCategory::CallArgument(None, false),
                         )
                         .unwrap_or_else(|err| {
                             bug!("Could not equate type variable with {:?}: {:?}", ty_left, err)
@@ -1656,7 +1656,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_right,
                             common_ty,
                             location.to_locations(),
-                            ConstraintCategory::CallArgument(None),
+                            ConstraintCategory::CallArgument(None, false),
                         ) {
                             span_mirbug!(
                                 self,
@@ -2055,9 +2055,10 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
 
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
             let (category, span) = if call_source.from_hir_call() {
+                let is_receiver = todo!();
                 (ConstraintCategory::CallArgument(Some(
                     self.infcx.tcx.erase_and_anonymize_regions(func_ty),
-                )), Some(op_arg.span))
+                ), is_receiver), Some(op_arg.span))
             } else {
                 (ConstraintCategory::Boring, None)
             };

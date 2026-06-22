@@ -511,7 +511,7 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
 
         let highlight = self
             .get_argument_hir_ty_for_highlighting(user_arg_index)
-            .and_then(|arg_hir_ty| self.highlight_if_we_can_match_hir_ty(fr, arg_ty, arg_hir_ty))
+            .and_then(|arg_hir_ty| self.highlight_if_we_can_match_hir_ty(fr, arg_ty, arg_hir_ty)) // nordh
             .unwrap_or_else(|| {
                 // `highlight_if_we_cannot_match_hir_ty` needs to know the number we will give to
                 // the anonymous region. If it succeeds, the `synthesize_region_name` call below
