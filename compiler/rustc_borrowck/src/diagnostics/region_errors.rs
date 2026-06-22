@@ -49,7 +49,7 @@ impl<'tcx> ConstraintDescription for ConstraintCategory<'tcx> {
             ConstraintCategory::UseAsStatic => "using this value as a static ",
             ConstraintCategory::Cast { is_implicit_coercion: false, .. } => "cast ",
             ConstraintCategory::Cast { is_implicit_coercion: true, .. } => "coercion ",
-            ConstraintCategory::CallArgument(_, _) => "argument ",
+            ConstraintCategory::CallArgument(_, is_receiver) => if *is_receiver { "receiver " } else { "argument " },
             ConstraintCategory::TypeAnnotation(AnnotationSource::GenericArg) => "generic argument ",
             ConstraintCategory::TypeAnnotation(_) => "type annotation ",
             ConstraintCategory::SizedBound => "proving this value is `Sized` ",

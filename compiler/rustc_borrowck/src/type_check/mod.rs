@@ -2028,7 +2028,9 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
         }
 
         let func_ty = func.ty(self.body, self.infcx.tcx);
+        let mut is_fn_def = false;
         if let ty::FnDef(def_id, _) = *func_ty.kind() {
+            is_fn_def = true;
             // Some of the SIMD intrinsics are special: they need a particular argument to be a
             // constant. (Eventually this should use const-generics, but those are not up for the
             // task yet: https://github.com/rust-lang/rust/issues/85229.)
@@ -2055,10 +2057,11 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
 
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
             let (category, span) = if call_source.from_hir_call() {
-                let is_receiver = todo!();
+                let is_receiver =
+                    n == 0 && matches!(&term.kind, TerminatorKind::Call { fn_span, .. } if term.source_info.span != *fn_span);
                 (ConstraintCategory::CallArgument(Some(
                     self.infcx.tcx.erase_and_anonymize_regions(func_ty),
-                ), is_receiver), Some(op_arg.span))
+                ), is_receiver && is_fn_def), Some(op_arg.span))
             } else {
                 (ConstraintCategory::Boring, None)
             };
