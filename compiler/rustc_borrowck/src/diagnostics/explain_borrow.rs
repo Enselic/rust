@@ -386,13 +386,26 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 region_name.highlight_region_name(err);
 
                 if let Some(desc) = opt_place_desc {
-                    err.span_label(
-                        span,
-                        format!(
-                            "{}requires that `{desc}` is borrowed for `{region_name}`",
-                            category.description(),
-                        ),
-                    );
+                    let span_is_for_arg_in_hir = body
+                        .source
+                        .def_id()
+                        .as_local()
+                        .and_then(|def_id| tcx.hir_node_by_def_id(def_id).fn_decl())
+                        .is_some_and(|fn_decl| {
+                            fn_decl.inputs.iter().any(|input| input.span.contains(span))
+                        });
+
+                    if !matches!(category, ConstraintCategory::CallArgument(_, _))
+                        || span_is_for_arg_in_hir
+                    {
+                        err.span_label(
+                            span,
+                            format!(
+                                "{}requires that `{desc}` is borrowed for `{region_name}`",
+                                category.description(),
+                            ),
+                        );
+                    }
                 } else {
                     err.span_label(
                         span,
