@@ -386,7 +386,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 let mut span = span;
                 region_name.highlight_region_name(err);
 
-                if let def_id = body.source.def_id()
+                if matches!(category, ConstraintCategory::CallArgument(_)) &&
+                    let def_id = body.source.def_id()
                     && let Some(node) = tcx.hir_get_if_local(def_id)
                     && let Some(body_id) = node.body_id()
                     && let hir_body = tcx.hir_body(body_id)
