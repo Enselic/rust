@@ -384,35 +384,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
-                let mut call_arg_span = span;
+                let call_arg_span = category.call_arg_span_for_diagnostic(tcx, body, span, path);
                 region_name.highlight_region_name(err);
-
-                if matches!(category, ConstraintCategory::CallArgument(_))
-                    && let def_id = body.source.def_id()
-                    && let Some(node) = tcx.hir_get_if_local(def_id)
-                    && let Some(body_id) = node.body_id()
-                    && let hir_body = tcx.hir_body(body_id)
-                {
-                    let mut expr_finder = FindExprBySpan::new(span, tcx);
-                    expr_finder.visit_expr(hir_body.value);
-                    if let Some(expr) = expr_finder.result {
-                        debug!("NORDH expr={expr:?}");
-                        let in_call_or_method_args = is_in_call_or_method_args(tcx, expr);
-                        if !in_call_or_method_args {
-                            for constraint in path {
-                                if constraint.category == category {
-                                    call_arg_span = constraint.locations.span(body);
-                                    debug!("NORDH adjusting span back to to {call_arg_span:?}");
-                                    break;
-                                }
-                            }
-                        }
-                        debug!(
-                            "NORDH expr: {:?}; in call/method args: {}",
-                            expr, in_call_or_method_args
-                        );
-                    }
-                }
 
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
@@ -552,6 +525,57 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 Applicability::Unspecified,
             );
         }
+    }
+}
+
+trait ConstraintCategoryExt<'tcx> {
+    fn call_arg_span_for_diagnostic(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        body: &Body<'tcx>,
+        span: Span,
+        path: &[OutlivesConstraint<'tcx>],
+    ) -> Span;
+}
+
+impl<'tcx> ConstraintCategoryExt<'tcx> for ConstraintCategory<'tcx> {
+    fn call_arg_span_for_diagnostic(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        body: &Body<'tcx>,
+        span: Span,
+        path: &[OutlivesConstraint<'tcx>],
+    ) -> Span {
+        let mut call_arg_span = span;
+
+        if matches!(self, ConstraintCategory::CallArgument(_))
+            && let def_id = body.source.def_id()
+            && let Some(node) = tcx.hir_get_if_local(def_id)
+            && let Some(body_id) = node.body_id()
+            && let hir_body = tcx.hir_body(body_id)
+        {
+            let mut expr_finder = FindExprBySpan::new(span, tcx);
+            expr_finder.visit_expr(hir_body.value);
+            if let Some(expr) = expr_finder.result {
+                debug!("NORDH expr={expr:?}");
+                let in_call_or_method_args = is_in_call_or_method_args(tcx, expr);
+                if !in_call_or_method_args {
+                    for constraint in path {
+                        if constraint.category == *self {
+                            call_arg_span = constraint.locations.span(body);
+                            debug!("NORDH adjusting span back to to {call_arg_span:?}");
+                            break;
+                        }
+                    }
+                }
+                debug!(
+                    "NORDH expr: {:?}; in call/method args: {}",
+                    expr, in_call_or_method_args
+                );
+            }
+        }
+
+        call_arg_span
     }
 }
 
