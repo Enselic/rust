@@ -2028,9 +2028,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
         }
 
         let func_ty = func.ty(self.body, self.infcx.tcx);
-        let mut is_fn_def = false;
         if let ty::FnDef(def_id, _) = *func_ty.kind() {
-            is_fn_def = true;
             // Some of the SIMD intrinsics are special: they need a particular argument to be a
             // constant. (Eventually this should use const-generics, but those are not up for the
             // task yet: https://github.com/rust-lang/rust/issues/85229.)

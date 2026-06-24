@@ -383,7 +383,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
-                let mut span = span;
+                let mut call_arg_span = span;
                 region_name.highlight_region_name(err);
 
                 if matches!(category, ConstraintCategory::CallArgument(_)) &&
@@ -399,8 +399,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         if !in_call_or_method_args {
                             for constraint in path {
                                 if constraint.category == category {
-                                    debug!("NORDH adjusting span back to to {span:?}");
-                                    span = constraint.locations.span(body);
+                                    debug!("NORDH adjusting span back to to {call_arg_span:?}");
+                                    call_arg_span = constraint.locations.span(body);
                                     break;
                                 }
                             }
@@ -449,7 +449,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     //     || span_is_for_arg_in_hir
                     // {
                     err.span_label(
-                        span,
+                        call_arg_span,
                         format!(
                             "{}requires that `{desc}` is borrowed for `{region_name}`",
                             category.description(),
@@ -458,7 +458,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     // }
                 } else {
                     err.span_label(
-                        span,
+                        call_arg_span,
                         format!(
                             "{}requires that {borrow_desc}borrow lasts for `{region_name}`",
                             category.description(),
