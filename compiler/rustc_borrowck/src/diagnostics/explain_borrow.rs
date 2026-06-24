@@ -413,43 +413,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         );
                     }
                 }
-                //             && let mut expr_finder = (FindLetExpr { span: old, result: None, tcx })
-                //             && let Some((let_expr_span, let_expr_pat, let_expr_init)) = {
-                //                 expr_finder.visit_expr(hir_body.value);
-                //                 expr_finder.result
-
-                //     while let hir::ExprKind::AddrOf(_, _, inner)
-                //     | hir::ExprKind::Unary(hir::UnOp::Deref, inner)
-                //     | hir::ExprKind::Field(inner, _)
-                //     | hir::ExprKind::MethodCall(_, inner, _, _)
-                //     | hir::ExprKind::Index(inner, _, _) = &expr.kind
-                //     {
-                //         expr = inner;
-                //     }
-                //     if let hir::ExprKind::Path(hir::QPath::Resolved(None, p)) = expr.kind
-                //         && let [hir::PathSegment { ident, args: None, .. }] = p.segments
-                //         && let hir::def::Res::Local(hir_id) = p.res
-                //         && let hir::Node::Pat(pat) = tcx.hir_node(hir_id)
-                //     {
-                //         if !ident.span.in_external_macro(tcx.sess.source_map()) {
-                //             err.span_label(pat.span, format!("binding `{ident}` declared here"));
-                //         }
-                //     }
-                // }
 
                 if let Some(desc) = opt_place_desc {
-                    // let span_is_for_arg_in_hir = body
-                    //     .source
-                    //     .def_id()
-                    //     .as_local()
-                    //     .and_then(|def_id| tcx.hir_node_by_def_id(def_id).fn_decl())
-                    //     .is_some_and(|fn_decl| {
-                    //         fn_decl.inputs.iter().any(|input| input.span.contains(span))
-                    //     });
-
-                    // if !matches!(category, ConstraintCategory::CallArgument(_))
-                    //     || span_is_for_arg_in_hir
-                    // {
                     err.span_label(
                         call_arg_span,
                         format!(
@@ -457,7 +422,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
                             category.description(),
                         ),
                     );
-                    // }
                 } else {
                     err.span_label(
                         call_arg_span,
