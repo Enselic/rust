@@ -2057,6 +2057,7 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
 
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
             let (category, span) = if call_source.from_hir_call() {
+                // let func_ty_is_fn_trait_call = 
                 let is_receiver =
                     n == 0 && matches!(&term.kind, TerminatorKind::Call { fn_span, .. } if term.source_info.span != *fn_span);
                 (ConstraintCategory::CallArgument(Some(

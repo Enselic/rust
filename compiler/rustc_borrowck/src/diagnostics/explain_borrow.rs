@@ -383,6 +383,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
+                let mut span = span;
                 region_name.highlight_region_name(err);
 
                 if let def_id = body.source.def_id()
@@ -392,8 +393,21 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 {
                     let mut expr_finder = FindExprBySpan::new(span, tcx);
                     expr_finder.visit_expr(hir_body.value);
-                    if let Some(mut expr) = expr_finder.result {
-                        debug!("NORDH expr.span: {:?}", expr);
+                    if let Some(expr) = expr_finder.result {
+                        let in_call_or_method_args = is_in_call_or_method_args(tcx, expr);
+                        if !in_call_or_method_args {
+                            for constraint in path {
+                                if constraint.category == category {
+                                    debug!("NORDH adjusting span back to to {span:?}");
+                                    span = constraint.locations.span(body);
+                                    break;
+                                }
+                            }
+                        }
+                        debug!(
+                            "NORDH expr: {:?}; in call/method args: {}",
+                            expr, in_call_or_method_args
+                        );
                     }
                 }
                 //             && let mut expr_finder = (FindLetExpr { span: old, result: None, tcx })
@@ -619,6 +633,30 @@ fn suggest_rewrite_if_let<G: EmissionGuarantee>(
             Applicability::MaybeIncorrect,
         );
     }
+}
+
+fn is_in_call_or_method_args<'hir>(tcx: TyCtxt<'hir>, expr: &hir::Expr<'hir>) -> bool {
+    for (_, node) in tcx.hir_parent_iter(expr.hir_id) {
+        let hir::Node::Expr(parent_expr) = node else {
+            continue;
+        };
+
+        match parent_expr.kind {
+            hir::ExprKind::Call(_, args) => {
+                if args.iter().any(|arg| arg.span.contains(expr.span)) {
+                    return true;
+                }
+            }
+            hir::ExprKind::MethodCall(_, _, args, _) => {
+                if args.iter().any(|arg| arg.span.contains(expr.span)) {
+                    return true;
+                }
+            }
+            _ => {}
+        }
+    }
+
+    false
 }
 
 impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
