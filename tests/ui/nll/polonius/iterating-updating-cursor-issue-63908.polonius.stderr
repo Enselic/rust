@@ -5,10 +5,10 @@ LL | fn remove_last_node_iterative<T>(mut node_ref: &mut List<T>) {
    |                                                - let's call the lifetime of this reference `'1`
 LL |     loop {
 LL |         let next_ref = &mut node_ref.as_mut().unwrap().next;
-   |                             -------- `*node_ref` is borrowed here
-...
-LL |             node_ref = next_ref;
-   |             ------------------- assignment requires that `*node_ref` is borrowed for `'1`
+   |                        ------------------------------------
+   |                        |    |
+   |                        |    `*node_ref` is borrowed here
+   |                        assignment requires that `*node_ref` is borrowed for `'1`
 ...
 LL |     *node_ref = None;
    |     ^^^^^^^^^ `*node_ref` is assigned to here but it was already borrowed

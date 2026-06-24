@@ -4,11 +4,11 @@ error[E0597]: `a` does not live long enough
 LL |     let a = ();
    |         - binding `a` declared here
 LL |     let b = |_| &a;
-   |             --- -^
-   |             |   ||
-   |             |   |borrowed value does not live long enough
-   |             |   returning this value requires that `a` is borrowed for `'static`
+   |             -----^
+   |             |    |
+   |             |    borrowed value does not live long enough
    |             value captured here
+   |             returning this value requires that `a` is borrowed for `'static`
 ...
 LL | }
    | - `a` dropped here while still borrowed
