@@ -13,6 +13,7 @@ use rustc_middle::mir::{
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
+use rustc_span::sym::debug;
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -642,6 +643,7 @@ fn is_in_call_or_method_args<'hir>(tcx: TyCtxt<'hir>, expr: &hir::Expr<'hir>) ->
         let hir::Node::Expr(parent_expr) = node else {
             continue;
         };
+        debug!("NORDH parent_expr={:?}", parent_expr);
 
         match parent_expr.kind {
             hir::ExprKind::Call(_, args) => {
@@ -650,7 +652,10 @@ fn is_in_call_or_method_args<'hir>(tcx: TyCtxt<'hir>, expr: &hir::Expr<'hir>) ->
                 }
             }
             hir::ExprKind::MethodCall(_, _, args, _) => {
-                if args.iter().any(|arg| arg.span.contains(expr.span)) {
+                if args.iter().any(|arg| {
+                    debug!("NORDH arg={:?}", arg);
+                    arg.span.contains(expr.span)
+                }) {
                     return true;
                 }
             }
