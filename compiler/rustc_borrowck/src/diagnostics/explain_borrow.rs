@@ -386,8 +386,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 let mut call_arg_span = span;
                 region_name.highlight_region_name(err);
 
-                if matches!(category, ConstraintCategory::CallArgument(_)) &&
-                    let def_id = body.source.def_id()
+                if matches!(category, ConstraintCategory::CallArgument(_))
+                    && let def_id = body.source.def_id()
                     && let Some(node) = tcx.hir_get_if_local(def_id)
                     && let Some(body_id) = node.body_id()
                     && let hir_body = tcx.hir_body(body_id)
@@ -395,12 +395,13 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     let mut expr_finder = FindExprBySpan::new(span, tcx);
                     expr_finder.visit_expr(hir_body.value);
                     if let Some(expr) = expr_finder.result {
+                        debug!("NORDH expr={expr:?}");
                         let in_call_or_method_args = is_in_call_or_method_args(tcx, expr);
                         if !in_call_or_method_args {
                             for constraint in path {
                                 if constraint.category == category {
-                                    debug!("NORDH adjusting span back to to {call_arg_span:?}");
                                     call_arg_span = constraint.locations.span(body);
+                                    debug!("NORDH adjusting span back to to {call_arg_span:?}");
                                     break;
                                 }
                             }
