@@ -3005,7 +3005,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                         name: self.synthesize_region_name(),
                         source: RegionNameSource::Static,
                     },
-                    ConstraintCategory::CallArgument(None, false),
+                    ConstraintCategory::CallArgument(None),
                     var_or_use_span,
                     &format!("`{name}`"),
                     "block",
@@ -3015,7 +3015,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 BorrowExplanation::MustBeValidFor {
                     category:
                         category @ (ConstraintCategory::Return(_)
-                        | ConstraintCategory::CallArgument(_, _)
+                        | ConstraintCategory::CallArgument(_)
                         | ConstraintCategory::OpaqueType),
                     from_closure: false,
                     ref region_name,
@@ -3649,7 +3649,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 let msg = format!("{kind} is returned here");
                 err.span_note(constraint_span, msg);
             }
-            ConstraintCategory::CallArgument(_, _) => {
+            ConstraintCategory::CallArgument(_) => {
                 fr_name.highlight_region_name(&mut err);
                 if matches!(
                     use_span.coroutine_kind(),

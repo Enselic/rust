@@ -444,7 +444,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     //         fn_decl.inputs.iter().any(|input| input.span.contains(span))
                     //     });
 
-                    // if !matches!(category, ConstraintCategory::CallArgument(_, _))
+                    // if !matches!(category, ConstraintCategory::CallArgument(_))
                     //     || span_is_for_arg_in_hir
                     // {
                     err.span_label(

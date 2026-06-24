@@ -1820,7 +1820,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                     | AnnotationSource::OpaqueCast,
                 )
                 | ConstraintCategory::Cast { .. }
-                | ConstraintCategory::CallArgument(_, _)
+                | ConstraintCategory::CallArgument(_)
                 | ConstraintCategory::CopyBound
                 | ConstraintCategory::SizedBound
                 | ConstraintCategory::Assignment

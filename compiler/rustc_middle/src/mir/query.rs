@@ -117,7 +117,7 @@ pub enum ConstraintCategory<'tcx> {
     },
 
     /// Contains the function type if available.
-    CallArgument(Option<Ty<'tcx>>, bool /* is receiver */),
+    CallArgument(Option<Ty<'tcx>>),
     CopyBound,
     SizedBound,
     Assignment,
