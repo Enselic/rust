@@ -11,6 +11,7 @@ use rustc_hir::def_id::DefId;
 use rustc_hir::intravisit::VisitorExt;
 use rustc_hir::{PolyTraitRef, TyKind, WhereBoundPredicate};
 use rustc_infer::infer::{NllRegionVariableOrigin, SubregionOrigin};
+use rustc_infer::traits::ObligationCauseCode;
 use rustc_middle::bug;
 use rustc_middle::hir::place::PlaceBase;
 use rustc_middle::mir::{AnnotationSource, ConstraintCategory, ReturnConstraint};
@@ -411,8 +412,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         };
 
         // Find the code to blame for the fact that `longer_fr` outlives `error_fr`.
-        let cause =
-            self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid).0.cause;
+        let best_constraint = 
+            self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid).0;
 
         // FIXME these methods should have better names, and also probably not be this generic.
         // FIXME note that we *throw away* the error element here! We probably want to
@@ -422,7 +423,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             self,
             placeholder,
             error_region,
-            cause,
+            rustc_infer::traits::ObligationCause::new(best_constraint.span, rustc_hir::def_id::CRATE_DEF_ID, ObligationCauseCode::Misc),
         );
     }
 
@@ -445,7 +446,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         let (blame_constraint, path) =
             self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
-        let BlameConstraint { category, cause, variance_info, .. } = blame_constraint;
+        let crate::consumers::OutlivesConstraint { category, variance_info, .. } = blame_constraint;
+        let cause = rustc_infer::traits::ObligationCauseCode::Misc;
 
         debug!("report_region_error: category={:?} {:?} {:?}", category, cause, variance_info);
 
@@ -453,7 +455,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         if let (Some(f), Some(o)) = (self.to_error_region(fr), self.to_error_region(outlived_fr)) {
             let infer_err = self.infcx.err_ctxt();
             let nice =
-                NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), cause.span, o, f);
+                NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), blame_constraint.span, o, f);
             if let Some(diag) = nice.try_report_from_nll() {
                 self.buffer_error(diag);
                 return;

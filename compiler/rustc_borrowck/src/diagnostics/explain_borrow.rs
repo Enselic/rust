@@ -578,18 +578,17 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
         &self,
         borrow_region: RegionVid,
         outlived_region: RegionVid,
-    ) -> (ConstraintCategory<'tcx>, bool, Span, Option<RegionName>, Vec<OutlivesConstraint<'tcx>>)
+    ) -> (OutlivesConstraint<'tcx>, Option<RegionName>, Vec<OutlivesConstraint<'tcx>>)
     {
         let (blame_constraint, path) = self.regioncx.best_blame_constraint(
             borrow_region,
             NllRegionVariableOrigin::FreeRegion,
             outlived_region,
         );
-        let BlameConstraint { category, from_closure, cause, .. } = blame_constraint;
 
         let outlived_fr_name = self.give_region_a_name(outlived_region);
 
-        (category, from_closure, cause.span, outlived_fr_name, path)
+        (blame_constraint, outlived_fr_name, path)
     }
 
     /// Returns structured explanation for *why* the borrow contains the

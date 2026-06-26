@@ -1346,7 +1346,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 propagated_outlives_requirements.push(ClosureOutlivesRequirement {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
                     outlived_free_region: fr_plus,
-                    blame_span: blame_constraint.cause.span,
+                    blame_span: blame_constraint.span,
                     category: blame_constraint.category,
                 });
             }
@@ -1614,7 +1614,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         from_region: RegionVid,
         from_region_origin: NllRegionVariableOrigin<'tcx>,
         to_region: RegionVid,
-    ) -> (BlameConstraint<'tcx>, Vec<OutlivesConstraint<'tcx>>) {
+    ) -> (OutlivesConstraint<'tcx>, Vec<OutlivesConstraint<'tcx>>) {
         assert!(from_region != to_region, "Trying to blame a region for itself!");
 
         let path = self.constraint_path_between_regions(from_region, to_region).unwrap();
@@ -1833,13 +1833,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             "Illegal placeholder constraint blamed; should have redirected to other region relation"
         );
 
-        let blame_constraint = BlameConstraint {
-            category: best_constraint.category,
-            from_closure: best_constraint.from_closure,
-            cause: ObligationCause::new(best_constraint.span, CRATE_DEF_ID, cause_code.clone()),
-            variance_info: best_constraint.variance_info,
-        };
-        (blame_constraint, path)
+        (best_constraint.clone(), path)
     }
 
     pub(crate) fn universe_info(&self, universe: ty::UniverseIndex) -> UniverseInfo<'tcx> {
