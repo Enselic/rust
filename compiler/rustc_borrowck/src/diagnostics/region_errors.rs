@@ -472,7 +472,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             fr_is_local, outlived_fr_is_local, category
         );
 
-        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span: cause.span };
+        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span: blame_constraint.span };
 
         let mut diag = match (category, fr_is_local, outlived_fr_is_local) {
             (ConstraintCategory::SolverRegionConstraint(span), _, _) => {
