@@ -1812,15 +1812,6 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             // The return expression is being influenced by the return type being
             // impl Trait, point at the return type and not the return expr.
             *next
-        } else if path[best_choice].category == ConstraintCategory::Return(ReturnConstraint::Normal)
-            && let Some(field) = path.iter().find_map(|p| {
-                if let ConstraintCategory::ClosureUpvar(f) = p.category { Some(f) } else { None }
-            })
-        {
-            OutlivesConstraint {
-                category: ConstraintCategory::Return(ReturnConstraint::ClosureUpvar(field)),
-                ..path[best_choice]
-            }
         } else {
             path[best_choice]
         };
