@@ -1817,7 +1817,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
         BestBlame {
             path,
-            idx,
+            idx: best_blame_idx,
         }
     }
 

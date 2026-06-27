@@ -20,9 +20,8 @@ use tracing::{debug, instrument};
 
 use super::{RegionName, UseSpans, find_use};
 use crate::borrow_set::BorrowData;
-use crate::constraints::OutlivesConstraint;
 use crate::nll::ConstraintDescription;
-use crate::region_infer::Cause;
+use crate::region_infer::{BestBlame, Cause};
 use crate::{MirBorrowckCtxt, WriteKind};
 
 #[derive(Debug)]
@@ -40,7 +39,7 @@ pub(crate) enum BorrowExplanation<'tcx> {
         span: Span,
         region_name: RegionName,
         opt_place_desc: Option<String>,
-        path: Vec<OutlivesConstraint<'tcx>>,
+        best_blame: BestBlame<'tcx>,
     },
     Unexplained,
 }
@@ -381,7 +380,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 ref region_name,
                 ref opt_place_desc,
                 from_closure: _,
-                ref path,
+                ref best_blame,
             } => {
                 region_name.highlight_region_name(err);
 
@@ -403,8 +402,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 };
 
-                cx.add_placeholder_from_predicate_note(err, &path);
-                cx.add_sized_or_copy_bound_info(err, category, &path);
+                cx.add_placeholder_from_predicate_note(err, &best_blame.path);
+                cx.add_sized_or_copy_bound_info(err, category, &best_blame.path);
 
                 if let ConstraintCategory::Cast {
                     is_raw_ptr_dyn_type_cast: _,
@@ -415,7 +414,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     self.add_object_lifetime_default_note(tcx, err, unsize_ty);
                 }
 
-                let mut preds = path
+                let mut preds = best_blame.path
                     .iter()
                     .filter_map(|constraint| match constraint.category {
                         ConstraintCategory::Predicate(pred) if !pred.is_dummy() => Some(pred),
@@ -689,14 +688,13 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
                 // Here, under NLL: no cause was found. Under polonius: no cause was found, or a
                 // boring local was found, which we ignore like NLLs do to match its diagnostics.
                 if let Some(region) = self.to_error_region_vid(borrow_region_vid) {
-                    let blame_path = self.regioncx.best_blame_constraint(
+                    let best_blame = self.regioncx.best_blame_constraint(
                         borrow_region_vid,
                         NllRegionVariableOrigin::FreeRegion,
                         region,
                     );
-                    let blame_constraint = blame_path.path[blame_path.idx];
-                    let span = blame_path.cause().span;
-                    let path = blame_path.path;
+                    let blame_constraint = best_blame.path[best_blame.idx];
+                    let span = best_blame.cause().span;
 
                     if let Some(region_name) = self.give_region_a_name(region) {
                         let opt_place_desc = self.describe_place(borrow.borrowed_place.as_ref());
@@ -706,7 +704,7 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
                             span,
                             region_name,
                             opt_place_desc,
-                            path,
+                            best_blame,
                         }
                     } else {
                         debug!("Could not generate a region name");
