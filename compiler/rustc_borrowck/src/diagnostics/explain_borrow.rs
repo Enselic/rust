@@ -12,7 +12,7 @@ use rustc_middle::mir::{
     Operand, Place, Rvalue, Statement, StatementKind, TerminatorKind,
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
-use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
+use rustc_middle::ty::{self, Ty, TyCtxt};
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -697,7 +697,7 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
                     let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
                     let category = best_constraint.category;
                     let from_closure = best_constraint.from_closure;
-                    let cause = blame_constraint.cause;
+                    let cause = blame_constraint.cause();
                     let span = cause.span;
                     let path = blame_constraint.path;
 
