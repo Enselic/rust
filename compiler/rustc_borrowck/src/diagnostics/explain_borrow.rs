@@ -22,7 +22,7 @@ use super::{RegionName, UseSpans, find_use};
 use crate::borrow_set::BorrowData;
 use crate::constraints::OutlivesConstraint;
 use crate::nll::ConstraintDescription;
-use crate::region_infer::{BlameConstraint, Cause};
+use crate::region_infer::Cause;
 use crate::{MirBorrowckCtxt, WriteKind};
 
 #[derive(Debug)]
@@ -580,12 +580,16 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
         outlived_region: RegionVid,
     ) -> (ConstraintCategory<'tcx>, bool, Span, Option<RegionName>, Vec<OutlivesConstraint<'tcx>>)
     {
-        let (blame_constraint, path) = self.regioncx.best_blame_constraint(
+        let blame_constraint = self.regioncx.best_blame_constraint(
             borrow_region,
             NllRegionVariableOrigin::FreeRegion,
             outlived_region,
         );
-        let BlameConstraint { category, from_closure, cause, .. } = blame_constraint;
+        let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
+        let category = best_constraint.category;
+        let from_closure = best_constraint.from_closure;
+        let cause = blame_constraint.cause;
+        let path = blame_constraint.path;
 
         let outlived_fr_name = self.give_region_a_name(outlived_region);
 

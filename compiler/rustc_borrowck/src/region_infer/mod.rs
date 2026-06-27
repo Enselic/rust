@@ -1285,9 +1285,9 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 return RegionRelationCheckResult::Error;
             }
 
-            let blame_constraint = self
-                .best_blame_constraint(longer_fr, NllRegionVariableOrigin::FreeRegion, shorter_fr)
-                .0;
+            let blame_constraint =
+                self.best_blame_constraint(longer_fr, NllRegionVariableOrigin::FreeRegion, shorter_fr);
+            let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
 
             // Grow `shorter_fr` until we find some non-local regions.
             // We will always find at least one: `'static`. We'll call
@@ -1347,7 +1347,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
                     outlived_free_region: fr_plus,
                     blame_span: blame_constraint.cause.span,
-                    category: blame_constraint.category,
+                    category: best_constraint.category,
                 });
             }
             return RegionRelationCheckResult::Propagated;
@@ -1614,7 +1614,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         from_region: RegionVid,
         from_region_origin: NllRegionVariableOrigin<'tcx>,
         to_region: RegionVid,
-    ) -> (BlameConstraint<'tcx>, Vec<OutlivesConstraint<'tcx>>) {
+    ) -> BlameConstraint<'tcx> {
         assert!(from_region != to_region, "Trying to blame a region for itself!");
 
         let path = self.constraint_path_between_regions(from_region, to_region).unwrap();
@@ -1805,13 +1805,13 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
         debug!(?best_choice, ?blame_source);
 
-        let best_constraint = if let Some(next) = path.get(best_choice + 1)
+        let best_blame_idx = if let Some(next) = path.get(best_choice + 1)
             && matches!(path[best_choice].category, ConstraintCategory::Return(_))
             && next.category == ConstraintCategory::OpaqueType
         {
             // The return expression is being influenced by the return type being
             // impl Trait, point at the return type and not the return expr.
-            *next
+            best_choice + 1
         } else if path[best_choice].category == ConstraintCategory::Return(ReturnConstraint::Normal)
             && let Some(field) = path.iter().find_map(|p| {
                 if let ConstraintCategory::ClosureUpvar(f) = p.category { Some(f) } else { None }
@@ -1819,26 +1819,24 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         {
             path[best_choice].category =
                 ConstraintCategory::Return(ReturnConstraint::ClosureUpvar(field));
-            path[best_choice]
+            best_choice
         } else {
-            path[best_choice]
+            best_choice
         };
 
         assert!(
             !matches!(
-                best_constraint.category,
+                path[best_blame_idx].category,
                 ConstraintCategory::OutlivesUnnameablePlaceholder(_)
             ),
             "Illegal placeholder constraint blamed; should have redirected to other region relation"
         );
 
-        let blame_constraint = BlameConstraint {
-            category: best_constraint.category,
-            from_closure: best_constraint.from_closure,
-            cause: ObligationCause::new(best_constraint.span, CRATE_DEF_ID, cause_code.clone()),
-            variance_info: best_constraint.variance_info,
-        };
-        (blame_constraint, path)
+        BlameConstraint {
+            cause: ObligationCause::new(path[best_blame_idx].span, CRATE_DEF_ID, cause_code),
+            path,
+            best_blame_idx,
+        }
     }
 
     pub(crate) fn universe_info(&self, universe: ty::UniverseIndex) -> UniverseInfo<'tcx> {
@@ -1914,8 +1912,8 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
 #[derive(Clone, Debug)]
 pub(crate) struct BlameConstraint<'tcx> {
-    pub category: ConstraintCategory<'tcx>,
-    pub from_closure: bool,
+    pub path: Vec<OutlivesConstraint<'tcx>>,
+    /// Index into `path` of the constraint most relevant to report to users.
+    pub best_blame_idx: usize,
     pub cause: ObligationCause<'tcx>,
-    pub variance_info: ty::VarianceDiagInfo<TyCtxt<'tcx>>,
 }
