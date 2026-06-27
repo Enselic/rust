@@ -121,6 +121,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         ty: None,
                         recovered: _,
                     }) = cond.kind
+                    && pat.span.can_be_used_for_suggestions()
                     && let Ok(pat) = tcx.sess.source_map().span_to_snippet(pat.span)
                 {
                     suggest_rewrite_if_let(tcx, expr, &pat, init, conseq, alt, err);
@@ -377,39 +378,38 @@ impl<'tcx> BorrowExplanation<'tcx> {
             } => {
                 region_name.highlight_region_name(err);
 
-                let span = best_blame.span();
-                let category = best_blame.category();
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
-                        span,
+                        best_blame.span(),
                         format!(
                             "{}requires that `{desc}` is borrowed for `{region_name}`",
-                            category.description(),
+                            best_blame.category().description(),
                         ),
                     );
                 } else {
                     err.span_label(
-                        span,
+                        best_blame.span(),
                         format!(
                             "{}requires that {borrow_desc}borrow lasts for `{region_name}`",
-                            category.description(),
+                            best_blame.category().description(),
                         ),
                     );
                 };
 
                 cx.add_placeholder_from_predicate_note(err, &best_blame.path);
-                cx.add_sized_or_copy_bound_info(err, category, &best_blame.path);
+                cx.add_sized_or_copy_bound_info(err, best_blame.category(), &best_blame.path);
 
                 if let ConstraintCategory::Cast {
                     is_raw_ptr_dyn_type_cast: _,
                     is_implicit_coercion: true,
                     unsize_to: Some(unsize_ty),
-                } = category
+                } = best_blame.category()
                 {
                     self.add_object_lifetime_default_note(tcx, err, unsize_ty);
                 }
 
-                let mut preds = best_blame.path
+                let mut preds = best_blame
+                    .path
                     .iter()
                     .filter_map(|constraint| match constraint.category {
                         ConstraintCategory::Predicate(pred) if !pred.is_dummy() => Some(pred),
@@ -428,7 +428,12 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 }
 
-                self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
+                self.add_lifetime_bound_suggestion_to_diagnostic(
+                    err,
+                    &best_blame.category(),
+                    best_blame.span(),
+                    region_name,
+                );
             }
             _ => {}
         }

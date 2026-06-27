@@ -3075,7 +3075,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 BorrowExplanation::MustBeValidFor { ref region_name, ref best_blame, .. },
             ) if borrow_spans.for_coroutine()
                 || borrow_spans.for_closure()
-                    && !best_blame.path[best_blame.idx].from_closure
+                    && !best_blame.from_closure()
                     && matches!(
                         best_blame.category(),
                         ConstraintCategory::Return(_)
@@ -3105,7 +3105,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ..
                 },
             ) if best_blame.category() == ConstraintCategory::Assignment
-                && !best_blame.path[best_blame.idx].from_closure =>
+                && !best_blame.from_closure() =>
             {
                 self.report_escaping_data(
                     borrow_span,
@@ -3150,7 +3150,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let borrow_span = borrow_spans.var_or_use_path_span();
         if let BorrowExplanation::MustBeValidFor { ref opt_place_desc, ref best_blame, .. } =
             explanation
-            && !best_blame.path[best_blame.idx].from_closure
+            && !best_blame.from_closure()
             && let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 borrow_span,
@@ -3357,11 +3357,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         proper_span: Span,
         explanation: BorrowExplanation<'tcx>,
     ) -> Diag<'infcx> {
-        if let BorrowExplanation::MustBeValidFor {
-            ref best_blame,
-            ..
-        } = explanation
-            && !best_blame.path[best_blame.idx].from_closure
+        if let BorrowExplanation::MustBeValidFor { ref best_blame, .. } = explanation
+            && !best_blame.from_closure()
         {
             if let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
@@ -3495,6 +3492,13 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             _ => {}
         }
         explanation.add_explanation_to_diagnostic(&self, &mut err, "", None, None);
+
+        borrow_spans.args_subdiag(&mut err, |args_span| {
+            crate::session_diagnostics::CaptureArgLabel::Capture {
+                is_within: borrow_spans.for_coroutine(),
+                args_span,
+            }
+        });
 
         err
     }

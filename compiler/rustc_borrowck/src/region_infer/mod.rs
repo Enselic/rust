@@ -1924,4 +1924,8 @@ impl<'tcx> BestBlame<'tcx> {
     pub(crate) fn span(&self) -> Span {
         self.path[self.idx].span
     }
+
+    pub(crate) fn from_closure(&self) -> bool {
+        self.path[self.idx].from_closure
+    }
 }

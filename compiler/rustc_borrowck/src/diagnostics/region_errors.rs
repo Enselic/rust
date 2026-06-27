@@ -454,21 +454,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let best_constraint = best_blame.path[best_blame.idx];
         let category = best_blame.category();
         let variance_info = best_constraint.variance_info;
-        let cause_code = best_blame.cause_code();
-        let cause = ObligationCause::new(
-            best_blame.span(),
-            CRATE_DEF_ID,
-            cause_code,
-        );
-        let path = best_blame.path;
 
-        debug!("report_region_error: category={:?} {:?} {:?}", category, cause, variance_info);
+        debug!("report_region_error: category={:?} {:?}", category, variance_info);
 
         // Check if we can use one of the "nice region errors".
         if let (Some(f), Some(o)) = (self.to_error_region(fr), self.to_error_region(outlived_fr)) {
             let infer_err = self.infcx.err_ctxt();
             let nice =
-                NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), cause.span, o, f);
+                NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), best_blame.span(), o, f);
             if let Some(diag) = nice.try_report_from_nll() {
                 self.buffer_error(diag);
                 return;
@@ -485,7 +478,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             fr_is_local, outlived_fr_is_local, category
         );
 
-        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span: cause.span };
+        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span: best_blame.span() };
 
         let mut diag = match (category, fr_is_local, outlived_fr_is_local) {
             (ConstraintCategory::SolverRegionConstraint(span), _, _) => {
@@ -571,10 +564,10 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             }
         }
 
-        self.add_placeholder_from_predicate_note(&mut diag, &path);
-        self.add_sized_or_copy_bound_info(&mut diag, category, &path);
+        self.add_placeholder_from_predicate_note(&mut diag, &best_blame.path);
+        self.add_sized_or_copy_bound_info(&mut diag, category, &best_blame.path);
 
-        for constraint in &path {
+        for constraint in &best_blame.path {
             if let ConstraintCategory::Cast { is_raw_ptr_dyn_type_cast: true, .. } =
                 constraint.category
             {
