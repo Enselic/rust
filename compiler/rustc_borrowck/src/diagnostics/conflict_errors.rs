@@ -3360,6 +3360,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         if let BorrowExplanation::MustBeValidFor { ref best_blame, .. } = explanation
             && !best_blame.from_closure()
         {
+            let mut best_blame = best_blame.clone();
+            best_blame.adjust_spans();
             if let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 proper_span,

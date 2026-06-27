@@ -1283,8 +1283,10 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 return RegionRelationCheckResult::Error;
             }
 
-            let best_blame =
+            let mut best_blame =
                 self.best_blame_constraint(longer_fr, NllRegionVariableOrigin::FreeRegion, shorter_fr);
+            best_blame.adjust_spans();
+
 
             // Grow `shorter_fr` until we find some non-local regions.
             // We will always find at least one: `'static`. We'll call
@@ -1814,6 +1816,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         BestBlame {
             path,
             idx: best_blame_idx,
+            span_adjusted: false, // needs body
         }
     }
 
@@ -1893,6 +1896,7 @@ pub(crate) struct BestBlame<'tcx> {
     pub path: Vec<OutlivesConstraint<'tcx>>,
     /// Index into `path` of the constraint most relevant to report to users.
     pub idx: usize,
+    pub span_adjusted: bool,
 }
 
 impl<'tcx> BestBlame<'tcx> {
@@ -1900,7 +1904,12 @@ impl<'tcx> BestBlame<'tcx> {
         self.path[self.idx].category
     }
 
+    pub(crate) fn adjust_spans(&mut self) {
+        self.span_adjusted = true;
+    }
+
     pub(crate) fn span(&self) -> Span {
+        assert!(self.span_adjusted, "span() called on BestBlame before span_adjusted was set");
         self.path[self.idx].span
     }
 

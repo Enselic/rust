@@ -465,7 +465,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     ) {
         debug!("report_region_error(fr={:?}, outlived_fr={:?})", fr, outlived_fr);
 
-        let best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
+        let mut best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
+        best_blame.adjust_spans();
         let best_constraint = best_blame.path[best_blame.idx];
         let category = best_blame.category();
         let variance_info = best_constraint.variance_info;
