@@ -3072,31 +3072,30 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 ),
             (
                 Some(name),
-                BorrowExplanation::MustBeValidFor {
-                    category:
-                        category @ (ConstraintCategory::Return(_)
-                        | ConstraintCategory::CallArgument(_)
-                        | ConstraintCategory::OpaqueType),
-                    from_closure: false,
-                    ref region_name,
-                    ref best_blame,
-                    ..
-                },
-            ) if borrow_spans.for_coroutine() || borrow_spans.for_closure() => self
-                .report_escaping_closure_capture(
+                BorrowExplanation::MustBeValidFor { ref region_name, ref best_blame, .. },
+            ) if borrow_spans.for_coroutine()
+                || borrow_spans.for_closure()
+                    && !best_blame.path[best_blame.idx].from_closure
+                    && matches!(
+                        best_blame.path[best_blame.idx].category,
+                        ConstraintCategory::Return(_)
+                            | ConstraintCategory::CallArgument(_)
+                            | ConstraintCategory::OpaqueType
+                    ) =>
+            {
+                self.report_escaping_closure_capture(
                     borrow_spans,
                     borrow_span,
                     region_name,
-                    category,
+                    best_blame.path[best_blame.idx].category,
                     best_blame.path[best_blame.idx].span,
                     &format!("`{name}`"),
                     "function",
-                ),
+                )
+            }
             (
                 name,
                 BorrowExplanation::MustBeValidFor {
-                    category: ConstraintCategory::Assignment,
-                    from_closure: false,
                     region_name:
                         RegionName {
                             source: RegionNameSource::AnonRegionFromUpvar(upvar_span, upvar_name),
@@ -3105,7 +3104,17 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ref best_blame,
                     ..
                 },
-            ) => self.report_escaping_data(borrow_span, &name, upvar_span, upvar_name, best_blame.path[best_blame.idx].span),
+            ) if best_blame.path[best_blame.idx].category == ConstraintCategory::Assignment
+                && !best_blame.path[best_blame.idx].from_closure =>
+            {
+                self.report_escaping_data(
+                    borrow_span,
+                    &name,
+                    upvar_span,
+                    upvar_name,
+                    best_blame.path[best_blame.idx].span,
+                )
+            }
             (Some(name), explanation) => self.report_local_value_does_not_live_long_enough(
                 location,
                 &name,
@@ -3139,18 +3148,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         explanation: BorrowExplanation<'tcx>,
     ) -> Diag<'infcx> {
         let borrow_span = borrow_spans.var_or_use_path_span();
-        if let BorrowExplanation::MustBeValidFor {
-            category,
-            ref opt_place_desc,
-            from_closure: false,
-            ref best_blame,
-            ..
-        } = explanation
+        if let BorrowExplanation::MustBeValidFor { ref opt_place_desc, ref best_blame, .. } =
+            explanation
+            && !best_blame.path[best_blame.idx].from_closure
             && let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 borrow_span,
                 best_blame.path[best_blame.idx].span,
-                category,
+                best_blame.path[best_blame.idx].category,
                 opt_place_desc.as_ref(),
             )
         {
@@ -3352,14 +3357,17 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         proper_span: Span,
         explanation: BorrowExplanation<'tcx>,
     ) -> Diag<'infcx> {
-        if let BorrowExplanation::MustBeValidFor { category, from_closure: false, ref best_blame, .. } =
-            explanation
+        if let BorrowExplanation::MustBeValidFor {
+            ref best_blame,
+            ..
+        } = explanation
+            && !best_blame.path[best_blame.idx].from_closure
         {
             if let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 proper_span,
                 best_blame.path[best_blame.idx].span,
-                category,
+                best_blame.path[best_blame.idx].category,
                 None,
             ) {
                 return diag;
