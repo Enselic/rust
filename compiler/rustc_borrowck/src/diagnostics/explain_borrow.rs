@@ -36,7 +36,6 @@ pub(crate) enum BorrowExplanation<'tcx> {
     MustBeValidFor {
         category: ConstraintCategory<'tcx>,
         from_closure: bool,
-        span: Span,
         region_name: RegionName,
         opt_place_desc: Option<String>,
         best_blame: BestBlame<'tcx>,
@@ -376,7 +375,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
             }
             BorrowExplanation::MustBeValidFor {
                 category,
-                span,
                 ref region_name,
                 ref opt_place_desc,
                 from_closure: _,
@@ -384,6 +382,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
             } => {
                 region_name.highlight_region_name(err);
 
+                let span = best_blame.path[best_blame.idx].span;
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
                         span,
@@ -694,14 +693,12 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
                         region,
                     );
                     let blame_constraint = best_blame.path[best_blame.idx];
-                    let span = best_blame.cause().span;
 
                     if let Some(region_name) = self.give_region_a_name(region) {
                         let opt_place_desc = self.describe_place(borrow.borrowed_place.as_ref());
                         BorrowExplanation::MustBeValidFor {
                             category: blame_constraint.category,
                             from_closure: blame_constraint.from_closure,
-                            span,
                             region_name,
                             opt_place_desc,
                             best_blame,
