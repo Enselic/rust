@@ -416,7 +416,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let best_blame = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid);
         let cause_code = best_blame.cause_code();
         let cause = ObligationCause::new(
-            best_blame.path[best_blame.idx].span,
+            best_blame.span(),
             CRATE_DEF_ID,
             cause_code,
         );
@@ -452,11 +452,11 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         let best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
         let best_constraint = best_blame.path[best_blame.idx];
-        let category = best_constraint.category;
+        let category = best_blame.category();
         let variance_info = best_constraint.variance_info;
         let cause_code = best_blame.cause_code();
         let cause = ObligationCause::new(
-            best_blame.path[best_blame.idx].span,
+            best_blame.span(),
             CRATE_DEF_ID,
             cause_code,
         );

@@ -121,7 +121,6 @@ impl<'tcx> BorrowExplanation<'tcx> {
                         ty: None,
                         recovered: _,
                     }) = cond.kind
-                    && pat.span.can_be_used_for_suggestions()
                     && let Ok(pat) = tcx.sess.source_map().span_to_snippet(pat.span)
                 {
                     suggest_rewrite_if_let(tcx, expr, &pat, init, conseq, alt, err);
@@ -378,8 +377,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
             } => {
                 region_name.highlight_region_name(err);
 
-                let span = best_blame.path[best_blame.idx].span;
-                let category = best_blame.path[best_blame.idx].category;
+                let span = best_blame.span();
+                let category = best_blame.category();
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
                         span,

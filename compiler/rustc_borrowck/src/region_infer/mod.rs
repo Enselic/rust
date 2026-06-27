@@ -16,7 +16,7 @@ use rustc_middle::mir::{
     AnnotationSource, BasicBlock, Body, ConstraintCategory, Local, Location, ReturnConstraint,
     TerminatorKind,
 };
-use rustc_middle::traits::{ObligationCause, ObligationCauseCode};
+use rustc_middle::traits::{ObligationCauseCode};
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeFoldable, UniverseIndex, fold_regions};
 use rustc_mir_dataflow::points::DenseLocationMap;
 use rustc_span::hygiene::DesugaringKind;
@@ -1285,9 +1285,8 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 return RegionRelationCheckResult::Error;
             }
 
-            let blame_constraint =
+            let best_blame =
                 self.best_blame_constraint(longer_fr, NllRegionVariableOrigin::FreeRegion, shorter_fr);
-            let best_constraint = blame_constraint.path[blame_constraint.idx];
 
             // Grow `shorter_fr` until we find some non-local regions.
             // We will always find at least one: `'static`. We'll call
@@ -1342,18 +1341,12 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             );
 
             for (fr_minus, fr_plus) in propagated_constraints {
-                let cause_code = blame_constraint.cause_code();
-                let cause = ObligationCause::new(
-                    blame_constraint.path[blame_constraint.idx].span,
-                    CRATE_DEF_ID,
-                    cause_code,
-                );
                 // Push the constraint `long_fr-: shorter_fr+`
                 propagated_outlives_requirements.push(ClosureOutlivesRequirement {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
                     outlived_free_region: fr_plus,
-                    blame_span: cause.span,
-                    category: best_constraint.category,
+                    blame_span: best_blame.span(),
+                    category: best_blame.category(),
                 });
             }
             return RegionRelationCheckResult::Propagated;
@@ -1922,5 +1915,13 @@ impl<'tcx> BestBlame<'tcx> {
                 }
             })
             .unwrap_or(ObligationCauseCode::Misc)
+    }
+
+    pub(crate) fn category(&self) -> ConstraintCategory<'tcx> {
+        self.path[self.idx].category
+    }
+
+    pub(crate) fn span(&self) -> Span {
+        self.path[self.idx].span
     }
 }

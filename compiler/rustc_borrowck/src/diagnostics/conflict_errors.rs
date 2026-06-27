@@ -3077,7 +3077,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 || borrow_spans.for_closure()
                     && !best_blame.path[best_blame.idx].from_closure
                     && matches!(
-                        best_blame.path[best_blame.idx].category,
+                        best_blame.category(),
                         ConstraintCategory::Return(_)
                             | ConstraintCategory::CallArgument(_)
                             | ConstraintCategory::OpaqueType
@@ -3087,8 +3087,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     borrow_spans,
                     borrow_span,
                     region_name,
-                    best_blame.path[best_blame.idx].category,
-                    best_blame.path[best_blame.idx].span,
+                    best_blame.category(),
+                    best_blame.span(),
                     &format!("`{name}`"),
                     "function",
                 )
@@ -3104,7 +3104,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ref best_blame,
                     ..
                 },
-            ) if best_blame.path[best_blame.idx].category == ConstraintCategory::Assignment
+            ) if best_blame.category() == ConstraintCategory::Assignment
                 && !best_blame.path[best_blame.idx].from_closure =>
             {
                 self.report_escaping_data(
@@ -3112,7 +3112,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     &name,
                     upvar_span,
                     upvar_name,
-                    best_blame.path[best_blame.idx].span,
+                    best_blame.span(),
                 )
             }
             (Some(name), explanation) => self.report_local_value_does_not_live_long_enough(
@@ -3154,8 +3154,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             && let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 borrow_span,
-                best_blame.path[best_blame.idx].span,
-                best_blame.path[best_blame.idx].category,
+                best_blame.span(),
+                best_blame.category(),
                 opt_place_desc.as_ref(),
             )
         {
@@ -3366,8 +3366,8 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             if let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 proper_span,
-                best_blame.path[best_blame.idx].span,
-                best_blame.path[best_blame.idx].category,
+                best_blame.span(),
+                best_blame.category(),
                 None,
             ) {
                 return diag;
@@ -3495,13 +3495,6 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             _ => {}
         }
         explanation.add_explanation_to_diagnostic(&self, &mut err, "", None, None);
-
-        borrow_spans.args_subdiag(&mut err, |args_span| {
-            crate::session_diagnostics::CaptureArgLabel::Capture {
-                is_within: borrow_spans.for_coroutine(),
-                args_span,
-            }
-        });
 
         err
     }
