@@ -6,7 +6,6 @@ use rustc_data_structures::frozen::Frozen;
 use rustc_data_structures::fx::{FxIndexMap, FxIndexSet};
 use rustc_data_structures::graph::scc::Sccs;
 use rustc_errors::Diag;
-use rustc_hir::def_id::CRATE_DEF_ID;
 use rustc_index::IndexVec;
 use rustc_infer::infer::outlives::test_type_match;
 use rustc_infer::infer::region_constraints::{GenericKind, VerifyBound, VerifyIfEq};
@@ -16,7 +15,6 @@ use rustc_middle::mir::{
     AnnotationSource, BasicBlock, Body, ConstraintCategory, Local, Location, ReturnConstraint,
     TerminatorKind,
 };
-use rustc_middle::traits::{ObligationCauseCode};
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt, TypeFoldable, UniverseIndex, fold_regions};
 use rustc_mir_dataflow::points::DenseLocationMap;
 use rustc_span::hygiene::DesugaringKind;
@@ -1898,25 +1896,6 @@ pub(crate) struct BestBlame<'tcx> {
 }
 
 impl<'tcx> BestBlame<'tcx> {
-    pub(crate) fn cause_code(&self) -> ObligationCauseCode<'tcx> {
-        // Try to avoid reporting a `ConstraintCategory::Predicate` as the direct blame
-        // constraint by improving the `ObligationCauseCode` when possible.
-        // FIXME: if multiple predicate constraints exist, we currently pick the first one.
-        self
-            .path
-            .iter()
-            .find_map(|constraint| {
-                if let ConstraintCategory::Predicate(predicate_span) = constraint.category {
-                    // We currently do not store the `DefId` in `ConstraintCategory` for
-                    // performance reasons. NLL diagnostics only use the span today.
-                    Some(ObligationCauseCode::WhereClause(CRATE_DEF_ID.to_def_id(), predicate_span))
-                } else {
-                    None
-                }
-            })
-            .unwrap_or(ObligationCauseCode::Misc)
-    }
-
     pub(crate) fn category(&self) -> ConstraintCategory<'tcx> {
         self.path[self.idx].category
     }

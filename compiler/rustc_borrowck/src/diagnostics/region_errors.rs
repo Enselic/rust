@@ -4,14 +4,14 @@ use rustc_data_structures::fx::FxIndexSet;
 use rustc_errors::{Applicability, Diag, ErrorGuaranteed, MultiSpan, msg};
 use rustc_hir as hir;
 use rustc_hir::GenericBound::Trait;
-use rustc_hir::def_id::CRATE_DEF_ID;
 use rustc_hir::QPath::Resolved;
 use rustc_hir::WherePredicateKind::BoundPredicate;
 use rustc_hir::def::Res::Def;
-use rustc_hir::def_id::DefId;
+use rustc_hir::def_id::{CRATE_DEF_ID, DefId};
 use rustc_hir::intravisit::VisitorExt;
 use rustc_hir::{PolyTraitRef, TyKind, WhereBoundPredicate};
 use rustc_infer::infer::{NllRegionVariableOrigin, SubregionOrigin};
+use rustc_infer::traits::ObligationCauseCode;
 use rustc_middle::bug;
 use rustc_middle::hir::place::PlaceBase;
 use rustc_middle::mir::{AnnotationSource, ConstraintCategory, ReturnConstraint};
@@ -30,6 +30,7 @@ use rustc_trait_selection::traits::{Obligation, ObligationCtxt};
 use tracing::{debug, instrument, trace};
 
 use super::{LIMITATION_NOTE, OutlivesSuggestionBuilder, RegionName, RegionNameSource};
+use crate::consumers::OutlivesConstraint;
 use crate::nll::ConstraintDescription;
 use crate::region_infer::TypeTest;
 use crate::session_diagnostics::{
@@ -414,12 +415,6 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         // Find the code to blame for the fact that `longer_fr` outlives `error_fr`.
         let best_blame = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid);
-        let cause_code = best_blame.cause_code();
-        let cause = ObligationCause::new(
-            best_blame.span(),
-            CRATE_DEF_ID,
-            cause_code,
-        );
 
         // FIXME these methods should have better names, and also probably not be this generic.
         // FIXME note that we *throw away* the error element here! We probably want to
@@ -429,8 +424,28 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             self,
             placeholder,
             error_region,
-            cause,
+            Self::fake_cause(best_blame.span(), &best_blame.path),
         );
+    }
+
+    fn fake_cause(span: Span, path: &[OutlivesConstraint<'tcx>]) -> ObligationCause<'tcx> {
+        // Try to avoid reporting a `ConstraintCategory::Predicate` as the direct blame
+        // constraint by improving the `ObligationCauseCode` when possible.
+        // FIXME: if multiple predicate constraints exist, we currently pick the first one.
+        let cause_code = path
+            .iter()
+            .find_map(|constraint| {
+                if let ConstraintCategory::Predicate(predicate_span) = constraint.category {
+                    // We currently do not store the `DefId` in `ConstraintCategory` for
+                    // performance reasons. NLL diagnostics only use the span today.
+                    Some(ObligationCauseCode::WhereClause(CRATE_DEF_ID.to_def_id(), predicate_span))
+                } else {
+                    None
+                }
+            })
+            .unwrap_or(ObligationCauseCode::Misc);
+
+        ObligationCause::new(span, CRATE_DEF_ID, cause_code)
     }
 
     /// Report an error because the universal region `fr` was required to outlive
@@ -460,8 +475,13 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         // Check if we can use one of the "nice region errors".
         if let (Some(f), Some(o)) = (self.to_error_region(fr), self.to_error_region(outlived_fr)) {
             let infer_err = self.infcx.err_ctxt();
-            let nice =
-                NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), best_blame.span(), o, f);
+            let nice = NiceRegionError::new_from_span(
+                &infer_err,
+                self.mir_def_id(),
+                best_blame.span(),
+                o,
+                f,
+            );
             if let Some(diag) = nice.try_report_from_nll() {
                 self.buffer_error(diag);
                 return;
