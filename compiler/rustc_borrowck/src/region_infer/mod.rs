@@ -1287,7 +1287,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 
             let blame_constraint =
                 self.best_blame_constraint(longer_fr, NllRegionVariableOrigin::FreeRegion, shorter_fr);
-            let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
+            let best_constraint = blame_constraint.path[blame_constraint.idx];
 
             // Grow `shorter_fr` until we find some non-local regions.
             // We will always find at least one: `'static`. We'll call
@@ -1615,7 +1615,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
         from_region: RegionVid,
         from_region_origin: NllRegionVariableOrigin<'tcx>,
         to_region: RegionVid,
-    ) -> BlameConstraint<'tcx> {
+    ) -> BestBlame<'tcx> {
         assert!(from_region != to_region, "Trying to blame a region for itself!");
 
         let path = self.constraint_path_between_regions(from_region, to_region).unwrap();
@@ -1815,9 +1815,9 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             "Illegal placeholder constraint blamed; should have redirected to other region relation"
         );
 
-        BlameConstraint {
+        BestBlame {
             path,
-            best_blame_idx,
+            idx,
         }
     }
 
@@ -1893,13 +1893,13 @@ impl<'tcx> RegionInferenceContext<'tcx> {
 }
 
 #[derive(Clone, Debug)]
-pub(crate) struct BlameConstraint<'tcx> {
+pub(crate) struct BestBlame<'tcx> {
     pub path: Vec<OutlivesConstraint<'tcx>>,
     /// Index into `path` of the constraint most relevant to report to users.
-    pub best_blame_idx: usize,
+    pub idx: usize,
 }
 
-impl<'tcx> BlameConstraint<'tcx> {
+impl<'tcx> BestBlame<'tcx> {
     pub(crate) fn cause(&self) -> ObligationCause<'tcx> {
         // Try to avoid reporting a `ConstraintCategory::Predicate` as the direct blame
         // constraint by improving the `ObligationCauseCode` when possible.
@@ -1919,7 +1919,7 @@ impl<'tcx> BlameConstraint<'tcx> {
             .unwrap_or(ObligationCauseCode::Misc);
 
         ObligationCause::new(
-            self.path[self.best_blame_idx].span,
+            self.path[self.idx].span,
             CRATE_DEF_ID,
             cause_code,
         )

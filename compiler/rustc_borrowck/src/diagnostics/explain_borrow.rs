@@ -689,25 +689,20 @@ impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
                 // Here, under NLL: no cause was found. Under polonius: no cause was found, or a
                 // boring local was found, which we ignore like NLLs do to match its diagnostics.
                 if let Some(region) = self.to_error_region_vid(borrow_region_vid) {
-                    let blame_constraint = self.regioncx.best_blame_constraint(
+                    let blame_path = self.regioncx.best_blame_constraint(
                         borrow_region_vid,
                         NllRegionVariableOrigin::FreeRegion,
                         region,
                     );
-                    let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
-                    let category = best_constraint.category;
-                    let from_closure = best_constraint.from_closure;
-                    let cause = blame_constraint.cause();
-                    let span = cause.span;
-                    let path = blame_constraint.path;
+                    let blame_constraint = blame_path.path[blame_path.idx];
+                    let span = blame_path.cause().span;
+                    let path = blame_path.path;
 
-                    let region_name = self.give_region_a_name(region);
-
-                    if let Some(region_name) = region_name {
+                    if let Some(region_name) = self.give_region_a_name(region) {
                         let opt_place_desc = self.describe_place(borrow.borrowed_place.as_ref());
                         BorrowExplanation::MustBeValidFor {
-                            category,
-                            from_closure,
+                            category: blame_constraint.category,
+                            from_closure: blame_constraint.from_closure,
                             span,
                             region_name,
                             opt_place_desc,

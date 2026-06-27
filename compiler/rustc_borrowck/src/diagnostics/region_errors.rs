@@ -443,7 +443,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         debug!("report_region_error(fr={:?}, outlived_fr={:?})", fr, outlived_fr);
 
         let blame_constraint = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
-        let best_constraint = blame_constraint.path[blame_constraint.best_blame_idx];
+        let best_constraint = blame_constraint.path[blame_constraint.idx];
         let category = best_constraint.category;
         let variance_info = best_constraint.variance_info;
         let cause = blame_constraint.cause();
