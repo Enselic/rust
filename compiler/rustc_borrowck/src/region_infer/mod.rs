@@ -1342,7 +1342,12 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             );
 
             for (fr_minus, fr_plus) in propagated_constraints {
-                let cause = blame_constraint.cause_code();
+                let cause_code = blame_constraint.cause_code();
+                let cause = ObligationCause::new(
+                    blame_constraint.path[blame_constraint.idx].span,
+                    CRATE_DEF_ID,
+                    cause_code,
+                );
                 // Push the constraint `long_fr-: shorter_fr+`
                 propagated_outlives_requirements.push(ClosureOutlivesRequirement {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
@@ -1900,11 +1905,11 @@ pub(crate) struct BestBlame<'tcx> {
 }
 
 impl<'tcx> BestBlame<'tcx> {
-    pub(crate) fn cause_code(&self) -> ObligationCause<'tcx> {
+    pub(crate) fn cause_code(&self) -> ObligationCauseCode<'tcx> {
         // Try to avoid reporting a `ConstraintCategory::Predicate` as the direct blame
         // constraint by improving the `ObligationCauseCode` when possible.
         // FIXME: if multiple predicate constraints exist, we currently pick the first one.
-        let cause_code = self
+        self
             .path
             .iter()
             .find_map(|constraint| {
@@ -1916,12 +1921,6 @@ impl<'tcx> BestBlame<'tcx> {
                     None
                 }
             })
-            .unwrap_or(ObligationCauseCode::Misc);
-
-        ObligationCause::new(
-            self.path[self.idx].span,
-            CRATE_DEF_ID,
-            cause_code,
-        )
+            .unwrap_or(ObligationCauseCode::Misc)
     }
 }

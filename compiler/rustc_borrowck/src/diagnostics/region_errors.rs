@@ -4,6 +4,7 @@ use rustc_data_structures::fx::FxIndexSet;
 use rustc_errors::{Applicability, Diag, ErrorGuaranteed, MultiSpan, msg};
 use rustc_hir as hir;
 use rustc_hir::GenericBound::Trait;
+use rustc_hir::def_id::CRATE_DEF_ID;
 use rustc_hir::QPath::Resolved;
 use rustc_hir::WherePredicateKind::BoundPredicate;
 use rustc_hir::def::Res::Def;
@@ -14,6 +15,7 @@ use rustc_infer::infer::{NllRegionVariableOrigin, SubregionOrigin};
 use rustc_middle::bug;
 use rustc_middle::hir::place::PlaceBase;
 use rustc_middle::mir::{AnnotationSource, ConstraintCategory, ReturnConstraint};
+use rustc_middle::traits::ObligationCause;
 use rustc_middle::ty::{
     self, GenericArgs, Region, RegionVid, Ty, TyCtxt, TypeFoldable, TypeVisitor, fold_regions,
 };
@@ -411,7 +413,13 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         };
 
         // Find the code to blame for the fact that `longer_fr` outlives `error_fr`.
-        let cause = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid).cause_code();
+        let best_blame = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid);
+        let cause_code = best_blame.cause_code();
+        let cause = ObligationCause::new(
+            best_blame.path[best_blame.idx].span,
+            CRATE_DEF_ID,
+            cause_code,
+        );
 
         // FIXME these methods should have better names, and also probably not be this generic.
         // FIXME note that we *throw away* the error element here! We probably want to
@@ -446,7 +454,12 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         let best_constraint = best_blame.path[best_blame.idx];
         let category = best_constraint.category;
         let variance_info = best_constraint.variance_info;
-        let cause = best_blame.cause_code();
+        let cause_code = best_blame.cause_code();
+        let cause = ObligationCause::new(
+            best_blame.path[best_blame.idx].span,
+            CRATE_DEF_ID,
+            cause_code,
+        );
         let path = best_blame.path;
 
         debug!("report_region_error: category={:?} {:?} {:?}", category, cause, variance_info);
