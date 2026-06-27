@@ -1342,7 +1342,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
             );
 
             for (fr_minus, fr_plus) in propagated_constraints {
-                let cause = blame_constraint.cause();
+                let cause = blame_constraint.cause_code();
                 // Push the constraint `long_fr-: shorter_fr+`
                 propagated_outlives_requirements.push(ClosureOutlivesRequirement {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
@@ -1900,7 +1900,7 @@ pub(crate) struct BestBlame<'tcx> {
 }
 
 impl<'tcx> BestBlame<'tcx> {
-    pub(crate) fn cause(&self) -> ObligationCause<'tcx> {
+    pub(crate) fn cause_code(&self) -> ObligationCause<'tcx> {
         // Try to avoid reporting a `ConstraintCategory::Predicate` as the direct blame
         // constraint by improving the `ObligationCauseCode` when possible.
         // FIXME: if multiple predicate constraints exist, we currently pick the first one.

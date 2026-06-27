@@ -411,7 +411,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         };
 
         // Find the code to blame for the fact that `longer_fr` outlives `error_fr`.
-        let cause = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid).cause();
+        let cause = self.regioncx.best_blame_constraint(longer_fr, origin_longer, error_vid).cause_code();
 
         // FIXME these methods should have better names, and also probably not be this generic.
         // FIXME note that we *throw away* the error element here! We probably want to
@@ -442,12 +442,12 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
     ) {
         debug!("report_region_error(fr={:?}, outlived_fr={:?})", fr, outlived_fr);
 
-        let blame_constraint = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
-        let best_constraint = blame_constraint.path[blame_constraint.idx];
+        let best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
+        let best_constraint = best_blame.path[best_blame.idx];
         let category = best_constraint.category;
         let variance_info = best_constraint.variance_info;
-        let cause = blame_constraint.cause();
-        let path = blame_constraint.path;
+        let cause = best_blame.cause_code();
+        let path = best_blame.path;
 
         debug!("report_region_error: category={:?} {:?} {:?}", category, cause, variance_info);
 
