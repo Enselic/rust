@@ -1898,6 +1898,10 @@ pub(crate) struct BestBlame<'tcx> {
 }
 
 impl<'tcx> BestBlame<'tcx> {
+    pub(crate) fn constraint(&self) -> &OutlivesConstraint<'tcx> {
+        &self.path[self.idx]
+    }
+
     pub(crate) fn category(&self) -> ConstraintCategory<'tcx> {
         self.path[self.idx].category
     }

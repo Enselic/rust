@@ -28,7 +28,7 @@ use rustc_trait_selection::traits::{Obligation, ObligationCtxt};
 use tracing::{debug, instrument, trace};
 
 use super::{LIMITATION_NOTE, OutlivesSuggestionBuilder, RegionName, RegionNameSource};
-use crate::consumers::RegionInferenceContext;
+use crate::consumers::{OutlivesConstraint, RegionInferenceContext};
 use crate::nll::ConstraintDescription;
 use crate::region_infer::TypeTest;
 use crate::session_diagnostics::{
@@ -447,9 +447,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         debug!("report_region_error(fr={:?}, outlived_fr={:?})", fr, outlived_fr);
 
         let best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
-        let best_constraint = best_blame.path[best_blame.idx];
-        let category = best_blame.category();
-        let variance_info = best_constraint.variance_info;
+        let OutlivesConstraint { category, span, variance_info, .. } = best_blame.constraint();
 
         debug!(
             "report_region_error: category={:?} {:?} {:?}",
