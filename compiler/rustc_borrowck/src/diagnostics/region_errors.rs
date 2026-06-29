@@ -447,14 +447,9 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         debug!("report_region_error(fr={:?}, outlived_fr={:?})", fr, outlived_fr);
 
         let best_blame = self.regioncx.best_blame_constraint(fr, fr_origin, outlived_fr);
-        let OutlivesConstraint { category, span, variance_info, .. } = best_blame.constraint();
+        let OutlivesConstraint { category, span, variance_info, .. } = *best_blame.constraint();
 
-        debug!(
-            "report_region_error: category={:?} {:?} {:?}",
-            category,
-            best_blame.span(),
-            variance_info
-        );
+        debug!("report_region_error: category={:?} {:?} {:?}", category, span, variance_info);
 
         // Check if we can use one of the "nice region errors".
         if let (Some(f), Some(o)) =
@@ -464,14 +459,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             let nice = NiceRegionError::new_from_span(
                 &infer_err,
                 self.mir_def_id(),
-                best_blame.span(),
-                o,
-                f,
-            );
-            let nice = NiceRegionError::new_from_span(
-                &infer_err,
-                self.mir_def_id(),
-                best_blame.span(),
+                span,
                 o,
                 f,
             );

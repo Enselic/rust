@@ -34,9 +34,9 @@ pub(crate) enum BorrowExplanation<'tcx> {
         should_note_order: bool,
     },
     MustBeValidFor {
+        best_blame: BestBlame<'tcx>,
         region_name: RegionName,
         opt_place_desc: Option<String>,
-        best_blame: BestBlame<'tcx>,
     },
     Unexplained,
 }
