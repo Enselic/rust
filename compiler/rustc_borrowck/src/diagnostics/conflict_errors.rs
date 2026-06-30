@@ -3078,22 +3078,23 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             (
                 Some(name),
                 BorrowExplanation::MustBeValidFor { ref region_name, ref best_blame, .. },
-            ) if borrow_spans.for_coroutine()
-                || borrow_spans.for_closure()
-                    && !best_blame.from_closure()
-                    && matches!(
-                        best_blame.category(),
-                        ConstraintCategory::Return(_)
-                            | ConstraintCategory::CallArgument(_)
-                            | ConstraintCategory::OpaqueType
-                    ) =>
+            ) if let OutlivesConstraint {
+                category:
+                    category @ (ConstraintCategory::Return(_)
+                    | ConstraintCategory::CallArgument(_)
+                    | ConstraintCategory::OpaqueType),
+                from_closure: false,
+                span,
+                ..
+            } = *best_blame.constraint()
+                && (borrow_spans.for_coroutine() || borrow_spans.for_closure()) =>
             {
                 self.report_escaping_closure_capture(
                     borrow_spans,
                     borrow_span,
                     region_name,
-                    best_blame.category(),
-                    best_blame.span(),
+                    category,
+                    span,
                     &format!("`{name}`"),
                     "function",
                 )
