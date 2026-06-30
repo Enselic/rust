@@ -46,6 +46,7 @@ use tracing::{debug, instrument};
 use super::explain_borrow::{BorrowExplanation, LaterUseKind};
 use super::{DescribePlaceOpt, RegionName, RegionNameSource, UseSpans};
 use crate::borrow_set::{BorrowData, TwoPhaseActivation};
+use crate::consumers::OutlivesConstraint;
 use crate::diagnostics::conflict_errors::StorageDeadOrDrop::LocalStorageDead;
 use crate::diagnostics::{CapturedMessageOpt, call_kind, find_all_local_uses};
 use crate::{InitializationRequiringAction, MirBorrowckCtxt, WriteKind, borrowck_errors};
@@ -3152,14 +3153,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         explanation: BorrowExplanation<'tcx>,
     ) -> Diag<'infcx> {
         let borrow_span = borrow_spans.var_or_use_path_span();
-        if let BorrowExplanation::MustBeValidFor { ref opt_place_desc, ref best_blame, .. } =
-            explanation
-            && !best_blame.from_closure()
+        if let BorrowExplanation::MustBeValidFor { opt_place_desc, best_blame, .. } = &explanation
+            && let OutlivesConstraint { category, span, from_closure: false, .. } =
+                *best_blame.constraint()
             && let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 borrow_span,
-                best_blame.span(),
-                best_blame.category(),
+                span,
+                category,
                 opt_place_desc.as_ref(),
             )
         {
@@ -3362,13 +3363,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
         explanation: BorrowExplanation<'tcx>,
     ) -> Diag<'infcx> {
         if let BorrowExplanation::MustBeValidFor { ref best_blame, .. } = explanation
-            && !best_blame.from_closure()
+            && let OutlivesConstraint { category, span, from_closure: false, .. } =
+                *best_blame.constraint()
         {
             if let Err(diag) = self.try_report_cannot_return_reference_to_local(
                 borrow,
                 proper_span,
-                best_blame.span(),
-                best_blame.category(),
+                span,
+                category,
                 None,
             ) {
                 return diag;

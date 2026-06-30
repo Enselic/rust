@@ -1290,6 +1290,7 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 NllRegionVariableOrigin::FreeRegion,
                 shorter_fr,
             );
+            let OutlivesConstraint { category, span, .. } = *best_blame.constraint();
 
             // Grow `shorter_fr` until we find some non-local regions.
             // We will always find at least one: `'static`. We'll call
@@ -1348,8 +1349,8 @@ impl<'tcx> RegionInferenceContext<'tcx> {
                 propagated_outlives_requirements.push(ClosureOutlivesRequirement {
                     subject: ClosureOutlivesSubject::Region(fr_minus),
                     outlived_free_region: fr_plus,
-                    blame_span: best_blame.span(),
-                    category: best_blame.category(),
+                    blame_span: span,
+                    category,
                 });
             }
             return RegionRelationCheckResult::Propagated;
@@ -1932,6 +1933,6 @@ impl<'tcx> BestBlame<'tcx> {
             })
             .unwrap_or_else(|| ObligationCauseCode::Misc);
 
-        ObligationCause::new(self.span(), CRATE_DEF_ID, cause_code.clone())
+        ObligationCause::new(self.constraint().span, CRATE_DEF_ID, cause_code.clone())
     }
 }

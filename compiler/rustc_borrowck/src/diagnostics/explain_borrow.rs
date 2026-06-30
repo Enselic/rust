@@ -20,6 +20,7 @@ use tracing::{debug, instrument};
 
 use super::{RegionName, UseSpans, find_use};
 use crate::borrow_set::BorrowData;
+use crate::consumers::OutlivesConstraint;
 use crate::nll::ConstraintDescription;
 use crate::region_infer::{BestBlame, Cause};
 use crate::{MirBorrowckCtxt, WriteKind};
@@ -376,34 +377,36 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 ref opt_place_desc,
                 ref best_blame,
             } => {
+                let OutlivesConstraint { category, span, .. } = *best_blame.constraint();
+
                 region_name.highlight_region_name(err);
 
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
-                        best_blame.span(),
+                        span,
                         format!(
                             "{}requires that `{desc}` is borrowed for `{region_name}`",
-                            best_blame.category().description(),
+                            category.description(),
                         ),
                     );
                 } else {
                     err.span_label(
-                        best_blame.span(),
+                        span,
                         format!(
                             "{}requires that {borrow_desc}borrow lasts for `{region_name}`",
-                            best_blame.category().description(),
+                            category.description(),
                         ),
                     );
                 };
 
                 cx.add_placeholder_from_predicate_note(err, &best_blame.path);
-                cx.add_sized_or_copy_bound_info(err, best_blame.category(), &best_blame.path);
+                cx.add_sized_or_copy_bound_info(err, category, &best_blame.path);
 
                 if let ConstraintCategory::Cast {
                     is_raw_ptr_dyn_type_cast: _,
                     is_implicit_coercion: true,
                     unsize_to: Some(unsize_ty),
-                } = best_blame.category()
+                } = category
                 {
                     self.add_object_lifetime_default_note(tcx, err, unsize_ty);
                 }
@@ -430,8 +433,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
 
                 self.add_lifetime_bound_suggestion_to_diagnostic(
                     err,
-                    &best_blame.category(),
-                    best_blame.span(),
+                    &category,
+                    span,
                     region_name,
                 );
             }
