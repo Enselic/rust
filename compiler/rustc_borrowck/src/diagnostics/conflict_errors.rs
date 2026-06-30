@@ -3110,16 +3110,14 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                     ref best_blame,
                     ..
                 },
-            ) if best_blame.category() == ConstraintCategory::Assignment
-                && !best_blame.from_closure() =>
+            ) if let OutlivesConstraint {
+                category: ConstraintCategory::Assignment,
+                from_closure: false,
+                span,
+                ..
+            } = *best_blame.constraint() =>
             {
-                self.report_escaping_data(
-                    borrow_span,
-                    &name,
-                    upvar_span,
-                    upvar_name,
-                    best_blame.span(),
-                )
+                self.report_escaping_data(borrow_span, &name, upvar_span, upvar_name, span)
             }
             (Some(name), explanation) => self.report_local_value_does_not_live_long_enough(
                 location,

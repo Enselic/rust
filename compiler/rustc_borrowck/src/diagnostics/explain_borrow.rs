@@ -378,6 +378,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 ref best_blame,
             } => {
                 let OutlivesConstraint { category, span, .. } = *best_blame.constraint();
+                let path = best_blame.path();
 
                 region_name.highlight_region_name(err);
 
@@ -399,8 +400,8 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 };
 
-                cx.add_placeholder_from_predicate_note(err, &best_blame.path);
-                cx.add_sized_or_copy_bound_info(err, category, &best_blame.path);
+                cx.add_placeholder_from_predicate_note(err, &path);
+                cx.add_sized_or_copy_bound_info(err, category, &path);
 
                 if let ConstraintCategory::Cast {
                     is_raw_ptr_dyn_type_cast: _,
@@ -411,8 +412,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     self.add_object_lifetime_default_note(tcx, err, unsize_ty);
                 }
 
-                let mut preds = best_blame
-                    .path
+                let mut preds = path
                     .iter()
                     .filter_map(|constraint| match constraint.category {
                         ConstraintCategory::Predicate(pred) if !pred.is_dummy() => Some(pred),
@@ -431,12 +431,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 }
 
-                self.add_lifetime_bound_suggestion_to_diagnostic(
-                    err,
-                    &category,
-                    span,
-                    region_name,
-                );
+                self.add_lifetime_bound_suggestion_to_diagnostic(err, &category, span, region_name);
             }
             _ => {}
         }

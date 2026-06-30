@@ -456,13 +456,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             (self.regioncx.to_error_region(fr), self.regioncx.to_error_region(outlived_fr))
         {
             let infer_err = self.infcx.err_ctxt();
-            let nice = NiceRegionError::new_from_span(
-                &infer_err,
-                self.mir_def_id(),
-                span,
-                o,
-                f,
-            );
+            let nice = NiceRegionError::new_from_span(&infer_err, self.mir_def_id(), span, o, f);
             if let Some(diag) = nice.try_report_from_nll() {
                 self.buffer_error(diag);
                 return;
@@ -479,7 +473,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
             fr_is_local, outlived_fr_is_local, category
         );
 
-        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span: best_blame.span() };
+        let errci = ErrorConstraintInfo { fr, outlived_fr, category, span };
 
         let mut diag = match (category, fr_is_local, outlived_fr_is_local) {
             (ConstraintCategory::SolverRegionConstraint(span), _, _) => {

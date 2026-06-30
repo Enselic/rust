@@ -1903,16 +1903,8 @@ impl<'tcx> BestBlame<'tcx> {
         &self.path[self.idx]
     }
 
-    pub(crate) fn category(&self) -> ConstraintCategory<'tcx> {
-        self.path[self.idx].category
-    }
-
-    pub(crate) fn span(&self) -> Span {
-        self.path[self.idx].span
-    }
-
-    pub(crate) fn from_closure(&self) -> bool {
-        self.path[self.idx].from_closure
+    pub(crate) fn path(&self) -> &[OutlivesConstraint<'tcx>] {
+        &self.path
     }
 
     pub(crate) fn to_obligation_cause(&self) -> ObligationCause<'tcx> {
