@@ -93,6 +93,15 @@ pub struct ConstQualifs {
     pub needs_non_const_drop: bool,
     pub tainted_by_errors: Option<ErrorGuaranteed>,
 }
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
+pub enum CallArgumentKind {
+    Normal,
+    Reciever,
+    Closure,
+}
+
 /// Outlives-constraints can be categorized to determine whether and why they
 /// are interesting (for error reporting). Order of variants indicates sort
 /// order of the category, thereby influencing diagnostic output.
@@ -116,7 +125,7 @@ pub enum ConstraintCategory<'tcx> {
     },
 
     /// Contains the function type if available.
-    CallArgument(Option<Ty<'tcx>>),
+    CallArgument(Option<Ty<'tcx>>, CallArgumentKind),
     CopyBound,
     SizedBound,
     Assignment,
