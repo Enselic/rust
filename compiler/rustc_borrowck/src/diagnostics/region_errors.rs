@@ -49,7 +49,7 @@ impl<'tcx> ConstraintDescription for ConstraintCategory<'tcx> {
             ConstraintCategory::UseAsStatic => "using this value as a static ",
             ConstraintCategory::Cast { is_implicit_coercion: false, .. } => "cast ",
             ConstraintCategory::Cast { is_implicit_coercion: true, .. } => "coercion ",
-            ConstraintCategory::CallArgument(_) => "argument ",
+            ConstraintCategory::CallArgument(_, _) => "argument ",
             ConstraintCategory::TypeAnnotation(AnnotationSource::GenericArg) => "generic argument ",
             ConstraintCategory::TypeAnnotation(_) => "type annotation ",
             ConstraintCategory::SizedBound => "proving this value is `Sized` ",
@@ -491,7 +491,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
                 self.report_fnmut_error(&errci, kind)
             }
             (ConstraintCategory::Assignment, true, false)
-            | (ConstraintCategory::CallArgument(_), true, false) => {
+            | (ConstraintCategory::CallArgument(_, _), true, false) => {
                 let mut db = self.report_escaping_data_error(&errci);
 
                 outlives_suggestion.intermediate_suggestion(self, &errci, &mut db);
@@ -945,7 +945,7 @@ impl<'infcx, 'tcx> MirBorrowckCtxt<'_, 'infcx, 'tcx> {
 
         let tcx = self.infcx.tcx;
 
-        let ConstraintCategory::CallArgument(Some(func_ty)) = category else { return };
+        let ConstraintCategory::CallArgument(Some(func_ty), _) = category else { return };
         let ty::FnDef(fn_did, args) = *func_ty.kind() else { return };
         debug!(?fn_did, ?args);
 

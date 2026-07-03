@@ -1633,7 +1633,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_left,
                             common_ty,
                             location.to_locations(),
-                            ConstraintCategory::CallArgument(None),
+                            ConstraintCategory::CallArgument(None, CallArgumentKind::Normal),
                         )
                         .unwrap_or_else(|err| {
                             bug!("Could not equate type variable with {:?}: {:?}", ty_left, err)
@@ -1642,7 +1642,7 @@ impl<'a, 'tcx> Visitor<'tcx> for TypeChecker<'a, 'tcx> {
                             ty_right,
                             common_ty,
                             location.to_locations(),
-                            ConstraintCategory::CallArgument(None),
+                            ConstraintCategory::CallArgument(None, CallArgumentKind::Normal),
                         ) {
                             span_mirbug!(
                                 self,
@@ -2047,10 +2047,13 @@ impl<'a, 'tcx> TypeChecker<'a, 'tcx> {
             let op_arg_ty = op_arg.node.ty(self.body, self.tcx());
 
             let op_arg_ty = self.normalize(ty::Unnormalized::new_wip(op_arg_ty), term_location);
+            let is_receiver = n == 0
+                && matches!(&term.kind, TerminatorKind::Call { fn_span, .. } if term.source_info.span != *fn_span);
             let category = if call_source.from_hir_call() {
-                ConstraintCategory::CallArgument(Some(
-                    self.infcx.tcx.erase_and_anonymize_regions(func_ty),
-                ))
+                ConstraintCategory::CallArgument(
+                    Some(self.infcx.tcx.erase_and_anonymize_regions(func_ty)),
+                    if is_receiver { CallArgumentKind::Receiver } else { CallArgumentKind::Normal },
+                )
             } else {
                 ConstraintCategory::Boring
             };

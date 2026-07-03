@@ -98,9 +98,14 @@ pub struct ConstQualifs {
 #[derive(TyEncodable, TyDecodable, StableHash, TypeVisitable, TypeFoldable)]
 pub enum CallArgumentKind {
     Normal,
-    Reciever,
+    Receiver,
     Closure,
+    Unused, // to save binary size for static_assert_size!
 }
+
+// Make sure this enum doesn't unintentionally grow
+#[cfg(target_pointer_width = "64")]
+rustc_data_structures::static_assert_size!(ConstraintCategory<'_>, 16);
 
 /// Outlives-constraints can be categorized to determine whether and why they
 /// are interesting (for error reporting). Order of variants indicates sort
