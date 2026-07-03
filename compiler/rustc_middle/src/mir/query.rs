@@ -100,7 +100,6 @@ pub enum CallArgumentKind {
     Normal,
     Receiver,
     Closure,
-    Unused, // to save binary size for static_assert_size!
 }
 
 // Make sure this enum doesn't unintentionally grow
@@ -130,7 +129,7 @@ pub enum ConstraintCategory<'tcx> {
     },
 
     /// Contains the function type if available.
-    CallArgument(Option<Ty<'tcx>>, CallArgumentKind),
+    CallArgument(Option<Ty<'tcx>>, CallArgumentKind), // to save binary size for static_assert_size!
     CopyBound,
     SizedBound,
     Assignment,

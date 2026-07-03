@@ -13,7 +13,7 @@ use rustc_hir::{PolyTraitRef, TyKind, WhereBoundPredicate};
 use rustc_infer::infer::{NllRegionVariableOrigin, SubregionOrigin};
 use rustc_middle::bug;
 use rustc_middle::hir::place::PlaceBase;
-use rustc_middle::mir::{AnnotationSource, ConstraintCategory, ReturnConstraint};
+use rustc_middle::mir::{AnnotationSource, CallArgumentKind, ConstraintCategory, ReturnConstraint};
 use rustc_middle::ty::{
     self, GenericArgs, Region, RegionVid, Ty, TyCtxt, TypeFoldable, TypeVisitor, fold_regions,
 };
@@ -49,7 +49,11 @@ impl<'tcx> ConstraintDescription for ConstraintCategory<'tcx> {
             ConstraintCategory::UseAsStatic => "using this value as a static ",
             ConstraintCategory::Cast { is_implicit_coercion: false, .. } => "cast ",
             ConstraintCategory::Cast { is_implicit_coercion: true, .. } => "coercion ",
-            ConstraintCategory::CallArgument(_, _) => "argument ",
+            ConstraintCategory::CallArgument(_, kind) => match kind {
+                CallArgumentKind::Normal => "argument ",
+                CallArgumentKind::Receiver => "receiver ",
+                CallArgumentKind::Closure => "closure ",
+            },
             ConstraintCategory::TypeAnnotation(AnnotationSource::GenericArg) => "generic argument ",
             ConstraintCategory::TypeAnnotation(_) => "type annotation ",
             ConstraintCategory::SizedBound => "proving this value is `Sized` ",
