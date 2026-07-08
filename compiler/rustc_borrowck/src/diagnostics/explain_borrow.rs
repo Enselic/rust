@@ -13,6 +13,7 @@ use rustc_middle::mir::{
 };
 use rustc_middle::ty::adjustment::PointerCoercion;
 use rustc_middle::ty::{self, RegionVid, Ty, TyCtxt};
+use rustc_span::sym::debug;
 use rustc_span::{DesugaringKind, Span, kw, sym};
 use rustc_trait_selection::error_reporting::traits::FindExprBySpan;
 use rustc_trait_selection::error_reporting::traits::call_kind::CallKind;
@@ -383,11 +384,12 @@ impl<'tcx> BorrowExplanation<'tcx> {
                 from_closure: _,
                 ref path,
             } => {
+                let call_arg_span = category.call_arg_span_for_diagnostic(tcx, body, span, path);
                 region_name.highlight_region_name(err);
 
                 if let Some(desc) = opt_place_desc {
                     err.span_label(
-                        span,
+                        call_arg_span,
                         format!(
                             "{}requires that `{desc}` is borrowed for `{region_name}`",
                             category.description(),
@@ -395,7 +397,7 @@ impl<'tcx> BorrowExplanation<'tcx> {
                     );
                 } else {
                     err.span_label(
-                        span,
+                        call_arg_span,
                         format!(
                             "{}requires that {borrow_desc}borrow lasts for `{region_name}`",
                             category.description(),
@@ -526,6 +528,57 @@ impl<'tcx> BorrowExplanation<'tcx> {
     }
 }
 
+trait ConstraintCategoryExt<'tcx> {
+    fn call_arg_span_for_diagnostic(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        body: &Body<'tcx>,
+        span: Span,
+        path: &[OutlivesConstraint<'tcx>],
+    ) -> Span;
+}
+
+impl<'tcx> ConstraintCategoryExt<'tcx> for ConstraintCategory<'tcx> {
+    fn call_arg_span_for_diagnostic(
+        &self,
+        tcx: TyCtxt<'tcx>,
+        body: &Body<'tcx>,
+        span: Span,
+        path: &[OutlivesConstraint<'tcx>],
+    ) -> Span {
+        let mut call_arg_span = span;
+
+        if matches!(self, ConstraintCategory::CallArgument(_))
+            && let def_id = body.source.def_id()
+            && let Some(node) = tcx.hir_get_if_local(def_id)
+            && let Some(body_id) = node.body_id()
+            && let hir_body = tcx.hir_body(body_id)
+        {
+            let mut expr_finder = FindExprBySpan::new(span, tcx);
+            expr_finder.visit_expr(hir_body.value);
+            if let Some(expr) = expr_finder.result {
+                debug!("NORDH expr={expr:?}");
+                let in_call_or_method_args = is_in_call_or_method_args(tcx, expr);
+                if !in_call_or_method_args {
+                    for constraint in path {
+                        if constraint.category == *self {
+                            call_arg_span = constraint.locations.span(body);
+                            debug!("NORDH adjusting span back to to {call_arg_span:?}");
+                            break;
+                        }
+                    }
+                }
+                debug!(
+                    "NORDH expr: {:?}; in call/method args: {}",
+                    expr, in_call_or_method_args
+                );
+            }
+        }
+
+        call_arg_span
+    }
+}
+
 fn suggest_rewrite_if_let<G: EmissionGuarantee>(
     tcx: TyCtxt<'_>,
     expr: &hir::Expr<'_>,
@@ -571,6 +624,34 @@ fn suggest_rewrite_if_let<G: EmissionGuarantee>(
             Applicability::MaybeIncorrect,
         );
     }
+}
+
+fn is_in_call_or_method_args<'hir>(tcx: TyCtxt<'hir>, expr: &hir::Expr<'hir>) -> bool {
+    for (_, node) in tcx.hir_parent_iter(expr.hir_id) {
+        let hir::Node::Expr(parent_expr) = node else {
+            continue;
+        };
+        debug!("NORDH parent_expr={:?}", parent_expr);
+
+        match parent_expr.kind {
+            hir::ExprKind::Call(_, args) => {
+                if args.iter().any(|arg| arg.span.contains(expr.span)) {
+                    return true;
+                }
+            }
+            hir::ExprKind::MethodCall(_, _, args, _) => {
+                if args.iter().any(|arg| {
+                    debug!("NORDH arg={:?}", arg);
+                    arg.span.contains(expr.span)
+                }) {
+                    return true;
+                }
+            }
+            _ => {}
+        }
+    }
+
+    false
 }
 
 impl<'tcx> MirBorrowckCtxt<'_, '_, 'tcx> {
