@@ -19,7 +19,7 @@ use crate::solve::{AdtDestructorKind, EvalCtxt, Goal, NoSolution};
 
 // Calculates the constituent types of a type for `auto trait` purposes.
 #[instrument(level = "trace", skip(ecx), ret)]
-pub(in crate::solve) fn instantiate_constituent_tys_for_auto_trait<D, I>(
+pub(in crate::solve) fn instantiate_constituent_tys_for_auto_trait<D, I>( // nordh
     ecx: &EvalCtxt<'_, D>,
     ty: I::Ty,
 ) -> Result<ty::Binder<I, Vec<I::Ty>>, NoSolution>

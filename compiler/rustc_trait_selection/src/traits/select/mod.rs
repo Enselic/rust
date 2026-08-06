@@ -2312,7 +2312,7 @@ impl<'tcx> SelectionContext<'_, 'tcx> {
     /// Zed<i32> where enum Zed { A(T), B(u32) } -> [i32, u32]
     /// ```
     #[instrument(level = "debug", skip(self), ret)]
-    fn constituent_types_for_auto_trait(
+    fn constituent_types_for_auto_trait( // nordh
         &self,
         t: Ty<'tcx>,
     ) -> Result<ty::Binder<'tcx, AutoImplConstituents<'tcx>>, SelectionError<'tcx>> {
