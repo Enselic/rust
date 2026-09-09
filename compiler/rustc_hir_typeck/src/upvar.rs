@@ -1035,8 +1035,8 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                             _ => {}
                         }
 
-                        // Add a label pointing to where a captured variable affected by drop
-                        // order is dropped.
+                        // Add a label pointing to where a captured variable affected by drop order
+                        // is dropped
                         if lint_note.reason.drop_order
                             && let Some(drop_location_span) = drop_location_span
                         {
