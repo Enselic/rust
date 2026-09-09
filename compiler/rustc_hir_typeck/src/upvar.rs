@@ -992,7 +992,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
     ) {
         struct MigrationLint<'a, 'tcx> {
             closure_def_id: LocalDefId,
-            closure_drop_location_span: Span,
+            drop_location_span: Span,
             this: &'a FnCtxt<'a, 'tcx>,
             body_id: hir::BodyId,
             need_migrations: Vec<NeededMigration>,
@@ -1003,7 +1003,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             fn into_diag(self, dcx: DiagCtxtHandle<'a>, level: Level) -> Diag<'a, ()> {
                 let Self {
                     closure_def_id,
-                    closure_drop_location_span,
+                    drop_location_span,
                     this,
                     body_id,
                     need_migrations,
@@ -1015,7 +1015,6 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                     migration_suggestion_for_2229(this.tcx, &need_migrations);
 
                 let closure_hir_id = this.tcx.local_def_id_to_hir_id(closure_def_id);
-                let drop_location_span = drop_location_span(this.tcx, closure_hir_id);
                 let closure_head_span = this.tcx.def_span(closure_def_id);
 
                 for NeededMigration { var_hir_id, diagnostics_info } in &need_migrations {
@@ -1045,7 +1044,6 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                         // Add a label pointing to where a captured variable affected by drop order
                         // is dropped
                         if lint_note.reason.drop_order
-                            && let Some(drop_location_span) = drop_location_span
                         {
                             let var_name = this.tcx.hir_name(*var_hir_id);
 
@@ -1217,7 +1215,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                 self.tcx.def_span(closure_def_id),
                 MigrationLint {
                     this: self,
-                    closure_drop_location_span: drop_location_span,
+                    drop_location_span,
                     migration_message: reasons.migration_message(),
                     closure_def_id,
                     body_id,
