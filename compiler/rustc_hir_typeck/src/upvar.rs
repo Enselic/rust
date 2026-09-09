@@ -1008,6 +1008,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                     migration_suggestion_for_2229(this.tcx, &need_migrations);
 
                 let closure_hir_id = this.tcx.local_def_id_to_hir_id(closure_def_id);
+                let drop_location_span = drop_location_span(this.tcx, closure_hir_id);
                 let closure_head_span = this.tcx.def_span(closure_def_id);
 
                 for NeededMigration { var_hir_id, diagnostics_info } in &need_migrations {
@@ -1038,7 +1039,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                         // order is dropped.
                         if lint_note.reason.drop_order
                             && let Some(drop_location_span) =
-                                drop_location_span(this.tcx, closure_hir_id)
+                                drop_location_span
                         {
                             let var_name = this.tcx.hir_name(*var_hir_id);
                             match &lint_note.captures_info {
@@ -1200,22 +1201,18 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
         );
 
         if !need_migrations.is_empty() {
-            let closure_hir_id = self.tcx.local_def_id_to_hir_id(closure_def_id);
-
-            if drop_location_hir_id(self.tcx, closure_hir_id).is_some() {
-                self.tcx.emit_node_span_lint(
-                    RUST_2021_INCOMPATIBLE_CLOSURE_CAPTURES,
-                    closure_hir_id,
-                    self.tcx.def_span(closure_def_id),
-                    MigrationLint {
-                        this: self,
-                        migration_message: reasons.migration_message(),
-                        closure_def_id,
-                        body_id,
-                        need_migrations,
-                    },
-                );
-            }
+            self.tcx.emit_node_span_lint(
+                RUST_2021_INCOMPATIBLE_CLOSURE_CAPTURES,
+                self.tcx.local_def_id_to_hir_id(closure_def_id),
+                self.tcx.def_span(closure_def_id),
+                MigrationLint {
+                    this: self,
+                    migration_message: reasons.migration_message(),
+                    closure_def_id,
+                    body_id,
+                    need_migrations,
+                },
+            );
         }
     }
 
@@ -2069,23 +2066,19 @@ fn apply_capture_kind_on_capture_ty<'tcx>(
     }
 }
 
-fn drop_location_hir_id(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<HirId> {
+fn drop_location_span(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<Span> {
     let owner_id = tcx.hir_get_enclosing_scope(hir_id)?;
 
-    match tcx.hir_node(owner_id) {
+    let hir_id = match tcx.hir_node(owner_id) {
         hir::Node::Item(hir::Item { kind: hir::ItemKind::Fn { body, .. }, .. }) => {
-            Some(body.hir_id)
+            body.hir_id
         }
-        hir::Node::Block(block) => Some(block.hir_id),
-        hir::Node::TraitItem(item) => Some(item.hir_id()),
-        hir::Node::ImplItem(item) => Some(item.hir_id()),
-        _ => None,
+        hir::Node::Block(block) => block.hir_id,
+        hir::Node::TraitItem(item) => item.hir_id(),
+        hir::Node::ImplItem(item) => item.hir_id(),
+        _ => return None,
     }
-}
 
-/// Returns the Span of where the value with the provided HirId would be dropped
-fn drop_location_span(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<Span> {
-    let hir_id = drop_location_hir_id(tcx, hir_id)?;
     Some(tcx.sess.source_map().end_point(tcx.hir_span(hir_id)))
 }
 
