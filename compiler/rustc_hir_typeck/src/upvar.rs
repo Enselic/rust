@@ -1041,6 +1041,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                             && let Some(drop_location_span) = drop_location_span
                         {
                             let var_name = this.tcx.hir_name(*var_hir_id);
+
                             match &lint_note.captures_info {
                                 UpvarMigrationInfo::CapturingPrecise {
                                     var_name: captured_name,
@@ -2065,6 +2066,7 @@ fn apply_capture_kind_on_capture_ty<'tcx>(
     }
 }
 
+/// Returns the Span of where the value with the provided HirId would be dropped
 fn drop_location_span(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<Span> {
     let owner_id = tcx.hir_get_enclosing_scope(hir_id)?;
 
@@ -2075,7 +2077,6 @@ fn drop_location_span(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<Span> {
         hir::Node::ImplItem(item) => item.hir_id(),
         _ => return None,
     };
-
     Some(tcx.sess.source_map().end_point(tcx.hir_span(hir_id)))
 }
 
