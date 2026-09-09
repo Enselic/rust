@@ -1043,8 +1043,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
 
                         // Add a label pointing to where a captured variable affected by drop order
                         // is dropped
-                        if lint_note.reason.drop_order
-                        {
+                        if lint_note.reason.drop_order {
                             let var_name = this.tcx.hir_name(*var_hir_id);
 
                             match &lint_note.captures_info {
