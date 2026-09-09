@@ -992,7 +992,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
     ) {
         struct MigrationLint<'a, 'tcx> {
             closure_def_id: LocalDefId,
-            drop_location_span: Span,
+            closure_drop_location_span: Span,
             this: &'a FnCtxt<'a, 'tcx>,
             body_id: hir::BodyId,
             need_migrations: Vec<NeededMigration>,
@@ -1003,7 +1003,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             fn into_diag(self, dcx: DiagCtxtHandle<'a>, level: Level) -> Diag<'a, ()> {
                 let Self {
                     closure_def_id,
-                    drop_location_span,
+                    closure_drop_location_span: drop_location_span,
                     this,
                     body_id,
                     need_migrations,
@@ -1204,9 +1204,9 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             self.typeck_results.borrow().closure_min_captures.get(&closure_def_id),
         );
 
-        let closure_hir_id = self.tcx.local_def_id_to_hir_id(closure_def_id);
         if !need_migrations.is_empty()
-            && let Some(drop_location_span) = drop_location_span(self.tcx, closure_hir_id)
+            && let Some(drop_location_span) =
+                drop_location_span(self.tcx, self.tcx.local_def_id_to_hir_id(closure_def_id))
         {
             self.tcx.emit_node_span_lint(
                 RUST_2021_INCOMPATIBLE_CLOSURE_CAPTURES,
@@ -1214,7 +1214,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                 self.tcx.def_span(closure_def_id),
                 MigrationLint {
                     this: self,
-                    drop_location_span,
+                    closure_drop_location_span: drop_location_span,
                     migration_message: reasons.migration_message(),
                     closure_def_id,
                     body_id,
