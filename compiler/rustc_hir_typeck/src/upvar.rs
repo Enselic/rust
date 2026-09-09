@@ -1038,8 +1038,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                         // Add a label pointing to where a captured variable affected by drop
                         // order is dropped.
                         if lint_note.reason.drop_order
-                            && let Some(drop_location_span) =
-                                drop_location_span
+                            && let Some(drop_location_span) = drop_location_span
                         {
                             let var_name = this.tcx.hir_name(*var_hir_id);
                             match &lint_note.captures_info {
@@ -2070,14 +2069,12 @@ fn drop_location_span(tcx: TyCtxt<'_>, hir_id: HirId) -> Option<Span> {
     let owner_id = tcx.hir_get_enclosing_scope(hir_id)?;
 
     let hir_id = match tcx.hir_node(owner_id) {
-        hir::Node::Item(hir::Item { kind: hir::ItemKind::Fn { body, .. }, .. }) => {
-            body.hir_id
-        }
+        hir::Node::Item(hir::Item { kind: hir::ItemKind::Fn { body, .. }, .. }) => body.hir_id,
         hir::Node::Block(block) => block.hir_id,
         hir::Node::TraitItem(item) => item.hir_id(),
         hir::Node::ImplItem(item) => item.hir_id(),
         _ => return None,
-    }
+    };
 
     Some(tcx.sess.source_map().end_point(tcx.hir_span(hir_id)))
 }
