@@ -1003,7 +1003,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             fn into_diag(self, dcx: DiagCtxtHandle<'a>, level: Level) -> Diag<'a, ()> {
                 let Self {
                     closure_def_id,
-                    closure_drop_location_span: drop_location_span,
+                    closure_drop_location_span,
                     this,
                     body_id,
                     need_migrations,
@@ -1052,7 +1052,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                                     ..
                                 } => {
                                     lint.span_label(
-                                            drop_location_span,
+                                            closure_drop_location_span,
                                             format!(
                                                 "in Rust 2018, `{var_name}` is dropped here, but in Rust 2021, \
                                                 only `{captured_name}` will be dropped here as part of the closure"
@@ -1061,7 +1061,7 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
                                 }
                                 UpvarMigrationInfo::CapturingNothing { use_span: _ } => {
                                     lint.span_label(
-                                            drop_location_span,
+                                            closure_drop_location_span,
                                             format!(
                                                 "in Rust 2018, `{var_name}` is dropped here along with \
                                                 the closure, but in Rust 2021 `{var_name}` is not part \
