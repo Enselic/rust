@@ -440,7 +440,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             Level::Deny | Level::Forbid => rustc_errors::Level::Error,
         };
 
-        let disable_suggestions = if let Some(ref span) = span
+        let disable_suggestions = /* if let Some(ref span) = span
             // If this code originates in a foreign macro, aka something that this crate
             // did not itself author, then it's likely that there's nothing this crate
             // can do about it. We probably want to skip the lint entirely.
@@ -448,8 +448,8 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
         {
             true
         } else {
-            false
-        };
+            */ false /*
+        } */;
 
         if disable_suggestions {
             // If this is a future incompatible that is not an edition fixing lint
