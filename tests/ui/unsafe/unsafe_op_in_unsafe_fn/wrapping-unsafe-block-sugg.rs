@@ -74,4 +74,8 @@ pub unsafe fn unsafe_in_external_macro() {
     external_unsafe_macro::unsafe_macro!();
 }
 
+pub unsafe fn deref_in_external_macro(x: *const i32) -> i32 {
+    external_unsafe_macro::deref_pointer_macro!(x)
+}
+
 fn main() {}
