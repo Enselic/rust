@@ -1,5 +1,9 @@
+//@ aux-build:external_unsafe_macro.rs
+
 #![deny(unsafe_op_in_unsafe_fn)]
 #![deny(unused_unsafe)]
+
+extern crate external_unsafe_macro;
 
 unsafe fn unsf() {}
 const PTR: *const () = std::ptr::null();
@@ -65,6 +69,10 @@ unsafe fn nested_allow_level() {
 
         unsafe { unsf() }
     }
+}
+
+unsafe fn deref_pointer_with_macro(x: *const i32) -> i32 {
+    external_unsafe_macro::deref_pointer_macro!(x)
 }
 
 fn main() {
