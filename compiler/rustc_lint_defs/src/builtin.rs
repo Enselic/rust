@@ -2638,7 +2638,7 @@ declare_lint! {
     ///
     /// The fix to this is to wrap the unsafe code in an `unsafe` block.
     ///
-    /// This lint is "allow" by default on editions up to 2021, from 2024 it is
+    /// This lint is "allow" by defaultunsafe_op on editions up to 2021, from 2024 it is
     /// "warn" by default; the plan for increasing severity further is
     /// still being considered. See [RFC #2585] and [issue #71668] for more
     /// details.
@@ -2656,6 +2656,7 @@ declare_lint! {
         explain_reason: false
     };
     @edition Edition2024 => Warn;
+    report_in_external_macro
 }
 
 declare_lint! {
