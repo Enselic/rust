@@ -53,7 +53,8 @@ pub(crate) fn expand(
 
 // #[rustc_std_internal_symbol]
 // unsafe fn __rust_alloc_error_handler(size: usize, align: usize) -> ! {
-//     handler(unsafe { core::alloc::Layout::from_size_align_unchecked(size, align) })
+//     let result = unsafe { core::alloc::Layout::from_size_align_unchecked(size, align) };
+//     handler(result)
 // }
 fn generate_handler(cx: &ExtCtxt<'_>, handler: Ident, span: Span, sig_span: Span) -> Stmt {
     let ty_usize = cx.ty_name(span, sym::usize);
@@ -73,7 +74,8 @@ fn generate_handler(cx: &ExtCtxt<'_>, handler: Ident, span: Span, sig_span: Span
         span,
     }));
 
-    let call = cx.expr_call_ident(sig_span, handler, thin_vec![layout]);
+    let layout = cx.stmt_let(span, false, sym::result, layout);
+    let call = cx.expr_call_ident(sig_span, handler, thin_vec![cx.expr_name(span, sym::result)]);
 
     let never = ast::FnRetTy::Ty(cx.ty(span, TyKind::Never));
     let params = thin_vec![
@@ -84,7 +86,7 @@ fn generate_handler(cx: &ExtCtxt<'_>, handler: Ident, span: Span, sig_span: Span
     let header = FnHeader { safety: Safety::Unsafe(span), ..FnHeader::default() };
     let sig = FnSig { decl, header, span };
 
-    let body = Some(cx.block_expr(call));
+    let body = Some(cx.block(span, thin_vec![layout, cx.stmt_expr(call)]));
     let kind = ItemKind::Fn(cx.item_fn(
         sig,
         Ident::from_str_and_span(&global_fn_name(ALLOC_ERROR_HANDLER), span),

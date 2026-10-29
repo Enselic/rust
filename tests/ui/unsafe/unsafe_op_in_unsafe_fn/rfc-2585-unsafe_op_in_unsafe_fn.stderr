@@ -26,6 +26,16 @@ LL |     *PTR;
    = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
 
+error[E0133]: dereference of raw pointer is unsafe and requires unsafe block
+  --> $DIR/rfc-2585-unsafe_op_in_unsafe_fn.rs:17:5
+   |
+LL |     external_unsafe_macro::deref_ptr!(PTR);
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ dereference of raw pointer
+   |
+   = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
+   = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+   = note: this error originates in the macro `external_unsafe_macro::deref_ptr` (in Nightly builds, run with -Z macro-backtrace for more info)
+
 error[E0133]: use of mutable static is unsafe and requires unsafe block
   --> $DIR/rfc-2585-unsafe_op_in_unsafe_fn.rs:19:5
    |
@@ -76,6 +86,16 @@ LL |     *PTR;
    = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
 
+error[E0133]: dereference of raw pointer is unsafe and requires unsafe block
+  --> $DIR/rfc-2585-unsafe_op_in_unsafe_fn.rs:33:5
+   |
+LL |     external_unsafe_macro::deref_ptr!(PTR);
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ dereference of raw pointer
+   |
+   = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
+   = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+   = note: this error originates in the macro `external_unsafe_macro::deref_ptr` (in Nightly builds, run with -Z macro-backtrace for more info)
+
 error[E0133]: use of mutable static is unsafe and requires unsafe block
   --> $DIR/rfc-2585-unsafe_op_in_unsafe_fn.rs:35:5
    |
@@ -113,6 +133,6 @@ LL |         unsf();
    |
    = note: consult the function's documentation for information on how to avoid undefined behavior
 
-error: aborting due to 11 previous errors
+error: aborting due to 13 previous errors
 
 For more information about this error, try `rustc --explain E0133`.
