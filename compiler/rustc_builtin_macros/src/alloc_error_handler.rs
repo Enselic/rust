@@ -53,7 +53,7 @@ pub(crate) fn expand(
 
 // #[rustc_std_internal_symbol]
 // unsafe fn __rust_alloc_error_handler(size: usize, align: usize) -> ! {
-//     handler(core::alloc::Layout::from_size_align_unchecked(size, align))
+//     handler(unsafe { core::alloc::Layout::from_size_align_unchecked(size, align) })
 // }
 fn generate_handler(cx: &ExtCtxt<'_>, handler: Ident, span: Span, sig_span: Span) -> Stmt {
     let ty_usize = cx.ty_name(span, sym::usize);
@@ -65,6 +65,13 @@ fn generate_handler(cx: &ExtCtxt<'_>, handler: Ident, span: Span, sig_span: Span
         layout_new,
         thin_vec![cx.expr_name(span, sym::size), cx.expr_name(span, sym::align)],
     );
+    // The handler's caller passes the size and alignment of a valid Layout.
+    let layout = cx.expr_block(Box::new(ast::Block {
+        stmts: thin_vec![cx.stmt_expr(layout)],
+        id: ast::DUMMY_NODE_ID,
+        rules: ast::BlockCheckMode::Unsafe(ast::CompilerGenerated),
+        span,
+    }));
 
     let call = cx.expr_call_ident(sig_span, handler, thin_vec![layout]);
 
