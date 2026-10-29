@@ -70,11 +70,11 @@ pub unsafe fn unsafe_in_macro() {
 pub unsafe fn unsafe_in_external_macro() {
     //~^ NOTE an unsafe function restricts its caller, but its body is safe by default
     external_unsafe_macro::unsafe_macro!();
-    //~^ NOTE call to unsafe function
+    //~^ ERROR call to unsafe function
     //~| NOTE for more information, see
     //~| NOTE consult the function's documentation
     external_unsafe_macro::unsafe_macro!();
-    //~^ NOTE call to unsafe function
+    //~^ ERROR call to unsafe function
     //~| NOTE for more information, see
     //~| NOTE consult the function's documentation
 }
