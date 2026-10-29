@@ -1,9 +1,3 @@
-error[E0433]: cannot find `deref_pointer_macro` in `external_unsafe_macro`
-  --> $DIR/wrapping-unsafe-block-sugg.rs:78:28
-   |
-LL |     external_unsafe_macro::deref_pointer_macro!(x)
-   |                            ^^^^^^^^^^^^^^^^^^^ could not find `deref_pointer_macro` in `external_unsafe_macro`
-
 error[E0133]: call to unsafe function `unsf` is unsafe and requires unsafe block
   --> $DIR/wrapping-unsafe-block-sugg.rs:13:5
    |
@@ -108,7 +102,7 @@ LL |     unsafe_macro!();
    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
 
 error[E0133]: call to unsafe function `external_unsafe_macro::unsf` is unsafe and requires unsafe block
-  --> $DIR/wrapping-unsafe-block-sugg.rs:73:5
+  --> $DIR/wrapping-unsafe-block-sugg.rs:72:5
    |
 LL |     external_unsafe_macro::unsafe_macro!();
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
@@ -123,7 +117,7 @@ LL | pub unsafe fn unsafe_in_external_macro() {
    = note: this error originates in the macro `external_unsafe_macro::unsafe_macro` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error[E0133]: call to unsafe function `external_unsafe_macro::unsf` is unsafe and requires unsafe block
-  --> $DIR/wrapping-unsafe-block-sugg.rs:74:5
+  --> $DIR/wrapping-unsafe-block-sugg.rs:76:5
    |
 LL |     external_unsafe_macro::unsafe_macro!();
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
@@ -132,7 +126,6 @@ LL |     external_unsafe_macro::unsafe_macro!();
    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
    = note: this error originates in the macro `external_unsafe_macro::unsafe_macro` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error: aborting due to 11 previous errors
+error: aborting due to 10 previous errors
 
-Some errors have detailed explanations: E0133, E0433.
-For more information about an error, try `rustc --explain E0133`.
+For more information about this error, try `rustc --explain E0133`.
