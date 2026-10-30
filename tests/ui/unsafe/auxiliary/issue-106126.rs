@@ -3,9 +3,8 @@ macro_rules! foo {
     () => {
         unsafe fn __unsf() {}
         unsafe fn __foo() {
-            unsafe {
-                __unsf();
-            }
+            #[allow(unsafe_op_in_unsafe_fn)]
+            __unsf();
         }
     };
 }
