@@ -2,7 +2,7 @@ use std::cmp::min;
 
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_data_structures::sorted_map::SortedMap;
-use rustc_errors::{Diag, Diagnostic, EmissionOverride, MultiSpan};
+use rustc_errors::{Diag, Diagnostic, EmissionOverride, MultiSpan, SuggestionStyle, Suggestions};
 use rustc_hir::{HirId, ItemLocalId};
 use rustc_lint_defs::{
     EditionFcw, FutureIncompatibilityReason, Level, Lint, LintExpectationId, LintId,
@@ -512,9 +512,25 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
         }
 
         if disable_suggestions {
-            // Any suggestions made here are likely to be incorrect, so anything we
-            // emit shouldn't be automatically fixed by rustfix.
-            err.disable_suggestions();
+            // The unsafe-op lint can suggest wrapping a caller's own function body,
+            // even when the unsafe operation itself comes from an external macro.
+            if LintId::of(lint) == LintId::of(builtin::UNSAFE_OP_IN_UNSAFE_FN)
+                && let Suggestions::Enabled(suggestions) = &mut err.suggestions
+            {
+                suggestions.retain(|suggestion| {
+                    suggestion.style == SuggestionStyle::CompletelyHidden
+                        && suggestion.substitutions.iter().all(|substitution| {
+                            substitution.parts.iter().all(|part| {
+                                !part.span.is_dummy()
+                                    && !part.span.from_expansion()
+                                    && !sess.source_map().is_imported(part.span)
+                            })
+                        })
+                });
+                err.seal_suggestions();
+            } else {
+                err.disable_suggestions();
+            }
         }
 
         err.is_lint(lint.name_lower(), has_future_breakage, lint.rust_version);
