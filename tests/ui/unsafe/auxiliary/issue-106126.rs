@@ -3,7 +3,10 @@ macro_rules! foo {
     () => {
         unsafe fn __unsf() {}
         unsafe fn __foo() {
-            __unsf();
+            // TODO: Verify
+            unsafe {
+                __unsf();
+            }
         }
     };
 }
