@@ -76,6 +76,13 @@ impl AllocFnFactory<'_, '_> {
         let mut abi_args = ThinVec::new();
         let args = method.inputs.iter().map(|input| self.arg_ty(input, &mut abi_args)).collect();
         let result = self.call_allocator(method.name, args);
+        // The shim's caller must uphold the allocator method's safety requirements.
+        let result = self.cx.expr_block(Box::new(ast::Block {
+            stmts: thin_vec![self.cx.stmt_expr(result)],
+            id: ast::DUMMY_NODE_ID,
+            rules: ast::BlockCheckMode::Unsafe(ast::CompilerGenerated),
+            span: self.span,
+        }));
         let output_ty = self.ret_ty(&method.output);
         let decl = self.cx.fn_decl(abi_args, ast::FnRetTy::Ty(output_ty));
         let header = FnHeader { safety: Safety::Unsafe(self.span), ..FnHeader::default() };
