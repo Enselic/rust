@@ -28,7 +28,7 @@ warning: unexpected `cfg` condition value: `UNEXPECTED_FEATURE`
   --> $DIR/report-in-external-macros.rs:19:5
    |
 LL |     cfg_macro::my_lib_macro_feature!();
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: remove the condition
    |
    = note: no expected values for `feature`
    = help: to expect this configuration use `--check-cfg=cfg(feature, values("UNEXPECTED_FEATURE"))`

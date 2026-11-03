@@ -14,6 +14,12 @@ LL | non_local_macro::non_local_impl!(LocalStruct);
    = note: items in an anonymous const item (`const _: () = { ... }`) are treated as in the same scope as the anonymous const's declaration for the purpose of this lint
    = note: `#[warn(non_local_definitions)]` on by default
    = note: this warning originates in the macro `non_local_macro::non_local_impl` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: use a const-anon item to suppress this lint
+  --> $DIR/auxiliary/non_local_macro.rs:4:15
+   |
+LL -         const _IMPL_DEBUG: () = {
+LL +         const _: () = {
+   |
 
 warning: 1 warning emitted
 

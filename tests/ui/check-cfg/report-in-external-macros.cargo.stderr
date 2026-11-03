@@ -27,7 +27,7 @@ warning: unexpected `cfg` condition value: `UNEXPECTED_FEATURE`
   --> $DIR/report-in-external-macros.rs:19:5
    |
 LL |     cfg_macro::my_lib_macro_feature!();
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: remove the condition
    |
    = note: no expected values for `feature`
    = note: using a cfg inside a macro will use the cfgs from the destination crate and not the ones from the defining crate
