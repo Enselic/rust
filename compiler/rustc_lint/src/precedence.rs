@@ -30,7 +30,7 @@ declare_lint! {
     pub AMBIGUOUS_NEGATIVE_LITERALS,
     Allow,
     "ambiguous negative literals operations",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint_pass!(Precedence => [AMBIGUOUS_NEGATIVE_LITERALS]);

@@ -298,7 +298,7 @@ declare_lint! {
     pub MISSING_DOCS,
     Allow,
     "detects missing documentation for public members",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 #[derive(Default)]

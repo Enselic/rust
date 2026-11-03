@@ -45,7 +45,7 @@ declare_lint! {
     pub UNUSED_MUST_USE,
     Warn,
     "unused result of a type flagged as `#[must_use]`",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -84,7 +84,8 @@ declare_lint! {
     /// [`unused_must_use` lint]: warn-by-default.html#unused-must-use
     pub UNUSED_RESULTS,
     Allow,
-    "unused result of an expression in a statement"
+    "unused result of an expression in a statement",
+    @external_macro_behavior = ReportAndSuggest;
 }
 
 declare_lint_pass!(UnusedResults => [UNUSED_MUST_USE, UNUSED_RESULTS]);

@@ -735,7 +735,7 @@ macro_rules! declare_tool_lint {
         $(, @eval_always = $eval_always: literal)?
         $(, @feature_gate = $gate:ident;)?
     ) => (
-         $crate::declare_tool_lint!{$(#[$attr])* $vis $tool::$NAME, $Level, $desc, if $rep { $crate::ExternalMacroBehavior::ReportAndSuggest } else { $crate::ExternalMacroBehavior::DontReport }  $(, @eval_always = $eval_always)? $(, @feature_gate = $gate;)?}
+         $crate::declare_tool_lint!{$(#[$attr])* $vis $tool::$NAME, $Level, $desc, if $rep { $crate::ExternalMacroBehavior::OnlyReport } else { $crate::ExternalMacroBehavior::DontReport }  $(, @eval_always = $eval_always)? $(, @feature_gate = $gate;)?}
     );
     (
         $(#[$attr:meta])* $vis:vis $tool:ident ::$NAME:ident, $Level:ident, $desc:expr,

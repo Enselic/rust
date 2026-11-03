@@ -902,7 +902,7 @@ declare_lint! {
     pub UNREACHABLE_CODE,
     Warn,
     "detects unreachable code paths",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -1670,7 +1670,7 @@ declare_lint! {
     pub DEPRECATED,
     Warn,
     "detects use of deprecated items",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -2389,7 +2389,7 @@ declare_lint! {
     pub DEPRECATED_IN_FUTURE,
     Allow,
     "detects use of items that will be deprecated in a future version",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -2794,7 +2794,7 @@ declare_lint! {
     pub UNNAMEABLE_TEST_ITEMS,
     Warn,
     "detects an item that cannot be named being marked as `#[test_case]`",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -3155,7 +3155,7 @@ declare_lint! {
     pub UNEXPECTED_CFGS,
     Warn,
     "detects unexpected names and values in `#[cfg]` conditions",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -3352,7 +3352,7 @@ declare_lint! {
     pub LONG_RUNNING_CONST_EVAL,
     Deny,
     "detects long const eval operations",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {
@@ -4262,7 +4262,7 @@ declare_lint! {
     pub NEVER_TYPE_FALLBACK_FLOWING_INTO_UNSAFE,
     Deny,
     "never type fallback affecting unsafe function calls",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint! {

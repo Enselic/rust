@@ -43,7 +43,7 @@ declare_lint! {
     pub NON_LOCAL_DEFINITIONS,
     Warn,
     "checks for non-local definitions",
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 #[derive(Default)]

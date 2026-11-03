@@ -15,7 +15,7 @@ declare_tool_lint! {
     pub rustc::DISALLOWED_PASS_BY_REF,
     Warn,
     "pass by reference of a type flagged as `#[rustc_pass_by_value]`",
-    external_macro_behavior: ReportAndSuggest
+    external_macro_behavior: OnlyReport
 }
 
 declare_lint_pass!(DisallowedPassByRef => [DISALLOWED_PASS_BY_REF]);

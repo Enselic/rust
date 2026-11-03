@@ -41,7 +41,7 @@ declare_lint! {
         reason: fcw!(EditionSemanticsChange 2021 "panic-macro-consistency"),
         explain_reason: false,
     };
-    @external_macro_behavior = ReportAndSuggest;
+    @external_macro_behavior = OnlyReport;
 }
 
 declare_lint_pass!(NonPanicFmt => [NON_FMT_PANICS]);
