@@ -440,7 +440,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             Level::Deny | Level::Forbid => rustc_errors::Level::Error,
         };
 
-        let disable_suggestions = if !lint.report_in_external_macro && let Some(ref span) = span
+        let in_external_macro = if let Some(ref span) = span
             // If this code originates in a foreign macro, aka something that this crate
             // did not itself author, then it's likely that there's nothing this crate
             // can do about it. We probably want to skip the lint entirely.
@@ -451,7 +451,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             false
         };
 
-        if disable_suggestions {
+        if in_external_macro {
             // If this is a future incompatible that is not an edition fixing lint
             // it'll become a hard error, so we have to emit *something*. Also,
             // if this lint occurs in the expansion of a macro from an external crate,
@@ -511,7 +511,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             }
         }
 
-        if disable_suggestions {
+        if in_external_macro && !lint.report_in_external_macro {
             // Any suggestions made here are likely to be incorrect, so anything we
             // emit shouldn't be automatically fixed by rustfix.
             err.disable_suggestions();
