@@ -5,8 +5,8 @@ use rustc_data_structures::sorted_map::SortedMap;
 use rustc_errors::{Diag, Diagnostic, EmissionOverride, MultiSpan};
 use rustc_hir::{HirId, ItemLocalId};
 use rustc_lint_defs::{
-    EditionFcw, FutureIncompatibilityReason, Level, Lint, LintExpectationId, LintId,
-    StableLintExpectationId, UnstableLintExpectationId, builtin,
+    EditionFcw, ExternalMacroBehavior, FutureIncompatibilityReason, Level, Lint, LintExpectationId,
+    LintId, StableLintExpectationId, UnstableLintExpectationId, builtin,
 };
 use rustc_macros::{Decodable, Encodable, StableHash};
 use rustc_session::Session;
@@ -440,7 +440,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             Level::Deny | Level::Forbid => rustc_errors::Level::Error,
         };
 
-        let disable_suggestions = if let Some(ref span) = span
+        let in_external_macro = if let Some(ref span) = span
             // If this code originates in a foreign macro, aka something that this crate
             // did not itself author, then it's likely that there's nothing this crate
             // can do about it. We probably want to skip the lint entirely.
@@ -451,7 +451,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             false
         };
 
-        if disable_suggestions {
+        if in_external_macro {
             // If this is a future incompatible that is not an edition fixing lint
             // it'll become a hard error, so we have to emit *something*. Also,
             // if this lint occurs in the expansion of a macro from an external crate,
@@ -470,7 +470,10 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
                     })
                 });
 
-            if !incompatible && !lint.report_in_external_macro && !is_in_find_attr {
+            if !incompatible
+                && lint.external_macro_behavior == ExternalMacroBehavior::DontReport
+                && !is_in_find_attr
+            {
                 // Don't continue further, since we don't want to have
                 // `diag_span_note_once` called for a diagnostic that isn't emitted.
                 return;
@@ -511,7 +514,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
             }
         }
 
-        if disable_suggestions {
+        if in_external_macro && lint.external_macro_behavior == ExternalMacroBehavior::OnlyReport {
             // Any suggestions made here are likely to be incorrect, so anything we
             // emit shouldn't be automatically fixed by rustfix.
             err.disable_suggestions();
