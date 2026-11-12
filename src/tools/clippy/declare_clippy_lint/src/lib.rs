@@ -134,7 +134,7 @@ macro_rules! declare_clippy_lint_inner {
             $vis clippy::$lint_name,
             $level,
             $desc,
-            report_in_external_macro:true
+            in_external_macro: $crate::rustc_lint::InExternalMacro::Report
             $(, @eval_always = $eval_always)?
         }
 
