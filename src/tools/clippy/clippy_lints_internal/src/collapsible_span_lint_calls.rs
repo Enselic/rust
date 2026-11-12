@@ -68,7 +68,7 @@ declare_tool_lint! {
     pub clippy::COLLAPSIBLE_SPAN_LINT_CALLS,
     Warn,
     "found collapsible `span_lint_and_then` calls",
-    in_external_macro: rustc_lint::InExternalMacro::Report
+    @in_external_macro = Report
 }
 
 declare_lint_pass!(CollapsibleCalls => [COLLAPSIBLE_SPAN_LINT_CALLS]);

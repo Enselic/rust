@@ -55,7 +55,7 @@ declare_lint! {
     pub DANGEROUS_IMPLICIT_AUTOREFS,
     Deny,
     "implicit reference to a dereference of a raw pointer",
-    @in_external_macro = Report;
+    @in_external_macro = Report
 }
 
 declare_lint_pass!(ImplicitAutorefs => [DANGEROUS_IMPLICIT_AUTOREFS]);

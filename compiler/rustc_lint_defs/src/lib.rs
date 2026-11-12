@@ -685,7 +685,7 @@ macro_rules! declare_lint {
      }; )?
      $(@edition $lint_edition:ident => $edition_level:ident;)?
      $(@msrv = $msrv:literal;)?
-     $(@in_external_macro = $external:ident;)?
+     $(@in_external_macro = $external:ident)?
      $($v:ident),*) => (
         $(#[$attr])*
         $vis static $NAME: &$crate::Lint = &$crate::Lint {
@@ -720,11 +720,11 @@ macro_rules! declare_tool_lint {
     );
     (
         $(#[$attr:meta])* $vis:vis $tool:ident ::$NAME:ident, $Level:ident, $desc:expr,
-        in_external_macro: $rep:expr
-        $(, @eval_always = $eval_always: literal)?
+        @in_external_macro = $external:ident
+        $(, @eval_always = $eval_always:literal)?
         $(, @feature_gate = $gate:ident;)?
     ) => (
-         $crate::declare_tool_lint!{$(#[$attr])* $vis $tool::$NAME, $Level, $desc, $rep  $(, @eval_always = $eval_always)? $(, @feature_gate = $gate;)?}
+        $crate::declare_tool_lint!{$(#[$attr])* $vis $tool::$NAME, $Level, $desc, $crate::InExternalMacro::$external $(, @eval_always = $eval_always)? $(, @feature_gate = $gate;)?}
     );
     (
         $(#[$attr:meta])* $vis:vis $tool:ident ::$NAME:ident, $Level:ident, $desc:expr,

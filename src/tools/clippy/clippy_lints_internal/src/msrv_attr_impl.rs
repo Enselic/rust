@@ -13,7 +13,7 @@ declare_tool_lint! {
     pub clippy::MISSING_MSRV_ATTR_IMPL,
     Warn,
     "checking if all necessary steps were taken when adding a MSRV to a lint",
-    in_external_macro: rustc_lint::InExternalMacro::Report
+    @in_external_macro = Report
 }
 
 declare_lint_pass!(MsrvAttrImpl => [MISSING_MSRV_ATTR_IMPL]);
