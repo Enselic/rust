@@ -148,8 +148,8 @@ pub use passes::{EarlyLintPass, LateLintPass};
 pub use rustc_errors::BufferedEarlyLint;
 pub use rustc_lint_defs::Level::{self, *};
 pub use rustc_lint_defs::{
-    Applicability, FutureIncompatibleInfo, Lint, LintId, LintPass, LintVec, declare_lint,
-    declare_lint_pass, declare_tool_lint, impl_lint_pass,
+    Applicability, FutureIncompatibleInfo, InExternalMacro, Lint, LintId, LintPass, LintVec,
+    declare_lint, declare_lint_pass, declare_tool_lint, impl_lint_pass,
 };
 pub use utils::std_or_core;
 
