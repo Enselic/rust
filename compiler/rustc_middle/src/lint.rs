@@ -514,7 +514,7 @@ pub fn emit_lint_base<'a, D: Diagnostic<'a> + 'a>(
         }
 
         // FIXME: write something
-        if in_external_macro {
+        if in_external_macro && lint.in_external_macro != InExternalMacro::ReportAndSuggest {
             // Any suggestions made here are likely to be incorrect, so anything we
             // emit shouldn't be automatically fixed by rustfix.
             err.disable_suggestions();
