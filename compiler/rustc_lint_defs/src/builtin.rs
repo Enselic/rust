@@ -5707,6 +5707,7 @@ declare_lint! {
     Allow,
     "usage of `unsafe` code and other potentially unsound constructs",
     @eval_always = true
+    in_external_macro: ReportAndSuggest
 }
 
 declare_lint! {
