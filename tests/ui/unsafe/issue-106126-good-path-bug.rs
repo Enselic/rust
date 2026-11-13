@@ -12,5 +12,6 @@
 extern crate issue_106126;
 
 foo!();
+//~^ ERROR: call to unsafe function `__unsf` is unsafe
 
 fn main() {}
