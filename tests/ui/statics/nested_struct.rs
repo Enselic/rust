@@ -5,17 +5,17 @@
 /// There is no real explanation for this test, as it was just
 /// a bug during a refactoring.
 
+pub enum InExternalMacro {
+    DontReport,
+    Report,
+}
+
 pub struct Lint {
     pub name: &'static str,
     pub desc: &'static str,
     pub in_external_macro: InExternalMacro,
     pub is_externally_loaded: bool,
     pub crate_level_only: bool,
-}
-
-pub enum InExternalMacro {
-    DontReport,
-    Report,
 }
 
 static FOO: &Lint = &Lint {

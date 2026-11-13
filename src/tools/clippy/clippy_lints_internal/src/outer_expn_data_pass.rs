@@ -25,7 +25,7 @@ declare_tool_lint! {
     pub clippy::OUTER_EXPN_EXPN_DATA,
     Warn,
     "using `cx.outer_expn().expn_data()` instead of `cx.outer_expn_data()`",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_lint_pass!(OuterExpnDataPass => [OUTER_EXPN_EXPN_DATA]);

@@ -27,7 +27,7 @@ declare_tool_lint! {
     pub clippy::UNUSUAL_NAMES,
     Warn,
     "commonly used concepts should use usual same variable name.",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_lint_pass!(UnusualNames => [UNUSUAL_NAMES]);

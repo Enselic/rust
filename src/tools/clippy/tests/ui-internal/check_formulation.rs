@@ -16,7 +16,7 @@ declare_tool_lint! {
     pub clippy::VALID,
     Warn,
     "One",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
@@ -27,7 +27,7 @@ declare_tool_lint! {
     pub clippy::INVALID1,
     Warn,
     "One",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
@@ -38,7 +38,7 @@ declare_tool_lint! {
     pub clippy::INVALID2,
     Warn,
     "One",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
@@ -49,7 +49,7 @@ declare_tool_lint! {
     pub clippy::ALLOWED_INVALID,
     Warn,
     "One",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_lint_pass!(Pass => [VALID, INVALID1, INVALID2]);

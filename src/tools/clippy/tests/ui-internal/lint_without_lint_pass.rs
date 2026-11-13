@@ -14,21 +14,21 @@ declare_tool_lint! {
     pub clippy::TEST_LINT,
     Warn,
     "",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
     pub clippy::TEST_LINT_REGISTERED,
     Warn,
     "",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
     pub clippy::TEST_LINT_REGISTERED_ONLY_IMPL,
     Warn,
     "",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 pub struct Pass;

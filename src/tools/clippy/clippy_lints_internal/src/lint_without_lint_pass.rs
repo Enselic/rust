@@ -39,7 +39,7 @@ declare_tool_lint! {
     pub clippy::LINT_WITHOUT_LINT_PASS,
     Warn,
     "declaring a lint without associating it in a LintPass",
-    @in_external_macro = Report
+    in_external_macro: Report
 
 }
 
@@ -63,7 +63,7 @@ declare_tool_lint! {
     pub clippy::DEFAULT_LINT,
     Warn,
     "found 'default lint description' in a lint declaration",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
@@ -76,7 +76,7 @@ declare_tool_lint! {
     pub clippy::INVALID_CLIPPY_VERSION_ATTRIBUTE,
     Warn,
     "found an invalid `clippy::version` attribute",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 declare_tool_lint! {
@@ -85,7 +85,7 @@ declare_tool_lint! {
     pub clippy::MISSING_CLIPPY_VERSION_ATTRIBUTE,
     Warn,
     "found clippy lint without `clippy::version` attribute",
-    @in_external_macro = Report
+    in_external_macro: Report
 }
 
 #[derive(Clone, Debug, Default)]
