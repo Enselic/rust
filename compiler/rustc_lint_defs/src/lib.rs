@@ -681,7 +681,7 @@ macro_rules! declare_lint {
      },)?
      $(@edition $lint_edition:ident => $edition_level:ident,)?
      $(@msrv = $msrv:literal,)?
-     $(@in_external_macro: $external:ident,)?
+     $(@in_external_macro = $external:ident,)?
      $($v:ident),*) => (
         $(#[$attr])*
         $vis static $NAME: &$crate::Lint = &$crate::Lint {

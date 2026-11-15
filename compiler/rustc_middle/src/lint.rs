@@ -5,8 +5,7 @@ use rustc_data_structures::sorted_map::SortedMap;
 use rustc_errors::{Diag, Diagnostic, EmissionOverride, MultiSpan};
 use rustc_hir::{HirId, ItemLocalId};
 use rustc_lint_defs::{
-    EditionFcw, FutureIncompatibilityReason, Level, Lint, LintExpectationId, LintId,
-    StableLintExpectationId, UnstableLintExpectationId, builtin,
+    EditionFcw, FutureIncompatibilityReason, InExternalMacro, Level, Lint, LintExpectationId, LintId, StableLintExpectationId, UnstableLintExpectationId, builtin,
 };
 use rustc_macros::{Decodable, Encodable, StableHash};
 use rustc_session::Session;
