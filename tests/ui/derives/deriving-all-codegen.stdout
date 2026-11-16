@@ -27,9 +27,6 @@ use std::from::From;
 // Empty struct.
 struct Empty;
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Empty { }
-#[automatically_derived]
 impl ::core::clone::Clone for Empty {
     #[inline]
     fn clone(&self) -> Self { *self }
@@ -84,9 +81,6 @@ struct Point {
     x: u32,
     y: u32,
 }
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Point { }
 #[automatically_derived]
 impl ::core::clone::Clone for Point {
     #[inline]
@@ -169,9 +163,6 @@ struct PackedPoint {
     y: u32,
 }
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for PackedPoint { }
-#[automatically_derived]
 impl ::core::clone::Clone for PackedPoint {
     #[inline]
     fn clone(&self) -> Self {
@@ -247,9 +238,6 @@ impl ::core::cmp::Ord for PackedPoint {
 
 struct TupleSingleField(u32);
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for TupleSingleField { }
-#[automatically_derived]
 impl ::core::clone::Clone for TupleSingleField {
     #[inline]
     fn clone(&self) -> Self {
@@ -321,9 +309,6 @@ impl ::core::cmp::Ord for TupleSingleField {
 struct SingleField {
     foo: bool,
 }
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for SingleField { }
 #[automatically_derived]
 impl ::core::clone::Clone for SingleField {
     #[inline]
@@ -405,9 +390,6 @@ struct Big {
     b7: u32,
     b8: u32,
 }
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Big { }
 #[automatically_derived]
 impl ::core::clone::Clone for Big {
     #[inline]
@@ -969,9 +951,6 @@ impl<T: ::core::cmp::Ord + ::core::marker::Copy + Trait, U: ::core::cmp::Ord +
 // An empty enum.
 enum Enum0 {}
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Enum0 { }
-#[automatically_derived]
 impl ::core::clone::Clone for Enum0 {
     #[inline]
     fn clone(&self) -> Self { *self }
@@ -1154,9 +1133,6 @@ enum Fieldless {
     C,
 }
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Fieldless { }
-#[automatically_derived]
 impl ::core::clone::Clone for Fieldless {
     #[inline]
     fn clone(&self) -> Self { *self }
@@ -1278,9 +1254,6 @@ enum Mixed {
         d2: Option<i32>,
     },
 }
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Mixed { }
 #[automatically_derived]
 impl ::core::clone::Clone for Mixed {
     #[inline]
@@ -1702,9 +1675,6 @@ pub union Union {
     pub i: i32,
 }
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for Union { }
-#[automatically_derived]
 impl ::core::clone::Clone for Union {
     #[inline]
     fn clone(&self) -> Self {
@@ -1719,9 +1689,6 @@ struct FooCopyClone(i32);
 #[automatically_derived]
 impl ::core::marker::Copy for FooCopyClone { }
 #[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for FooCopyClone { }
-#[automatically_derived]
 impl ::core::clone::Clone for FooCopyClone {
     #[inline]
     fn clone(&self) -> Self {
@@ -1731,9 +1698,6 @@ impl ::core::clone::Clone for FooCopyClone {
 }
 
 struct FooCloneCopy(i32);
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for FooCloneCopy { }
 #[automatically_derived]
 impl ::core::clone::Clone for FooCloneCopy {
     #[inline]
@@ -1746,9 +1710,6 @@ impl ::core::clone::Clone for FooCloneCopy {
 impl ::core::marker::Copy for FooCloneCopy { }
 
 struct FooCopyAndClone(i32);
-#[automatically_derived]
-#[doc(hidden)]
-unsafe impl ::core::clone::TrivialClone for FooCopyAndClone { }
 #[automatically_derived]
 impl ::core::clone::Clone for FooCopyAndClone {
     #[inline]
